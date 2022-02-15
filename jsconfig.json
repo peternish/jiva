@@ -6,6 +6,7 @@
       "@api/*": ["api/*"],
       "@redux/*": ["redux/*"],
       "@styles/*": ["styles/*"],
+      "@pages/*": ["pages/*"],
     }
   }
 }
