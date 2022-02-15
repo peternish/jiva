@@ -1,5 +1,5 @@
-import constants from "../constants";
-import { axiosInstance as axios } from "../http";
+import constants from "@api/constants";
+import { axiosInstance as axios } from "@api/http";
 
 const BASE_URL = constants?.API_BASE_URL + "/auth";
 
