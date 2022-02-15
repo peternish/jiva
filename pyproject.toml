@@ -8,6 +8,7 @@ license = "MIT"
 [tool.poetry.dependencies]
 python = "^3.8"
 djangorestframework = "^3.13.1"
+Django = "^4.0.2"
 
 [tool.poetry.dev-dependencies]
 black = "^22.1.0"
