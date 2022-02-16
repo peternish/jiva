@@ -11,6 +11,7 @@ test:
     - npm i
     - npm i -g next
     - next lint
+    - next build
     - next test
 
 deploy-staging:
