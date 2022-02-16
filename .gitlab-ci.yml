@@ -28,4 +28,4 @@ deploy-staging:
   script:
     - npm i -g vercel
     - DEPLOYMENT_URL=$(vercel --name $CI_PROJECT_NAME --confirm -t $VERCEL_TOKEN)
-    - vercel
+    - vercel -t $VERCEL_TOKEN
