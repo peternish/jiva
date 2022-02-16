@@ -25,19 +25,7 @@ deploy-staging:
   only:
     - staging
 
-  variables:
-    PREVIEW_URL: https://$CI_PROJECT_NAME-$CI_COMMIT_REF_SLUG.$VERCEL_SCOPE.vercel.app
-
-  # rules:
-  #   - if: $CI_MERGE_REQUEST_IID
-  #   - if: $CI_COMMIT_TAG
-  #   - if: $CI_COMMIT_BRANCH == 'staging'
-
-  environment:
-    name: vercel/$CI_COMMIT_REF_NAME
-    url: $PREVIEW_URL
-
   script:
     - npm i -g vercel
     - DEPLOYMENT_URL=$(vercel --name $CI_PROJECT_NAME --confirm -t $VERCEL_TOKEN)
-    - vercel alias set $DEPLOYMENT_URL $PREVIEW_URL -t $VERCEL_TOKEN
+    - vercel
