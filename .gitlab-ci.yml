@@ -3,7 +3,7 @@ deploy-staging:
   image: node:13.10.1-alpine3.10
 
   variables:
-    PREVIEW_URL=https://$CI_PROJECT_NAME-$CI_COMMIT_REF_SLUG.$VERCEL_SCOPE.vercel.app
+    PREVIEW_URL: https://$CI_PROJECT_NAME-$CI_COMMIT_REF_SLUG.$VERCEL_SCOPE.vercel.app
 
   rules:
     - if: $CI_MERGE_REQUEST_IID
