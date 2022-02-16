@@ -18,14 +18,29 @@ test:
     - npm ci
     - npm run build
     - npm run test
+    - npm run coverage
   coverage: /All\sfiles.*?\s+(\d+.\d+)/
 
 deploy-staging:
   stage: deploy
   only:
     - staging
+  
+  environment:
+    name: staging
 
   script:
     - npm i -g vercel
-    - DEPLOYMENT_URL=$(vercel --name $CI_PROJECT_NAME --confirm -t $VERCEL_TOKEN)
-    - vercel -t $VERCEL_TOKEN
+    - DEPLOYMENT_URL=$(VERCEL_ORG_ID=$VERCEL_ORG_ID VERCEL_PROJECT_ID=$VERCEL_PROJECT_ID_STAGING vercel --confirm -t $VERCEL_TOKEN --prod)
+
+deploy-production:
+  stage: deploy
+  only:
+    - master
+  
+  environment:
+    name: production
+
+  script:
+    - npm i -g vercel
+    - DEPLOYMENT_URL=$(VERCEL_ORG_ID=$VERCEL_ORG_ID VERCEL_PROJECT_ID=$VERCEL_PROJECT_ID_PRODUCTION vercel --confirm -t $VERCEL_TOKEN --prod)
