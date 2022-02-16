@@ -14,6 +14,8 @@ test:
 
 deploy-staging:
   stage: deploy
+  only:
+    - staging
 
   variables:
     PREVIEW_URL: https://$CI_PROJECT_NAME-$CI_COMMIT_REF_SLUG.$VERCEL_SCOPE.vercel.app
