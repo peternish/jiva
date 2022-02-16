@@ -2,17 +2,23 @@ default:
   image: node:latest
 
 stages:
+  - lint
   - test
   - deploy
+
+lint:
+  stage: lint
+  script:
+    - npm ci
+    - npm run lint
 
 test:
   stage: test
   script:
-    - npm i
-    - npm i -g next
-    - next lint
-    - next build
-    - next test
+    - npm ci
+    - npm run build
+    - npm run test
+  coverage: /All\sfiles.*?\s+(\d+.\d+)/
 
 deploy-staging:
   stage: deploy
