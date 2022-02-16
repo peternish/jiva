@@ -1,6 +1,19 @@
+default:
+  image: node:latest
+
+stages:
+  - test
+  - deploy
+
+test:
+  stage: test
+  script:
+    - npm i -g next
+    - next lint
+    - next test
+
 deploy-staging:
   stage: deploy
-  image: node:13.10.1-alpine3.10
 
   variables:
     PREVIEW_URL: https://$CI_PROJECT_NAME-$CI_COMMIT_REF_SLUG.$VERCEL_SCOPE.vercel.app
