@@ -3,6 +3,7 @@ default:
 
 stages:
   - lint
+  - sonarscanner
   - test
   - deploy
 
@@ -24,7 +25,7 @@ SonarScanner:
   image:
     name: sonarsource/sonar-scanner-cli:4.6
     entrypoint: [""]
-  stage: test
+  stage: sonarscanner
   script:
     - sonar-scanner
       -Dsonar.host.url=https://sonarqube.cs.ui.ac.id/
