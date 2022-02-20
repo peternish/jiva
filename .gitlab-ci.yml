@@ -53,7 +53,9 @@ DeployStaging:
 
   script:
     - npm i -g vercel
-    - DEPLOYMENT_URL=$(VERCEL_ORG_ID=$VERCEL_ORG_ID VERCEL_PROJECT_ID=$VERCEL_PROJECT_ID_STAGING vercel --confirm -t $VERCEL_TOKEN --prod)
+    - VERCEL_ORG_ID=$VERCEL_ORG_ID \
+      VERCEL_PROJECT_ID=$VERCEL_PROJECT_ID_STAGING \
+      vercel --confirm -t $VERCEL_TOKEN --prod
 
 DeployProduction:
   stage: deploy
@@ -65,4 +67,6 @@ DeployProduction:
 
   script:
     - npm i -g vercel
-    - DEPLOYMENT_URL=$(VERCEL_ORG_ID=$VERCEL_ORG_ID VERCEL_PROJECT_ID=$VERCEL_PROJECT_ID_PRODUCTION vercel --confirm -t $VERCEL_TOKEN --prod)
+    - VERCEL_ORG_ID=$VERCEL_ORG_ID \
+      VERCEL_PROJECT_ID=$VERCEL_PROJECT_ID_PRODUCTION \
+      vercel --confirm -t $VERCEL_TOKEN --prod
