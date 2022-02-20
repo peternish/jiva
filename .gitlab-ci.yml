@@ -17,7 +17,7 @@ Lint:
 include:
   - template: Code-Quality.gitlab-ci.yml
 
-CodeQuality:
+code_quality:
   stage: codequality
   artifacts:
     paths: [gl-code-quality-report.json]
