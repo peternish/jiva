@@ -13,14 +13,6 @@ lint:
     - npm ci
     - npm run lint
 
-test:
-  stage: test
-  script:
-    - npm ci
-    - npm run build
-    - npm run test
-  coverage: /All\sfiles.*?\s+(\d+.\d+)/
-
 SonarScanner:
   image:
     name: sonarsource/sonar-scanner-cli:4.6
@@ -34,6 +26,14 @@ SonarScanner:
     - master
     - main
     - staging
+
+test:
+  stage: test
+  script:
+    - npm ci
+    - npm run build
+    - npm run test
+  coverage: /All\sfiles.*?\s+(\d+.\d+)/
 
 deploy-staging:
   stage: deploy
