@@ -18,6 +18,7 @@ SonarScanner:
     name: sonarsource/sonar-scanner-cli:4.6
     entrypoint: [""]
   stage: sonarscanner
+  allow_failure: true
   script:
     - sonar-scanner
       -Dsonar.host.url=https://sonarqube.cs.ui.ac.id/
