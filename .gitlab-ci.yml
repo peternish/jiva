@@ -13,7 +13,7 @@ lint:
     - npm ci
     - npm run lint
 
-SonarScanner:
+sonarscanner:
   image:
     name: sonarsource/sonar-scanner-cli:4.6
     entrypoint: [""]
