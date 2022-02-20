@@ -20,22 +20,6 @@ test:
     - npm run test
   coverage: /All\sfiles.*?\s+(\d+.\d+)/
 
-SonarScanner Dev:
-  image:
-    name: sonarsource/sonar-scanner-cli:4.6
-    entrypoint: [""]
-  stage: test
-  script:
-    - sonar-scanner
-      -Dsonar.host.url=https://sonarqube.cs.ui.ac.id/
-      -Dsonar.login=$SONARQUBE_TOKEN
-      -Dsonar.branch.name=$CI_COMMIT_REF_NAME
-      -Dsonar.branch.target=staging
-  except:
-    - master
-    - main
-    - staging
-
 SonarScanner:
   image:
     name: sonarsource/sonar-scanner-cli:4.6
@@ -45,7 +29,6 @@ SonarScanner:
     - sonar-scanner
       -Dsonar.host.url=https://sonarqube.cs.ui.ac.id/
       -Dsonar.login=$SONARQUBE_TOKEN
-      -Dsonar.branch.name=$CI_COMMIT_REF_NAME
   only:
     - master
     - main
