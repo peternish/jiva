@@ -7,13 +7,20 @@ stages:
   - test
   - deploy
 
-lint:
+Lint:
   stage: lint
   script:
     - npm ci
     - npm run lint
 
-sonarscanner:
+include:
+  - template: Code-Quality.gitlab-ci.yml
+
+code_quality:
+  artifacts:
+    paths: [gl-code-quality-report.json]
+
+SonarScanner:
   image:
     name: sonarsource/sonar-scanner-cli:4.6
     entrypoint: [""]
@@ -26,7 +33,7 @@ sonarscanner:
   only:
     - staging
 
-test:
+Test:
   stage: test
   script:
     - npm ci
@@ -34,7 +41,7 @@ test:
     - npm run test
   coverage: /All\sfiles.*?\s+(\d+.\d+)/
 
-deploy-staging:
+DeployStaging:
   stage: deploy
   only:
     - staging
@@ -46,7 +53,7 @@ deploy-staging:
     - npm i -g vercel
     - DEPLOYMENT_URL=$(VERCEL_ORG_ID=$VERCEL_ORG_ID VERCEL_PROJECT_ID=$VERCEL_PROJECT_ID_STAGING vercel --confirm -t $VERCEL_TOKEN --prod)
 
-deploy-production:
+DeployProduction:
   stage: deploy
   only:
     - master
