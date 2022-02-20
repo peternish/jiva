@@ -18,12 +18,13 @@ sonarscanner:
     name: sonarsource/sonar-scanner-cli:4.6
     entrypoint: [""]
   stage: sonarscanner
-  allow_failure: true
   script:
     - sonar-scanner
       -Dsonar.projectKey=$SONARQUBE_PROJECT_KEY
       -Dsonar.host.url=https://sonarqube.cs.ui.ac.id/
       -Dsonar.login=$SONARQUBE_TOKEN
+  only:
+    - staging
 
 test:
   stage: test
