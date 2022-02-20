@@ -3,7 +3,6 @@ default:
 
 stages:
   - lint
-  - codequality
   - sonarscanner
   - test
   - deploy
@@ -18,7 +17,6 @@ include:
   - template: Code-Quality.gitlab-ci.yml
 
 code_quality:
-  stage: codequality
   artifacts:
     paths: [gl-code-quality-report.json]
 
