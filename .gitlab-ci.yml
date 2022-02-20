@@ -24,8 +24,6 @@ sonarscanner:
       -Dsonar.projectKey=$SONARQUBE_PROJECT_KEY
       -Dsonar.host.url=https://sonarqube.cs.ui.ac.id/
       -Dsonar.login=$SONARQUBE_TOKEN
-  only:
-    - merge_requests
 
 test:
   stage: test
