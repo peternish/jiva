@@ -13,18 +13,19 @@ lint:
     - npm ci
     - npm run lint
 
-# sonarscanner:
-#   image:
-#     name: sonarsource/sonar-scanner-cli:4.6
-#     entrypoint: [""]
-#   stage: sonarscanner
-#   allow_failure: true
-#   script:
-#     - sonar-scanner
-#       -Dsonar.host.url=https://sonarqube.cs.ui.ac.id/
-#       -Dsonar.login=$SONARQUBE_TOKEN
-#   only:
-#     - merge_requests
+sonarscanner:
+  image:
+    name: sonarsource/sonar-scanner-cli:4.6
+    entrypoint: [""]
+  stage: sonarscanner
+  allow_failure: true
+  script:
+    - sonar-scanner
+      -Dsonar.projectKey=$SONARQUBE_PROJECT_KEY
+      -Dsonar.host.url=https://sonarqube.cs.ui.ac.id/
+      -Dsonar.login=$SONARQUBE_TOKEN
+  only:
+    - merge_requests
 
 test:
   stage: test
