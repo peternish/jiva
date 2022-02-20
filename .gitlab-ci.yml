@@ -1,6 +1,9 @@
 default:
   image: node:latest
 
+variables:
+  VERCEL_ORG_ID: $VERCEL_ORG_ID
+
 stages:
   - lint
   - codequality
@@ -50,12 +53,13 @@ DeployStaging:
   
   environment:
     name: staging
+  
+  variables:
+    VERCEL_PROJECT_ID: $VERCEL_PROJECT_ID_STAGING
 
   script:
     - npm i -g vercel
-    - VERCEL_ORG_ID=$VERCEL_ORG_ID \
-      VERCEL_PROJECT_ID=$VERCEL_PROJECT_ID_STAGING \
-      vercel --confirm -t $VERCEL_TOKEN --prod
+    - vercel --confirm -t $VERCEL_TOKEN --prod
 
 DeployProduction:
   stage: deploy
@@ -64,9 +68,10 @@ DeployProduction:
   
   environment:
     name: production
+  
+  variables:
+    VERCEL_PROJECT_ID: $VERCEL_PROJECT_ID_PRODUCTION
 
   script:
     - npm i -g vercel
-    - VERCEL_ORG_ID=$VERCEL_ORG_ID \
-      VERCEL_PROJECT_ID=$VERCEL_PROJECT_ID_PRODUCTION \
-      vercel --confirm -t $VERCEL_TOKEN --prod
+    - vercel --confirm -t $VERCEL_TOKEN --prod
