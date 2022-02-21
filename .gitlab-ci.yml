@@ -6,8 +6,6 @@ variables:
 
 stages:
   - lint
-  - codequality
-  - sonarscanner
   - test
   - deploy
 
@@ -17,26 +15,28 @@ Lint:
     - npm ci
     - npm run lint
 
-include:
-  - template: Code-Quality.gitlab-ci.yml
+# include:
+#   - template: Code-Quality.gitlab-ci.yml
 
-code_quality:
-  stage: codequality
-  artifacts:
-    paths: [gl-code-quality-report.json]
+# code_quality:
+#   stage: codequality
+#   artifacts:
+#     paths: [gl-code-quality-report.json]
 
 SonarScanner:
   image:
     name: sonarsource/sonar-scanner-cli:4.6
     entrypoint: [""]
-  stage: sonarscanner
+  stage: test
   script:
     - sonar-scanner
       -Dsonar.projectKey=$SONARQUBE_PROJECT_KEY
-      -Dsonar.host.url=https://sonarqube.cs.ui.ac.id/
+      -Dsonar.host.url=https://pmpl.cs.ui.ac.id/sonarqube
+      -Dsonar.branch.name=$CI_COMMIT_REF_NAME
       -Dsonar.login=$SONARQUBE_TOKEN
-  only:
-    - staging
+      -Dsonar.qualitygate.wait=true
+  rules:
+  - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "staging"'
 
 Test:
   stage: test
