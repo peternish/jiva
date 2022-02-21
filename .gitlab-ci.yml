@@ -1,0 +1,130 @@
+# =====
+# SETUP
+# =====
+
+# Global environment variable
+variables:
+  SECRET_KEY: super-secret-key
+  DATABASE_NAME: $DATABASE_NAME
+  DATABASE_USER: $DATABASE_USER
+  DATABASE_PASSWORD: $DATABASE_PASSWORD
+  DATABASE_HOST: $DATABASE_HOST
+  DATABASE_PORT: $DATABASE_PORT
+
+# Coverage artifact
+.coverage_artifacts: &coverage_artifacts
+  artifacts:
+    paths:
+      - .coverage*
+
+# Requirements artifact
+.requirement_artifacts: &requirement_artifacts
+  artifacts:
+    paths:
+      - requirements.txt
+
+# Default image
+default:
+  image: ubuntu:20.04
+  # This folder is cached between builds
+  # http://docs.gitlab.com/ee/ci/yaml/README.html#cache
+  cache:
+    paths:
+      - ~/.cache/pip/
+
+  before_script:
+    - apt -y update
+    - apt -y install apt-utils
+    - apt -y install net-tools python3.9 python3-pip
+    - apt -y upgrade
+    - pip3 install -r requirements.txt
+
+# ======
+# STAGES
+# ======
+
+stages:
+  # - .pre
+  - build
+  - test
+  - deploy
+
+# # Build requirements.txt from pyproject.toml
+# build_requirement:
+#   stage: .pre
+#   script:
+#     - curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python3 -
+#     - poetry show
+#     - poetry export -o requirements.txt
+
+# Build
+migrations:
+  stage: build
+  script:
+    - python3 manage.py makemigrations
+    - python3 manage.py migrate
+    - python3 manage.py check
+
+# Testing
+unit_testing:
+  <<: *coverage_artifacts
+  stage: test
+  needs: ['migrations']
+  script:
+    - coverage run --parallel --include="./*" --omit="manage.py,jiva_be/*"
+      manage.py test --exclude-tag=functional
+
+# Code quality Check
+include:
+  - template: Code-Quality.gitlab-ci.yml
+
+code_quality:
+  stage: test
+  artifacts:
+    paths: [gl-code-quality-report.json]
+
+sonar_scanner:
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "staging"'
+  image:
+    name: sonarsource/sonar-scanner-cli:4.6
+    entrypoint: [""]
+  stage: test
+  script:
+    - sonar-scanner
+      -Dsonar.projectKey=$SONARQUBE_PROJECT_KEY
+      -Dsonar.host.url=https://sonarqube.cs.ui.ac.id/
+      -Dsonar.login=$SONARQUBE_TOKEN
+
+# Staging
+staging:
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "staging"'
+  image: ruby:2.7
+  stage: deploy
+  before_script:
+    - gem install dpl
+    - wget -qO- https://cli-assets.heroku.com/install-ubuntu.sh | sh
+  script:
+    - dpl --provider=heroku --app=$HEROKU_STAGING_NAME --api-key=$HEROKU_STAGING_KEY --skip-cleanup
+    - heroku run --app $HEROKU_STAGING_NAME migrate
+  environment:
+    name: production
+    url: https://$HEROKU_STAGING_NAME.herokuapp.com
+
+# Deploy
+deployment:
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "master"'
+  image: ruby:2.7
+  stage: deploy
+  before_script:
+    - gem install dpl
+    - wget -qO- https://cli-assets.heroku.com/install-ubuntu.sh | sh
+  script:
+    - dpl --provider=heroku --app=$HEROKU_APP_NAME --api-key=$HEROKU_API_KEY --skip-cleanup
+    - heroku run --app $HEROKU_APP_NAME migrate
+  environment:
+    name: production
+    url: https://$HEROKU_APP_NAME.herokuapp.com
+ 
