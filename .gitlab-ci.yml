@@ -4,12 +4,19 @@ default:
 variables:
   VERCEL_ORG_ID: $VERCEL_ORG_ID
 
+.base_rules: &base_rules
+  only:
+    - merge_requests
+    - staging
+    - master
+
 stages:
   - lint
   - test
   - deploy
 
 Lint:
+  <<: *base_rules
   stage: lint
   script:
     - npm ci
@@ -28,10 +35,11 @@ SonarScanner:
       -Dsonar.branch.target=$CI_MERGE_REQUEST_TARGET_BRANCH_NAME
       -Dsonar.login=$SONARQUBE_TOKEN
       -Dsonar.qualitygate.wait=true
-  rules:
-  - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "staging"'
+  only:
+    - merge_requests
 
 Test:
+  <<: *base_rules
   stage: test
   script:
     - npm ci
