@@ -3,11 +3,6 @@
 import os
 import sys
 
-class MyClass:
-    while True:
-        return False #Noncompliant
-
-
 def main():
     """Run administrative tasks."""
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'jiva_be.settings')

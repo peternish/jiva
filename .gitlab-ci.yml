@@ -69,6 +69,9 @@ sonar_scanner:
   needs: []
   script:
     - sonar-scanner
+      -Dsonar.projectName=Jiva
+      -Dsonar.host.url=https://pmpl.cs.ui.ac.id/sonarqube/
+      -Dsonar.sourceEncoding=UTF-8
       -Dsonar.projectKey=$SONARQUBE_PROJECT_KEY
       -Dsonar.login=$SONARQUBE_TOKEN
       -Dsonar.branch.name=$CI_COMMIT_REF_NAME
