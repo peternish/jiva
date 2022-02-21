@@ -17,12 +17,6 @@ variables:
     paths:
       - .coverage*
 
-# Sonar artifact
-.sonar_artifacts: &sonar_artifacts
-  artifacts:
-    paths:
-      - .scannerwork/
-
 # Python machine update
 .py_machine_update: &py_machine_update
   before_script:
@@ -50,6 +44,7 @@ default:
 migrations:
   <<: *py_machine_update
   stage: build
+  needs: []
   script:
     - python3 manage.py makemigrations
     - python3 manage.py migrate
@@ -67,7 +62,6 @@ unit_testing:
 
 # Testing: SonarQube testing
 sonar_scanner:
-  <<: *sonar_artifacts
   stage: test
   image:
     name: sonarsource/sonar-scanner-cli:4.6
