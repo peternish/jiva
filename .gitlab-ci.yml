@@ -17,6 +17,13 @@ variables:
     paths:
       - .coverage*
 
+.py_machine_update: &py_machine_update
+  before_script:
+    - apt -y update
+    - DEBIAN_FRONTEND=noninteractive apt -y install apt-utils net-tools
+    - apt -y upgrade
+    - pip3 install -r requirements.txt
+
 # # Requirements artifact
 # .requirement_artifacts: &requirement_artifacts
 #   artifacts:
@@ -31,12 +38,6 @@ default:
   cache:
     paths:
       - ~/.cache/pip/
-
-  before_script:
-    - apt -y update
-    - DEBIAN_FRONTEND=noninteractive apt -y install apt-utils net-tools
-    - apt -y upgrade
-    - pip3 install -r requirements.txt
 
 # ======
 # STAGES
@@ -58,6 +59,7 @@ stages:
 
 # Build
 migrations:
+  <<: *py_machine_update
   stage: build
   script:
     - python3 manage.py makemigrations
@@ -66,6 +68,7 @@ migrations:
 
 # Testing
 unit_testing:
+  <<: *py_machine_update
   <<: *coverage_artifacts
   stage: test
   needs: ['migrations']
