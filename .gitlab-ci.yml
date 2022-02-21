@@ -25,7 +25,7 @@ variables:
     - apt -y upgrade
     - pip3 install -r requirements.txt
 
-# Applies on
+# Applies on MR
 .apply_on_mr: &apply_on_mr
   rules:
     - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "staging"'
@@ -54,17 +54,24 @@ migrations:
     - python3 manage.py makemigrations
     - python3 manage.py migrate
     - python3 manage.py check
+  only:
+    - merge_requests
+    - staging
+    - master
 
 # Testing: Unit testing
 unit_testing:
   <<: *py_machine_update
   <<: *coverage_artifacts
-  <<: *apply_on_mr
   stage: test
   needs: ['migrations']
   script:
     - coverage run --parallel --include="./*" --omit="manage.py,jiva_be/*"
       manage.py test --exclude-tag=functional
+  only:
+    - merge_requests
+    - staging
+    - master
 
 # Testing: SonarQube testing
 sonar_scanner:
