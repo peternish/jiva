@@ -35,7 +35,7 @@ default:
   before_script:
     - apt -y update
     - apt -y install apt-utils
-    - apt -y install net-tools python3.9 python3-pip
+    - DEBIAN_FRONTEND=noninteractive apt -y install net-tools python3.9 python3-pip
     - apt -y upgrade
     - pip3 install -r requirements.txt
 
