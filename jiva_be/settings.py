@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
+from distutils.log import debug
 from pathlib import Path
 from dotenv import load_dotenv
 from os import getenv
@@ -82,7 +83,13 @@ WSGI_APPLICATION = 'jiva_be.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-DATABASES = {
+DATABASES = { 
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+    
+} if DEBUG else {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': getenv("DATABASE_NAME"),
