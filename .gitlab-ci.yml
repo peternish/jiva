@@ -25,6 +25,11 @@ variables:
     - apt -y upgrade
     - pip3 install -r requirements.txt
 
+# Applies on
+.apply_on_mr: &apply_on_mr
+  rules:
+    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "staging"'
+
 
 # ======
 # STAGES
@@ -54,6 +59,7 @@ migrations:
 unit_testing:
   <<: *py_machine_update
   <<: *coverage_artifacts
+  <<: *apply_on_mr
   stage: test
   needs: ['migrations']
   script:
@@ -62,6 +68,7 @@ unit_testing:
 
 # Testing: SonarQube testing
 sonar_scanner:
+  <<: *apply_on_mr
   stage: test
   image:
     name: sonarsource/sonar-scanner-cli:4.6
@@ -77,8 +84,6 @@ sonar_scanner:
       -Dsonar.branch.name=$CI_COMMIT_REF_NAME
       -Dsonar.branch.target=$CI_MERGE_REQUEST_TARGET_BRANCH_NAME
       -Dsonar.qualitygate.wait=true
-  rules:
-    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "staging"'
 
 # Deploy: Staging
 staging:
