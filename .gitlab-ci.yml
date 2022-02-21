@@ -21,7 +21,7 @@ variables:
 .sonar_artifacts: &sonar_artifacts
   artifacts:
     paths:
-      - .sonar/
+      - .scannerwork/
 
 # Python machine update
 .py_machine_update: &py_machine_update
