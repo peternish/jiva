@@ -33,6 +33,7 @@ SonarScanner:
       -Dsonar.projectKey=$SONARQUBE_PROJECT_KEY
       -Dsonar.host.url=https://pmpl.cs.ui.ac.id/sonarqube
       -Dsonar.branch.name=$CI_COMMIT_REF_NAME
+      -Dsonar.branch.name=$CI_MERGE_REQUEST_TARGET_BRANCH_NAME
       -Dsonar.login=$SONARQUBE_TOKEN
       -Dsonar.qualitygate.wait=true
   rules:
