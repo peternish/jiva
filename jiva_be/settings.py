@@ -11,6 +11,9 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
+from os import getenv
+from dotenv import load_dotenv
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,12 +23,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-$2k@8(2bzd#stv_&^%i3tikfbkj+7jx4!md2abh+w4^qi77e#2'
+SECRET_KEY = getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1",
+    "jiva-backend-staging.herokuapp.com",
+    "jiva-backend.herokuapp.com"
+]
 
 
 # Application definition
@@ -75,8 +83,12 @@ WSGI_APPLICATION = 'jiva_be.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': getenv("DATABASE_NAME"),
+        'USER': getenv("DATABASE_USER"),
+        'PASSWORD': getenv("DATABASE_PASSWORD"),
+        'HOST': getenv("DATABASE_HOST"),
+        'PORT': getenv("DATABASE_PORT")
     }
 }
 
