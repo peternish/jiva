@@ -25,7 +25,7 @@ variables:
 
 # Default image
 default:
-  image: ubuntu:20.04
+  image: python:3.9.10-buster
   # This folder is cached between builds
   # http://docs.gitlab.com/ee/ci/yaml/README.html#cache
   cache:
@@ -34,8 +34,7 @@ default:
 
   before_script:
     - apt -y update
-    - apt -y install apt-utils
-    - DEBIAN_FRONTEND=noninteractive apt -y install net-tools python3.9 python3-pip
+    - DEBIAN_FRONTEND=noninteractive apt -y install apt-utils net-tools
     - apt -y upgrade
     - pip3 install -r requirements.txt
 
