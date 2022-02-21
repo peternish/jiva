@@ -68,7 +68,6 @@ unit_testing:
   script:
     - coverage run --parallel --include="./*" --omit="manage.py,jiva_be/*"
       manage.py test --exclude-tag=functional
-    - coverage report -m
   only:
     - merge_requests
     - staging
