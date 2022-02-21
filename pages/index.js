@@ -8,6 +8,12 @@ export default function Home() {
     return i + a;
     i++;             // Noncompliant; this is never executed
   }
+
+  function fun(a) {
+    var i = 10;
+    return i + a;
+    i++;             // Noncompliant; this is never executed
+  }
   return (
     <div className={styles.container}>
       <Head>
