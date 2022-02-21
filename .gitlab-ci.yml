@@ -85,7 +85,7 @@ sonar_scanner:
 staging:
   stage: deploy
   image: ruby:2.7
-  needs: ['code_quality', 'unit_testing', 'sonar_scanner']
+  needs: ['unit_testing']
   before_script:
     - gem install dpl
     - wget -qO- https://cli-assets.heroku.com/install-ubuntu.sh | sh
@@ -102,7 +102,7 @@ staging:
 deployment:
   image: ruby:2.7
   stage: deploy
-  needs: ['code_quality', 'unit_testing', 'sonar_scanner']
+  needs: ['unit_testing']
   before_script:
     - gem install dpl
     - wget -qO- https://cli-assets.heroku.com/install-ubuntu.sh | sh
