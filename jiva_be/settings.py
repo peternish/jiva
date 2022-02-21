@@ -135,3 +135,16 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# 
+class MyClass:
+    while True:
+        return False #Noncompliant
+
+class MyClass:
+    while True:
+        return False #Noncompliant
+
+class MyClass:
+    while True:
+        return False #Noncompliant

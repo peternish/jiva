@@ -19,3 +19,8 @@ from django.urls import path
 urlpatterns = [
     path('admin/', admin.site.urls),
 ]
+
+class MyClass:
+    while True:
+        return False #Noncompliant
+

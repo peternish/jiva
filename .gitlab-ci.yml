@@ -72,6 +72,8 @@ sonar_scanner:
       -Dsonar.projectKey=$SONARQUBE_PROJECT_KEY
       -Dsonar.login=$SONARQUBE_TOKEN
       -Dsonar.branch.name=$CI_COMMIT_REF_NAME
+      -Dsonar.branch.target=$CI_MERGE_REQUEST_TARGET_BRANCH_NAME
+      -Dsonar.qualitygate.wait=true
   rules:
     - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "staging"'
 

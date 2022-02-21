@@ -3,6 +3,10 @@
 import os
 import sys
 
+class MyClass:
+    while True:
+        return False #Noncompliant
+
 
 def main():
     """Run administrative tasks."""
