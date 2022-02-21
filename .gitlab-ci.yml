@@ -15,14 +15,6 @@ Lint:
     - npm ci
     - npm run lint
 
-# include:
-#   - template: Code-Quality.gitlab-ci.yml
-
-# code_quality:
-#   stage: codequality
-#   artifacts:
-#     paths: [gl-code-quality-report.json]
-
 SonarScanner:
   image:
     name: sonarsource/sonar-scanner-cli:4.6
@@ -33,7 +25,7 @@ SonarScanner:
       -Dsonar.projectKey=$SONARQUBE_PROJECT_KEY
       -Dsonar.host.url=https://pmpl.cs.ui.ac.id/sonarqube
       -Dsonar.branch.name=$CI_COMMIT_REF_NAME
-      -Dsonar.branch.name=$CI_MERGE_REQUEST_TARGET_BRANCH_NAME
+      -Dsonar.branch.target=$CI_MERGE_REQUEST_TARGET_BRANCH_NAME
       -Dsonar.login=$SONARQUBE_TOKEN
       -Dsonar.qualitygate.wait=true
   rules:
