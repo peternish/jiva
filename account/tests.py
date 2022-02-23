@@ -17,6 +17,7 @@ class UnitTest(TestCase):
       "full_name": "This is a full name"
     }
     request.POST = payload
+    request.method = "POST"
     response = views.register(request)
     self.assertEqual(response.data, Response(payload).data)
     self.assertEqual(response.status_code, 200)
@@ -28,5 +29,6 @@ class UnitTest(TestCase):
       "password": "password"
     }
     request.POST = payload
+    request.method = "POST"
     response = views.register(request)
     self.assertEqual(response.status_code, 400)
