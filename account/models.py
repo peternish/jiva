@@ -11,14 +11,6 @@ class AccountManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, full_name, password=None):
-        user = self.create_user(email, full_name, password)
-        user.is_staff = True
-        user.is_admin = True
-        user.is_superuser = True
-        user.save(using=self._db)
-        return user
-
 class Account(AbstractBaseUser):
     objects = AccountManager()
 
