@@ -2,16 +2,17 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
 class AccountManager(BaseUserManager):
-    def create_user(self, email, password=None):
+    def create_user(self, email, full_name, password=None):
         user = self.model(
-            email=email
+            email=email,
+            full_name=full_name
         )
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, password=None):
-        user = self.create_user(email, password)
+    def create_superuser(self, email, full_name, password=None):
+        user = self.create_user(email, full_name, password)
         user.is_staff = True
         user.is_admin = True
         user.is_superuser = True
