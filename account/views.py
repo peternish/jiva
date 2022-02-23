@@ -1,6 +1,5 @@
 # django imports
 from .serializers import AccountSerializer
-from .models import Account
 
 # rest imports
 from rest_framework import status
