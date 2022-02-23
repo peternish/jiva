@@ -7,8 +7,9 @@ from rest_framework.response import Response
 
 # other imports
 from . import views
+from . import models
 
-class UnitTest(TestCase):
+class ViewTest(TestCase):
   def setUp(self):
     self.factory = RequestFactory()
 
@@ -32,3 +33,14 @@ class UnitTest(TestCase):
     request = self.factory.post("/account/register", data=payload)
     response = views.register(request)
     self.assertEqual(response.status_code, 400)
+  
+class ModelTest(TestCase):
+  def test_create_account(self):
+    account = models.Account.objects.create_user(
+      email="email@email.com",
+      full_name="budi budiman",
+      password="password"
+    )
+    account.save()
+    self.assertEquals(Account.objects.filter(email="email@email.com".count()), 1)
+    self.assertEquals(str(account), "email@email.com")
