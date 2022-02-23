@@ -19,7 +19,8 @@ class UnitTest(TestCase):
     request.POST = payload
     request.method = "POST"
     response = views.register(request)
-    self.assertEqual(response.data, Response(payload).data)
+    self.assertEqual(response.data["email"], Response(payload).data["email"])
+    self.assertEqual(response.data["full_name"], Response(payload).data["full_name"])
     self.assertEqual(response.status_code, 200)
   
   def test_register_missing_field(self):
