@@ -42,5 +42,5 @@ class ModelTest(TestCase):
       password="password"
     )
     account.save()
-    self.assertEquals(Account.objects.filter(email="email@email.com".count()), 1)
+    self.assertEquals(models.Account.objects.filter(email="email@email.com").count(), 1)
     self.assertEquals(str(account), "email@email.com")
