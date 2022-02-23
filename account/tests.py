@@ -44,3 +44,14 @@ class ModelTest(TestCase):
     account.save()
     self.assertEquals(models.Account.objects.filter(email="email@email.com").count(), 1)
     self.assertEquals(str(account), "email@email.com")
+  
+  def test_create_superuser(self):
+    account = models.Account.objects.create_superuser(
+      email="email@email.com",
+      full_name="budi budiman",
+      password="password"
+    )
+    account.save()
+    self.assertTrue(account.is_superuser, True)
+    self.assertTrue(account.is_staff, True)
+    self.assertTrue(account.is_admin, True)
