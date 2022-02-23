@@ -36,12 +36,6 @@ class Account(AbstractBaseUser):
 
     USERNAME_FIELD = 'email'
 
-    def has_perm(self, perm, obj=None):
-        return self.is_staff
-
-    def has_module_perms(self, package_name):
-        return True
-
     def save(self, *args, **kwargs):
         super(Account, self).save(*args, **kwargs)
 
