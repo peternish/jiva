@@ -1,9 +1,12 @@
 # Django imports
 from django.test import TestCase
+from django.urls import reverse
 
 # Rest imports
 from rest_framework.response import Response
 from rest_framework.test import APIRequestFactory
+from rest_framework import status
+from rest_framework.test import APITestCase
 
 # other imports
 from . import views
@@ -56,3 +59,15 @@ class ModelTest(TestCase):
     self.assertTrue(account.is_superuser, True)
     self.assertTrue(account.is_staff, True)
     self.assertTrue(account.is_admin, True)
+
+class IntegrationTest(TestCase):
+  def test_create_account(self):
+    """
+    Ensure we can create a new account object.
+    """
+    url = reverse("account:register")
+    data = {"email": "test@email.com", "password": "123", "full_name": "Budi Budiman"}
+    response = self.client.post(url, data, format="json")
+    self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+    self.assertEqual(models.Account.objects.count(), 1)
+    self.assertEqual(models.Account.objects.get().email, "test@email.com")
