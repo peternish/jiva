@@ -31,6 +31,15 @@ class ProfileModelTest(TestCase):
         self.assertEqual(profile.account.pk, account.pk)
 
 
+class OwnerProfileModelTest(TestCase):
+    def test_ownerprofile_is_subclass_of_profile(self):
+        self.assertTrue(issubclass(OwnerProfile, Profile))
+
+    def test_ownerprofile_has_role_owner(self):
+        owner_profile = OwnerProfile()
+        self.assertEqual(owner_profile.role, 'owner')
+
+
 class KlinikModelTest(TestCase):
     def test_created_klinik_instace_of_Klinik_class(self):
         klinik = Klinik('Lalita')
