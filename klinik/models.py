@@ -6,3 +6,9 @@ class Profile(models.Model):
 
 
 class OwnerProfile(Profile):
+
+
+class Klinik(models.Model):
+
+
+class Cabang(models.Model):
