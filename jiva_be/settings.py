@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from distutils.log import debug
 from pathlib import Path
+from telnetlib import STATUS
 from dotenv import load_dotenv
 from os import getenv
 
@@ -44,7 +45,9 @@ APPS = [
     'account'
 ]
 
-MODULES = []
+MODULES = [
+    'rest_framework_simplejwt'
+]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -148,3 +151,13 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# rest settings
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
+
+# account settings
+AUTH_USER_MODEL = 'account.Account'
