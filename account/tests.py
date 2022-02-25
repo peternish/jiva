@@ -1,9 +1,9 @@
 # Django imports
 from django.test import TestCase
-from django.test.client import RequestFactory
 
 # Rest imports
 from rest_framework.response import Response
+from rest_framework.test import APIRequestFactory
 
 # other imports
 from . import views
@@ -11,7 +11,7 @@ from . import models
 
 class ViewTest(TestCase):
   def setUp(self):
-    self.factory = RequestFactory()
+    self.factory = APIRequestFactory()
 
   def test_register_success(self):
     payload = {
@@ -19,10 +19,11 @@ class ViewTest(TestCase):
       "password": "password",
       "full_name": "This is a full name"
     }
-    request = self.factory.post("/account/register", data=payload)
+    request = self.factory.post("/account/register", data=payload, format="json")
     response = views.register(request)
-    self.assertEqual(response.data["email"], Response(payload).data["email"])
-    self.assertEqual(response.data["full_name"], Response(payload).data["full_name"])
+    test_response = Response(payload)
+    self.assertEqual(response.data["email"], test_response.data["email"])
+    self.assertEqual(response.data["full_name"], test_response.data["full_name"])
     self.assertEqual(response.status_code, 201)
   
   def test_register_missing_field(self):
