@@ -10,11 +10,16 @@ from rest_framework.test import APITestCase
 
 # other imports
 from . import views
-from . import models
+from .models import Account
 
 class ViewTest(TestCase):
   def setUp(self):
     self.factory = APIRequestFactory()
+    self.user = Account.objects.create(
+      email="test@email.com", 
+      password="password", 
+      full_name="Budi Budiman"
+    )
 
   def test_register_success(self):
     payload = {
@@ -40,17 +45,17 @@ class ViewTest(TestCase):
   
 class ModelTest(TestCase):
   def test_create_account(self):
-    account = models.Account.objects.create_user(
+    account = Account.objects.create_user(
       email="email@email.com",
       full_name="budi budiman",
       password="password"
     )
     account.save()
-    self.assertEquals(models.Account.objects.filter(email="email@email.com").count(), 1)
+    self.assertEquals(Account.objects.filter(email="email@email.com").count(), 1)
     self.assertEquals(str(account), "email@email.com")
   
   def test_create_superuser(self):
-    account = models.Account.objects.create_superuser(
+    account = Account.objects.create_superuser(
       email="email@email.com",
       full_name="budi budiman",
       password="password"
@@ -69,5 +74,15 @@ class IntegrationTest(TestCase):
     data = {"email": "test@email.com", "password": "123", "full_name": "Budi Budiman"}
     response = self.client.post(url, data, format="json")
     self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-    self.assertEqual(models.Account.objects.count(), 1)
-    self.assertEqual(models.Account.objects.get().email, "test@email.com")
+    self.assertEqual(Account.objects.count(), 1)
+    self.assertEqual(Account.objects.get().email, "test@email.com")
+  
+  def test_login_200(self):
+    """
+    Ensure user is logged in.
+    """
+    url = reverse("account:login")
+    data = {"email": "test@email.com", "password": "password", "full_name": "Budi Budiman"}
+    response = self.client.post(url, data, format="json")
+    self.assertEqual(response.status_code, status.HTTP_200_OK)
+    self.assertTrue(self.user.is_authenticated)
