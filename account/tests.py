@@ -65,7 +65,7 @@ class ModelTest(TestCase):
     self.assertTrue(account.is_staff, True)
     self.assertTrue(account.is_admin, True)
 
-class IntegrationTest(TestCase):
+class IntegrationTest(TestCase):  
   def test_create_account(self):
     """
     Ensure we can create a new account object.
@@ -81,6 +81,12 @@ class IntegrationTest(TestCase):
     """
     Ensure user is logged in.
     """
+    Account.objects.create(
+      email="test@email.com", 
+      password="password", 
+      full_name="Budi Budiman"
+    )
+
     url = reverse("account:login")
     data = {"username": "test@email.com", "password": "password"}
     response = self.client.post(url, data, format="json")
