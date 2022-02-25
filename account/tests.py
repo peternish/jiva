@@ -91,3 +91,26 @@ class IntegrationTest(TestCase):
     data = {"email": "test@email.com", "password": "password"}
     response = self.client.post(url, data, format="json")
     self.assertEqual(response.status_code, status.HTTP_200_OK)
+  
+  def test_refresh_200(self):
+    """
+    Ensure refresh token works
+    """
+    Account.objects.create_user(
+      email="test@email.com", 
+      password="password", 
+      full_name="Budi Budiman"
+    )
+
+    login_response = self.client.post(reverse("account:login"), data={
+      "email": "test@email.com", 
+      "password": "password"
+    }, format="json")
+    
+    refresh_response = self.client.post(reverse("account:refresh"), data={
+      "refresh": login_response.data["refresh"]
+    }, format="json")
+
+    self.assertEquals(refresh_response.status_code, 200)
+    self.assertTrue("access" in refresh_response.data)
+
