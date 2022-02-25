@@ -82,7 +82,6 @@ class IntegrationTest(TestCase):
     Ensure user is logged in.
     """
     url = reverse("account:login")
-    data = {"email": "test@email.com", "password": "password", "full_name": "Budi Budiman"}
+    data = {"username": "test@email.com", "password": "password"}
     response = self.client.post(url, data, format="json")
     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    self.assertTrue(self.user.is_authenticated)
