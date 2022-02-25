@@ -2,7 +2,7 @@ from re import A
 from django.test import TestCase
 from unittest.mock import Mock
 
-from .models import Account, Klinik, Profile, OwnerProfile
+from .models import Account, Cabang, Klinik, Profile, OwnerProfile
 
 
 class ProfileModelTest(TestCase):
@@ -64,3 +64,29 @@ class KlinikModelTest(TestCase):
         klinik.owner = owner
 
         self.assertEqual(self.name, 'Lalita')
+
+
+class CabangModelTest(TestCase):
+    def test_created_cabang_instace_of_Cabang_class(self):
+        cabang = Cabang('alam sutra')
+        klinik = Mock(spec=Klinik)
+        klinik._state = Mock()
+        cabang.klinik = klinik
+
+        self.assertIsInstance(cabang, Cabang)
+
+    def test_created_cabang_belongs_to_klinik(self):
+        cabang = Cabang('alam sutra')
+        klinik = Mock(spec=Klinik)
+        klinik._state = Mock()
+        cabang.klinik = klinik
+
+        self.assertEqual(cabang.klinik.pk, klinik.pk)
+
+    def test_created_cabang_has_location(self):
+        cabang = Cabang('alam sutra')
+        klinik = Mock(spec=Klinik)
+        klinik._state = Mock()
+        cabang.klinik = klinik
+
+        self.assertEqual(cabang.location, 'alam sutra')
