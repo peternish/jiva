@@ -1,7 +1,34 @@
+from re import A
 from django.test import TestCase
 from unittest.mock import Mock
 
-from .models import Klinik, OwnerProfile
+from .models import Account, Klinik, Profile, OwnerProfile
+
+
+class ProfileModelTest(TestCase):
+    def test_profile_model_instace_of_Profile_class(self):
+        profile = Profile('terapis')
+        account = Mock(spec=Account)
+        account._state = Mock()
+        profile.account = account
+
+        self.assertIsInstance(profile, Profile)
+
+    def test_profile_model_has_role(self):
+        profile = Profile('terapis')
+        account = Mock(spec=Account)
+        account._state = Mock()
+        profile.account = account
+
+        self.assertEqual(profile.role, 'terapis')
+
+    def test_profile_model_has_Account(self):
+        profile = Profile('terapis')
+        account = Mock(spec=Account)
+        account._state = Mock()
+        profile.account = account
+
+        self.assertEqual(profile.account.pk, account.pk)
 
 
 class KlinikModelTest(TestCase):
