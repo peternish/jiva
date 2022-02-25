@@ -161,3 +161,5 @@ REST_FRAMEWORK = {
 
 # account settings
 AUTH_USER_MODEL = 'account.Account'
+
+APPEND_SLASH = False
