@@ -67,4 +67,17 @@ describe('Tenaga medis list table properties', () => {
     expect(nikColumn).toBeInTheDocument()
     expect(lihatColumn).toBeInTheDocument()
   })
+
+
+  it('should have all lihat value as link', () => {
+    render(<DashboardTenagaMedis />)
+
+    const lihatLinks = screen.getAllByRole('link', {
+      name: /Lihat/,
+    })
+
+    lihatLinks.forEach((lihatLink) => {
+      expect(lihatLink).toBeInTheDocument()
+    })
+  })
 })
