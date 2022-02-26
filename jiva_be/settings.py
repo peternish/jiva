@@ -40,10 +40,7 @@ ALLOWED_HOSTS = [
 
 # Application definition
 
-APPS = [
-    "klinik",
-    'account'
-]
+APPS = ["klinik", "account"]
 
 MODULES = [
     "rest_framework",
@@ -159,5 +156,15 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# rest settings
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    )
+}
+
+# account settings
+AUTH_USER_MODEL = "account.Account"
 
 APPEND_SLASH = False
