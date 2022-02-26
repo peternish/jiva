@@ -26,8 +26,8 @@ class OwnerProfileModelTest(TestCase):
         self.assertTrue(issubclass(OwnerProfile, Profile))
 
     def test_ownerprofile_has_role_owner(self):
-        owner_profile = OwnerProfile()
-        self.assertEqual(owner_profile.role, 'owner')
+        self.owner_profile = baker.make('klinik.OwnerProfile')
+        self.assertEqual(self.owner_profile.role, 'owner')
 
 
 class KlinikModelTest(TestCase):
