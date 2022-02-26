@@ -10,7 +10,7 @@ class Profile(models.Model):
     role = models.CharField(max_length=30, default='tenaga_medis')
     account = models.ForeignKey(
         Account,
-        on_delete=models.DO_NOTHING)
+        on_delete=models.CASCADE)
 
 
 class OwnerProfile(Profile):
