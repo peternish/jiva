@@ -67,7 +67,9 @@ unit_testing:
   needs: ['migrations']
   script:
     - coverage run --parallel --include="./*" --omit="manage.py,jiva_be/*"
-      manage.py test --exclude-tag=functional
+      manage.py test
+    - coverage report -m
+    - coverage xml -o 'coverage.xml'
   only:
     - merge_requests
     - staging
@@ -91,6 +93,7 @@ sonar_scanner:
       -Dsonar.branch.name=$CI_COMMIT_REF_NAME
       -Dsonar.branch.target=$CI_MERGE_REQUEST_TARGET_BRANCH_NAME
       -Dsonar.qualitygate.wait=true
+      -Dsonar.python.coverage.reportPaths=coverage.xml
 
 # Deploy: Staging
 staging:
