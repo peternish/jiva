@@ -12,19 +12,19 @@ from . import views
 from .models import Account
 import os
 
+TEST_USER_EMAIL = "test@email.com"
+TEST_USER_PASSWORD = os.getenv("SECRET_KEY")
+TEST_USER_FULL_NAME = "Budi Budiman"
+
 class ViewTest(TestCase):
     def setUp(self):
         self.factory = APIRequestFactory()
-        self.user = {}
-        self.user["email"] = "test@email.com"
-        self.user["password"] = os.getenv("SECRET_KEY")
-        self.user["full_name"] = "Budi Budiman"
 
     def test_register_success(self):
         payload = {
-            "email": self.user["email"],
-            "password": self.user["password"],
-            "full_name": self.user["full_name"],
+            "email": TEST_USER_EMAIL,
+            "password": TEST_USER_PASSWORD,
+            "full_name": TEST_USER_FULL_NAME,
         }
         request = self.factory.post("/account/register", data=payload, format="json")
         response = views.register(request)
@@ -34,30 +34,24 @@ class ViewTest(TestCase):
         self.assertEqual(response.status_code, 201)
 
     def test_register_missing_field(self):
-        payload = {"email": self.user["email"], "password": self.user["password"]}
+        payload = {"email": TEST_USER_EMAIL, "password": TEST_USER_PASSWORD}
         request = self.factory.post("/account/register", data=payload)
         response = views.register(request)
         self.assertEqual(response.status_code, 400)
 
 
 class ModelTest(TestCase):
-    def setUp(self):
-        self.user = {}
-        self.user["email"] = "test@email.com"
-        self.user["password"] = os.getenv("SECRET_KEY")
-        self.user["full_name"] = "Budi Budiman"
-
     def test_create_account(self):
         account = Account.objects.create_user(
-            email=self.user["email"], full_name=self.user["full_name"], password=self.user["password"]
+            email=TEST_USER_EMAIL, full_name=TEST_USER_FULL_NAME, password=TEST_USER_PASSWORD
         )
         account.save()
-        self.assertEquals(Account.objects.filter(email=self.user["email"]).count(), 1)
-        self.assertEquals(str(account), self.user["email"])
+        self.assertEquals(Account.objects.filter(email=TEST_USER_EMAIL).count(), 1)
+        self.assertEquals(str(account), TEST_USER_EMAIL)
 
     def test_create_superuser(self):
         account = Account.objects.create_superuser(
-            email=self.user["email"], full_name=self.user["full_name"], password=self.user["password"]
+            email=TEST_USER_EMAIL, full_name=TEST_USER_FULL_NAME, password=TEST_USER_PASSWORD
         )
         account.save()
         self.assertTrue(account.is_superuser, True)
@@ -66,37 +60,31 @@ class ModelTest(TestCase):
 
 
 class IntegrationTest(TestCase):
-    def setUp(self):
-        self.user = {}
-        self.user["email"] = "test@email.com"
-        self.user["password"] = os.getenv("SECRET_KEY")
-        self.user["full_name"] = "Budi Budiman"
-
     def test_create_account(self):
         """
         Ensure we can create a new account object.
         """
         url = reverse("account:register")
         data = {
-            "email": self.user["email"],
-            "password": self.user["password"],
-            "full_name": self.user["full_name"],
+            "email": TEST_USER_EMAIL,
+            "password": TEST_USER_PASSWORD,
+            "full_name": TEST_USER_FULL_NAME,
         }
         response = self.client.post(url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Account.objects.count(), 1)
-        self.assertEqual(Account.objects.get().email, self.user["email"])
+        self.assertEqual(Account.objects.get().email, TEST_USER_EMAIL)
 
     def test_login_200(self):
         """
         Ensure user is logged in.
         """
         Account.objects.create_user(
-            email=self.user["email"], password=self.user["password"], full_name=self.user["full_name"]
+            email=TEST_USER_EMAIL, password=TEST_USER_PASSWORD, full_name=TEST_USER_FULL_NAME
         )
 
         url = reverse("account:login")
-        data = {"email": self.user["email"], "password": self.user["password"]}
+        data = {"email": TEST_USER_EMAIL, "password": TEST_USER_PASSWORD}
         response = self.client.post(url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
@@ -105,12 +93,12 @@ class IntegrationTest(TestCase):
         Ensure refresh token works
         """
         Account.objects.create_user(
-            email=self.user["email"], password=self.user["password"], full_name=self.user["full_name"]
+            email=TEST_USER_EMAIL, password=TEST_USER_PASSWORD, full_name=TEST_USER_FULL_NAME
         )
 
         login_response = self.client.post(
             reverse("account:login"),
-            data={"email": self.user["email"], "password": self.user["password"]},
+            data={"email": TEST_USER_EMAIL, "password": TEST_USER_PASSWORD},
             format="json",
         )
 
