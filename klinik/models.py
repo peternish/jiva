@@ -1,3 +1,4 @@
+from tkinter import CASCADE
 from django.db import models
 
 
@@ -19,7 +20,10 @@ class OwnerProfile(Profile):
 
 
 class Klinik(models.Model):
-    pass
+    name = models.CharField(max_length=100)
+    owner = models.ForeignKey(
+        OwnerProfile,
+        on_delete=models.CASCADE)
 
 
 class Cabang(models.Model):
