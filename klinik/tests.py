@@ -31,29 +31,21 @@ class OwnerProfileModelTest(TestCase):
 
 
 class KlinikModelTest(TestCase):
-    def test_created_klinik_instace_of_Klinik_class(self):
-        klinik = Klinik('Lalita')
-        owner = Mock(spec=OwnerProfile)
-        owner._state = Mock()
-        klinik.owner = owner
+    def setUp(self) -> None:
+        self.klinik = baker.make(
+            'klinik.Klinik',
+            name='Lalita'
+        )
+        return super().setUp()
 
-        self.assertIsInstance(klinik, Klinik)
+    def test_created_klinik_instace_of_Klinik_class(self):
+        self.assertIsInstance(self.klinik, Klinik)
 
     def test_created_klinik_has_owner(self):
-        klinik = Klinik('Lalita')
-        owner = Mock(spec=OwnerProfile)
-        owner._state = Mock()
-        klinik.owner = owner
-
-        self.assertEqual(klinik.owner.pk, owner.pk)
+        self.assertIsNotNone(self.klinik.owner.pk)
 
     def test_created_klinik_has_name(self):
-        klinik = Klinik('Lalita')
-        owner = Mock(spec=OwnerProfile)
-        owner._state = Mock()
-        klinik.owner = owner
-
-        self.assertEqual(self.name, 'Lalita')
+        self.assertEqual(self.klinik.name, 'Lalita')
 
 
 class CabangModelTest(TestCase):
