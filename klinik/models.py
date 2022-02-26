@@ -1,9 +1,5 @@
-from tkinter import CASCADE
 from django.db import models
-
-
-class Account(models.Model):
-    pass
+from account.models import Account
 
 
 class Profile(models.Model):
