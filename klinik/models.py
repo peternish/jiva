@@ -27,4 +27,7 @@ class Klinik(models.Model):
 
 
 class Cabang(models.Model):
-    pass
+    location = models.CharField(max_length=300)
+    klinik = models.ForeignKey(
+        Klinik,
+        on_delete=models.CASCADE)
