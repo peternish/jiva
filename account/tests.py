@@ -6,19 +6,18 @@ from django.urls import reverse
 from rest_framework.response import Response
 from rest_framework.test import APIRequestFactory
 from rest_framework import status
-from rest_framework.test import APITestCase
 
 # other imports
 from . import views
 from .models import Account
-
+import os
 
 class ViewTest(TestCase):
     def setUp(self):
         self.factory = APIRequestFactory()
         self.user = {}
         self.user["email"] = "test@email.com"
-        self.user["password"] = "fe767870-bba8-4d6d-8b5a-61ed9036ee48"
+        self.user["password"] = os.getenv("SECRET_KEY")
         self.user["full_name"] = "Budi Budiman"
 
     def test_register_success(self):
@@ -45,7 +44,7 @@ class ModelTest(TestCase):
     def setUp(self):
         self.user = {}
         self.user["email"] = "test@email.com"
-        self.user["password"] = "fe767870-bba8-4d6d-8b5a-61ed9036ee48"
+        self.user["password"] = os.getenv("SECRET_KEY")
         self.user["full_name"] = "Budi Budiman"
 
     def test_create_account(self):
@@ -70,7 +69,7 @@ class IntegrationTest(TestCase):
     def setUp(self):
         self.user = {}
         self.user["email"] = "test@email.com"
-        self.user["password"] = "fe767870-bba8-4d6d-8b5a-61ed9036ee48"
+        self.user["password"] = os.getenv("SECRET_KEY")
         self.user["full_name"] = "Budi Budiman"
 
     def test_create_account(self):
