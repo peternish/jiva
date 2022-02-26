@@ -6,7 +6,10 @@ class Account(models.Model):
 
 
 class Profile(models.Model):
-    pass
+    role = models.CharField(max_length=30, default='tenaga_medis')
+    account = models.ForeignKey(
+        Account,
+        on_delete=models.DO_NOTHING)
 
 
 class OwnerProfile(Profile):
