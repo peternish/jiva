@@ -1,7 +1,26 @@
 .nav {
+    display: flex;
+    justify-content: space-between;
     width: 100%;
-    padding: 1em 2em;
+    padding: 0.9em 9vw;
     background: #0052D0;
-    position: absolute;
+    position: fixed;
     top: 0;
 }
+
+.navBrand {
+    color: #FFFFFF;
+    font-weight: 700;
+    font-size: 1.3em;
+    letter-spacing: 0.5px;
+}
+
+.navLinks {
+    display: flex;
+    column-gap: 1.1em;
+    color: #FFFFFF;
+    font-weight: 500;
+    font-size: 1.1em;
+    letter-spacing: 0.5px;
+}
+
