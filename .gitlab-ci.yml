@@ -15,7 +15,7 @@ variables:
 .coverage_artifacts: &coverage_artifacts
   artifacts:
     paths:
-      - .coverage*
+      - coverage.xml
 
 # Migrations artifact
 .migration_artifacts: &migration_artifacts
@@ -75,7 +75,7 @@ unit_testing:
   script:
     - coverage run --omit="manage.py,jiva_be/*" manage.py test
     - coverage report -m
-    - coverage xml -o 'coverage.xml'
+    - coverage xml
   only:
     - merge_requests
     - staging
