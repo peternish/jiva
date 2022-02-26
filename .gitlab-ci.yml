@@ -73,8 +73,7 @@ unit_testing:
   stage: test
   needs: ['migrations']
   script:
-    - coverage run --parallel --include="./*" --omit="manage.py,jiva_be/*"
-      manage.py test
+    - coverage run --omit="manage.py,jiva_be/*" manage.py test
     - coverage report -m
     - coverage xml -o 'coverage.xml'
   only:
