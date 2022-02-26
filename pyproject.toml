@@ -14,6 +14,8 @@ python-dotenv = "^0.19.2"
 psycopg2 = "^2.9.3"
 gunicorn = "^20.1.0"
 djangorestframework-simplejwt = "^5.0.0"
+pylint-django = "^2.5.2"
+model-bakery = "^1.4.0"
 
 [tool.poetry.dev-dependencies]
 black = "^22.1.0"

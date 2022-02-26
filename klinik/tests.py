@@ -1,34 +1,24 @@
-from re import A
 from django.test import TestCase
+from model_bakery import baker
 from unittest.mock import Mock
 
 from .models import Account, Cabang, Klinik, Profile, OwnerProfile
 
 
 class ProfileModelTest(TestCase):
-    def test_profile_model_instace_of_Profile_class(self):
-        profile = Profile('terapis')
-        account = Mock(spec=Account)
-        account._state = Mock()
-        profile.account = account
 
-        self.assertIsInstance(profile, Profile)
+    def setUp(self) -> None:
+        self.profile = baker.make('klinik.Profile')
+        return super().setUp()
+
+    def test_profile_model_instace_of_Profile_class(self):
+        self.assertIsInstance(self.profile, Profile)
 
     def test_profile_model_has_role(self):
-        profile = Profile('terapis')
-        account = Mock(spec=Account)
-        account._state = Mock()
-        profile.account = account
-
-        self.assertEqual(profile.role, 'terapis')
+        self.assertEqual(self.profile.role, 'tenaga_medis')
 
     def test_profile_model_has_Account(self):
-        profile = Profile('terapis')
-        account = Mock(spec=Account)
-        account._state = Mock()
-        profile.account = account
-
-        self.assertEqual(profile.account.pk, account.pk)
+        self.assertIsNotNone(self.profile.account.pk)
 
 
 class OwnerProfileModelTest(TestCase):
