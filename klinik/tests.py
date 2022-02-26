@@ -49,26 +49,18 @@ class KlinikModelTest(TestCase):
 
 
 class CabangModelTest(TestCase):
-    def test_created_cabang_instace_of_Cabang_class(self):
-        cabang = Cabang('alam sutra')
-        klinik = Mock(spec=Klinik)
-        klinik._state = Mock()
-        cabang.klinik = klinik
+    def setUp(self) -> None:
+        self.cabang = baker.make(
+            'klinik.Cabang',
+            location='alam sutra'
+        )
+        return super().setUp()
 
-        self.assertIsInstance(cabang, Cabang)
+    def test_created_cabang_instace_of_Cabang_class(self):
+        self.assertIsInstance(self.cabang, Cabang)
 
     def test_created_cabang_belongs_to_klinik(self):
-        cabang = Cabang('alam sutra')
-        klinik = Mock(spec=Klinik)
-        klinik._state = Mock()
-        cabang.klinik = klinik
-
-        self.assertEqual(cabang.klinik.pk, klinik.pk)
+        self.assertIsNotNone(self.cabang.klinik.pk)
 
     def test_created_cabang_has_location(self):
-        cabang = Cabang('alam sutra')
-        klinik = Mock(spec=Klinik)
-        klinik._state = Mock()
-        cabang.klinik = klinik
-
-        self.assertEqual(cabang.location, 'alam sutra')
+        self.assertEqual(self.cabang.location, 'alam sutra')
