@@ -4,10 +4,18 @@ import Navbar from 'components/Navbar'
 
 describe('Navbar', () => {
   it('renders a navbar', () => {
-    render(<Navbar />)
+    render(<Navbar/>)
 
     const nav = screen.getByRole('navigation')
 
     expect(nav).toBeInTheDocument()
+  })
+
+  it('renders navigation links', () => {
+    render(<Navbar/>)
+
+    const link = screen.getByRole('link')
+
+    expect(link).toBeInTheDocument()
   })
 })
