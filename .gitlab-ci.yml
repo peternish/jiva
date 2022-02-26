@@ -17,6 +17,12 @@ variables:
     paths:
       - .coverage*
 
+# Migrations artifact
+.migration_artifacts: &migration_artifacts
+  artifacts:
+    paths:
+      - '*/migrations*'
+
 # Python machine update
 .py_machine_update: &py_machine_update
   before_script:
@@ -48,6 +54,7 @@ default:
 # Build: Django migration
 migrations:
   <<: *py_machine_update
+  <<: *migration_artifacts
   stage: build
   needs: []
   script:
