@@ -21,6 +21,7 @@ djangorestframework-simplejwt = "^5.0.0"
 [tool.poetry.dev-dependencies]
 black = "^22.1.0"
 pylint = "^2.12.2"
+pylint-django = "^2.5.2"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
