@@ -1,10 +1,10 @@
 import { render, screen } from '@testing-library/react'
-import DashboardTenagaMedis from 'pages/tenaga-medis/index'
+import Landing from 'pages/landing-page'
 import '@testing-library/jest-dom'
 
 describe('Landing Page', () => {
-    it('renders the page', () => {
-        render(<LandingPage/>)
+    it('should render', () => {
+        render(<Landing/>)
 
         const main = screen.getByRole('main')
 
