@@ -5,13 +5,14 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Link from '@mui/material/Link';
+import styles from '@styles/Table.module.css'
 
 function TenagaMedisTable() {
   return (
-    <TableContainer>
+    <TableContainer className={styles.container}>
       <Table>
         <TableHead>
-          <TableRow>
+          <TableRow className={styles.header}>
             <TableCell>Nama</TableCell>
             <TableCell>Tempat/Tanggal Lahir</TableCell>
             <TableCell>NIK</TableCell>
@@ -20,25 +21,25 @@ function TenagaMedisTable() {
         </TableHead>
 
         <TableBody>
-          <TableRow>
+          <TableRow className={styles.row}>
             <TableCell>Budi Budiman</TableCell>
             <TableCell>Jakarta, 2 Januari 2001</TableCell>
             <TableCell>081234567890</TableCell>
-            <TableCell><Link href="#">Lihat</Link></TableCell>
+            <TableCell><Link href="#" underline="none" className={styles.link}>Lihat</Link></TableCell>
           </TableRow>
 
-          <TableRow>
+          <TableRow className={styles.row}>
             <TableCell>Budi Budiman</TableCell>
             <TableCell>Jakarta, 2 Januari 2001</TableCell>
             <TableCell>081234567890</TableCell>
-            <TableCell><Link href="#">Lihat</Link></TableCell>
+            <TableCell><Link href="#" underline="none" className={styles.link}>Lihat</Link></TableCell>
           </TableRow>
 
-          <TableRow>
+          <TableRow className={styles.row}>
             <TableCell>Budi Budiman</TableCell>
             <TableCell>Jakarta, 2 Januari 2001</TableCell>
             <TableCell>081234567890</TableCell>
-            <TableCell><Link href="#">Lihat</Link></TableCell>
+            <TableCell><Link href="#" underline="none" className={styles.link}>Lihat</Link></TableCell>
           </TableRow>
         </TableBody>
       </Table>
