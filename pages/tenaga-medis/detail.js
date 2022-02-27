@@ -1,5 +1,7 @@
+import DetailTenagaMedisPage from 'components/pages/tenaga-medis/DetailTenagaMedisPage'
+
 function DetailTenagaMedis() {
-  return null
+  return <DetailTenagaMedisPage />
 }
 
 export default DetailTenagaMedis
