@@ -25,21 +25,21 @@ function TenagaMedisTable() {
             <TableCell>Budi Budiman</TableCell>
             <TableCell>Jakarta, 2 Januari 2001</TableCell>
             <TableCell>081234567890</TableCell>
-            <TableCell><Link href="#" underline="none" className={styles.link}>Lihat</Link></TableCell>
+            <TableCell><Link href="/tenaga-medis/detail" underline="none" className={styles.link}>Lihat</Link></TableCell>
           </TableRow>
 
           <TableRow className={styles.row}>
             <TableCell>Budi Budiman</TableCell>
             <TableCell>Jakarta, 2 Januari 2001</TableCell>
             <TableCell>081234567890</TableCell>
-            <TableCell><Link href="#" underline="none" className={styles.link}>Lihat</Link></TableCell>
+            <TableCell><Link href="/tenaga-medis/detail" underline="none" className={styles.link}>Lihat</Link></TableCell>
           </TableRow>
 
           <TableRow className={styles.row}>
             <TableCell>Budi Budiman</TableCell>
             <TableCell>Jakarta, 2 Januari 2001</TableCell>
             <TableCell>081234567890</TableCell>
-            <TableCell><Link href="#" underline="none" className={styles.link}>Lihat</Link></TableCell>
+            <TableCell><Link href="/tenaga-medis/detail" underline="none" className={styles.link}>Lihat</Link></TableCell>
           </TableRow>
         </TableBody>
       </Table>
