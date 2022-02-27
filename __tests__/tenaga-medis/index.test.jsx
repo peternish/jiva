@@ -69,7 +69,7 @@ describe('Tenaga medis list table properties', () => {
   })
 
 
-  it('should have all lihat value as link', () => {
+  it('should have all lihat value as link pointing to detail page', () => {
     render(<DashboardTenagaMedis />)
 
     const lihatLinks = screen.getAllByRole('link', {
@@ -78,6 +78,7 @@ describe('Tenaga medis list table properties', () => {
 
     lihatLinks.forEach((lihatLink) => {
       expect(lihatLink).toBeInTheDocument()
+      expect(lihatLink).toHaveAttribute('href', '/tenaga-medis/detail')
     })
   })
 })
