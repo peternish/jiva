@@ -5,10 +5,29 @@ import styled from "styled-components"
 // component imports
 import { Formik, Field, Form } from "formik"
 import Button from "@mui/material/Button"
+import TextInput from "components/common/TextInput"
 
 const TambahForm = () => {
   return (
     <>
+      <TextInput
+        name="email"
+        type="email"
+        label="Email"
+        placeholder="jiva@goog.com"
+      />
+      <TextInput
+        name="password"
+        type="password"
+        label="Password"
+        placeholder="password"
+      />
+      <TextInput
+        name="input_value"
+        type="text"
+        label="Input Value"
+        placeholder="Input Value"
+      />
     </>
   );
 };
