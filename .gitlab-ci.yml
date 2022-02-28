@@ -36,6 +36,7 @@ SonarScanner:
     name: sonarsource/sonar-scanner-cli:4.6
     entrypoint: [""]
   stage: test
+  needs: ['Test']
   script:
     - sonar-scanner
       -Dsonar.projectKey=$SONARQUBE_PROJECT_KEY
