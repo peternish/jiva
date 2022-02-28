@@ -32,7 +32,7 @@ Test:
   coverage: /All\sfiles.*?\s+(\d+.\d+)/
   artifacts:
     paths:
-      - coverage/lcov.info
+      - coverage/
 
 SonarScanner:
   image:
@@ -48,7 +48,7 @@ SonarScanner:
       -Dsonar.branch.target=$CI_MERGE_REQUEST_TARGET_BRANCH_NAME
       -Dsonar.login=$SONARQUBE_TOKEN
       -Dsonar.qualitygate.wait=true
-      -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
+      -Dsonar.javascript.lcov.reportPaths=coverage/*
       -Dsonar.coverage.exclusions=**/.scannerwork/**,**/api/**,**/public/**,**/redux/**,**/styles/**,**/utils/**
   rules:
     - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "staging"'
