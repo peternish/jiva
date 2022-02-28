@@ -30,6 +30,9 @@ Test:
     - npm run build
     - npm run test
   coverage: /All\sfiles.*?\s+(\d+.\d+)/
+  artifacts:
+    paths:
+      - coverage/lcov.info
 
 SonarScanner:
   image:
