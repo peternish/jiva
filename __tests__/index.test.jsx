@@ -1,21 +1,15 @@
 import { render, screen } from '@testing-library/react'
+import Home from '../pages/index'
 import '@testing-library/jest-dom'
-import Navbar from 'components/Navbar'
 
-describe('Navbar', () => {
-  it('renders a navbar', () => {
-    render(<Navbar/>)
+describe('Home', () => {
+  it('renders a heading', () => {
+    render(<Home />)
 
-    const nav = screen.getByRole('navigation')
+    const heading = screen.getByRole('heading', {
+      name: /welcome to next\.js!/i,
+    })
 
-    expect(nav).toBeInTheDocument()
-  })
-
-  it('renders navigation links', () => {
-    render(<Navbar/>)
-
-    const links = screen.getAllByRole('link')
-
-    expect(links).toHaveLength(3)
+    expect(heading).toBeInTheDocument()
   })
 })
