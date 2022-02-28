@@ -22,6 +22,15 @@ Lint:
     - npm ci
     - npm run lint
 
+Test:
+  <<: *base_rules
+  stage: test
+  script:
+    - npm ci
+    - npm run build
+    - npm run test
+  coverage: /All\sfiles.*?\s+(\d+.\d+)/
+
 SonarScanner:
   image:
     name: sonarsource/sonar-scanner-cli:4.6
@@ -35,17 +44,9 @@ SonarScanner:
       -Dsonar.branch.target=$CI_MERGE_REQUEST_TARGET_BRANCH_NAME
       -Dsonar.login=$SONARQUBE_TOKEN
       -Dsonar.qualitygate.wait=true
+      -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
   only:
     - merge_requests
-
-Test:
-  <<: *base_rules
-  stage: test
-  script:
-    - npm ci
-    - npm run build
-    - npm run test
-  coverage: /All\sfiles.*?\s+(\d+.\d+)/
 
 DeployStaging:
   stage: deploy
