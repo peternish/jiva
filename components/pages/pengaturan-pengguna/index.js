@@ -11,6 +11,7 @@ import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
+import Link from '@mui/material/Link'
 
 const PengaturanPenggunaTable = () => {
   return (
@@ -66,11 +67,11 @@ const Dashboard = () => {
 
         <PengaturanPenggunaTable />
 
-        <a href="/pengaturan-pengguna/tambah">
+        <Link href="/pengaturan-pengguna/tambah">
           <Button variant="contained" >
             Tambah Pengguna
           </Button>
-        </a>
+        </Link>
         </main>
   );
 };
