@@ -36,7 +36,7 @@ const Tambah = () => {
 
   return (
     <main>
-    <h1>Pengaturan Pengguna</h1>
+    <h1>Tambah Pengguna</h1>
     <Formik
       initialValues={{
         email: "",
@@ -47,7 +47,7 @@ const Tambah = () => {
       onSubmit={(values, { setSubmitting }) => {}}
     >
       {() => (
-        <Form className="form">
+        <Form className="form" role="form">
           <TambahForm />
         </Form>
       )}
