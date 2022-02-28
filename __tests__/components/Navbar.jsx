@@ -15,7 +15,7 @@ describe('Navbar', () => {
     render(<Navbar/>)
 
     const links = screen.getAllByRole('link')
-    
+
     expect(links).toHaveLength(3)
   })
 })
