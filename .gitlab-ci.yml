@@ -100,6 +100,7 @@ sonar_scanner:
       -Dsonar.branch.target=$CI_MERGE_REQUEST_TARGET_BRANCH_NAME
       -Dsonar.qualitygate.wait=true
       -Dsonar.python.coverage.reportPaths=coverage.xml
+      -Dsonar.coverage.exclusions=**/*manage.py,**/*asgi.py,**/*wsgi.py,**/*settings.py
 
 # Deploy: Staging
 staging:
