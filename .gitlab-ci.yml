@@ -46,8 +46,9 @@ SonarScanner:
       -Dsonar.login=$SONARQUBE_TOKEN
       -Dsonar.qualitygate.wait=true
       -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
-  only:
-    - merge_requests
+      -Dsonar.coverage.exclusions=**/.scannerwork/**,**/api/**,**/public/**,**/redux/**,**/styles/**,**/utils/**
+  rules:
+    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "staging"'
 
 DeployStaging:
   stage: deploy
