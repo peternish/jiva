@@ -14,8 +14,8 @@ describe('Navbar', () => {
   it('renders navigation links', () => {
     render(<Navbar/>)
 
-    const link = screen.getByRole('link')
-
-    expect(link).toBeInTheDocument()
+    const links = screen.getAllByRole('link')
+    
+    expect(links).toHaveLength(3)
   })
 })
