@@ -1,10 +1,14 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import Register from "@pages/register";
 import "@testing-library/jest-dom";
+import { Provider } from "react-redux"
+import { store } from "@redux/store"
+
+// components
+import Register from "@pages/register";
 
 describe("<Register/>", () => {
   beforeEach(() => {
-    render(<Register/>)
+    render(<Provider store={store}><Register/></Provider>)
   })
 
   describe("Renders first page correctly", () => {
@@ -39,7 +43,7 @@ describe("<Register/>", () => {
   
       // Labels
       expect(screen.getByLabelText("Nama Klinik")).toBeInTheDocument();
-      expect(screen.getByLabelText("Surat Izin Klinik")).toBeInTheDocument();
+      expect(screen.getByText("Surat Izin Klinik")).toBeInTheDocument();
   
       // Input
       expect(screen.getByPlaceholderText("Jiva")).toBeInTheDocument();
