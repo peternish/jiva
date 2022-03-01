@@ -115,36 +115,36 @@ const ClinicForm = () => {
   );
 };
 
-const pageDetails = [
-  {
-    title: "Daftar Pemilik Klinik",
-    formComponent: <CredentialsForm />,
-    cta1: {
-      label: "Batal",
-      onClick: () => history.back(),
-    },
-    cta2: {
-      label: "Lanjut",
-      onClick: () => setPageNum(pageNum + 1),
-    },
-  },
-  {
-    title: "Daftar Klinik",
-    formComponent: <ClinicForm />,
-    cta1: {
-      label: "Kembali",
-      onClick: () => setPageNum(pageNum - 1),
-    },
-    cta2: {
-      label: "Daftar",
-      type: "submit",
-    },
-  },
-];
-
 const Register = () => {
   const [pageNum, setPageNum] = useState(0);
   const [sikFile, setSikFile] = useState(null);
+
+  const pageDetails = [
+    {
+      title: "Daftar Pemilik Klinik",
+      formComponent: <CredentialsForm />,
+      cta1: {
+        label: "Batal",
+        onClick: () => history.back(),
+      },
+      cta2: {
+        label: "Lanjut",
+        onClick: () => setPageNum(pageNum + 1),
+      },
+    },
+    {
+      title: "Daftar Klinik",
+      formComponent: <ClinicForm />,
+      cta1: {
+        label: "Kembali",
+        onClick: () => setPageNum(pageNum - 1),
+      },
+      cta2: {
+        label: "Daftar",
+        type: "submit",
+      },
+    },
+  ];
 
   return (
     <CSS>
