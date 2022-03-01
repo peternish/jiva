@@ -9,12 +9,20 @@
     "test": "jest --collect-coverage"
   },
   "dependencies": {
+    "@emotion/react": "^11.8.1",
+    "@emotion/styled": "^11.8.1",
+    "@mui/material": "^5.4.4",
+    "@reduxjs/toolkit": "^1.8.0",
+    "formik": "^2.2.9",
     "next": "12.0.10",
     "react": "17.0.2",
     "react-dom": "17.0.2",
+    "react-redux": "^7.2.6",
+    "redux": "^4.1.2",
     "redux-devtools-extension": "^2.13.9",
     "redux-persist": "^6.0.0",
-    "redux-thunk": "^2.4.1"
+    "redux-thunk": "^2.4.1",
+    "styled-components": "^5.3.3"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.2",

@@ -22,7 +22,6 @@ const customJestConfig = {
     '^@utils/(.*)$': '<rootDir>/utils/$1',
   },
   testEnvironment: 'jest-environment-jsdom',
-  setupFilesAfterEnv: ['./jest.setup.js'],
   collectCoverage: true
 }
 
