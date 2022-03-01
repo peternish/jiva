@@ -10,7 +10,7 @@ describe("<Login/>", () => {
   })
 
   it("renders title correctly", () => {
-    expect(screen.getByText("Masuk")).toBeInTheDocument()
+    expect(screen.getByRole("heading")).toBeInTheDocument()
   })
 
   it("renders inputs correctly", () => {
@@ -18,11 +18,11 @@ describe("<Login/>", () => {
     expect(screen.getByLabelText("Password")).toBeInTheDocument()
 
     expect(screen.getByPlaceholderText("jiva@gmail.com")).toBeInTheDocument()
-    expect(screen.getByPlaceholderLabelText("password")).toBeInTheDocument()
+    expect(screen.getByPlaceholderText("password")).toBeInTheDocument()
   })
 
   it("renders button correctly", () => {
-    const button = screen.getByText("Masuk")
+    const button = screen.getByRole("button")
     expect(button).toBeInTheDocument()
     expect(button.getAttribute("type")).toBe("submit")
   })
