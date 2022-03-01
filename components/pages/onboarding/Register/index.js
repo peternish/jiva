@@ -4,9 +4,10 @@ import styled from "styled-components";
 
 // component imports
 import Card from "@mui/material/Card";
-import { Formik, Field, Form } from "formik";
+import { Formik, Form } from "formik";
 import TextInput from "@components/common/TextInput";
 import Button from "@mui/material/Button";
+import Dropzone from "@components/pages/onboarding/Register/Dropzone.js"
 
 const CSS = styled.div`
   height: 100%;
@@ -25,6 +26,9 @@ const CSS = styled.div`
     padding: 3em;
     width: max-content;
     box-sizing: border-box;
+    height: max-content;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.15);
+    border-radius: 0.5em;
   }
 
   .form {
@@ -32,6 +36,8 @@ const CSS = styled.div`
     flex-direction: column;
     align-items: center;
     margin: 2em 0;
+    height: 15em;
+    width: 100%;
   }
 
   #button-container {
@@ -105,19 +111,13 @@ const ClinicForm = () => {
         label="Nama Klinik"
         placeholder="Jiva"
       />
-      <TextInput
-        name="sik"
-        type="file"
-        label="Surat Izin Klinik"
-        placeholder="Unggah File"
-      />
+      <Dropzone/>
     </>
   );
 };
 
 const Register = () => {
   const [pageNum, setPageNum] = useState(0);
-  const [sikFile, setSikFile] = useState(null);
 
   const pageDetails = [
     {
