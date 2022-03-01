@@ -1,0 +1,9 @@
+{
+    "python.linting.pylintArgs": [
+        "pylint_django",
+        "--load-plugins",
+        "pylint_django.checkers.migrations",
+        "--disable=django-not-configured",
+        "--django-settings-module=jiva_be.settings"
+      ],
+}
