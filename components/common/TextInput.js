@@ -17,6 +17,12 @@ input {
   padding: 1em 0.75em;
   width: 40em;
 }
+
+@media(max-width: 768px) {
+  &, input {
+    width: 100%;
+  }
+}
 `
 
 const TextInput = ({ label, name, type = "text", placeholder = "" }) => {
