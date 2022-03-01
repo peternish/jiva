@@ -1,5 +1,5 @@
-import RegisterPage from "@components/pages/onboarding/Register"
+import RegisterPage from "@components/pages/onboarding/Register";
 
-const Register = () => <RegisterPage/>
+const Register = () => <RegisterPage />;
 
-export default Register
+export default Register;

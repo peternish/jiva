@@ -119,33 +119,55 @@ const PAGE_COUNT = 2;
 
 const Register = () => {
   const [pageNum, setPageNum] = useState(0);
+  const [sikFile, setSikFile] = useState(null);
+
+  const pageDetails = [
+    {
+      title: "Daftar Pemilik Klinik",
+      formComponent: <CredentialsForm />,
+      cta1: {
+        label: "Batal",
+        onClick: () => history.back(),
+      },
+      cta2: {
+        label: "Lanjut",
+        onClick: () => setPageNum(pageNum + 1),
+      },
+    },
+    {
+      title: "Daftar Klinik",
+      formComponent: <ClinicForm />,
+      cta1: {
+        label: "Kembali",
+        onClick: () => setPageNum(pageNum - 1),
+      },
+      cta2: {
+        label: "Daftar",
+        type: "submit",
+      },
+    },
+  ];
 
   return (
     <CSS>
       <Card id="register-card">
-        <h1 id="title">
-          {pageNum === 0 ? "Daftar Pemilik Klinik" : "Daftar Klinik"}
-        </h1>
+        <h1 id="title">{pageDetails[pageNum].title}</h1>
         <Formik
           initialValues={{
             email: "",
             password: "",
             full_name: "",
             clinic_name: "",
-            sik: "",
           }}
           validate={(values) => {}}
           onSubmit={(values, { setSubmitting }) => {}}
         >
           {() => (
-            <Form className="form">
-              {pageNum === 0 ? <CredentialsForm /> : null}
-              {pageNum === PAGE_COUNT - 1 ? <ClinicForm /> : null}
-            </Form>
+            <Form className="form">{pageDetails[pageNum].formComponent}</Form>
           )}
         </Formik>
         <div id="progress">
-          {[...Array(PAGE_COUNT).keys()].map((_, idx) => (
+          {pageDetails.map((_, idx) => (
             <div
               className={`dot ${pageNum === idx ? "active" : ""}`}
               key={idx}
@@ -155,20 +177,16 @@ const Register = () => {
         <div id="button-container">
           <Button
             variant="outlined"
-            onClick={() => {
-              if (pageNum > 0) setPageNum(pageNum - 1);
-            }}
+            onClick={pageDetails[pageNum].cta1.onClick}
           >
-            {pageNum === 0 ? "Batal" : "Kembali"}
+            {pageDetails[pageNum].cta1.label}
           </Button>
           <Button
-            type="submit"
             variant="contained"
-            onClick={() => {
-              if (pageNum < PAGE_COUNT - 1) setPageNum(pageNum + 1);
-            }}
+            onClick={pageDetails[pageNum].cta2.onClick}
+            type={pageDetails[pageNum].cta2.type || ""}
           >
-            {pageNum === PAGE_COUNT - 1 ? "Daftar" : "Lanjut"}
+            {pageDetails[pageNum].cta2.label}
           </Button>
         </div>
       </Card>

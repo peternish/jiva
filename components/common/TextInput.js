@@ -22,7 +22,7 @@ input {
 const TextInput = ({ label, name, type = "text", placeholder = "" }) => {
   return <CSS>
     <label htmlFor={name}>{label}</label>
-    <Field type={type} placeholder={placeholder} name={name}/>
+    <Field type={type} placeholder={placeholder} name={name} id={name}/>
   </CSS>
 }
 
