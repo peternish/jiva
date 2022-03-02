@@ -45,4 +45,22 @@ describe('Sidebar', () => {
     expect(screen.getByTestId('ChevronRightIcon')).toBeInTheDocument()
 
   })
+
+  it('renders the navigation links', () => {
+    render(<Sidebar/>)
+
+    const navList = [
+      'Pengaturan Formulir Pendaftaran',
+      'List Pendaftaran',
+      'Pengaturan Klinik',
+      'Pengaturan Pengguna',
+      'Pengaturan Jadwal Praktik',
+      'Pengaturan Formulir Rekaman Medis',
+      'Rekaman Medis',
+    ]
+
+    navList.forEach((navItem) => {
+      expect(screen.getByText(navItem)).toBeInTheDocument
+    })
+  })
 })
