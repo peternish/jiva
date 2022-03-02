@@ -123,12 +123,12 @@ class CabangEndpointTest(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     @skip()
-    def mock_object_create_raise_integrity_error(self):
+    def mock_object_raise_integrity_error(self):
         raise IntegrityError()
 
     @patch(
         "klinik.models.Cabang.objects.first",
-        new=mock_object_create_raise_integrity_error,
+        new=mock_object_raise_integrity_error,
     )
     def test_create_cabang_from_klinik_fail_not_found(self):
         payload = {
@@ -149,7 +149,7 @@ class CabangEndpointTest(TestCase):
 
     @patch(
         "klinik.models.Cabang.objects.first",
-        new=mock_object_create_raise_integrity_error,
+        new=mock_object_raise_integrity_error,
     )
     def test_update_cabang_with_id_fail_not_found(self):
         payload = {"klinik": self.TEST_KLINIK_PK,
