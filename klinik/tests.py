@@ -157,3 +157,28 @@ class CabangEndpointTest(TestCase):
         request = self.api.get("/cabang/revise", data=payload, format="json")
         response = views.update_cabang(request)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    @patch(
+        "klinik.models.Cabang.objects.first",
+        new=lambda: True,
+    )
+    def test_delete_cabang_with_id(self, mock_cabang):
+        payload = {"klinik": self.TEST_KLINIK_PK,
+                   "cabang": self.TEST_CABANG_PK}
+        request = self.api.get("/cabang/remove", data=payload, format="json")
+        response = views.remove_cabang(request)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(mock_cabang.call_count, 1)
+
+    @patch(
+        "klinik.models.Cabang.objects.first",
+        new=mock_object_raise_integrity_error,
+    )
+    def test_delete_cabang_with_id_not_found(self):
+        payload = {"klinik": self.TEST_KLINIK_PK,
+                   "cabang": self.TEST_CABANG_PK}
+        request = self.api.get("/cabang/remove", data=payload, format="json")
+        response = views.remove_cabang(request)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        
+    
