@@ -112,3 +112,12 @@ class CabangEndpointTest(TestCase):
             response = views.create_cabang(request)
             self.assertEqual(response.status_code, status.HTTP_201_CREATED)
             # TODO: mock serializer
+
+    def test_create_cabang_from_klinik_fail_without_location(self):
+        payload = {
+            "klinik": self.TEST_KLINIK_PK,
+        }
+        request = self.api.get(
+            "/cabang/register", data=payload, format="json")
+        response = views.create_cabang(request)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
