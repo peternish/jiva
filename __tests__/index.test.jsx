@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, fireEvent } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import Navbar from 'components/Navbar'
 import Sidebar from 'components/Sidebar'
@@ -28,5 +28,21 @@ describe('Sidebar', () => {
     const sidebar = screen.getByTestId('sidebar')
 
     expect(sidebar).toBeInTheDocument()
+  })
+
+  it('toggles the sidebar when the arrow button is clicked', () => {
+    render(<Sidebar/>)
+
+    const rightArrow = screen.getByTestId('ChevronRightIcon')
+    expect(rightArrow).toBeInTheDocument()
+    
+    fireEvent.click(rightArrow)
+    
+    const leftArrow = screen.getByTestId('ChevronLeftIcon')
+    expect(leftArrow).toBeInTheDocument()
+    
+    fireEvent.click(leftArrow)
+    expect(screen.getByTestId('ChevronRightIcon')).toBeInTheDocument()
+
   })
 })
