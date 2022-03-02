@@ -90,7 +90,8 @@ class CabangEndpointTest(TestCase):
         self.assertIsInstance(cabang, list)
 
     def test_fetch_cabang_with_id(self):
-        payload = {"klinik": self.TEST_KLINIK_PK, "cabang": self.TEST_CABANG_PK}
+        payload = {"klinik": self.TEST_KLINIK_PK,
+                   "cabang": self.TEST_CABANG_PK}
         request = self.api.get("/cabang/fetch", data=payload, format="json")
         response = views.get_cabang(request)
         rest_response = Response(request)
@@ -100,9 +101,11 @@ class CabangEndpointTest(TestCase):
         self.assertIsInstance(cabang, Cabang)
 
     def test_create_cabang_from_klinik(self):
-        payload = {"klinik": self.TEST_KLINIK_PK, "location": self.TEST_LOCATION}
+        payload = {"klinik": self.TEST_KLINIK_PK,
+                   "location": self.TEST_LOCATION}
         with patch.object(Cabang, "create_cabang", autospec=True) as mock_do:
-            request = self.api.post("/cabang/register", data=payload, format="json")
+            request = self.api.post(
+                "/cabang/register", data=payload, format="json")
             response = views.create_cabang(request)
             self.assertEqual(response.status_code, status.HTTP_201_CREATED)
             # TODO: mock serializer
@@ -114,7 +117,8 @@ class CabangEndpointTest(TestCase):
         payload = {
             "klinik": self.TEST_KLINIK_PK,
         }
-        request = self.api.post("/cabang/register", data=payload, format="json")
+        request = self.api.post(
+            "/cabang/register", data=payload, format="json")
         response = views.create_cabang(request)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
@@ -126,22 +130,26 @@ class CabangEndpointTest(TestCase):
         "klinik.models.Cabang.objects.first",
         new=mock_object_create_raise_integrity_error,
     )
-    def test_create_cabang_from_klinik_fail_without_location(self):
+    def test_create_cabang_from_klinik_fail_not_found(self):
         payload = {
             "klinik": self.TEST_KLINIK_PK,
+            "cabang": self.TEST_CABANG_PK
         }
-        request = self.api.post("/cabang/register", data=payload, format="json")
+        request = self.api.post(
+            "/cabang/register", data=payload, format="json")
         response = views.create_cabang(request)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_update_cabang_with_id(self):
-        payload = {"klinik": self.TEST_KLINIK_PK, "cabang": self.TEST_CABANG_PK}
+        payload = {"klinik": self.TEST_KLINIK_PK,
+                   "cabang": self.TEST_CABANG_PK}
         request = self.api.get("/cabang/revise", data=payload, format="json")
         response = views.update_cabang(request)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_update_cabang_with_id(self):
-        payload = {"klinik": self.TEST_KLINIK_PK, "cabang": self.TEST_CABANG_PK}
+        payload = {"klinik": self.TEST_KLINIK_PK,
+                   "cabang": self.TEST_CABANG_PK}
         request = self.api.get("/cabang/revise", data=payload, format="json")
         response = views.update_cabang(request)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
