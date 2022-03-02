@@ -22,22 +22,6 @@ Lint:
     - npm ci
     - npm run lint
 
-SonarScanner:
-  image:
-    name: sonarsource/sonar-scanner-cli:4.6
-    entrypoint: [""]
-  stage: test
-  script:
-    - sonar-scanner
-      -Dsonar.projectKey=$SONARQUBE_PROJECT_KEY
-      -Dsonar.host.url=https://pmpl.cs.ui.ac.id/sonarqube
-      -Dsonar.branch.name=$CI_COMMIT_REF_NAME
-      -Dsonar.branch.target=$CI_MERGE_REQUEST_TARGET_BRANCH_NAME
-      -Dsonar.login=$SONARQUBE_TOKEN
-      -Dsonar.qualitygate.wait=true
-  only:
-    - merge_requests
-
 Test:
   <<: *base_rules
   stage: test
@@ -46,6 +30,28 @@ Test:
     - npm run build
     - npm run test
   coverage: /All\sfiles.*?\s+(\d+.\d+)/
+  artifacts:
+    paths:
+      - coverage/
+
+SonarScanner:
+  image:
+    name: sonarsource/sonar-scanner-cli:4.6
+    entrypoint: [""]
+  stage: test
+  needs: ['Test']
+  script:
+    - sonar-scanner
+      -Dsonar.projectKey=$SONARQUBE_PROJECT_KEY
+      -Dsonar.host.url=https://pmpl.cs.ui.ac.id/sonarqube
+      -Dsonar.branch.name=$CI_COMMIT_REF_NAME
+      -Dsonar.branch.target=$CI_MERGE_REQUEST_TARGET_BRANCH_NAME
+      -Dsonar.login=$SONARQUBE_TOKEN
+      -Dsonar.qualitygate.wait=true
+      -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
+      -Dsonar.coverage.exclusions=**/.scannerwork/**,**/api/**,**/public/**,**/redux/**,**/styles/**,**/utils/**,**/__tests__/**
+  rules:
+    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "staging"'
 
 DeployStaging:
   stage: deploy
