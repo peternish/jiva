@@ -147,9 +147,13 @@ class CabangEndpointTest(TestCase):
         response = views.update_cabang(request)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_update_cabang_with_id(self):
+    @patch(
+        "klinik.models.Cabang.objects.first",
+        new=mock_object_create_raise_integrity_error,
+    )
+    def test_update_cabang_with_id_fail_not_found(self):
         payload = {"klinik": self.TEST_KLINIK_PK,
                    "cabang": self.TEST_CABANG_PK}
         request = self.api.get("/cabang/revise", data=payload, format="json")
         response = views.update_cabang(request)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
