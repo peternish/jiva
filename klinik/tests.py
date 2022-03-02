@@ -107,7 +107,7 @@ class CabangEndpointTest(TestCase):
             "location": self.TEST_LOCATION
         }
         with patch.object(Cabang, 'create_cabang', autospec=True) as mock_do:
-            request = self.api.get(
+            request = self.api.post(
                 "/cabang/register", data=payload, format="json")
             response = views.create_cabang(request)
             self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -117,7 +117,7 @@ class CabangEndpointTest(TestCase):
         payload = {
             "klinik": self.TEST_KLINIK_PK,
         }
-        request = self.api.get(
+        request = self.api.post(
             "/cabang/register", data=payload, format="json")
         response = views.create_cabang(request)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
