@@ -1,6 +1,6 @@
 from django.test import TestCase
 from model_bakery import baker
-from unittest.mock import Mock, patch
+from unittest.mock import skip, patch
 
 # Models
 from .models import Account, Cabang, Klinik, Profile, OwnerProfile
@@ -12,6 +12,9 @@ import views
 from rest_framework.response import Response
 from rest_framework.test import APIRequestFactory
 from rest_framework import status
+
+# Errors
+from psycopg2 import IntegrityError
 
 
 class ProfileModelTest(TestCase):
@@ -113,6 +116,11 @@ class CabangEndpointTest(TestCase):
             self.assertEqual(response.status_code, status.HTTP_201_CREATED)
             # TODO: mock serializer
 
+    @skip()
+    def mock_object_create_raise_integrity_error(self):
+        raise IntegrityError()
+
+    @patch('klinik.models.Cabang.objects.create', new=mock_object_create_raise_integrity_error)
     def test_create_cabang_from_klinik_fail_without_location(self):
         payload = {
             "klinik": self.TEST_KLINIK_PK,
