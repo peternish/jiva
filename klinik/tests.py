@@ -83,7 +83,7 @@ class CabangEndpointTest(TestCase):
         request = self.api.get("/cabang/all", data=payload, format="json")
         response = views.get_all_cabang(request)
         rest_response = Response(request)
-        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         cabang = response.data["cabang"]
         self.assertEqual(cabang, rest_response.data["cabang"])
         self.assertIsInstance(cabang, list)
@@ -96,7 +96,7 @@ class CabangEndpointTest(TestCase):
         request = self.api.get("/cabang/fetch", data=payload, format="json")
         response = views.get_cabang(request)
         rest_response = Response(request)
-        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         cabang = response.data["cabang"]
         self.assertEqual(cabang, rest_response.data["cabang"])
         self.assertIsInstance(cabang, Cabang)
@@ -110,5 +110,5 @@ class CabangEndpointTest(TestCase):
             request = self.api.get(
                 "/cabang/register", data=payload, format="json")
             response = views.create_cabang(request)
-            self.assertEqual(response.status_code, 201)
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
             # TODO: mock serializer
