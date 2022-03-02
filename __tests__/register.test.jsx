@@ -27,8 +27,10 @@ describe("<Register/>", () => {
     });
   
     it("renders buttons correctly", () => {
-      expect(screen.getByText("Batal")).toBeInTheDocument()
-      expect(screen.getByText("Lanjut")).toBeInTheDocument()
+      const cta1 = screen.getByText("Batal")
+      const cta2 = screen.getByText("Lanjut")
+      expect(cta1).toBeInTheDocument()
+      expect(cta2).toBeInTheDocument()
     })
   })
 
