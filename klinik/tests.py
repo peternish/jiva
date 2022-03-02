@@ -116,12 +116,10 @@ class CabangEndpointTest(TestCase):
             self.assertEqual(response.status_code, status.HTTP_201_CREATED)
             # TODO: mock serializer
 
-    @skip()
-    def mock_object_create_raise_integrity_error(self):
-        raise IntegrityError()
-
-    @patch('klinik.models.Cabang.objects.create', new=mock_object_create_raise_integrity_error)
     def test_create_cabang_from_klinik_fail_without_location(self):
+        """
+        Payload should be handled manually
+        """
         payload = {
             "klinik": self.TEST_KLINIK_PK,
         }
@@ -129,3 +127,26 @@ class CabangEndpointTest(TestCase):
             "/cabang/register", data=payload, format="json")
         response = views.create_cabang(request)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    @skip()
+    def mock_object_create_raise_integrity_error(self):
+        raise IntegrityError()
+
+    @patch('klinik.models.Cabang.objects.first', new=mock_object_create_raise_integrity_error)
+    def test_create_cabang_from_klinik_fail_without_location(self):
+        payload = {
+            "klinik": self.TEST_KLINIK_PK,
+        }
+        request = self.api.post(
+            "/cabang/register", data=payload, format="json")
+        response = views.create_cabang(request)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_update_cabang_with_id(self):
+        payload = {
+            "klinik": self.TEST_KLINIK_PK,
+            "cabang": self.TEST_CABANG_PK
+        }
+        request = self.api.get("/cabang/revise", data=payload, format="json")
+        response = views.update_cabang(request)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
