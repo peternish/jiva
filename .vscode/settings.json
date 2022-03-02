@@ -6,4 +6,6 @@
         "--disable=django-not-configured",
         "--django-settings-module=jiva_be.settings"
       ],
+      "python.linting.pylintEnabled": true,
+      "python.linting.enabled": true,
 }

@@ -16,6 +16,7 @@ TEST_USER_EMAIL = "test@email.com"
 TEST_USER_PASSWORD = os.getenv("SECRET_KEY")
 TEST_USER_FULL_NAME = "Budi Budiman"
 
+
 class ViewTest(TestCase):
     def setUp(self):
         self.factory = APIRequestFactory()
@@ -43,7 +44,9 @@ class ViewTest(TestCase):
 class ModelTest(TestCase):
     def test_create_account(self):
         account = Account.objects.create_user(
-            email=TEST_USER_EMAIL, full_name=TEST_USER_FULL_NAME, password=TEST_USER_PASSWORD
+            email=TEST_USER_EMAIL,
+            full_name=TEST_USER_FULL_NAME,
+            password=TEST_USER_PASSWORD,
         )
         account.save()
         self.assertEquals(Account.objects.filter(email=TEST_USER_EMAIL).count(), 1)
@@ -51,7 +54,9 @@ class ModelTest(TestCase):
 
     def test_create_superuser(self):
         account = Account.objects.create_superuser(
-            email=TEST_USER_EMAIL, full_name=TEST_USER_FULL_NAME, password=TEST_USER_PASSWORD
+            email=TEST_USER_EMAIL,
+            full_name=TEST_USER_FULL_NAME,
+            password=TEST_USER_PASSWORD,
         )
         account.save()
         self.assertTrue(account.is_superuser, True)
@@ -80,7 +85,9 @@ class IntegrationTest(TestCase):
         Ensure user is logged in.
         """
         Account.objects.create_user(
-            email=TEST_USER_EMAIL, password=TEST_USER_PASSWORD, full_name=TEST_USER_FULL_NAME
+            email=TEST_USER_EMAIL,
+            password=TEST_USER_PASSWORD,
+            full_name=TEST_USER_FULL_NAME,
         )
 
         url = reverse("account:login")
@@ -93,7 +100,9 @@ class IntegrationTest(TestCase):
         Ensure refresh token works
         """
         Account.objects.create_user(
-            email=TEST_USER_EMAIL, password=TEST_USER_PASSWORD, full_name=TEST_USER_FULL_NAME
+            email=TEST_USER_EMAIL,
+            password=TEST_USER_PASSWORD,
+            full_name=TEST_USER_FULL_NAME,
         )
 
         login_response = self.client.post(
