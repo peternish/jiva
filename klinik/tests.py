@@ -2,7 +2,16 @@ from django.test import TestCase
 from model_bakery import baker
 from unittest.mock import Mock
 
+# Models
 from .models import Account, Cabang, Klinik, Profile, OwnerProfile
+
+# Views
+import views
+
+# Rest
+from rest_framework.response import Response
+from rest_framework.test import APIRequestFactory
+from rest_framework import status
 
 
 class ProfileModelTest(TestCase):
@@ -57,3 +66,22 @@ class CabangModelTest(TestCase):
 
     def test_created_cabang_has_location(self):
         self.assertEqual(self.cabang.location, "alam sutra")
+
+
+class CabangEndpointTest(TestCase):
+    def setUp(self) -> None:
+        self.api = APIRequestFactory()
+        self.TEST_KLINIK_PK = 1919
+        return super().setUp()
+
+    def test_fetch_all_cabang_that_belongs_to_klinik(self):
+        payload = {
+            "klinik": self.TEST_KLINIK_PK
+        }
+        request = self.api.get("/cabang/all", data=payload, format="json")
+        response = views.get_all_cabang(request)
+        rest_response = Response(request)
+        self.assertEqual(response.status_code, 201)
+        cabang = response.data["cabang"]
+        self.assertEqual(cabang, rest_response.data["cabang"])
+        self.assertIsInstance(cabang, list)
