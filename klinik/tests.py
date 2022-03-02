@@ -72,6 +72,7 @@ class CabangEndpointTest(TestCase):
     def setUp(self) -> None:
         self.api = APIRequestFactory()
         self.TEST_KLINIK_PK = 1919
+        self.TEST_CABANG_PK = 9191
         return super().setUp()
 
     def test_fetch_all_cabang_that_belongs_to_klinik(self):
@@ -85,3 +86,16 @@ class CabangEndpointTest(TestCase):
         cabang = response.data["cabang"]
         self.assertEqual(cabang, rest_response.data["cabang"])
         self.assertIsInstance(cabang, list)
+
+    def test_fetch_cabang_with_id(self):
+        payload = {
+            "klinik": self.TEST_KLINIK_PK,
+            "cabang": self.TEST_CABANG_PK
+        }
+        request = self.api.get("/cabang/fetch", data=payload, format="json")
+        response = views.get_cabang(request)
+        rest_response = Response(request)
+        self.assertEqual(response.status_code, 201)
+        cabang = response.data["cabang"]
+        self.assertEqual(cabang, rest_response.data["cabang"])
+        self.assertIsInstance(cabang, Cabang)
