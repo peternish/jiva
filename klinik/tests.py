@@ -1,6 +1,6 @@
 from django.test import TestCase
 from model_bakery import baker
-from unittest.mock import Mock
+from unittest.mock import Mock, patch
 
 # Models
 from .models import Account, Cabang, Klinik, Profile, OwnerProfile
@@ -73,6 +73,7 @@ class CabangEndpointTest(TestCase):
         self.api = APIRequestFactory()
         self.TEST_KLINIK_PK = 1919
         self.TEST_CABANG_PK = 9191
+        self.TEST_LOCATION = "Alam Sutra"
         return super().setUp()
 
     def test_fetch_all_cabang_that_belongs_to_klinik(self):
@@ -99,3 +100,15 @@ class CabangEndpointTest(TestCase):
         cabang = response.data["cabang"]
         self.assertEqual(cabang, rest_response.data["cabang"])
         self.assertIsInstance(cabang, Cabang)
+
+    def test_create_cabang_from_klinik(self):
+        payload = {
+            "klinik": self.TEST_KLINIK_PK,
+            "location": self.TEST_LOCATION
+        }
+        with patch.object(Cabang, 'create_cabang', autospec=True) as mock_do:
+            request = self.api.get(
+                "/cabang/register", data=payload, format="json")
+            response = views.create_cabang(request)
+            self.assertEqual(response.status_code, 201)
+            # TODO: mock serializer
