@@ -15,5 +15,4 @@ klinik_patterns = [
 
 urlpatterns = [
     path("cabang/", include(klinik_patterns, namespace="cabang")),
-
 ]

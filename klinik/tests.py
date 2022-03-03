@@ -1,9 +1,9 @@
 from django.test import TestCase
 from model_bakery import baker
-from unittest.mock import skip, patch
+from unittest.mock import patch
 
 # Models
-from .models import Account, Cabang, Klinik, Profile, OwnerProfile
+from .models import Cabang, Klinik, Profile, OwnerProfile
 
 # Views
 import views
@@ -15,6 +15,10 @@ from rest_framework import status
 
 # Errors
 from psycopg2 import IntegrityError
+
+
+def mock_object_raise_integrity_error(self):
+    raise IntegrityError()
 
 
 class ProfileModelTest(TestCase):
@@ -122,19 +126,13 @@ class CabangEndpointTest(TestCase):
         response = views.create_cabang(request)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-    @skip()
-    def mock_object_raise_integrity_error(self):
-        raise IntegrityError()
-
     @patch(
         "klinik.models.Cabang.objects.first",
         new=mock_object_raise_integrity_error,
     )
     def test_create_cabang_from_klinik_fail_not_found(self):
-        payload = {
-            "klinik": self.TEST_KLINIK_PK,
-            "cabang": self.TEST_CABANG_PK
-        }
+        payload = {"klinik": self.TEST_KLINIK_PK,
+                   "cabang": self.TEST_CABANG_PK}
         request = self.api.post(
             "/cabang/register", data=payload, format="json")
         response = views.create_cabang(request)
@@ -180,5 +178,3 @@ class CabangEndpointTest(TestCase):
         request = self.api.get("/cabang/remove", data=payload, format="json")
         response = views.remove_cabang(request)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-        
-    
