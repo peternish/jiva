@@ -1,6 +1,6 @@
 from django.test import TestCase
 from model_bakery import baker
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 # Models
 from klinik.models import Cabang, Klinik, Profile, OwnerProfile
@@ -93,6 +93,17 @@ class CabangEndpointTest(TestCase):
         cabang = response.data["cabang"]
         self.assertEqual(cabang, rest_response.data["cabang"])
         self.assertIsInstance(cabang, list)
+
+    @patch(
+        "klinik.models.Cabang.objects.filter",
+        new=mock_object_raise_integrity_error,
+    )
+    def test_fetch_all_cabang_that_belongs_to_klinik_fail_invalid_klinik(self, mock_cabang: Mock):
+        payload = {"klinik": self.TEST_KLINIK_PK}
+        request = self.api.get("/cabang/all", data=payload, format="json")
+        response = views.get_all_cabang(request)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(mock_cabang.call_count, 1)
 
     def test_fetch_cabang_with_id(self):
         # TODO: refactor payload
