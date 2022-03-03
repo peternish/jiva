@@ -7,7 +7,8 @@ import Card from "@mui/material/Card";
 import { Formik, Form } from "formik";
 import TextInput from "@components/common/TextInput";
 import Button from "@mui/material/Button";
-import Dropzone from "@components/pages/onboarding/Register/Dropzone.js"
+import Dropzone from "@components/pages/onboarding/Register/Dropzone.js";
+import Layout from "@components/Layout";
 
 const CSS = styled.div`
   height: 100%;
@@ -111,7 +112,7 @@ const ClinicForm = () => {
         label="Nama Klinik"
         placeholder="Jiva"
       />
-      <Dropzone/>
+      <Dropzone />
     </>
   );
 };
@@ -147,48 +148,50 @@ const Register = () => {
   ];
 
   return (
-    <CSS>
-      <Card id="register-card">
-        <h1 id="title">{pageDetails[pageNum].title}</h1>
-        <Formik
-          initialValues={{
-            email: "",
-            password: "",
-            full_name: "",
-            clinic_name: "",
-          }}
-          validate={(values) => {}}
-          onSubmit={(values, { setSubmitting }) => {}}
-        >
-          {() => (
-            <Form className="form">{pageDetails[pageNum].formComponent}</Form>
-          )}
-        </Formik>
-        <div id="progress">
-          {pageDetails.map((_, idx) => (
-            <div
-              className={`dot ${pageNum === idx ? "active" : ""}`}
-              key={idx}
-            ></div>
-          ))}
-        </div>
-        <div id="button-container">
-          <Button
-            variant="outlined"
-            onClick={pageDetails[pageNum].cta1.onClick}
+    <Layout navType="topbar">
+      <CSS>
+        <Card id="register-card">
+          <h1 id="title">{pageDetails[pageNum].title}</h1>
+          <Formik
+            initialValues={{
+              email: "",
+              password: "",
+              full_name: "",
+              clinic_name: "",
+            }}
+            validate={(values) => {}}
+            onSubmit={(values, { setSubmitting }) => {}}
           >
-            {pageDetails[pageNum].cta1.label}
-          </Button>
-          <Button
-            variant="contained"
-            onClick={pageDetails[pageNum].cta2.onClick}
-            type={pageDetails[pageNum].cta2.type || ""}
-          >
-            {pageDetails[pageNum].cta2.label}
-          </Button>
-        </div>
-      </Card>
-    </CSS>
+            {() => (
+              <Form className="form">{pageDetails[pageNum].formComponent}</Form>
+            )}
+          </Formik>
+          <div id="progress">
+            {pageDetails.map((_, idx) => (
+              <div
+                className={`dot ${pageNum === idx ? "active" : ""}`}
+                key={idx}
+              ></div>
+            ))}
+          </div>
+          <div id="button-container">
+            <Button
+              variant="outlined"
+              onClick={pageDetails[pageNum].cta1.onClick}
+            >
+              {pageDetails[pageNum].cta1.label}
+            </Button>
+            <Button
+              variant="contained"
+              onClick={pageDetails[pageNum].cta2.onClick}
+              type={pageDetails[pageNum].cta2.type || ""}
+            >
+              {pageDetails[pageNum].cta2.label}
+            </Button>
+          </div>
+        </Card>
+      </CSS>
+    </Layout>
   );
 };
 

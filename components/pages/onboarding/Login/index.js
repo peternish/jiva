@@ -5,6 +5,7 @@ import Card from "@mui/material/Card";
 import { Formik, Form } from "formik";
 import TextInput from "@components/common/TextInput";
 import Button from "@mui/material/Button";
+import Layout from "@components/Layout";
 
 const CSS = styled.div`
   height: 100%;
@@ -51,43 +52,42 @@ const CSS = styled.div`
 
 const Login = () => {
   return (
-    <CSS>
-      <Card id="card">
-        <h1 id="title">Masuk</h1>
-        <Formik
-          initialValues={{
-            email: "",
-            password: ""
-          }}
-          validate={(values) => {}}
-          onSubmit={(values, { setSubmitting }) => {}}
-        >
-          {() => (
-            <Form id="form">
-              <TextInput
-                name="email"
-                type="email"
-                label="Email"
-                placeholder="jiva@gmail.com"
-              />
-              <TextInput
-                name="password"
-                type="password"
-                label="Password"
-                placeholder="password"
-              />
-            </Form>
-          )}
-        </Formik>
-        <Button
-          variant="contained"
-          type="submit"
-        >
-          Masuk
-        </Button>
-      </Card>
-    </CSS>
+    <Layout navType="topbar">
+      <CSS>
+        <Card id="card">
+          <h1 id="title">Masuk</h1>
+          <Formik
+            initialValues={{
+              email: "",
+              password: "",
+            }}
+            validate={(values) => {}}
+            onSubmit={(values, { setSubmitting }) => {}}
+          >
+            {() => (
+              <Form id="form">
+                <TextInput
+                  name="email"
+                  type="email"
+                  label="Email"
+                  placeholder="jiva@gmail.com"
+                />
+                <TextInput
+                  name="password"
+                  type="password"
+                  label="Password"
+                  placeholder="password"
+                />
+              </Form>
+            )}
+          </Formik>
+          <Button variant="contained" type="submit">
+            Masuk
+          </Button>
+        </Card>
+      </CSS>
+    </Layout>
   );
-}
+};
 
-export default Login
+export default Login;
