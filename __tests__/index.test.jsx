@@ -57,6 +57,7 @@ describe('Sidebar', () => {
       'Pengaturan Jadwal Praktik',
       'Pengaturan Formulir Rekaman Medis',
       'Rekaman Medis',
+      'Akun'
     ]
 
     navList.forEach((navItem) => {
