@@ -1,4 +1,5 @@
 from django.http import HttpRequest
+from klinik import serializers
 from klinik.serializers import CabangSerializer
 from klinik.models import Cabang, Klinik
 from rest_framework import status
@@ -27,7 +28,15 @@ def get_cabang(request: Request) -> Response:
     return Response(status=status.HTTP_200_OK, data=serialized)
 
 
+@api_view(["POST"])
 def create_cabang(request: Request) -> Response:
+    klinik = request.params.get("klinik")
+    location = request.params.get("location")
+    if location is None:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+    Cabang.objects.create(klinik__id=klinik, location=location)
+    # TODO: Handle create fail
+    return Response(status=status.HTTP_201_CREATED)
     pass
 
 
