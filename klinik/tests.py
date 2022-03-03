@@ -95,6 +95,7 @@ class CabangEndpointTest(TestCase):
         self.assertIsInstance(cabang, list)
 
     def test_fetch_cabang_with_id(self):
+        # TODO: refactor payload
         payload = {"klinik": self.TEST_KLINIK_PK,
                    "cabang": self.TEST_CABANG_PK}
         request = self.api.get("/cabang/fetch", data=payload, format="json")

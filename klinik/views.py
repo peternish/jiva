@@ -19,7 +19,11 @@ def get_all_cabang(request: Request) -> Response:
 
 
 def get_cabang(request: Request) -> Response:
-    pass
+    id_cabang = request.query_params.get("cabang")
+    # TODO: Handle cabang None
+    query = Cabang.objects.get(id_cabang)
+    serialized = CabangSerializer(query, context={'request': request})
+    return Response(status=status.HTTP_200_OK, data=serialized)
 
 
 def create_cabang(request: Request) -> Response:
