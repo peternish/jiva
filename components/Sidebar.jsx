@@ -12,7 +12,7 @@ import Divider from "@mui/material/Divider";
 import Link from 'next/link'
 import { useState } from 'react';
 
-export default function Bar() {
+export default function Sidebar() {
 
     const navItems = [
         {divider : 'Pasien'},
@@ -37,18 +37,18 @@ export default function Bar() {
     }
 
   return (
-    <nav className={`${styles.sidebar} ${open ? styles.open : ''}`}>
+    <nav className={`${styles.sidebar} ${open ? styles.open : ''}`} data-testid="sidebar">
         <div className={styles.sidebarHeader} onClick={toggleSidebar}>
             {open ? <ChevronLeftIcon/> : <ChevronRightIcon/>}
         </div>
         <div className={styles.navList}>
-            {navItems.map(navItem => (
+            {navItems.map((navItem, index) => (
                 navItem.divider 
                     ? 
-                    <>
+                    <div key={index}>
                         <Divider/>
                         {open && <div className={styles.listDivider}>{navItem.divider}</div>}
-                    </> 
+                    </div> 
                     :
                 <Link href={navItem.link} key={navItem.title}>
                 <a title={navItem.title}>
