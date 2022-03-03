@@ -1,0 +1,52 @@
+.sidebar {
+    background-color: #0052D0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    max-width: 3.5em;
+    height: 100%;
+    overflow-x: hidden;
+    transition: 0.3s;
+}
+
+.sidebar.open {
+    transition: 0.5s;
+    max-width: 30em;
+}
+
+.sidebarHeader {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-start;
+    color: #FFFFFF;
+    padding: 1em;
+    width: 100%;
+    cursor: pointer;
+}
+
+.listDivider {
+    color: #FFFFFF;
+    font-weight: bold;
+    padding: 1em 1em 0.1em 1em;
+    white-space: nowrap;
+}
+
+.listItem {
+    display: flex;
+    column-gap: 1.1em;
+    color: #FFFFFF;
+    padding: 1em;
+    align-items: center;
+    overflow-x: hidden;
+    width: 100%
+}
+
+.listItemText {
+    width: 100%;
+    overflow-x: hidden;
+    white-space: nowrap;
+}
+
+.listItem:hover {
+    background: rgba(0, 0, 0, 0.1);
+}
