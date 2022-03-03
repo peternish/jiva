@@ -6,7 +6,8 @@ from unittest.mock import patch
 from .models import Cabang, Klinik, Profile, OwnerProfile
 
 # Views
-import views
+
+from klinik import views
 
 # Rest
 from rest_framework.response import Response
