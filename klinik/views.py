@@ -18,10 +18,11 @@ def get_all_cabang(request: Request) -> Response:
     return Response(status=status.HTTP_200_OK, data=serialized)
 
 
+@api_view(["GET"])
 def get_cabang(request: Request) -> Response:
     id_cabang = request.query_params.get("cabang")
     # TODO: Handle cabang None
-    query = Cabang.objects.get(id_cabang)
+    query = Cabang.objects.get(id=id_cabang)
     serialized = CabangSerializer(query, context={'request': request})
     return Response(status=status.HTTP_200_OK, data=serialized)
 
