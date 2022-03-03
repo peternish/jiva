@@ -1,6 +1,9 @@
+from cgi import test
 from django.test import TestCase
 from model_bakery import baker
 from unittest.mock import Mock
+from django.core import files
+from django.core.files.uploadedfile import SimpleUploadedFile
 
 from .models import Account, Cabang, Klinik, Profile, OwnerProfile
 
@@ -31,7 +34,10 @@ class OwnerProfileModelTest(TestCase):
 
 class KlinikModelTest(TestCase):
     def setUp(self) -> None:
-        self.klinik = baker.make("klinik.Klinik", name="Lalita")
+        mock_file = Mock(spec=files.File, name="mocktest")
+        mock_file.name = "test.jpg"
+        test_file = SimpleUploadedFile("best_file_eva.txt", b"these are the file contents!")
+        self.klinik = baker.make("klinik.Klinik", name="Lalita", sik=test_file, _create_files=True)
         return super().setUp()
 
     def test_created_klinik_instace_of_Klinik_class(self):
