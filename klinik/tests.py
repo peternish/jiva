@@ -103,7 +103,7 @@ class CabangEndpointTest(TestCase):
         request = self.api.get("/cabang/all", data=payload, format="json")
         response = views.get_all_cabang(request)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-        self.assertEqual(mock_cabang.call_count, 1)
+        mock_cabang.assert_called_once()
 
     def test_fetch_cabang_with_id(self):
         # TODO: refactor payload
@@ -190,7 +190,7 @@ class CabangEndpointTest(TestCase):
         request = self.api.get("/cabang/remove", data=payload, format="json")
         response = views.remove_cabang(request)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(mock_cabang.call_count, 1)
+        mock_cabang.assert_called_once()
 
     @patch(
         "klinik.models.Cabang.objects.first",
