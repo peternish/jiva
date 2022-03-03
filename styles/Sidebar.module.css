@@ -7,6 +7,9 @@
     height: 100%;
     overflow-x: hidden;
     transition: 0.3s;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .sidebar.open {
@@ -49,4 +52,14 @@
 
 .listItem:hover {
     background: rgba(0, 0, 0, 0.1);
+}
+
+.sidebarFooter {
+    display: flex;
+    column-gap: 1.1em;
+    color: #FFFFFF;
+    padding: 1em;
+    align-items: center;
+    width: 100%;
+    cursor: pointer;
 }

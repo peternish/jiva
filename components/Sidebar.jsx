@@ -1,4 +1,8 @@
+import Link from 'next/link'
+import { useState } from 'react';
+
 import styles from '@styles/Sidebar.module.css'
+
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
@@ -9,8 +13,8 @@ import TodayIcon from '@mui/icons-material/Today';
 import ConstructionIcon from '@mui/icons-material/Construction';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import Divider from "@mui/material/Divider";
-import Link from 'next/link'
-import { useState } from 'react';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+
 
 export default function Sidebar() {
 
@@ -38,27 +42,33 @@ export default function Sidebar() {
 
   return (
     <nav className={`${styles.sidebar} ${open ? styles.open : ''}`} data-testid="sidebar">
-        <div className={styles.sidebarHeader} onClick={toggleSidebar}>
-            {open ? <ChevronLeftIcon/> : <ChevronRightIcon/>}
+        <div>
+            <div className={styles.sidebarHeader} onClick={toggleSidebar}>
+                {open ? <ChevronLeftIcon/> : <ChevronRightIcon/>}
+            </div>
+            <div className={styles.navList}>
+                {navItems.map((navItem, index) => (
+                    navItem.divider 
+                        ? 
+                        <div key={index}>
+                            <Divider/>
+                            {open && <div className={styles.listDivider}>{navItem.divider}</div>}
+                        </div> 
+                        :
+                    <Link href={navItem.link} key={navItem.title}>
+                    <a title={navItem.title}>
+                        <div className={styles.listItem}>
+                            {navItem.icon}
+                            <div className={styles.listItemText}> {navItem.title} </div>
+                        </div>
+                    </a>
+                    </Link>
+                ))}
+            </div>
         </div>
-        <div className={styles.navList}>
-            {navItems.map((navItem, index) => (
-                navItem.divider 
-                    ? 
-                    <div key={index}>
-                        <Divider/>
-                        {open && <div className={styles.listDivider}>{navItem.divider}</div>}
-                    </div> 
-                    :
-                <Link href={navItem.link} key={navItem.title}>
-                <a title={navItem.title}>
-                    <div className={styles.listItem}>
-                        {navItem.icon}
-                        <div className={styles.listItemText}> {navItem.title} </div>
-                    </div>
-                </a>
-                </Link>
-            ))}
+        <div className={styles.sidebarFooter}>
+            <AccountCircleIcon/>
+            Akun
         </div>
     </nav>
   )
