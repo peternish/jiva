@@ -3,7 +3,7 @@ from model_bakery import baker
 from unittest.mock import patch
 
 # Models
-from .models import Cabang, Klinik, Profile, OwnerProfile
+from klinik.models import Cabang, Klinik, Profile, OwnerProfile
 
 # Views
 
