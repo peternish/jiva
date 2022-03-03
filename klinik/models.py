@@ -16,6 +16,7 @@ class OwnerProfile(Profile):
 class Klinik(models.Model):
     name = models.CharField(max_length=100)
     owner = models.ForeignKey(OwnerProfile, on_delete=models.CASCADE)
+    sik = models.FileField()
 
 
 class Cabang(models.Model):

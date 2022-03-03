@@ -55,6 +55,7 @@ INSTALLED_APPS = (
         "django.contrib.sessions",
         "django.contrib.messages",
         "django.contrib.staticfiles",
+        "storages",
     ]
     + APPS
     + MODULES
@@ -151,6 +152,19 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
+
+# AWS S3 Staticfiles for SIK
+AWS_ACCESS_KEY_ID = 'AKIA5TLHE2AOYPHOHTVC'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_STORAGE_BUCKET_NAME = 'django-surat-izin-klinik-jiva'
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+AWS_S3_OBJECT_PARAMETERS = {
+    'CacheControl': 'max-age=86400',
+}
+AWS_LOCATION = 'static'
+
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+STATICFILES_STORAGE = 'storages.backends.s3boto3.S3StaticStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
