@@ -4,9 +4,9 @@ import { useState } from "react";
 import Card from "@mui/material/Card";
 import { Formik, Form } from "formik";
 import Button from "@mui/material/Button";
-import CSS from "@components/pages/onboarding/Register/CSS";
 import TextInput from "@components/common/TextInput";
-import Dropzone from "@components/pages/onboarding/Register/Dropzone.js";
+import CSS from "@components/RegisterPageComponents/CSS";
+import Dropzone from "@components/RegisterPageComponents/Dropzone.js";
 
 // redux
 import { useDispatch } from "react-redux";
