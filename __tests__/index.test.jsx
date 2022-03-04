@@ -1,22 +1,31 @@
-import { render, screen, fireEvent } from '@testing-library/react'
 import '@testing-library/jest-dom'
-import Navbar from 'components/Navbar'
+import { render, screen, fireEvent } from '@testing-library/react'
 import Sidebar from 'components/Sidebar'
+import Navbar from "components/Navbar";
+import Layout from "@components/Layout";
 
-describe('Navbar', () => {
-  it('renders a navbar', () => {
-    render(<Navbar/>)
+describe("Layout", () => {
+  it("renders a head", () => {
+    const text = "Hello";
+    render(<Layout>{text}</Layout>);
+    expect(screen.getByText(text)).toBeInTheDocument();
+  });
+});
 
-    const nav = screen.getByRole('navigation')
+describe("Navbar", () => {
+  it("renders a navbar", () => {
+    render(<Navbar />);
 
-    expect(nav).toBeInTheDocument()
-  })
+    const nav = screen.getByRole("navigation");
 
-  it('renders navigation links', () => {
-    render(<Navbar/>)
+    expect(nav).toBeInTheDocument();
+  });
 
-    const links = screen.getAllByRole('link')
+  it("renders navigation links", () => {
+    render(<Navbar />);
 
+    const links = screen.getAllByRole("link");
+    
     expect(links).toHaveLength(3)
   })
 })
