@@ -1,7 +1,7 @@
 import CreateTenagaMedisPage from 'components/pages/tenaga-medis/CreateTenagaMedisPage'
 
-function DetailTenagaMedis() {
+function CreateTenagaMedis() {
   return <CreateTenagaMedisPage />
 }
 
-export default DetailTenagaMedis
+export default CreateTenagaMedis

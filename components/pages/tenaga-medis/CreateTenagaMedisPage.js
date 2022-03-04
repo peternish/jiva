@@ -13,7 +13,7 @@ const theme = createTheme({
   },
 })
 
-function DetailTenagaMedisPage() {
+function CreateTenagaMedisPage() {
   return (
     <main className={styles.container} style={{width: "50%"}}>
       <h1>Tambah Tenaga Medis</h1>
@@ -56,4 +56,4 @@ function DetailTenagaMedisPage() {
   )
 }
 
-export default DetailTenagaMedisPage
+export default CreateTenagaMedisPage
