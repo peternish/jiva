@@ -1,17 +1,16 @@
-# django imports
 from django.urls import path, include
+from rest_framework.urlpatterns import format_suffix_patterns
 from klinik import views
 
 app_name = "klinik"
 
-klinik_patterns = [
-    path("all", views.get_all_cabang, name="get_all_cabang"),
-    path("fetch", views.get_cabang, name="get_cabang"),
-    path("register", views.create_cabang, name="create_cabang"),
-    path("revise", views.update_cabang, name="update_cabang"),
-    path("remove", views.remove_cabang, name="remove_cabang"),
+cabang_patterns = [
+    path('', views.CabangListApi.as_view()),
+    path('<int:pk>/', views.CabangDetailApi.as_view()),
 ]
 
+cabang_patterns = format_suffix_patterns(cabang_patterns)
+
 urlpatterns = [
-    path("cabang/", include(klinik_patterns)),
+    path("cabang/", include(cabang_patterns)),
 ]
