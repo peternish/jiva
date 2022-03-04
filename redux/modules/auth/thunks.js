@@ -1,21 +1,51 @@
 // api
-import jivaAPI from "@api";
+import jivaAPI from "@api/index";
+
+// toast
+import { toast } from "react-toastify";
+
+// utils
+import { getStringOrFirstArrayValue, capitalize } from "@utils/index";
 
 // actions
-import { setAccessToken, setRefreshToken } from "@api/modules/auth";
+import { setAccessToken, setRefreshToken } from "@redux/modules/auth";
 
-export const signup = ({ email, password, full_name }={}) => {
-  return async (dispatch, _getState) => {
+export const signup = ({
+  email,
+  password,
+  fullName,
+  clinicName,
+  sikFile,
+} = {}) => {
+  return async () => {
     try {
-      const { data } = await jivaAPI.auth.signup({ email, password, full_name })
+      await jivaAPI.auth.signup({ email, password, full_name: fullName });
+      location.assign("/login");
     } catch (error) {
-      // ignore for now
+      let errorMessage = "Something went wrong 😥";
+      if (error?.response?.status === 400 && error?.response?.data) {
+        errorMessage = getStringOrFirstArrayValue(
+          Object.values(error.response.data)[0]
+        );
+        errorMessage = capitalize(errorMessage);
+      }
+      toast(errorMessage, { type: toast.TYPE.ERROR });
     }
   };
 };
 
-export const login = async (email, password) => {
-  return async (dispatch) => {};
+export const login = ({ email, password } = {}) => {
+  return async (dispatch) => {
+    try {
+      const { access, refresh } = await jivaAPI.auth.login({
+        email,
+        password,
+      });
+      dispatch(setAccessToken(access));
+      dispatch(setRefreshToken(refresh));
+      location.assign("/");
+    } catch (err) {
+      toast(err, { type: toast.TYPE.ERROR });
+    }
+  };
 };
-
-export const logout = async () => {};
