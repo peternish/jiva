@@ -13,7 +13,7 @@ describe('Update tenaga medis page main components', () => {
 
 
   it('should have the page main heading', () => {
-    render(<DetailTenagaMedis />)
+    render(<UpdateTenagaMedis />)
 
     const heading = screen.getByRole('heading', {
       name: /Update Tenaga Medis/,
@@ -24,7 +24,7 @@ describe('Update tenaga medis page main components', () => {
 
 
   it('should have data fields', () => {
-    render(<DetailTenagaMedis />)
+    render(<UpdateTenagaMedis />)
 
     const fields = screen.getAllByRole('textbox')
 
@@ -35,7 +35,7 @@ describe('Update tenaga medis page main components', () => {
 
 
   it('should have the batal button', () => {
-    render(<DetailTenagaMedis />)
+    render(<UpdateTenagaMedis />)
 
     const button = screen.getByRole('button', {
       name: /Batal/,
@@ -46,7 +46,7 @@ describe('Update tenaga medis page main components', () => {
 
   
   it('should have the simpan button', () => {
-    render(<DetailTenagaMedis />)
+    render(<UpdateTenagaMedis />)
 
     const button = screen.getByRole('button', {
       name: /Simpan/,
