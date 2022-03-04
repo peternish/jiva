@@ -180,5 +180,3 @@ class CabangEndpointTest(TestCase):
         request = self.api.get("/cabang/remove", data=payload, format="json")
         response = views.remove_cabang(request)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-        
-    
