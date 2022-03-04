@@ -1,4 +1,5 @@
 # Django imports
+import email
 from django.test import TestCase
 from django.urls import reverse
 
@@ -10,6 +11,7 @@ from rest_framework import status
 # other imports
 from . import views
 from .models import Account
+from klinik.models import OwnerProfile
 import os
 
 TEST_USER_EMAIL = "test@email.com"
@@ -31,6 +33,7 @@ class ViewTest(TestCase):
         test_response = Response(payload)
         self.assertEqual(response.data["email"], test_response.data["email"])
         self.assertEqual(response.data["full_name"], test_response.data["full_name"])
+        self.assertEquals(OwnerProfile.objects.filter(account__email=TEST_USER_EMAIL).count(), 1)
         self.assertEqual(response.status_code, 201)
 
     def test_register_missing_field(self):
