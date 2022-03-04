@@ -22,3 +22,24 @@ class CabangListApi(APIView):
             serializer.save()
             return Response(status=status.HTTP_201_CREATED)
         return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+class CabangDetailApi(APIView):
+    def get_object(self, pk: int):
+        try:
+            return Cabang.objects.get(pk=pk)
+        except Cabang.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+    def put(self, request: Request, pk: int, format=None):
+        cabang = self.get_object(pk)
+        serializer = CabangSerializer(cabang, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request: Request, pk: int, format=None):
+        cabang = self.get_object(pk)
+        cabang.delete()
+        return Response(status=status.HTTP_200_OK)
