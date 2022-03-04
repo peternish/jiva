@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 // redux
 import { useDispatch } from "react-redux";
 import { login } from "@redux/modules/auth/thunks";
+import Layout from "@components/Layout";
 
 const CSS = styled.div`
   height: 100%;
@@ -63,51 +64,53 @@ const fields = {
 const Login = () => {
   const dispatch = useDispatch();
   return (
-    <CSS>
-      <Card id="card">
-        <h1 id="title">Masuk</h1>
-        <Formik
-          initialValues={fields}
-          validate={(values) => {
-            const errors = {};
-            const ERR_MESSAGE = "Input ini wajib diisi";
-            Object.keys(fields).forEach((key) => {
-              if (!values[key]) errors[key] = ERR_MESSAGE;
-            });
-            return errors;
-          }}
-          onSubmit={(values) => {
-            try {
-              dispatch(login(values));
-            } catch (err) {
-              console.log(err);
-            }
-          }}
-        >
-          {({ isValid, errors }) => (
-            <Form id="form">
-              <TextInput
-                name="email"
-                type="email"
-                label="Email"
-                placeholder="jiva@gmail.com"
-                error={errors.email}
-              />
-              <TextInput
-                name="password"
-                type="password"
-                label="Password"
-                placeholder="password"
-                error={errors.password}
-              />
-              <Button variant="contained" type="submit" disabled={!isValid}>
-                Masuk
-              </Button>
-            </Form>
-          )}
-        </Formik>
-      </Card>
-    </CSS>
+    <Layout navType="topbar">
+      <CSS>
+        <Card id="card">
+          <h1 id="title">Masuk</h1>
+          <Formik
+            initialValues={fields}
+            validate={(values) => {
+              const errors = {};
+              const ERR_MESSAGE = "Input ini wajib diisi";
+              Object.keys(fields).forEach((key) => {
+                if (!values[key]) errors[key] = ERR_MESSAGE;
+              });
+              return errors;
+            }}
+            onSubmit={(values) => {
+              try {
+                dispatch(login(values));
+              } catch (err) {
+                console.log(err);
+              }
+            }}
+          >
+            {({ isValid, errors }) => (
+              <Form id="form">
+                <TextInput
+                  name="email"
+                  type="email"
+                  label="Email"
+                  placeholder="jiva@gmail.com"
+                  error={errors.email}
+                />
+                <TextInput
+                  name="password"
+                  type="password"
+                  label="Password"
+                  placeholder="password"
+                  error={errors.password}
+                />
+                <Button variant="contained" type="submit" disabled={!isValid}>
+                  Masuk
+                </Button>
+              </Form>
+            )}
+          </Formik>
+        </Card>
+      </CSS>
+    </Layout>
   );
 };
 

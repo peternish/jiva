@@ -80,8 +80,8 @@ describe("<Register/>", () => {
 
     it("renders buttons correctly", () => {
       expect(screen.getByText("Kembali")).toBeInTheDocument();
-      expect(screen.getByText("Daftar")).toBeInTheDocument();
-      expect(screen.getByText("Daftar").getAttribute("type")).toBe("submit");
+      expect(screen.getByRole('button', {name: /Daftar/})).toBeInTheDocument();
+      expect(screen.getByRole('button', {name: /Daftar/}).getAttribute("type")).toBe("submit");
     });
   });
 });

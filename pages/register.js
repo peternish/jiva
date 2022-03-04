@@ -11,6 +11,7 @@ import Dropzone from "@components/RegisterPageComponents/Dropzone.js";
 // redux
 import { useDispatch } from "react-redux";
 import { signup } from "@redux/modules/auth/thunks";
+import Layout from "@components/Layout";
 
 const Register = () => {
   const dispatch = useDispatch();
@@ -39,110 +40,112 @@ const Register = () => {
   };
 
   return (
-    <CSS>
-      <Card id="register-card">
-        <Formik
-          initialValues={{ ...fields }}
-          validate={(values) => {
-            const errors = {};
-            const ERR_MESSAGE = "Input ini wajib diisi";
-            Object.keys(fields).forEach((key) => {
-              if (!values[key]) errors[key] = ERR_MESSAGE;
-            });
-            return errors;
-          }}
-          onSubmit={(values) => {
-            dispatch(signup({ ...values, sikFile }));
-          }}
-        >
-          {({ errors, validateForm, isValid, validateField }) => (
-            <Form className="form">
-              {pageNum === 0 ? (
-                <div className="container">
-                  <h1 id="title">Daftar Pemilik Klinik</h1>
-                  <div className="input-container">
-                    <TextInput
-                      name="email"
-                      type="email"
-                      label="Email"
-                      placeholder="jiva@gmail.com"
-                      error={errors.email}
-                    />
-                    <TextInput
-                      name="fullName"
-                      type="text"
-                      label="Nama Lengkap"
-                      placeholder="John Doe"
-                      error={errors.fullName}
-                    />
-                    <TextInput
-                      name="password"
-                      type="password"
-                      label="Password"
-                      placeholder="Password"
-                      error={errors.password}
-                    />
+    <Layout navType="topbar">
+      <CSS>
+        <Card id="register-card">
+          <Formik
+            initialValues={{ ...fields }}
+            validate={(values) => {
+              const errors = {};
+              const ERR_MESSAGE = "Input ini wajib diisi";
+              Object.keys(fields).forEach((key) => {
+                if (!values[key]) errors[key] = ERR_MESSAGE;
+              });
+              return errors;
+            }}
+            onSubmit={(values) => {
+              dispatch(signup({ ...values, sikFile }));
+            }}
+          >
+            {({ errors, validateForm, isValid, validateField }) => (
+              <Form className="form">
+                {pageNum === 0 ? (
+                  <div className="container">
+                    <h1 id="title">Daftar Pemilik Klinik</h1>
+                    <div className="input-container">
+                      <TextInput
+                        name="email"
+                        type="email"
+                        label="Email"
+                        placeholder="jiva@gmail.com"
+                        error={errors.email}
+                      />
+                      <TextInput
+                        name="fullName"
+                        type="text"
+                        label="Nama Lengkap"
+                        placeholder="John Doe"
+                        error={errors.fullName}
+                      />
+                      <TextInput
+                        name="password"
+                        type="password"
+                        label="Password"
+                        placeholder="Password"
+                        error={errors.password}
+                      />
+                    </div>
+                    <Progress />
+                    <div id="button-container">
+                      <Button
+                        variant="outlined"
+                        onClick={() => location.assign("/")}
+                      >
+                        Batal
+                      </Button>
+                      <Button
+                        variant="contained"
+                        onClick={async () => {
+                          const currentErrors = await validateForm();
+                          if (
+                            !currentErrors.email &&
+                            !currentErrors.password &&
+                            !currentErrors.fullName
+                          ) {
+                            nextPage();
+                          }
+                        }}
+                      >
+                        Lanjut
+                      </Button>
+                    </div>
                   </div>
-                  <Progress />
-                  <div id="button-container">
-                    <Button
-                      variant="outlined"
-                      onClick={() => location.assign("/")}
-                    >
-                      Batal
-                    </Button>
-                    <Button
-                      variant="contained"
-                      onClick={async () => {
-                        const currentErrors = await validateForm();
-                        if (
-                          !currentErrors.email &&
-                          !currentErrors.password &&
-                          !currentErrors.fullName
-                        ) {
-                          nextPage();
-                        }
-                      }}
-                    >
-                      Lanjut
-                    </Button>
-                  </div>
-                </div>
-              ) : null}
+                ) : null}
 
-              {pageNum === 1 ? (
-                <div className="container">
-                  <h1 id="title">Daftar Klinik</h1>
-                  <div className="input-container">
-                    <TextInput
-                      name="clinicName"
-                      type="text"
-                      label="Nama Klinik"
-                      placeholder="Jiva"
-                      error={errors.clinicName}
-                    />
-                    <Dropzone setSikFile={setSikFile} sikFile={sikFile} />
+                {pageNum === 1 ? (
+                  <div className="container">
+                    <h1 id="title">Daftar Klinik</h1>
+                    <div className="input-container">
+                      <TextInput
+                        name="clinicName"
+                        type="text"
+                        label="Nama Klinik"
+                        placeholder="Jiva"
+                        error={errors.clinicName}
+                      />
+                      <Dropzone setSikFile={setSikFile} sikFile={sikFile} />
+                    </div>
+                    <Progress />
+                    <div id="button-container">
+                      <Button variant="outlined" onClick={prevPage}>
+                        Kembali
+                      </Button>
+                      <Button
+                        variant="contained"
+                        type="submit"
+                        disabled={!isValid || !sikFile}
+                      >
+                        Daftar
+                      </Button>
+                    </div>
                   </div>
-                  <Progress />
-                  <div id="button-container">
-                    <Button variant="outlined" onClick={prevPage}>
-                      Kembali
-                    </Button>
-                    <Button
-                      variant="contained"
-                      type="submit"
-                      disabled={!isValid || !sikFile}
-                    >
-                      Daftar
-                    </Button>
-                  </div>
-                </div>
-              ) : null}
-            </Form>
-          )}
-        </Formik>
-      </Card>
-    </CSS>
+                ) : null}
+              </Form>
+            )}
+          </Formik>
+        </Card>
+      </CSS>
+    </Layout>
   );
 };
 

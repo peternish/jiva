@@ -1,5 +1,4 @@
 import "@styles/globals.css";
-import Layout from "@components/Layout";
 
 // redux
 import { Provider } from "react-redux";
@@ -12,9 +11,7 @@ import "react-toastify/dist/ReactToastify.css";
 function MyApp({ Component, pageProps }) {
   return (
     <Provider store={store}>
-      <Layout>
-        <Component {...pageProps} />
-      </Layout>
+      <Component {...pageProps} />
       <ToastContainer />
     </Provider>
   );
