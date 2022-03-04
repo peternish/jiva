@@ -7,7 +7,7 @@ import { store } from "@redux/store";
 import Register from "@pages/register";
 import Dropzone, {
   getColor,
-} from "@components/pages/onboarding/Register/Dropzone";
+} from "@components/RegisterPageComponents/Dropzone";
 import constants from "@utils/constants";
 
 describe("<Register/>", () => {
