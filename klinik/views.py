@@ -8,7 +8,7 @@ from klinik.models import Cabang
 
 class CabangListApi(APIView):
     def get(self, request: Request, format=None):
-        klinik_id = request.data.get("klinik")
+        klinik_id = request.query_params.get("klinik")
         if klinik_id is None:
             return Response(status=status.HTTP_404_NOT_FOUND)
         branches = Cabang.objects.all()

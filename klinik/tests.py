@@ -1,182 +1,141 @@
-from django.test import TestCase
-from model_bakery import baker
-from unittest.mock import skip, patch
-
-# Models
-from .models import Account, Cabang, Klinik, Profile, OwnerProfile
-
-# Views
-import views
-
-# Rest
-from rest_framework.response import Response
-from rest_framework.test import APIRequestFactory
+from rest_framework.test import APITestCase
+from django.urls import reverse
 from rest_framework import status
+from account.models import Account
 
-# Errors
-from psycopg2 import IntegrityError
-
-
-class ProfileModelTest(TestCase):
-    def setUp(self) -> None:
-        self.profile = baker.make("klinik.Profile")
-        return super().setUp()
-
-    def test_profile_model_instace_of_Profile_class(self):
-        self.assertIsInstance(self.profile, Profile)
-
-    def test_profile_model_has_role(self):
-        self.assertEqual(self.profile.role, "tenaga_medis")
-
-    def test_profile_model_has_Account(self):
-        self.assertIsNotNone(self.profile.account.pk)
+from klinik.factory import AccountFactory, CabangFactory, KlinikFactory, OwnerFactory
+from klinik.models import Cabang, Klinik, OwnerProfile
+import random
 
 
-class OwnerProfileModelTest(TestCase):
-    def test_ownerprofile_is_subclass_of_profile(self):
-        self.assertTrue(issubclass(OwnerProfile, Profile))
+class CabangAPITest(APITestCase):
 
-    def test_ownerprofile_has_role_owner(self):
-        self.owner_profile = baker.make("klinik.OwnerProfile")
-        self.assertEqual(self.owner_profile.role, "owner")
+    def setUp(self):
+        self.url_list = reverse('klinik:cabang-list')
 
+        self.account = Account.objects.create_user(
+            email="test@example.com",
+            full_name="john doe",
+            password="aezakmi1337hesoyam",
+        )
+        self.account.save()
 
-class KlinikModelTest(TestCase):
-    def setUp(self) -> None:
-        self.klinik = baker.make("klinik.Klinik", name="Lalita")
-        return super().setUp()
+        self.owner = OwnerProfile(account=self.account)
+        self.owner.save()
 
-    def test_created_klinik_instace_of_Klinik_class(self):
-        self.assertIsInstance(self.klinik, Klinik)
+        # Should have ID 1
+        self.klinik = Klinik(
+            name="klinik1",
+            owner=self.owner
+        )
+        self.klinik.save()
 
-    def test_created_klinik_has_owner(self):
-        self.assertIsNotNone(self.klinik.owner.pk)
+        for i in range(10):
+            tmp = Cabang(
+                location="",
+                klinik=self.klinik
+            )
+            tmp.save()
 
-    def test_created_klinik_has_name(self):
-        self.assertEqual(self.klinik.name, "Lalita")
+        # Should have ID 2
+        self.klinik2 = Klinik(
+            name="klinik2",
+            owner=self.owner
+        )
+        self.klinik2.save()
 
+        for i in range(10):
+            tmp = Cabang(
+                location="alam sutra",
+                klinik=self.klinik2
+            )
+            tmp.save()
 
-class CabangModelTest(TestCase):
-    def setUp(self) -> None:
-        self.cabang = baker.make("klinik.Cabang", location="alam sutra")
-        return super().setUp()
+    def test_get_cabang_list_from_klinik(self):
+        self.assertEqual(Cabang.objects.count(), 20)
+        resp = self.client.get(self.url_list, data={"klinik": self.klinik.id})
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(resp.data), 10)
+        self.assertNotEqual(len(resp.data), 20)
 
-    def test_created_cabang_instace_of_Cabang_class(self):
-        self.assertIsInstance(self.cabang, Cabang)
+    def test_get_cabang_list_from_klinik_without_klinik_fails(self):
+        resp = self.client.get(self.url_list)
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
 
-    def test_created_cabang_belongs_to_klinik(self):
-        self.assertIsNotNone(self.cabang.klinik.pk)
+    def test_get_cabang_list_from_klinik_klinik_not_found(self):
+        self.assertEqual(Cabang.objects.count(), 20)
+        resp = self.client.get(self.url_list, data={"klinik": 0})
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(resp.data), 0)
+        self.assertNotEqual(len(resp.data), 10)
+        self.assertNotEqual(len(resp.data), 20)
 
-    def test_created_cabang_has_location(self):
-        self.assertEqual(self.cabang.location, "alam sutra")
-
-
-class CabangEndpointTest(TestCase):
-    def setUp(self) -> None:
-        self.api = APIRequestFactory()
-        self.TEST_KLINIK_PK = 1919
-        self.TEST_CABANG_PK = 9191
-        self.TEST_LOCATION = "Alam Sutra"
-        return super().setUp()
-
-    def test_fetch_all_cabang_that_belongs_to_klinik(self):
-        payload = {"klinik": self.TEST_KLINIK_PK}
-        request = self.api.get("/cabang/all", data=payload, format="json")
-        response = views.get_all_cabang(request)
-        rest_response = Response(request)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        cabang = response.data["cabang"]
-        self.assertEqual(cabang, rest_response.data["cabang"])
-        self.assertIsInstance(cabang, list)
-
-    def test_fetch_cabang_with_id(self):
-        payload = {"klinik": self.TEST_KLINIK_PK,
-                   "cabang": self.TEST_CABANG_PK}
-        request = self.api.get("/cabang/fetch", data=payload, format="json")
-        response = views.get_cabang(request)
-        rest_response = Response(request)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        cabang = response.data["cabang"]
-        self.assertEqual(cabang, rest_response.data["cabang"])
-        self.assertIsInstance(cabang, Cabang)
-
-    def test_create_cabang_from_klinik(self):
-        payload = {"klinik": self.TEST_KLINIK_PK,
-                   "location": self.TEST_LOCATION}
-        with patch.object(Cabang, "create_cabang", autospec=True) as mock_do:
-            request = self.api.post(
-                "/cabang/register", data=payload, format="json")
-            response = views.create_cabang(request)
-            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-            # TODO: mock serializer
-
-    def test_create_cabang_from_klinik_fail_without_location(self):
-        """
-        Payload should be handled manually
-        """
-        payload = {
-            "klinik": self.TEST_KLINIK_PK,
+    def test_post_cabang_list(self):
+        self.assertEqual(Cabang.objects.count(), 20)
+        data = {
+            "location": "alam baka",
+            "klinik": self.klinik.id
         }
-        request = self.api.post(
-            "/cabang/register", data=payload, format="json")
-        response = views.create_cabang(request)
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        resp = self.client.post(self.url_list, data=data)
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Cabang.objects.count(), 21)
 
-    @skip()
-    def mock_object_raise_integrity_error(self):
-        raise IntegrityError()
-
-    @patch(
-        "klinik.models.Cabang.objects.first",
-        new=mock_object_raise_integrity_error,
-    )
-    def test_create_cabang_from_klinik_fail_not_found(self):
-        payload = {
-            "klinik": self.TEST_KLINIK_PK,
-            "cabang": self.TEST_CABANG_PK
+    def test_post_cabang_list_klinik_not_found(self):
+        self.assertEqual(Cabang.objects.count(), 20)
+        data = {
+            "location": "alam baka",
+            "klinik": -1
         }
-        request = self.api.post(
-            "/cabang/register", data=payload, format="json")
-        response = views.create_cabang(request)
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        resp = self.client.post(self.url_list, data=data)
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(Cabang.objects.count(), 20)
 
-    def test_update_cabang_with_id(self):
-        payload = {"klinik": self.TEST_KLINIK_PK,
-                   "cabang": self.TEST_CABANG_PK}
-        request = self.api.get("/cabang/revise", data=payload, format="json")
-        response = views.update_cabang(request)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+    def test_get_cabang_detail(self):
+        cabang_list = list(Cabang.objects.all())
+        cabang = random.choice(cabang_list)
+        uri = reverse('klinik:cabang-detail', kwargs={"pk": cabang.id})
+        resp = self.client.get(uri)
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(resp.data['id'], cabang.id)
+        self.assertEqual(resp.data['klinik_id'], cabang.klinik_id)
+        self.assertEqual(resp.data['location'], cabang.location)
 
-    @patch(
-        "klinik.models.Cabang.objects.first",
-        new=mock_object_raise_integrity_error,
-    )
-    def test_update_cabang_with_id_fail_not_found(self):
-        payload = {"klinik": self.TEST_KLINIK_PK,
-                   "cabang": self.TEST_CABANG_PK}
-        request = self.api.get("/cabang/revise", data=payload, format="json")
-        response = views.update_cabang(request)
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+    def test_get_cabang_detail_cabang_not_found(self):
+        uri = reverse('klinik:cabang-detail', kwargs={"pk": 9999})
+        resp = self.client.get(uri)
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
 
-    @patch(
-        "klinik.models.Cabang.objects.first",
-        new=lambda: True,
-    )
-    def test_delete_cabang_with_id(self, mock_cabang):
-        payload = {"klinik": self.TEST_KLINIK_PK,
-                   "cabang": self.TEST_CABANG_PK}
-        request = self.api.get("/cabang/remove", data=payload, format="json")
-        response = views.remove_cabang(request)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(mock_cabang.call_count, 1)
+    def test_put_cabang_detail(self):
+        cabang_list = list(Cabang.objects.all())
+        cabang = random.choice(cabang_list)
+        uri = reverse('klinik:cabang-detail', kwargs={"pk": cabang.id})
+        resp = self.client.put(uri, data={"location": "alam baka"})
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(resp.data['id'], cabang.id)
+        self.assertEqual(resp.data['location'], 'alam baka')
+        self.assertNotEqual(resp.data['location'], cabang.location)
 
-    @patch(
-        "klinik.models.Cabang.objects.first",
-        new=mock_object_raise_integrity_error,
-    )
-    def test_delete_cabang_with_id_not_found(self):
-        payload = {"klinik": self.TEST_KLINIK_PK,
-                   "cabang": self.TEST_CABANG_PK}
-        request = self.api.get("/cabang/remove", data=payload, format="json")
-        response = views.remove_cabang(request)
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+    def test_put_cabang_detail_bad_request(self):
+        cabang_list = list(Cabang.objects.all())
+        cabang = random.choice(cabang_list)
+        uri = reverse('klinik:cabang-detail', kwargs={"pk": cabang.id})
+        resp = self.client.put(uri, data={"realm": "alam baka"})
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_delete_cabang_detail(self):
+        self.assertEqual(Cabang.objects.count(), 20)
+        cabang_list = list(Cabang.objects.all())
+        cabang = random.choice(cabang_list)
+        uri = reverse('klinik:cabang-detail', kwargs={"pk": cabang.id})
+        resp = self.client.delete(uri)
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(Cabang.objects.count(), 19)
+
+    def test_delete_cabang_detail_not_found(self):
+        self.assertEqual(Cabang.objects.count(), 20)
+        cabang_list = list(Cabang.objects.all())
+        cabang = random.choice(cabang_list)
+        uri = reverse('klinik:cabang-detail', kwargs={"pk": 9999})
+        resp = self.client.delete(uri)
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(Cabang.objects.count(), 20)
