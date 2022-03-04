@@ -3,7 +3,14 @@ from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework import status
 from klinik.serializers import CabangSerializer
-from klinik.models import Cabang
+from klinik.models import Cabang, Klinik
+
+
+def get_object(klass: APIView, pk: int):
+    try:
+        return klass.objects.get(pk=pk)
+    except klass.DoesNotExist:
+        return None
 
 
 class CabangListApi(APIView):
@@ -18,28 +25,33 @@ class CabangListApi(APIView):
 
     def post(self, request: Request, format=None):
         serializer = CabangSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
+        klinik_id = request.data.get("klinik")
+        klinik = get_object(Klinik, klinik_id)
+        if serializer.is_valid() and klinik is not None:
+            serializer.save(klinik=klinik)
             return Response(status=status.HTTP_201_CREATED)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 class CabangDetailApi(APIView):
-    def get_object(self, pk: int):
-        try:
-            return Cabang.objects.get(pk=pk)
-        except Cabang.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+    def get(self, request: Request, pk: int, format=None):
+        cabang = get_object(Cabang, pk)
+        serializer = CabangSerializer(cabang)
+        if cabang is not None:
+            return Response(data=serializer.data, status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
     def put(self, request: Request, pk: int, format=None):
-        cabang = self.get_object(pk)
+        cabang = get_object(Cabang, pk)
         serializer = CabangSerializer(cabang, data=request.data)
-        if serializer.is_valid():
+        if serializer.is_valid() and cabang is not None:
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request: Request, pk: int, format=None):
-        cabang = self.get_object(pk)
+        cabang = get_object(Cabang, pk)
+        if cabang is None:
+            return Response(status=status.HTTP_404_NOT_FOUND)
         cabang.delete()
         return Response(status=status.HTTP_200_OK)
