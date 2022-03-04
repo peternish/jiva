@@ -23,28 +23,28 @@ function DetailTenagaMedisPage() {
           fullWidth 
           variant="outlined" 
           label="Nama"
-          defaultValue="Budi Budiman"
+          placeholder="Budi Budiman"
         />
 
         <TextField 
           fullWidth 
           variant="outlined" 
           label="Email"
-          defaultValue="budi.budiman@email.com"
+          placeholder="budi.budiman@email.com"
         />
 
         <TextField 
           fullWidth 
           variant="outlined" 
           label="Nomor Telepon"
-          defaultValue="081234567890"
+          placeholder="081234567890"
         />
 
         <TextField 
           fullWidth 
           variant="outlined" 
           label="Input Field"
-          defaultValue="Input Field"
+          placeholder="Input Field"
         />
       </Stack>
 
