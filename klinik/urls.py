@@ -5,8 +5,10 @@ from klinik import views
 app_name = "klinik"
 
 cabang_patterns = [
-    path('', views.CabangListApi.as_view()),
-    path('<int:pk>/', views.CabangDetailApi.as_view()),
+    path('', views.CabangListApi.as_view(),
+         name="klinik-cabang-list"),
+    path('<int:pk>/', views.CabangDetailApi.as_view(),
+         name="klinik-cabang-detail"),
 ]
 
 cabang_patterns = format_suffix_patterns(cabang_patterns)
