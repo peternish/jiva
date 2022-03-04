@@ -15,7 +15,6 @@ const LayoutStyle = styled.div`
   height: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
 `;
 
 const Layout = ({ children, navType = 'sidebar' }) => {
