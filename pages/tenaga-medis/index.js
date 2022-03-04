@@ -1,4 +1,4 @@
-import DashboardTenagaMedisPage from 'components/pages/tenaga-medis/DashboardTenagaMedisPage'
+import DashboardTenagaMedisPage from '@components/pages/tenaga-medis/DashboardTenagaMedisPage'
 
 function DashboardTenagaMedis() {
   return <DashboardTenagaMedisPage />

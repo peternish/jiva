@@ -1,4 +1,4 @@
-import CreateTenagaMedisPage from 'components/pages/tenaga-medis/CreateTenagaMedisPage'
+import CreateTenagaMedisPage from '@components/pages/tenaga-medis/CreateTenagaMedisPage'
 
 function CreateTenagaMedis() {
   return <CreateTenagaMedisPage />

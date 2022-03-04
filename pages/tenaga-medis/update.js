@@ -1,4 +1,4 @@
-import UpdateTenagaMedisPage from 'components/pages/tenaga-medis/UpdateTenagaMedisPage'
+import UpdateTenagaMedisPage from '@components/pages/tenaga-medis/UpdateTenagaMedisPage'
 
 
 function UpdateTenagaMedis() {
