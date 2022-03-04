@@ -1,192 +1,146 @@
 import { useState } from "react";
 
-import styled from "styled-components";
-
 // component imports
 import Card from "@mui/material/Card";
 import { Formik, Form } from "formik";
-import TextInput from "@components/common/TextInput";
 import Button from "@mui/material/Button";
-import Dropzone from "@components/pages/onboarding/Register/Dropzone.js"
+import CSS from "@components/pages/onboarding/Register/CSS";
+import TextInput from "@components/common/TextInput";
+import Dropzone from "@components/pages/onboarding/Register/Dropzone.js";
 
-const CSS = styled.div`
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  #title {
-    font-size: 3em;
-  }
-
-  #register-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 3em;
-    width: max-content;
-    box-sizing: border-box;
-    height: max-content;
-    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.15);
-    border-radius: 0.5em;
-  }
-
-  .form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 2em 0;
-    height: 15em;
-    width: 100%;
-  }
-
-  #button-container {
-    display: flex;
-    width: 20em;
-    gap: 1em;
-
-    button {
-      width: 100%;
-    }
-  }
-
-  #progress {
-    display: flex;
-    gap: 0.5em;
-    margin: 1em 0;
-
-    .dot {
-      width: 0.75em;
-      height: 0.75em;
-      background: #c4c4c4;
-      border-radius: 50%;
-
-      &.active {
-        background: #0052d0;
-      }
-    }
-  }
-
-  @media (max-width: 768px) {
-    padding: 2em 0;
-
-    #register-card {
-      width: 100%;
-    }
-  }
-`;
-
-// forms
-const CredentialsForm = () => {
-  return (
-    <>
-      <TextInput
-        name="email"
-        type="email"
-        label="Email"
-        placeholder="jiva@gmail.com"
-      />
-      <TextInput
-        name="full_name"
-        type="text"
-        label="Nama Lengkap"
-        placeholder="John Doe"
-      />
-      <TextInput
-        name="password"
-        type="password"
-        label="Password"
-        placeholder="Password"
-      />
-    </>
-  );
-};
-
-const ClinicForm = () => {
-  return (
-    <>
-      <TextInput
-        name="clinic_name"
-        type="text"
-        label="Nama Klinik"
-        placeholder="Jiva"
-      />
-      <Dropzone/>
-    </>
-  );
-};
+// redux
+import { useDispatch } from "react-redux";
+import { signup } from "@redux/modules/auth/thunks";
 
 const Register = () => {
+  const dispatch = useDispatch();
   const [pageNum, setPageNum] = useState(0);
+  const [sikFile, setSikFile] = useState(null);
 
-  const pageDetails = [
-    {
-      title: "Daftar Pemilik Klinik",
-      formComponent: <CredentialsForm />,
-      cta1: {
-        label: "Batal",
-        onClick: () => history.back(),
-      },
-      cta2: {
-        label: "Lanjut",
-        onClick: () => setPageNum(pageNum + 1),
-      },
-    },
-    {
-      title: "Daftar Klinik",
-      formComponent: <ClinicForm />,
-      cta1: {
-        label: "Kembali",
-        onClick: () => setPageNum(pageNum - 1),
-      },
-      cta2: {
-        label: "Daftar",
-        type: "submit",
-      },
-    },
-  ];
+  const Progress = () => (
+    <div className="progress">
+      {[0, 1].map((_, idx) => (
+        <div
+          className={`dot ${pageNum === idx ? "active" : ""}`}
+          key={idx}
+        ></div>
+      ))}
+    </div>
+  );
+
+  const nextPage = () => setPageNum(pageNum + 1);
+  const prevPage = () => setPageNum(pageNum - 1);
+
+  const fields = {
+    email: "",
+    password: "",
+    fullName: "",
+    clinicName: "",
+  };
 
   return (
     <CSS>
       <Card id="register-card">
-        <h1 id="title">{pageDetails[pageNum].title}</h1>
         <Formik
-          initialValues={{
-            email: "",
-            password: "",
-            full_name: "",
-            clinic_name: "",
+          initialValues={{ ...fields }}
+          validate={(values) => {
+            const errors = {};
+            const ERR_MESSAGE = "Input ini wajib diisi";
+            Object.keys(fields).forEach((key) => {
+              if (!values[key]) errors[key] = ERR_MESSAGE;
+            });
+            return errors;
           }}
-          validate={(values) => {}}
-          onSubmit={(values, { setSubmitting }) => {}}
+          onSubmit={(values) => {
+            dispatch(signup({ ...values, sikFile }));
+          }}
         >
-          {() => (
-            <Form className="form">{pageDetails[pageNum].formComponent}</Form>
+          {({ errors, validateForm, isValid, validateField }) => (
+            <Form className="form">
+              {pageNum === 0 ? (
+                <div className="container">
+                  <h1 id="title">Daftar Pemilik Klinik</h1>
+                  <div className="input-container">
+                    <TextInput
+                      name="email"
+                      type="email"
+                      label="Email"
+                      placeholder="jiva@gmail.com"
+                      error={errors.email}
+                    />
+                    <TextInput
+                      name="fullName"
+                      type="text"
+                      label="Nama Lengkap"
+                      placeholder="John Doe"
+                      error={errors.fullName}
+                    />
+                    <TextInput
+                      name="password"
+                      type="password"
+                      label="Password"
+                      placeholder="Password"
+                      error={errors.password}
+                    />
+                  </div>
+                  <Progress />
+                  <div id="button-container">
+                    <Button
+                      variant="outlined"
+                      onClick={() => location.assign("/")}
+                    >
+                      Batal
+                    </Button>
+                    <Button
+                      variant="contained"
+                      onClick={async () => {
+                        const currentErrors = await validateForm();
+                        if (
+                          !currentErrors.email &&
+                          !currentErrors.password &&
+                          !currentErrors.fullName
+                        ) {
+                          nextPage();
+                        }
+                      }}
+                    >
+                      Lanjut
+                    </Button>
+                  </div>
+                </div>
+              ) : null}
+
+              {pageNum === 1 ? (
+                <div className="container">
+                  <h1 id="title">Daftar Klinik</h1>
+                  <div className="input-container">
+                    <TextInput
+                      name="clinicName"
+                      type="text"
+                      label="Nama Klinik"
+                      placeholder="Jiva"
+                      error={errors.clinicName}
+                    />
+                    <Dropzone setSikFile={setSikFile} sikFile={sikFile} />
+                  </div>
+                  <Progress />
+                  <div id="button-container">
+                    <Button variant="outlined" onClick={prevPage}>
+                      Kembali
+                    </Button>
+                    <Button
+                      variant="contained"
+                      type="submit"
+                      disabled={!isValid || !sikFile}
+                    >
+                      Daftar
+                    </Button>
+                  </div>
+                </div>
+              ) : null}
+            </Form>
           )}
         </Formik>
-        <div id="progress">
-          {pageDetails.map((_, idx) => (
-            <div
-              className={`dot ${pageNum === idx ? "active" : ""}`}
-              key={idx}
-            ></div>
-          ))}
-        </div>
-        <div id="button-container">
-          <Button
-            variant="outlined"
-            onClick={pageDetails[pageNum].cta1.onClick}
-          >
-            {pageDetails[pageNum].cta1.label}
-          </Button>
-          <Button
-            variant="contained"
-            onClick={pageDetails[pageNum].cta2.onClick}
-            type={pageDetails[pageNum].cta2.type || ""}
-          >
-            {pageDetails[pageNum].cta2.label}
-          </Button>
-        </div>
       </Card>
     </CSS>
   );

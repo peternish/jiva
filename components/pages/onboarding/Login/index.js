@@ -5,12 +5,18 @@ import Card from "@mui/material/Card";
 import { Formik, Form } from "formik";
 import TextInput from "@components/common/TextInput";
 import Button from "@mui/material/Button";
+import { toast } from "react-toastify";
+
+// redux
+import { useDispatch } from "react-redux";
+import { login } from "@redux/modules/auth/thunks";
 
 const CSS = styled.div`
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100%;
 
   #title {
     font-size: 3em;
@@ -49,45 +55,60 @@ const CSS = styled.div`
   }
 `;
 
+const fields = {
+  email: "",
+  password: "",
+};
+
 const Login = () => {
+  const dispatch = useDispatch();
   return (
     <CSS>
       <Card id="card">
         <h1 id="title">Masuk</h1>
         <Formik
-          initialValues={{
-            email: "",
-            password: ""
+          initialValues={fields}
+          validate={(values) => {
+            const errors = {};
+            const ERR_MESSAGE = "Input ini wajib diisi";
+            Object.keys(fields).forEach((key) => {
+              if (!values[key]) errors[key] = ERR_MESSAGE;
+            });
+            return errors;
           }}
-          validate={(values) => {}}
-          onSubmit={(values, { setSubmitting }) => {}}
+          onSubmit={(values) => {
+            try {
+              dispatch(login(values));
+            } catch (err) {
+              console.log(err);
+            }
+          }}
         >
-          {() => (
+          {({ isValid, errors }) => (
             <Form id="form">
               <TextInput
                 name="email"
                 type="email"
                 label="Email"
                 placeholder="jiva@gmail.com"
+                error={errors.email}
               />
               <TextInput
                 name="password"
                 type="password"
                 label="Password"
                 placeholder="password"
+                error={errors.password}
               />
+              <Button variant="contained" type="submit" disabled={!isValid}>
+                Masuk
+              </Button>
             </Form>
           )}
         </Formik>
-        <Button
-          variant="contained"
-          type="submit"
-        >
-          Masuk
-        </Button>
       </Card>
     </CSS>
   );
-}
+};
 
-export default Login
+export default Login;
