@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react'
-import Tambah from 'pages/pengaturan-pengguna/tambah'
+import Tambah from '@pages/pengaturan-pengguna/tambah'
 import '@testing-library/jest-dom'
 
 describe("Pengaturan Pengguna Tambah", () => {

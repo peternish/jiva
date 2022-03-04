@@ -1,5 +1,7 @@
-import { render, screen } from '@testing-library/react'
-import Dashboard from 'pages/pengaturan-pengguna/index'
+import { fireEvent, render, screen } from '@testing-library/react'
+import { Provider } from "react-redux"
+import { store } from "@redux/store"
+import Dashboard from '@pages/pengaturan-pengguna/index'
 import '@testing-library/jest-dom'
 
 describe("Pengaturan Pengguna Main", () => {
@@ -40,4 +42,6 @@ describe("Pengaturan Pengguna Main", () => {
 
     expect(linktambah).toBeInTheDocument()
   })
+
+
 });
