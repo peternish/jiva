@@ -3,7 +3,6 @@ from django.urls import reverse
 from rest_framework import status
 from account.models import Account
 
-from klinik.factory import AccountFactory, CabangFactory, KlinikFactory, OwnerFactory
 from klinik.models import Cabang, Klinik, OwnerProfile
 import random
 
