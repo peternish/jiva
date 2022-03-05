@@ -1,22 +1,20 @@
-from klinik.models import Cabang, Klinik, OwnerProfile
+from .models import Cabang, Klinik, OwnerProfile
 from rest_framework.test import APITestCase
 from django.urls import reverse
 from rest_framework import status
 from account.models import Account
 from django.core.files.uploadedfile import SimpleUploadedFile
-
-from klinik.models import Klinik, OwnerProfile
-import random
 import secrets
 import os
 
 
 class KlinikAPITest(APITestCase):
     def setUp(self):
+        self.url = "klinik:klinik-detail"
         self.account = Account.objects.create_user(
             email="test@example.com",
             full_name="Larissa Rochefort",
-            password="asdqwe123",
+            password=os.getenv("SECRET_KEY"),
         )
 
         self.owner = OwnerProfile(account=self.account)
@@ -41,39 +39,39 @@ class KlinikAPITest(APITestCase):
         self.klinik2.save()
 
     def test_get_klinik(self):
-        url = reverse("klinik:klinik-detail", kwargs={"pk":1})
+        url = reverse(self.url, kwargs={"pk":1})
         resp = self.client.get(url)
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
 
     def test_get_klinik_fail(self):
-        url = reverse("klinik:klinik-detail", kwargs={"pk":999})
+        url = reverse(self.url, kwargs={"pk":999})
         resp = self.client.get(url)
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_put_klinik(self):
         klinik_list = list(Klinik.objects.all())
-        klinik = random.choice(klinik_list)
-        url = reverse("klinik:klinik-detail", kwargs={"pk":klinik.id})
+        klinik = secrets.choice(klinik_list)
+        url = reverse(self.url, kwargs={"pk":klinik.id})
         resp = self.client.put(url, data={"name": "apeture"})
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
 
     def test_put_klinik_fail(self):
-        url = reverse("klinik:klinik-detail", kwargs={"pk":3})
+        url = reverse(self.url, kwargs={"pk":3})
         resp = self.client.put(url, data={"name": "klinik3"})
         self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_delete_klinik(self):
         self.assertEqual(Klinik.objects.count(), 2)
         klinik_list = list(Klinik.objects.all())
-        klinik = random.choice(klinik_list)
-        url = reverse("klinik:klinik-detail", kwargs={"pk": klinik.id})
+        klinik = secrets.choice(klinik_list)
+        url = reverse(self.url, kwargs={"pk": klinik.id})
         resp = self.client.delete(url)
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         self.assertEqual(Klinik.objects.count(), 1)
 
     def test_delete_klinik_fail(self):
         self.assertEqual(Klinik.objects.count(), 2)
-        url = reverse("klinik:klinik-detail", kwargs={"pk": 999})
+        url = reverse(self.url, kwargs={"pk": 999})
         resp = self.client.delete(url)
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
         self.assertEqual(Klinik.objects.count(), 2)
