@@ -29,7 +29,7 @@ class CabangAPITest(APITestCase):
         )
         self.klinik.save()
 
-        for i in range(10):
+        for _ in range(10):
             tmp = Cabang(
                 location="",
                 klinik=self.klinik
@@ -43,7 +43,7 @@ class CabangAPITest(APITestCase):
         )
         self.klinik2.save()
 
-        for i in range(10):
+        for _ in range(10):
             tmp = Cabang(
                 location="alam sutra",
                 klinik=self.klinik2
