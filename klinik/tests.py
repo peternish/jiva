@@ -11,6 +11,7 @@ class CabangAPITest(APITestCase):
 
     def setUp(self):
         self.url_list = reverse('klinik:cabang-list')
+        self.url_detail = 'klinik:cabang-detail'
 
         self.account = Account.objects.create_user(
             email="test@example.com",
@@ -50,6 +51,8 @@ class CabangAPITest(APITestCase):
             )
             tmp.save()
 
+        self.alt_location = "alam baka"
+
     def test_get_cabang_list_from_klinik(self):
         self.assertEqual(Cabang.objects.count(), 20)
         resp = self.client.get(self.url_list, data={"klinik": self.klinik.id})
@@ -72,7 +75,7 @@ class CabangAPITest(APITestCase):
     def test_post_cabang_list(self):
         self.assertEqual(Cabang.objects.count(), 20)
         data = {
-            "location": "alam baka",
+            "location": self.alt_location,
             "klinik": self.klinik.id
         }
         resp = self.client.post(self.url_list, data=data)
@@ -82,7 +85,7 @@ class CabangAPITest(APITestCase):
     def test_post_cabang_list_klinik_not_found(self):
         self.assertEqual(Cabang.objects.count(), 20)
         data = {
-            "location": "alam baka",
+            "location": self.alt_location,
             "klinik": -1
         }
         resp = self.client.post(self.url_list, data=data)
@@ -92,7 +95,7 @@ class CabangAPITest(APITestCase):
     def test_get_cabang_detail(self):
         cabang_list = list(Cabang.objects.all())
         cabang = secrets.choice(cabang_list)
-        uri = reverse('klinik:cabang-detail', kwargs={"pk": cabang.id})
+        uri = reverse(self.url_detail, kwargs={"pk": cabang.id})
         resp = self.client.get(uri)
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         self.assertEqual(resp.data['id'], cabang.id)
@@ -100,15 +103,15 @@ class CabangAPITest(APITestCase):
         self.assertEqual(resp.data['location'], cabang.location)
 
     def test_get_cabang_detail_cabang_not_found(self):
-        uri = reverse('klinik:cabang-detail', kwargs={"pk": 9999})
+        uri = reverse(self.url_detail, kwargs={"pk": 9999})
         resp = self.client.get(uri)
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_put_cabang_detail(self):
         cabang_list = list(Cabang.objects.all())
         cabang = secrets.choice(cabang_list)
-        uri = reverse('klinik:cabang-detail', kwargs={"pk": cabang.id})
-        resp = self.client.put(uri, data={"location": "alam baka"})
+        uri = reverse(self.url_detail, kwargs={"pk": cabang.id})
+        resp = self.client.put(uri, data={"location": self.alt_location})
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         self.assertEqual(resp.data['id'], cabang.id)
         self.assertEqual(resp.data['location'], 'alam baka')
@@ -117,15 +120,15 @@ class CabangAPITest(APITestCase):
     def test_put_cabang_detail_bad_request(self):
         cabang_list = list(Cabang.objects.all())
         cabang = secrets.choice(cabang_list)
-        uri = reverse('klinik:cabang-detail', kwargs={"pk": cabang.id})
-        resp = self.client.put(uri, data={"realm": "alam baka"})
+        uri = reverse(self.url_detail, kwargs={"pk": cabang.id})
+        resp = self.client.put(uri, data={"realm": self.alt_location})
         self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_delete_cabang_detail(self):
         self.assertEqual(Cabang.objects.count(), 20)
         cabang_list = list(Cabang.objects.all())
         cabang = secrets.choice(cabang_list)
-        uri = reverse('klinik:cabang-detail', kwargs={"pk": cabang.id})
+        uri = reverse(self.url_detail, kwargs={"pk": cabang.id})
         resp = self.client.delete(uri)
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         self.assertEqual(Cabang.objects.count(), 19)
@@ -133,7 +136,7 @@ class CabangAPITest(APITestCase):
     def test_delete_cabang_detail_not_found(self):
         self.assertEqual(Cabang.objects.count(), 20)
         cabang_list = list(Cabang.objects.all())
-        uri = reverse('klinik:cabang-detail', kwargs={"pk": 9999})
+        uri = reverse(self.url_detail, kwargs={"pk": 9999})
         resp = self.client.delete(uri)
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
         self.assertEqual(Cabang.objects.count(), 20)
