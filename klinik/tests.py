@@ -135,7 +135,6 @@ class CabangAPITest(APITestCase):
 
     def test_delete_cabang_detail_not_found(self):
         self.assertEqual(Cabang.objects.count(), 20)
-        cabang_list = list(Cabang.objects.all())
         uri = reverse(self.url_detail, kwargs={"pk": 9999})
         resp = self.client.delete(uri)
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
