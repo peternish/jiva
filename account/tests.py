@@ -65,6 +65,8 @@ class ModelTest(TestCase):
         self.assertTrue(account.is_superuser, True)
         self.assertTrue(account.is_staff, True)
         self.assertTrue(account.is_admin, True)
+        self.assertTrue(account.has_perm("account.can_add"))
+        self.assertTrue(account.has_module_perms("account"))
 
 
 class IntegrationTest(TestCase):

@@ -75,6 +75,9 @@ coverage==6.3.2; python_version >= "3.7" \
 django-storages==1.12.3; python_version >= "3.5" \
     --hash=sha256:a475edb2f0f04c4f7e548919a751ecd50117270833956ed5bd585c0575d2a5e7 \
     --hash=sha256:204a99f218b747c46edbfeeb1310d357f83f90fa6a6024d8d0a3f422570cee84
+django-cors-headers==3.11.0; python_version >= "3.7" \
+    --hash=sha256:eb98389bf7a2afc5d374806af4a9149697e3a6955b5a2dc2bf049f7d33647456 \
+    --hash=sha256:a22be2befd4069c4fc174f11cf067351df5c061a3a5f94a01650b4e928b0372b
 django==4.0.3; python_version >= "3.8" \
     --hash=sha256:1239218849e922033a35d2a2f777cb8bee18bd725416744074f455f34ff50d0c \
     --hash=sha256:77ff2e7050e3324c9b67e29b6707754566f58514112a9ac73310f60cd5261930
