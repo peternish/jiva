@@ -24,8 +24,6 @@ class CabangListApi(APIView):
     def get(self, request: Request, format=None):
         owner = OwnerProfile.objects.get(account__email=request.user)
         klinik = Klinik.objects.get(owner=owner)
-        if klinik is None:
-            return Response(status=status.HTTP_404_NOT_FOUND)
         branches = Cabang.objects.all()
         branches = branches.filter(klinik=klinik)
         serializer = CabangSerializer(branches, many=True)
