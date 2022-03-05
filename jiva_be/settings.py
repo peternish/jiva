@@ -28,7 +28,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = getenv("DEBUG") == "TRUE"
+DEBUG = True
 
 ALLOWED_HOSTS = [
     "localhost",
@@ -37,12 +37,6 @@ ALLOWED_HOSTS = [
     "jiva-backend.herokuapp.com",
 ]
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://127.0.0.1",
-    "https://jiva.vercel.app",
-    "https://jiva-staging.vercel.app"
-]
 
 # Application definition
 
@@ -51,7 +45,6 @@ APPS = ["klinik", "account"]
 MODULES = [
     "rest_framework",
     "rest_framework_simplejwt",
-    "corsheaders"
 ]
 
 INSTALLED_APPS = (
@@ -70,7 +63,6 @@ INSTALLED_APPS = (
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
-    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
