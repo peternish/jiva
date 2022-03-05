@@ -1,10 +1,10 @@
+from klinik.models import Cabang, Klinik, OwnerProfile
 from rest_framework.test import APITestCase
 from django.urls import reverse
 from rest_framework import status
 from account.models import Account
-
-from klinik.models import Cabang, Klinik, OwnerProfile
-import random
+import secrets
+import os
 
 
 class CabangAPITest(APITestCase):
@@ -15,7 +15,7 @@ class CabangAPITest(APITestCase):
         self.account = Account.objects.create_user(
             email="test@example.com",
             full_name="john doe",
-            password="aezakmi1337hesoyam",
+            password=os.getenv("SECRET_KEY"),
         )
         self.account.save()
 
@@ -91,7 +91,7 @@ class CabangAPITest(APITestCase):
 
     def test_get_cabang_detail(self):
         cabang_list = list(Cabang.objects.all())
-        cabang = random.choice(cabang_list)
+        cabang = secrets.choice(cabang_list)
         uri = reverse('klinik:cabang-detail', kwargs={"pk": cabang.id})
         resp = self.client.get(uri)
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
@@ -106,7 +106,7 @@ class CabangAPITest(APITestCase):
 
     def test_put_cabang_detail(self):
         cabang_list = list(Cabang.objects.all())
-        cabang = random.choice(cabang_list)
+        cabang = secrets.choice(cabang_list)
         uri = reverse('klinik:cabang-detail', kwargs={"pk": cabang.id})
         resp = self.client.put(uri, data={"location": "alam baka"})
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
@@ -116,7 +116,7 @@ class CabangAPITest(APITestCase):
 
     def test_put_cabang_detail_bad_request(self):
         cabang_list = list(Cabang.objects.all())
-        cabang = random.choice(cabang_list)
+        cabang = secrets.choice(cabang_list)
         uri = reverse('klinik:cabang-detail', kwargs={"pk": cabang.id})
         resp = self.client.put(uri, data={"realm": "alam baka"})
         self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
@@ -124,7 +124,7 @@ class CabangAPITest(APITestCase):
     def test_delete_cabang_detail(self):
         self.assertEqual(Cabang.objects.count(), 20)
         cabang_list = list(Cabang.objects.all())
-        cabang = random.choice(cabang_list)
+        cabang = secrets.choice(cabang_list)
         uri = reverse('klinik:cabang-detail', kwargs={"pk": cabang.id})
         resp = self.client.delete(uri)
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
@@ -133,7 +133,7 @@ class CabangAPITest(APITestCase):
     def test_delete_cabang_detail_not_found(self):
         self.assertEqual(Cabang.objects.count(), 20)
         cabang_list = list(Cabang.objects.all())
-        cabang = random.choice(cabang_list)
+        cabang = secrets.choice(cabang_list)
         uri = reverse('klinik:cabang-detail', kwargs={"pk": 9999})
         resp = self.client.delete(uri)
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)

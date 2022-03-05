@@ -4,9 +4,10 @@ from rest_framework.request import Request
 from rest_framework import status
 from klinik.serializers import CabangSerializer
 from klinik.models import Cabang, Klinik
+from django.db import models
 
 
-def get_object(klass: APIView, pk: int):
+def get_object(klass: models.Model, pk: int):
     try:
         return klass.objects.get(pk=pk)
     except klass.DoesNotExist:
