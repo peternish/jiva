@@ -1,10 +1,6 @@
 import styled from "styled-components";
 import BaseDropzone from "react-dropzone";
 
-// redux
-import { useDispatch, useSelector } from "react-redux";
-import { setSikFile } from "@redux/modules/auth";
-
 // utils
 import constants from "@utils/constants";
 
