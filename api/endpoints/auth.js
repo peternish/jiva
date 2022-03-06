@@ -3,7 +3,7 @@ import { axiosInstance as axios } from "@api/http";
 
 const BASE_URL = constants?.API_BASE_URL + "/account";
 
-const endpoints = {
+const authEndpoints = {
   signup: ({ email, password, full_name } = {}) =>
     axios.post(`${BASE_URL}/register/`, {
       email,
@@ -22,4 +22,4 @@ const endpoints = {
   logout: () => {},
 };
 
-export default endpoints;
+export default authEndpoints;

@@ -1,6 +1,6 @@
 import axios from "axios";
 import { store } from "@redux/store";
-import { refresh } from "@redux/modules/auth/thunks";
+import { refreshToken } from "@redux/modules/auth/thunks";
 
 const axiosInstance = axios.create();
 
@@ -22,7 +22,7 @@ axios.interceptors.response.use(
   },
   function (error) {
     if (error?.response.status === 401) {
-      store.dispatch(refresh());
+      store.dispatch(refreshToken());
     }
     return Promise.reject(error);
   }
