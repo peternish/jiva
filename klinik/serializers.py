@@ -1,5 +1,12 @@
 from rest_framework import serializers
-from klinik.models import Cabang
+from klinik.models import Klinik, Cabang
+
+
+class KlinikSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Klinik
+        fields = ["id", "owner_id", "name"]
+        read_only_fields = ["id", "owner_id"]
 
 
 class CabangSerializer(serializers.ModelSerializer):
