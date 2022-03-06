@@ -18,10 +18,12 @@ export const signup = ({
   clinicName,
   sikFile,
 } = {}) => {
-  return async () => {
+  return async (dispatch) => {
     try {
       await jivaAPI.auth.signup({ email, password, full_name: fullName });
-      location.assign("/login");
+      await dispatch(login({ email, password }));
+      await jivaAPI.klinik.createKlinik({ clinicName, sikFile });
+      location.assign("/");
     } catch (error) {
       let errorMessage = "Something went wrong 😥";
       if (error?.response?.status === 400 && error?.response?.data) {
@@ -50,6 +52,17 @@ export const login = ({ email, password } = {}) => {
     } catch (err) {
       toast(err, { type: toast.TYPE.ERROR });
     }
+  };
+};
+
+export const refresh = () => {
+  return async (dispatch, _getState) => {
+    const {
+      data: { access },
+    } = await jivaAPI.auth.refresh({
+      refresh: _getState().auth.refreshToken,
+    });
+    await dispatch(setAccessToken(access));
   };
 };
 

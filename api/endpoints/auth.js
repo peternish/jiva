@@ -15,6 +15,10 @@ const endpoints = {
       email,
       password,
     }),
+  refresh: ({ refresh } = {}) =>
+    axios.post(`${BASE_URL}/token/refresh/`, {
+      refresh,
+    }),
   logout: () => {},
 };
 
