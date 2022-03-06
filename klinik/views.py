@@ -76,9 +76,9 @@ class CabangListApi(APIView):
         return Response(serializer.data)
 
     def post(self, request: Request, format=None):
+        owner = OwnerProfile.objects.get(account__email=request.user)
+        klinik = Klinik.objects.get(owner=owner)
         serializer = CabangSerializer(data=request.data)
-        klinik_id = request.data.get("klinik")
-        klinik = get_object(Klinik, klinik_id)
         if serializer.is_valid() and klinik is not None:
             serializer.save(klinik=klinik)
             return Response(status=status.HTTP_201_CREATED)
