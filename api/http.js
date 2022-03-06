@@ -3,13 +3,16 @@ import { store } from "@redux/store";
 
 const axiosInstance = axios.create();
 
-store.subscribe(() => {
-  const { accessToken } = store.getState().auth;
-  Object.assign(axiosInstance.defaults, {
-    headers: {
-      authorization: accessToken ? `Bearer ${accessToken}` : "None",
-    },
-  });
-});
+axiosInstance.interceptors.request.use(
+  function (config) {
+    config.headers["Authorization"] = `Bearer ${
+      store.getState().auth.accessToken
+    }`;
+    return config;
+  },
+  function (error) {
+    return Promise.reject(error);
+  }
+);
 
 export { axiosInstance };
