@@ -33,6 +33,12 @@ class Account(AbstractBaseUser):
     is_superuser = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
 
+    def has_perm(self, perm, obj=None):
+        return self.is_staff
+
+    def has_module_perms(self, package_name):
+        return True
+
     USERNAME_FIELD = "email"
 
     def save(self, *args, **kwargs):
