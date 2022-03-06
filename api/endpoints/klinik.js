@@ -3,7 +3,7 @@ import { axiosInstance as axios } from "@api/http";
 
 const BASE_URL = constants?.API_BASE_URL + "/klinik";
 
-const endpoints = {
+const klinikEndpoints = {
   createKlinik: ({ clinicName, sikFile } = {}) => {
     const formData = new FormData();
     formData.append("name", clinicName);
@@ -13,4 +13,4 @@ const endpoints = {
   },
 };
 
-export default endpoints;
+export default klinikEndpoints;

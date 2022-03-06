@@ -55,7 +55,7 @@ export const login = ({ email, password } = {}) => {
   };
 };
 
-export const refresh = () => {
+export const refreshToken = () => {
   return async (dispatch, _getState) => {
     const {
       data: { access },
