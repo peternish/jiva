@@ -1,5 +1,6 @@
 import axios from "axios";
 import { store } from "@redux/store";
+import { refresh } from "@redux/modules/auth/thunks";
 
 const axiosInstance = axios.create();
 
@@ -11,6 +12,18 @@ axiosInstance.interceptors.request.use(
     return config;
   },
   function (error) {
+    return Promise.reject(error);
+  }
+);
+
+axios.interceptors.response.use(
+  function (response) {
+    return response;
+  },
+  function (error) {
+    if (error?.response.status === 401) {
+      store.dispatch(refresh());
+    }
     return Promise.reject(error);
   }
 );

@@ -53,6 +53,17 @@ export const login = ({ email, password } = {}) => {
   };
 };
 
+export const refresh = () => {
+  return async (dispatch, _getState) => {
+    const {
+      data: { access },
+    } = await jivaAPI.auth.refresh({
+      refresh: _getState().auth.refreshToken,
+    });
+    await dispatch(setAccessToken(access));
+  };
+};
+
 export const logout = () => {
   return async () => {
     await persistor.purge();
