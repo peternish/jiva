@@ -8,11 +8,13 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 import secrets
 import os
 
-
-class KlinikAPITest(APITestCase):
+class KlinikTestSetUp(APITestCase):
     def setUp(self):
         self.url = "klinik:klinik-detail"
         self.file_content = b"these are the file contents!"
+
+        self.url_list = reverse("klinik:cabang-list")
+        self.url_detail = "klinik:cabang-detail"
 
         self.email = "test@example.com"
         self.account = Account.objects.create_user(
@@ -36,17 +38,23 @@ class KlinikAPITest(APITestCase):
 
         # Should have ID 1
         test_file = SimpleUploadedFile(
-            "best_file_eva.txt", self.file
+            "best_file_eva.txt", self.file_content
         )
         self.klinik = Klinik(name="klinik1", owner=self.owner, sik=test_file)
         self.klinik.save()
+        for _ in range(10):
+            tmp = Cabang(location="", klinik=self.klinik)
+            tmp.save()
 
         # Should have ID 2
         test_file2 = SimpleUploadedFile(
-            "not_the_best_file_eva.txt", self.file
+            "not_the_best_file_eva.txt", self.file_content
         )
         self.klinik2 = Klinik(name="klinik2", owner=self.owner2, sik=test_file2)
         self.klinik2.save()
+        for _ in range(10):
+            tmp = Cabang(location="alam sutra", klinik=self.klinik2)
+            tmp.save()
 
         url = reverse("account:login")
         resp = self.client.post(
@@ -60,6 +68,11 @@ class KlinikAPITest(APITestCase):
         self.token = resp.data["access"]
         self.auth = "Bearer " + self.token
 
+        self.alt_location = "alam baka"
+
+
+class KlinikAPITest(KlinikTestSetUp):
+    
     def test_get_klinik(self):
         url = reverse(self.url, kwargs={"pk": 1})
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
@@ -105,62 +118,7 @@ class KlinikAPITest(APITestCase):
         self.assertEqual(Klinik.objects.count(), 2)
 
 
-class CabangAPITest(APITestCase):
-    def setUp(self):
-        self.url_list = reverse("klinik:cabang-list")
-        self.url_detail = "klinik:cabang-detail"
-
-        self.email = "test@example.com"
-        self.account = Account.objects.create_user(
-            email=self.email,
-            full_name="john doe",
-            password=os.getenv("SECRET_KEY"),
-        )
-        self.account.save()
-        self.owner = OwnerProfile(account=self.account)
-        self.owner.save()
-
-        self.email2 = "test2@example.com"
-        self.account2 = Account.objects.create_user(
-            email=self.email2,
-            full_name="Pavolia Reine",
-            password=os.getenv("SECRET_KEY"),
-        )
-
-        self.owner2 = OwnerProfile(account=self.account2)
-        self.owner2.save()
-
-        test_file = SimpleUploadedFile(
-            "best_file_eva.txt", self.file
-        )
-        self.klinik = Klinik(name="klinik1", owner=self.owner, sik=test_file)
-        self.klinik.save()
-        for _ in range(10):
-            tmp = Cabang(location="", klinik=self.klinik)
-            tmp.save()
-
-        test_file2 = SimpleUploadedFile(
-            "not_the_best_file_eva.txt", self.file
-        )
-        self.klinik2 = Klinik(name="klinik2", owner=self.owner2, sik=test_file2)
-        self.klinik2.save()
-        for _ in range(10):
-            tmp = Cabang(location="alam sutra", klinik=self.klinik2)
-            tmp.save()
-
-        url = reverse("account:login")
-        resp = self.client.post(
-            url,
-            {"email": self.email, "password": os.getenv("SECRET_KEY")},
-            format="json",
-        )
-        self.assertEqual(resp.status_code, status.HTTP_200_OK)
-        self.assertTrue("access" in resp.data)
-        self.assertTrue("refresh" in resp.data)
-        self.token = resp.data["access"]
-        self.auth = "Bearer " + self.token
-
-        self.alt_location = "alam baka"
+class CabangAPITest(KlinikTestSetUp):
 
     def test_get_cabang_list_from_klinik(self):
         self.assertEqual(Cabang.objects.count(), 20)
