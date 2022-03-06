@@ -15,6 +15,7 @@ from telnetlib import STATUS
 from dotenv import load_dotenv
 from os import getenv
 from datetime import timedelta
+import django_heroku
 
 load_dotenv()
 
@@ -192,3 +193,5 @@ SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=int(getenv("ACCESS_TOKEN_TTL_MINUTES") or 5)),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 }
+
+django_heroku.settings(locals())
