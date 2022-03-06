@@ -1,3 +1,4 @@
+from rest_framework.permissions import IsAuthenticated
 from urllib.request import Request
 from .serializers import KlinikSerializer, CabangSerializer
 from .models import Klinik
@@ -16,6 +17,11 @@ def get_object(klass: models.Model, pk: int):
         return None
 
 class KlinikAPI(APIView):
+
+    permission_classes = [
+        IsAuthenticated,
+    ]
+
     def get(self, request:Request, pk: int, format=None):
         klinik = get_object(Klinik, pk)
         serializer = KlinikSerializer(klinik)
@@ -40,6 +46,11 @@ class KlinikAPI(APIView):
     
 
 class CabangListApi(APIView):
+    
+    permission_classes = [
+        IsAuthenticated,
+    ]
+
     def get(self, request: Request, format=None):
         klinik_id = request.query_params.get("klinik")
         if klinik_id is None:
