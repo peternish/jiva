@@ -76,7 +76,7 @@ unit_testing:
   stage: test
   needs: ['migrations']
   script:
-    - coverage run --omit="manage.py,jiva_be/*" manage.py test
+    - coverage run --omit="manage.py,jiva_be/*,**/__init__.py,**/tests.py" manage.py test
     - coverage report -m
     - coverage xml
   only:

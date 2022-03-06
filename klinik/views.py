@@ -17,6 +17,21 @@ def get_object(klass: models.Model, pk: int):
         return None
 
 
+class KlinikList(APIView):
+
+    permission_classes = [
+        IsAuthenticated,
+    ]
+
+    def post(self, request):
+        owner = OwnerProfile.objects.get(account__email=request.user)
+        serializer = KlinikSerializer(data=request.data)
+        if serializer.is_valid() and owner is not None:
+            serializer.save(owner=owner)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 class KlinikAPI(APIView):
 
     permission_classes = [
@@ -35,7 +50,7 @@ class KlinikAPI(APIView):
         serializer = KlinikSerializer(klinik, data=request.data)
         if serializer.is_valid() and klinik is not None:
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request: Request, pk: int, format=None):
