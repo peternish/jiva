@@ -9,7 +9,6 @@ import os
 
 
 class KlinikAPITest(APITestCase):
-
     def setUp(self):
         self.url = "klinik:klinik-detail"
 
@@ -34,21 +33,17 @@ class KlinikAPITest(APITestCase):
         self.owner2.save()
 
         # Should have ID 1
-        test_file = SimpleUploadedFile("best_file_eva.txt", b"these are the file contents!")
-        self.klinik = Klinik(
-            name="klinik1",
-            owner=self.owner,
-            sik = test_file
+        test_file = SimpleUploadedFile(
+            "best_file_eva.txt", b"these are the file contents!"
         )
+        self.klinik = Klinik(name="klinik1", owner=self.owner, sik=test_file)
         self.klinik.save()
 
         # Should have ID 2
-        test_file2 = SimpleUploadedFile("not_the_best_file_eva.txt", b"these are the file contents!")
-        self.klinik2 = Klinik(
-            name="klinik2",
-            owner=self.owner2,
-            sik = test_file2
+        test_file2 = SimpleUploadedFile(
+            "not_the_best_file_eva.txt", b"these are the file contents!"
         )
+        self.klinik2 = Klinik(name="klinik2", owner=self.owner2, sik=test_file2)
         self.klinik2.save()
 
         url = reverse("account:login")
@@ -62,15 +57,14 @@ class KlinikAPITest(APITestCase):
         self.assertTrue("refresh" in resp.data)
         self.token = resp.data["access"]
 
-
     def test_get_klinik(self):
-        url = reverse(self.url, kwargs={"pk":1})
+        url = reverse(self.url, kwargs={"pk": 1})
         self.client.credentials(HTTP_AUTHORIZATION="Bearer " + self.token)
         resp = self.client.get(url)
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
 
     def test_get_klinik_fail(self):
-        url = reverse(self.url, kwargs={"pk":999})
+        url = reverse(self.url, kwargs={"pk": 999})
         self.client.credentials(HTTP_AUTHORIZATION="Bearer " + self.token)
         resp = self.client.get(url)
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
@@ -78,13 +72,13 @@ class KlinikAPITest(APITestCase):
     def test_put_klinik(self):
         klinik_list = list(Klinik.objects.all())
         klinik = secrets.choice(klinik_list)
-        url = reverse(self.url, kwargs={"pk":klinik.id})
+        url = reverse(self.url, kwargs={"pk": klinik.id})
         self.client.credentials(HTTP_AUTHORIZATION="Bearer " + self.token)
         resp = self.client.put(url, data={"name": "apeture"})
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
 
     def test_put_klinik_fail(self):
-        url = reverse(self.url, kwargs={"pk":3})
+        url = reverse(self.url, kwargs={"pk": 3})
         self.client.credentials(HTTP_AUTHORIZATION="Bearer " + self.token)
         resp = self.client.put(url, data={"name": "klinik3"})
         self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
@@ -109,10 +103,9 @@ class KlinikAPITest(APITestCase):
 
 
 class CabangAPITest(APITestCase):
-
     def setUp(self):
-        self.url_list = reverse('klinik:cabang-list')
-        self.url_detail = 'klinik:cabang-detail'
+        self.url_list = reverse("klinik:cabang-list")
+        self.url_detail = "klinik:cabang-detail"
 
         self.email = "test@example.com"
         self.account = Account.objects.create_user(
@@ -134,35 +127,25 @@ class CabangAPITest(APITestCase):
 
         self.owner2 = OwnerProfile(account=self.account2)
         self.owner2.save()
-        
-        test_file = SimpleUploadedFile("best_file_eva.txt", b"these are the file contents!")
-        self.klinik = Klinik(
-            name="klinik1",
-            owner=self.owner,
-            sik = test_file
+
+        test_file = SimpleUploadedFile(
+            "best_file_eva.txt", b"these are the file contents!"
         )
+        self.klinik = Klinik(name="klinik1", owner=self.owner, sik=test_file)
         self.klinik.save()
 
         for _ in range(10):
-            tmp = Cabang(
-                location="",
-                klinik=self.klinik
-            )
+            tmp = Cabang(location="", klinik=self.klinik)
             tmp.save()
 
-        test_file2 = SimpleUploadedFile("not_the_best_file_eva.txt", b"these are the file contents!")
-        self.klinik2 = Klinik(
-            name="klinik2",
-            owner=self.owner2,
-            sik = test_file2
+        test_file2 = SimpleUploadedFile(
+            "not_the_best_file_eva.txt", b"these are the file contents!"
         )
+        self.klinik2 = Klinik(name="klinik2", owner=self.owner2, sik=test_file2)
         self.klinik2.save()
 
         for _ in range(10):
-            tmp = Cabang(
-                location="alam sutra",
-                klinik=self.klinik2
-            )
+            tmp = Cabang(location="alam sutra", klinik=self.klinik2)
             tmp.save()
 
         url = reverse("account:login")
@@ -202,10 +185,7 @@ class CabangAPITest(APITestCase):
 
     def test_post_cabang_list(self):
         self.assertEqual(Cabang.objects.count(), 20)
-        data = {
-            "location": self.alt_location,
-            "klinik": self.klinik.id
-        }
+        data = {"location": self.alt_location, "klinik": self.klinik.id}
         self.client.credentials(HTTP_AUTHORIZATION="Bearer " + self.token)
         resp = self.client.post(self.url_list, data=data)
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
@@ -213,10 +193,7 @@ class CabangAPITest(APITestCase):
 
     def test_post_cabang_list_klinik_not_found(self):
         self.assertEqual(Cabang.objects.count(), 20)
-        data = {
-            "location": self.alt_location,
-            "klinik": -1
-        }
+        data = {"location": self.alt_location, "klinik": -1}
         self.client.credentials(HTTP_AUTHORIZATION="Bearer " + self.token)
         resp = self.client.post(self.url_list, data=data)
         self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
@@ -229,9 +206,9 @@ class CabangAPITest(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION="Bearer " + self.token)
         resp = self.client.get(uri)
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
-        self.assertEqual(resp.data['id'], cabang.id)
-        self.assertEqual(resp.data['klinik_id'], cabang.klinik_id)
-        self.assertEqual(resp.data['location'], cabang.location)
+        self.assertEqual(resp.data["id"], cabang.id)
+        self.assertEqual(resp.data["klinik_id"], cabang.klinik_id)
+        self.assertEqual(resp.data["location"], cabang.location)
 
     def test_get_cabang_detail_cabang_not_found(self):
         uri = reverse(self.url_detail, kwargs={"pk": 9999})
@@ -246,9 +223,9 @@ class CabangAPITest(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION="Bearer " + self.token)
         resp = self.client.put(uri, data={"location": self.alt_location})
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
-        self.assertEqual(resp.data['id'], cabang.id)
-        self.assertEqual(resp.data['location'], 'alam baka')
-        self.assertNotEqual(resp.data['location'], cabang.location)
+        self.assertEqual(resp.data["id"], cabang.id)
+        self.assertEqual(resp.data["location"], "alam baka")
+        self.assertNotEqual(resp.data["location"], cabang.location)
 
     def test_put_cabang_detail_bad_request(self):
         cabang_list = list(Cabang.objects.all())

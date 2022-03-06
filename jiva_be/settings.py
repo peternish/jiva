@@ -41,18 +41,14 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1",
     "https://jiva.vercel.app",
-    "https://jiva-staging.vercel.app"
+    "https://jiva-staging.vercel.app",
 ]
 
 # Application definition
 
 APPS = ["klinik", "account"]
 
-MODULES = [
-    "rest_framework",
-    "rest_framework_simplejwt",
-    "corsheaders"
-]
+MODULES = ["rest_framework", "rest_framework_simplejwt", "corsheaders"]
 
 INSTALLED_APPS = (
     [
@@ -165,14 +161,14 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 AWS_ACCESS_KEY_ID = getenv("AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY = getenv("AWS_SECRET_ACCESS_KEY")
 AWS_STORAGE_BUCKET_NAME = getenv("AWS_STORAGE_BUCKET_NAME")
-AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+AWS_S3_CUSTOM_DOMAIN = "%s.s3.amazonaws.com" % AWS_STORAGE_BUCKET_NAME
 AWS_S3_OBJECT_PARAMETERS = {
-    'CacheControl': 'max-age=86400',
+    "CacheControl": "max-age=86400",
 }
-AWS_LOCATION = 'static'
+AWS_LOCATION = "static"
 
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-STATICFILES_STORAGE = 'storages.backends.s3boto3.S3StaticStorage'
+DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+STATICFILES_STORAGE = "storages.backends.s3boto3.S3StaticStorage"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field

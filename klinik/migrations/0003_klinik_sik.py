@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('klinik', '0002_alter_profile_account_delete_account'),
+        ("klinik", "0002_alter_profile_account_delete_account"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='klinik',
-            name='sik',
-            field=models.FileField(default=None, upload_to=''),
+            model_name="klinik",
+            name="sik",
+            field=models.FileField(default=None, upload_to=""),
         ),
     ]

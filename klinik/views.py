@@ -16,13 +16,14 @@ def get_object(klass: models.Model, pk: int):
     except klass.DoesNotExist:
         return None
 
+
 class KlinikAPI(APIView):
 
     permission_classes = [
         IsAuthenticated,
     ]
 
-    def get(self, request:Request, pk: int, format=None):
+    def get(self, request: Request, pk: int, format=None):
         klinik = get_object(Klinik, pk)
         serializer = KlinikSerializer(klinik)
         if klinik is not None:
@@ -43,10 +44,10 @@ class KlinikAPI(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
         klinik.delete()
         return Response(status=status.HTTP_200_OK)
-    
+
 
 class CabangListApi(APIView):
-    
+
     permission_classes = [
         IsAuthenticated,
     ]
