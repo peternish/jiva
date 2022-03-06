@@ -8,9 +8,11 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 import secrets
 import os
 
+
 class KlinikTestSetUp(APITestCase):
     def setUp(self):
         self.url = "klinik:klinik-detail"
+        self.url_klinik_list = reverse("klinik:klinik-list")
         self.file_content = b"these are the file contents!"
 
         self.url_list = reverse("klinik:cabang-list")
@@ -36,10 +38,18 @@ class KlinikTestSetUp(APITestCase):
         self.owner2 = OwnerProfile(account=self.account2)
         self.owner2.save()
 
-        # Should have ID 1
-        test_file = SimpleUploadedFile(
-            "best_file_eva.txt", self.file_content
+        self.email3 = "test3@example.com"
+        self.account3 = Account.objects.create_user(
+            email=self.email3,
+            full_name="Pa Izuri",
+            password=os.getenv("SECRET_KEY"),
         )
+
+        self.owner3 = OwnerProfile(account=self.account3)
+        self.owner3.save()
+
+        # Should have ID 1
+        test_file = SimpleUploadedFile("best_file_eva.txt", self.file_content)
         self.klinik = Klinik(name="klinik1", owner=self.owner, sik=test_file)
         self.klinik.save()
         for _ in range(10):
@@ -47,14 +57,16 @@ class KlinikTestSetUp(APITestCase):
             tmp.save()
 
         # Should have ID 2
-        test_file2 = SimpleUploadedFile(
-            "not_the_best_file_eva.txt", self.file_content
-        )
+        test_file2 = SimpleUploadedFile("not_the_best_file_eva.txt", self.file_content)
         self.klinik2 = Klinik(name="klinik2", owner=self.owner2, sik=test_file2)
         self.klinik2.save()
         for _ in range(10):
             tmp = Cabang(location="alam sutra", klinik=self.klinik2)
             tmp.save()
+
+        self.test_file3 = SimpleUploadedFile(
+            "absolutely_not_the_best_file_eva.txt", self.file_content
+        )
 
         url = reverse("account:login")
         resp = self.client.post(
@@ -72,7 +84,6 @@ class KlinikTestSetUp(APITestCase):
 
 
 class KlinikAPITest(KlinikTestSetUp):
-    
     def test_get_klinik(self):
         url = reverse(self.url, kwargs={"pk": 1})
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
@@ -90,8 +101,8 @@ class KlinikAPITest(KlinikTestSetUp):
         klinik = secrets.choice(klinik_list)
         url = reverse(self.url, kwargs={"pk": klinik.id})
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
-        resp = self.client.put(url, data={"name": "apeture"})
-        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+        resp = self.client.put(url, data={"name": "apeture", "sik": self.test_file3})
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
 
     def test_put_klinik_fail(self):
         url = reverse(self.url, kwargs={"pk": 3})
@@ -118,8 +129,25 @@ class KlinikAPITest(KlinikTestSetUp):
         self.assertEqual(Klinik.objects.count(), 2)
 
 
-class CabangAPITest(KlinikTestSetUp):
+class KlinikListAPITest(KlinikTestSetUp):
+    def test_post_klinik(self):
+        self.assertEqual(Klinik.objects.count(), 2)
+        data = {"name": "klinik3", "sik": self.test_file3}
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        resp = self.client.post(self.url_klinik_list, data=data)
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Klinik.objects.count(), 3)
 
+    def test_post_klinik_fail(self):
+        self.assertEqual(Klinik.objects.count(), 2)
+        data = {"name": "klinik2"}
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        resp = self.client.post(self.url_klinik_list, data=data)
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(Klinik.objects.count(), 2)
+
+
+class CabangAPITest(KlinikTestSetUp):
     def test_get_cabang_list_from_klinik(self):
         self.assertEqual(Cabang.objects.count(), 20)
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)

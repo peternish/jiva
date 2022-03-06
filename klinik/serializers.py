@@ -5,7 +5,7 @@ from klinik.models import Klinik, Cabang
 class KlinikSerializer(serializers.ModelSerializer):
     class Meta:
         model = Klinik
-        fields = ["id", "owner_id", "name"]
+        fields = ["id", "owner_id", "name", "sik"]
         read_only_fields = ["id", "owner_id"]
 
 
