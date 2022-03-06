@@ -3,6 +3,8 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import Sidebar from '@components/Layout/Sidebar'
 import Navbar from "@components/Layout/Navbar";
 import Layout from "@components/Layout";
+import { store } from "@redux/store";
+import { Provider } from "react-redux";
 
 describe("Layout", () => {
   it("renders a head", () => {
@@ -13,17 +15,21 @@ describe("Layout", () => {
 });
 
 describe("Navbar", () => {
-  it("renders a navbar", () => {
-    render(<Navbar />);
+  beforeEach(() => {
+    render(
+      <Provider store={store}>
+        <Navbar/>
+      </Provider>
+    );
+  });
 
+  it("renders a navbar", () => {
     const nav = screen.getByRole("navigation");
 
     expect(nav).toBeInTheDocument();
   });
 
   it("renders navigation links", () => {
-    render(<Navbar />);
-
     const links = screen.getAllByRole("link");
     
     expect(links).toHaveLength(3)
@@ -31,17 +37,17 @@ describe("Navbar", () => {
 })
 
 describe('Sidebar', () => {
+  beforeEach(() => {
+    render(<Sidebar/>);
+  });
+  
   it('renders a sidebar', () => {
-    render(<Sidebar/>)
-
     const sidebar = screen.getByTestId('sidebar')
 
     expect(sidebar).toBeInTheDocument()
   })
 
   it('toggles the sidebar when the arrow button is clicked', () => {
-    render(<Sidebar/>)
-
     const rightArrow = screen.getByTestId('ChevronRightIcon')
     expect(rightArrow).toBeInTheDocument()
     
@@ -56,8 +62,6 @@ describe('Sidebar', () => {
   })
 
   it('renders the navigation links', () => {
-    render(<Sidebar/>)
-
     const navList = [
       'Pengaturan Formulir Pendaftaran',
       'List Pendaftaran',
