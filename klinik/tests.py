@@ -55,12 +55,13 @@ class CabangAPITest(APITestCase):
         self.assertTrue("access" in resp.data)
         self.assertTrue("refresh" in resp.data)
         self.token = resp.data["access"]
+        self.auth = "Bearer " + self.token
 
         self.alt_location = "alam baka"
 
     def test_get_cabang_list_from_klinik(self):
         self.assertEqual(Cabang.objects.count(), 20)
-        self.client.credentials(HTTP_AUTHORIZATION="Bearer " + self.token)
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         resp = self.client.get(self.url_list, data={"klinik": self.klinik.id})
 
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
@@ -74,7 +75,7 @@ class CabangAPITest(APITestCase):
     def test_post_cabang_list(self):
         self.assertEqual(Cabang.objects.count(), 20)
         data = {"location": self.alt_location, "klinik": self.klinik.id}
-        self.client.credentials(HTTP_AUTHORIZATION="Bearer " + self.token)
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         resp = self.client.post(self.url_list, data=data)
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Cabang.objects.count(), 21)
@@ -82,7 +83,7 @@ class CabangAPITest(APITestCase):
     def test_post_cabang_list_klinik_not_found(self):
         self.assertEqual(Cabang.objects.count(), 20)
         data = {"location": self.alt_location, "klinik": -1}
-        self.client.credentials(HTTP_AUTHORIZATION="Bearer " + self.token)
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         resp = self.client.post(self.url_list, data=data)
         self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(Cabang.objects.count(), 20)
@@ -91,7 +92,7 @@ class CabangAPITest(APITestCase):
         cabang_list = list(Cabang.objects.all())
         cabang = secrets.choice(cabang_list)
         uri = reverse(self.url_detail, kwargs={"pk": cabang.id})
-        self.client.credentials(HTTP_AUTHORIZATION="Bearer " + self.token)
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         resp = self.client.get(uri)
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         self.assertEqual(resp.data["id"], cabang.id)
@@ -100,7 +101,7 @@ class CabangAPITest(APITestCase):
 
     def test_get_cabang_detail_cabang_not_found(self):
         uri = reverse(self.url_detail, kwargs={"pk": 9999})
-        self.client.credentials(HTTP_AUTHORIZATION="Bearer " + self.token)
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         resp = self.client.get(uri)
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
 
@@ -108,7 +109,7 @@ class CabangAPITest(APITestCase):
         cabang_list = list(Cabang.objects.all())
         cabang = secrets.choice(cabang_list)
         uri = reverse(self.url_detail, kwargs={"pk": cabang.id})
-        self.client.credentials(HTTP_AUTHORIZATION="Bearer " + self.token)
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         resp = self.client.put(uri, data={"location": self.alt_location})
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         self.assertEqual(resp.data["id"], cabang.id)
@@ -119,7 +120,7 @@ class CabangAPITest(APITestCase):
         cabang_list = list(Cabang.objects.all())
         cabang = secrets.choice(cabang_list)
         uri = reverse(self.url_detail, kwargs={"pk": cabang.id})
-        self.client.credentials(HTTP_AUTHORIZATION="Bearer " + self.token)
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         resp = self.client.put(uri, data={"realm": self.alt_location})
         self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
 
@@ -128,7 +129,7 @@ class CabangAPITest(APITestCase):
         cabang_list = list(Cabang.objects.all())
         cabang = secrets.choice(cabang_list)
         uri = reverse(self.url_detail, kwargs={"pk": cabang.id})
-        self.client.credentials(HTTP_AUTHORIZATION="Bearer " + self.token)
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         resp = self.client.delete(uri)
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         self.assertEqual(Cabang.objects.count(), 19)
@@ -136,7 +137,7 @@ class CabangAPITest(APITestCase):
     def test_delete_cabang_detail_not_found(self):
         self.assertEqual(Cabang.objects.count(), 20)
         uri = reverse(self.url_detail, kwargs={"pk": 9999})
-        self.client.credentials(HTTP_AUTHORIZATION="Bearer " + self.token)
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         resp = self.client.delete(uri)
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
         self.assertEqual(Cabang.objects.count(), 20)
