@@ -1,3 +1,4 @@
+from rest_framework.permissions import IsAuthenticated
 from .models import Cabang, Klinik, OwnerProfile
 from rest_framework.test import APITestCase
 from django.urls import reverse
@@ -9,6 +10,12 @@ import os
 
 
 class KlinikAPITest(APITestCase):
+
+    permission_classes = [
+        IsAuthenticated,
+    ]
+
+
     def setUp(self):
         self.url = "klinik:klinik-detail"
         self.account = Account.objects.create_user(
@@ -78,6 +85,10 @@ class KlinikAPITest(APITestCase):
 
 
 class CabangAPITest(APITestCase):
+
+    permission_classes = [
+        IsAuthenticated,
+    ]
 
     def setUp(self):
         self.url_list = reverse('klinik:cabang-list')
