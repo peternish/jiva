@@ -1,7 +1,7 @@
 # django imports
 from .serializers import AccountSerializer
 from .models import Account
-from klinik.models import OwnerProfile
+from klinik.models import OwnerProfile, Klinik
 
 # rest imports
 from rest_framework import status
