@@ -6,8 +6,8 @@ import Head from "next/head";
 
 // utils
 import constants from "@utils/constants";
-import Sidebar from "@components/Sidebar";
-import Navbar from "@components/Navbar";
+import Sidebar from "@components/Layout/Sidebar";
+import Navbar from "@components/Layout/Navbar";
 
 const LayoutStyle = styled.div`
   max-width: ${constants.MAX_WIDTH}px;

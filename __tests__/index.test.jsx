@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom'
 import { render, screen, fireEvent } from '@testing-library/react'
-import Sidebar from 'components/Sidebar'
-import Navbar from "components/Navbar";
+import Sidebar from '@components/Layout/Sidebar'
+import Navbar from "@components/Layout/Navbar";
 import Layout from "@components/Layout";
 
 describe("Layout", () => {
