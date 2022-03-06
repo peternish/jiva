@@ -14,6 +14,7 @@ from pathlib import Path
 from telnetlib import STATUS
 from dotenv import load_dotenv
 from os import getenv
+from datetime import timedelta
 
 load_dotenv()
 
@@ -186,3 +187,8 @@ REST_FRAMEWORK = {
 AUTH_USER_MODEL = "account.Account"
 
 APPEND_SLASH = False
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=int(getenv("ACCESS_TOKEN_TTL_MINUTES") or 5)),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+}
