@@ -1,9 +1,10 @@
-from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
+from klinik.models import Cabang, Klinik, OwnerProfile
+from klinik.serializers import CabangSerializer
 from rest_framework.response import Response
 from rest_framework.request import Request
+from rest_framework.views import APIView
 from rest_framework import status
-from klinik.serializers import CabangSerializer
-from klinik.models import Cabang, Klinik
 from django.db import models
 
 
@@ -15,12 +16,16 @@ def get_object(klass: models.Model, pk: int):
 
 
 class CabangListApi(APIView):
+
+    permission_classes = [
+        IsAuthenticated,
+    ]
+
     def get(self, request: Request, format=None):
-        klinik_id = request.query_params.get("klinik")
-        if klinik_id is None:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+        owner = OwnerProfile.objects.get(account__email=request.user)
+        klinik = Klinik.objects.get(owner=owner)
         branches = Cabang.objects.all()
-        branches = branches.filter(klinik__id=klinik_id)
+        branches = branches.filter(klinik=klinik)
         serializer = CabangSerializer(branches, many=True)
         return Response(serializer.data)
 
@@ -35,6 +40,11 @@ class CabangListApi(APIView):
 
 
 class CabangDetailApi(APIView):
+
+    permission_classes = [
+        IsAuthenticated,
+    ]
+
     def get(self, request: Request, pk: int, format=None):
         cabang = get_object(Cabang, pk)
         serializer = CabangSerializer(cabang)

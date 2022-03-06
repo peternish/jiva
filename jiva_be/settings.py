@@ -41,18 +41,14 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1",
     "https://jiva.vercel.app",
-    "https://jiva-staging.vercel.app"
+    "https://jiva-staging.vercel.app",
 ]
 
 # Application definition
 
 APPS = ["klinik", "account"]
 
-MODULES = [
-    "rest_framework",
-    "rest_framework_simplejwt",
-    "corsheaders"
-]
+MODULES = ["rest_framework", "rest_framework_simplejwt", "corsheaders"]
 
 INSTALLED_APPS = (
     [

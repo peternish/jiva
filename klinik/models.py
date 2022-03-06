@@ -15,7 +15,7 @@ class OwnerProfile(Profile):
 
 class Klinik(models.Model):
     name = models.CharField(max_length=100)
-    owner = models.ForeignKey(OwnerProfile, on_delete=models.CASCADE)
+    owner = models.OneToOneField(OwnerProfile, on_delete=models.CASCADE)
 
 
 class Cabang(models.Model):
