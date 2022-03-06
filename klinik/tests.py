@@ -12,6 +12,7 @@ import os
 class KlinikAPITest(APITestCase):
     def setUp(self):
         self.url = "klinik:klinik-detail"
+        self.file_content = b"these are the file contents!"
 
         self.email = "test@example.com"
         self.account = Account.objects.create_user(
@@ -35,14 +36,14 @@ class KlinikAPITest(APITestCase):
 
         # Should have ID 1
         test_file = SimpleUploadedFile(
-            "best_file_eva.txt", b"these are the file contents!"
+            "best_file_eva.txt", self.file
         )
         self.klinik = Klinik(name="klinik1", owner=self.owner, sik=test_file)
         self.klinik.save()
 
         # Should have ID 2
         test_file2 = SimpleUploadedFile(
-            "not_the_best_file_eva.txt", b"these are the file contents!"
+            "not_the_best_file_eva.txt", self.file
         )
         self.klinik2 = Klinik(name="klinik2", owner=self.owner2, sik=test_file2)
         self.klinik2.save()
@@ -130,7 +131,7 @@ class CabangAPITest(APITestCase):
         self.owner2.save()
 
         test_file = SimpleUploadedFile(
-            "best_file_eva.txt", b"these are the file contents!"
+            "best_file_eva.txt", self.file
         )
         self.klinik = Klinik(name="klinik1", owner=self.owner, sik=test_file)
         self.klinik.save()
@@ -139,7 +140,7 @@ class CabangAPITest(APITestCase):
             tmp.save()
 
         test_file2 = SimpleUploadedFile(
-            "not_the_best_file_eva.txt", b"these are the file contents!"
+            "not_the_best_file_eva.txt", self.file
         )
         self.klinik2 = Klinik(name="klinik2", owner=self.owner2, sik=test_file2)
         self.klinik2.save()
