@@ -5,11 +5,11 @@ const auth = createSlice({
   initialState: {
     accessToken: undefined,
     refreshToken: undefined,
-    sikFile: undefined
+    sikFile: undefined,
   },
   reducers: {
     setAccessToken(state, { payload }) {
-      state.token = payload;
+      state.accessToken = payload;
       return state;
     },
     setRefreshToken(state, { payload }) {

@@ -37,12 +37,14 @@ export const signup = ({
 export const login = ({ email, password } = {}) => {
   return async (dispatch) => {
     try {
-      const { access, refresh } = await jivaAPI.auth.login({
+      const {
+        data: { access, refresh },
+      } = await jivaAPI.auth.login({
         email,
         password,
       });
-      dispatch(setAccessToken(access));
-      dispatch(setRefreshToken(refresh));
+      await dispatch(setAccessToken(access));
+      await dispatch(setRefreshToken(refresh));
       location.assign("/");
     } catch (err) {
       toast(err, { type: toast.TYPE.ERROR });
