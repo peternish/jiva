@@ -81,7 +81,7 @@ class CabangListApi(APIView):
         serializer = CabangSerializer(data=request.data)
         if serializer.is_valid() and klinik is not None:
             serializer.save(klinik=klinik)
-            return Response(status=status.HTTP_201_CREATED)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
