@@ -1,6 +1,5 @@
 import constants from "@api/constants";
 import { axiosInstance as axios } from "@api/http";
-import { store } from "@redux/store";
 
 const BASE_URL = constants?.API_BASE_URL + "/account";
 
