@@ -1,5 +1,6 @@
 // api
 import jivaAPI from "@api/index";
+import { persistor } from "@redux/store";
 
 // toast
 import { toast } from "react-toastify";
@@ -49,5 +50,12 @@ export const login = ({ email, password } = {}) => {
     } catch (err) {
       toast(err, { type: toast.TYPE.ERROR });
     }
+  };
+};
+
+export const logout = () => {
+  return async () => {
+    await persistor.purge();
+    window.location.assign("/");
   };
 };
