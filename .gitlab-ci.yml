@@ -10,12 +10,21 @@ variables:
   DATABASE_PASSWORD: $DATABASE_PASSWORD
   DATABASE_HOST: $DATABASE_HOST
   DATABASE_PORT: $DATABASE_PORT
+  AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+  AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+  AWS_STORAGE_BUCKET_NAME: $AWS_STORAGE_BUCKET_NAME
 
 # Coverage artifact
 .coverage_artifacts: &coverage_artifacts
   artifacts:
     paths:
-      - .coverage*
+      - coverage.xml
+
+# Migrations artifact
+.migration_artifacts: &migration_artifacts
+  artifacts:
+    paths:
+      - '*/migrations*'
 
 # Python machine update
 .py_machine_update: &py_machine_update
@@ -48,6 +57,7 @@ default:
 # Build: Django migration
 migrations:
   <<: *py_machine_update
+  <<: *migration_artifacts
   stage: build
   needs: []
   script:
@@ -66,10 +76,9 @@ unit_testing:
   stage: test
   needs: ['migrations']
   script:
-    - coverage run --parallel --include="./*" --omit="manage.py,jiva_be/*"
-      manage.py test
+    - coverage run --omit="manage.py,jiva_be/*" manage.py test
     - coverage report -m
-    - coverage xml -o 'coverage.xml'
+    - coverage xml
   only:
     - merge_requests
     - staging
@@ -94,6 +103,7 @@ sonar_scanner:
       -Dsonar.branch.target=$CI_MERGE_REQUEST_TARGET_BRANCH_NAME
       -Dsonar.qualitygate.wait=true
       -Dsonar.python.coverage.reportPaths=coverage.xml
+      -Dsonar.coverage.exclusions=**/*manage.py,**/*asgi.py,**/*wsgi.py,**/*settings.py
 
 # Deploy: Staging
 staging:
