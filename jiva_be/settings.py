@@ -180,4 +180,4 @@ SIMPLE_JWT = {
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 }
 
-django_heroku.settings(locals())
+django_heroku.settings(locals(), test_runner=False)
