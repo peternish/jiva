@@ -40,7 +40,7 @@ export const signup = ({
 export const login = ({ email, password } = {}) => {
   return async (dispatch) => {
     try {
-      await dispatch(getTokens());
+      await dispatch(getTokens({ email, password }));
       location.assign("/");
     } catch (err) {
       toast(err, { type: toast.TYPE.ERROR });
