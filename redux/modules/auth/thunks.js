@@ -37,11 +37,11 @@ export const signup = ({
   };
 };
 
-export const login = ({ email, password } = {}, redirect = True) => {
+export const login = ({ email, password } = {}) => {
   return async (dispatch) => {
     try {
       await dispatch(getTokens());
-      if (redirect) location.assign("/");
+      location.assign("/");
     } catch (err) {
       toast(err, { type: toast.TYPE.ERROR });
     }
