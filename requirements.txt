@@ -72,9 +72,15 @@ coverage==6.3.2; python_version >= "3.7" \
     --hash=sha256:9548f10d8be799551eb3a9c74bbf2b4934ddb330e08a73320123c07f95cc2d92 \
     --hash=sha256:18d520c6860515a771708937d2f78f63cc47ab3b80cb78e86573b0a760161faf \
     --hash=sha256:03e2a7826086b91ef345ff18742ee9fc47a6839ccd517061ef8fa1976e652ce9
+dj-database-url==0.5.0 \
+    --hash=sha256:4aeaeb1f573c74835b0686a2b46b85990571159ffc21aa57ecd4d1e1cb334163 \
+    --hash=sha256:851785365761ebe4994a921b433062309eb882fedd318e1b0fcecc607ed02da9
 django-cors-headers==3.11.0; python_version >= "3.7" \
     --hash=sha256:eb98389bf7a2afc5d374806af4a9149697e3a6955b5a2dc2bf049f7d33647456 \
     --hash=sha256:a22be2befd4069c4fc174f11cf067351df5c061a3a5f94a01650b4e928b0372b
+django-heroku==0.3.1 \
+    --hash=sha256:6af4bc3ae4a9b55eaad6dbe5164918982d2762661aebc9f83d9fa49f6009514e \
+    --hash=sha256:2bc690aab89eedbe01311752320a9a12e7548e3b0ed102681acc5736a41a4762
 django-storages==1.12.3; python_version >= "3.5" \
     --hash=sha256:a475edb2f0f04c4f7e548919a751ecd50117270833956ed5bd585c0575d2a5e7 \
     --hash=sha256:204a99f218b747c46edbfeeb1310d357f83f90fa6a6024d8d0a3f422570cee84
@@ -197,6 +203,9 @@ tzdata==2021.5; sys_platform == "win32" and python_version >= "3.8" \
 urllib3==1.26.8; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.5.0" and python_version < "4" and python_version >= "3.6" \
     --hash=sha256:000ca7f471a233c2251c6c7023ee85305721bfdf18621ebff4fd17a8653427ed \
     --hash=sha256:0e7c33d9a63e7ddfcb86780aac87befc2fbddf46c58dbb487e0855f7ceec283c
+whitenoise==6.0.0; python_version >= "3.7" \
+    --hash=sha256:5a4aff543ee860fbe40d743e556adf92ccd41b7df45697cae074afdf657056b9 \
+    --hash=sha256:08c42bc535f9777eea1a599289d9433f081921f97887eaf6f559446b2a080374
 wrapt==1.13.3; python_full_version >= "3.6.2" \
     --hash=sha256:e05e60ff3b2b0342153be4d1b597bbcfd8330890056b9619f4ad6b8d5c96a81a \
     --hash=sha256:85148f4225287b6a0665eef08a178c15097366d46b210574a658c1ff5b377489 \
