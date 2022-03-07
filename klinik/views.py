@@ -1,3 +1,5 @@
+from functools import partial
+from urllib import request
 from rest_framework.permissions import IsAuthenticated
 from urllib.request import Request
 from .serializers import KlinikSerializer, CabangSerializer
@@ -17,44 +19,46 @@ def get_object(klass: models.Model, pk: int):
         return None
 
 
-class KlinikList(APIView):
-
-    permission_classes = [
-        IsAuthenticated,
-    ]
-
-    def post(self, request):
-        owner = OwnerProfile.objects.get(account__email=request.user)
-        serializer = KlinikSerializer(data=request.data)
-        if serializer.is_valid() and owner is not None:
-            serializer.save(owner=owner)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
 class KlinikAPI(APIView):
 
     permission_classes = [
         IsAuthenticated,
     ]
 
-    def get(self, request: Request, pk: int, format=None):
-        klinik = get_object(Klinik, pk)
+    def get_klinik(self, request: Request):
+        owner = OwnerProfile.objects.get(account__email=request.user)
+        try:
+            klinik = Klinik.objects.get(owner=owner)
+            return klinik
+        except:
+            return None
+
+    def post(self, request):
+        owner = OwnerProfile.objects.get(account__email=request.user)
+        serializer = KlinikSerializer(data=request.data)
+        klinik_exist = Klinik.objects.filter(owner=owner).count() > 0
+        if serializer.is_valid() and owner is not None and not klinik_exist:
+            serializer.save(owner=owner)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def get(self, request: Request, format=None):
+        klinik = self.get_klinik(request)
         serializer = KlinikSerializer(klinik)
         if klinik is not None:
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-    def put(self, request: Request, pk: int, format=None):
-        klinik = get_object(Klinik, pk)
-        serializer = KlinikSerializer(klinik, data=request.data)
+    def patch(self, request: Request, format=None):
+        klinik = self.get_klinik(request)
+        serializer = KlinikSerializer(klinik, data=request.data, partial=True)
         if serializer.is_valid() and klinik is not None:
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request: Request, pk: int, format=None):
-        klinik = get_object(Klinik, pk)
+    def delete(self, request: Request, format=None):
+        klinik = self.get_klinik(request)
         if klinik is None:
             return Response(status=status.HTTP_404_NOT_FOUND)
         klinik.delete()

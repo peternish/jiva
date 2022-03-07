@@ -11,7 +11,6 @@ import os
 
 class KlinikTestSetUp(APITestCase):
     def setUp(self):
-        self.url = "klinik:klinik-detail"
         self.url_klinik_list = reverse("klinik:klinik-list")
         self.file_content = b"these are the file contents!"
 
@@ -80,60 +79,61 @@ class KlinikTestSetUp(APITestCase):
         self.token = resp.data["access"]
         self.auth = "Bearer " + self.token
 
+        resp = self.client.post(
+            url,
+            {"email": self.email3, "password": os.getenv("SECRET_KEY")},
+            format="json",
+        )
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertTrue("access" in resp.data)
+        self.assertTrue("refresh" in resp.data)
+        self.token3 = resp.data["access"]
+        self.auth3 = "Bearer " + self.token3
+
         self.alt_location = "alam baka"
 
 
 class KlinikAPITest(KlinikTestSetUp):
     def test_get_klinik(self):
-        url = reverse(self.url, kwargs={"pk": 1})
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
-        resp = self.client.get(url)
+        resp = self.client.get(self.url_klinik_list)
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
 
     def test_get_klinik_fail(self):
-        url = reverse(self.url, kwargs={"pk": 999})
-        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
-        resp = self.client.get(url)
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth3)
+        resp = self.client.get(self.url_klinik_list)
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
 
-    def test_put_klinik(self):
-        klinik_list = list(Klinik.objects.all())
-        klinik = secrets.choice(klinik_list)
-        url = reverse(self.url, kwargs={"pk": klinik.id})
+    def test_patch_klinik(self):
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
-        resp = self.client.put(url, data={"name": "apeture", "sik": self.test_file3})
+        resp = self.client.patch(
+            self.url_klinik_list, data={"name": "apeture", "sik": self.test_file3}
+        )
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
 
-    def test_put_klinik_fail(self):
-        url = reverse(self.url, kwargs={"pk": 3})
-        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
-        resp = self.client.put(url, data={"name": "klinik3"})
+    def test_patch_klinik_fail(self):
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth3)
+        resp = self.client.patch(self.url_klinik_list, data={"name": "klinik3"})
         self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_delete_klinik(self):
         self.assertEqual(Klinik.objects.count(), 2)
-        klinik_list = list(Klinik.objects.all())
-        klinik = secrets.choice(klinik_list)
-        url = reverse(self.url, kwargs={"pk": klinik.id})
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
-        resp = self.client.delete(url)
+        resp = self.client.delete(self.url_klinik_list)
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         self.assertEqual(Klinik.objects.count(), 1)
 
     def test_delete_klinik_fail(self):
         self.assertEqual(Klinik.objects.count(), 2)
-        url = reverse(self.url, kwargs={"pk": 999})
-        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
-        resp = self.client.delete(url)
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth3)
+        resp = self.client.delete(self.url_klinik_list)
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
         self.assertEqual(Klinik.objects.count(), 2)
 
-
-class KlinikListAPITest(KlinikTestSetUp):
     def test_post_klinik(self):
         self.assertEqual(Klinik.objects.count(), 2)
         data = {"name": "klinik3", "sik": self.test_file3}
-        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth3)
         resp = self.client.post(self.url_klinik_list, data=data)
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Klinik.objects.count(), 3)
