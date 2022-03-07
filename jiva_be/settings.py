@@ -14,6 +14,8 @@ from pathlib import Path
 from telnetlib import STATUS
 from dotenv import load_dotenv
 from os import getenv
+from datetime import timedelta
+import django_heroku
 
 load_dotenv()
 
@@ -99,26 +101,12 @@ WSGI_APPLICATION = "jiva_be.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-DATABASES = (
-    {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": BASE_DIR / "db.sqlite3",
-        }
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
     }
-    if DEBUG
-    else {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": getenv("DATABASE_NAME"),
-            "USER": getenv("DATABASE_USER"),
-            "PASSWORD": getenv("DATABASE_PASSWORD"),
-            "HOST": getenv("DATABASE_HOST"),
-            "PORT": getenv("DATABASE_PORT"),
-        }
-    }
-)
-
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -186,3 +174,10 @@ REST_FRAMEWORK = {
 AUTH_USER_MODEL = "account.Account"
 
 APPEND_SLASH = False
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=int(getenv("ACCESS_TOKEN_TTL_MINUTES") or 5)),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+}
+
+django_heroku.settings(locals(), test_runner=False)

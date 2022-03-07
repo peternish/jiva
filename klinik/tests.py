@@ -169,14 +169,6 @@ class CabangAPITest(KlinikTestSetUp):
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Cabang.objects.count(), 21)
 
-    def test_post_cabang_list_klinik_not_found(self):
-        self.assertEqual(Cabang.objects.count(), 20)
-        data = {"location": self.alt_location, "klinik": -1}
-        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
-        resp = self.client.post(self.url_list, data=data)
-        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(Cabang.objects.count(), 20)
-
     def test_get_cabang_detail(self):
         cabang_list = list(Cabang.objects.all())
         cabang = secrets.choice(cabang_list)
