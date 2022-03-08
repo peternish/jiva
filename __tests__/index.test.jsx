@@ -1,15 +1,80 @@
-import { render, screen } from '@testing-library/react'
-import Home from '../pages/index'
 import '@testing-library/jest-dom'
+import { render, screen, fireEvent } from '@testing-library/react'
+import Sidebar from '@components/Layout/Sidebar'
+import Navbar from "@components/Layout/Navbar";
+import Layout from "@components/Layout";
+import { store } from "@redux/store";
+import { Provider } from "react-redux";
 
-describe('Home', () => {
-  it('renders a heading', () => {
-    render(<Home />)
+describe("Layout", () => {
+  it("renders a head", () => {
+    const text = "Hello";
+    render(<Layout>{text}</Layout>);
+    expect(screen.getByText(text)).toBeInTheDocument();
+  });
+});
 
-    const heading = screen.getByRole('heading', {
-      name: /welcome to next\.js!/i,
+describe("Navbar", () => {
+  beforeEach(() => {
+    render(
+      <Provider store={store}>
+        <Navbar/>
+      </Provider>
+    );
+  });
+
+  it("renders a navbar", () => {
+    const nav = screen.getByRole("navigation");
+
+    expect(nav).toBeInTheDocument();
+  });
+
+  it("renders navigation links", () => {
+    const links = screen.getAllByRole("link");
+    
+    expect(links).toHaveLength(3)
+  })
+})
+
+describe('Sidebar', () => {
+  beforeEach(() => {
+    render(<Sidebar/>);
+  });
+  
+  it('renders a sidebar', () => {
+    const sidebar = screen.getByTestId('sidebar')
+
+    expect(sidebar).toBeInTheDocument()
+  })
+
+  it('toggles the sidebar when the arrow button is clicked', () => {
+    const rightArrow = screen.getByTestId('ChevronRightIcon')
+    expect(rightArrow).toBeInTheDocument()
+    
+    fireEvent.click(rightArrow)
+    
+    const leftArrow = screen.getByTestId('ChevronLeftIcon')
+    expect(leftArrow).toBeInTheDocument()
+    
+    fireEvent.click(leftArrow)
+    expect(screen.getByTestId('ChevronRightIcon')).toBeInTheDocument()
+
+  })
+
+  it('renders the navigation links', () => {
+    const navList = [
+      'Pengaturan Formulir Pendaftaran',
+      'List Pendaftaran',
+      'Pengaturan Klinik',
+      'Pengaturan Pengguna',
+      'Pengaturan Jadwal Praktik',
+      'Pengaturan Formulir Rekaman Medis',
+      'Rekaman Medis',
+      'Akun'
+    ]
+
+    navList.forEach((navItem) => {
+      expect(screen.getByText(navItem)).toBeInTheDocument
     })
-
-    expect(heading).toBeInTheDocument()
   })
 })
