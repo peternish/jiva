@@ -67,6 +67,10 @@ const tenagaMedisEndpoints = {
     };
   },
 
+  updateTenagaMedisByID: ({ id, name, tempatTanggalLahir, nik }) => {
+    return null;
+  },
+
   createTenagaMedis: ({ nomorTelepon }) => {
     return axios.post(BASE_URL, { nomorTelepon });
   },

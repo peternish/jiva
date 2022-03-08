@@ -23,6 +23,16 @@ const getTenagaMedis = () => {
     };
 };
 
+const updateTenagaMedisByID = ({ id, name, tempatTanggalLahir, nik }) => {
+    return async (dispatch) => {
+        try {
+            await jivaAPI.tenagaMedis.updateTenagaMedisByID({ id, name, tempatTanggalLahir, nik });
+        } catch (error) {
+            console.log(error);
+        };
+    };
+};
+
 const createTenagaMedis = ({ nomorTelepon }) => {
     return async (dispatch) => {
         try {
@@ -33,4 +43,4 @@ const createTenagaMedis = ({ nomorTelepon }) => {
     };
 };
 
-export { getTenagaMedis, getTenagaMedisByID, createTenagaMedis };
+export { getTenagaMedis, getTenagaMedisByID, updateTenagaMedisByID, createTenagaMedis };
