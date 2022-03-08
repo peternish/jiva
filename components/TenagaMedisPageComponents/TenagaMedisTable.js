@@ -41,7 +41,7 @@ function TenagaMedisTable() {
                 <TableCell>{tenagaMedis.name}</TableCell>
                 <TableCell>{tenagaMedis.tempatTanggalLahir}</TableCell>
                 <TableCell>{tenagaMedis.nik}</TableCell>
-                <TableCell><Link href="/tenaga-medis/detail" underline="none" className={styles.link}>Lihat</Link></TableCell>
+                <TableCell><Link href={`/tenaga-medis/detail/${tenagaMedis.id}`} underline="none" className={styles.link}>Lihat</Link></TableCell>
               </TableRow>
             ))
           }
