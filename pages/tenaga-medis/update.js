@@ -14,7 +14,7 @@ function UpdateTenagaMedis() {
         <div className={layoutStyles.containerWithSidebar}>
           <h1>Update Tenaga Medis</h1>
 
-          <Stack spacing={2} style={{marginTop: "2em"}}>
+          <Stack spacing={2}>
             <TextField 
               fullWidth 
               variant="outlined" 
@@ -44,7 +44,7 @@ function UpdateTenagaMedis() {
             />
           </Stack>
 
-          <Stack spacing={2} direction="row" style={{marginTop: "2em"}}>
+          <Stack spacing={2} direction="row">
             <Button variant="outlined">Batal</Button>
             <Button variant="contained">Simpan</Button>
           </Stack>
