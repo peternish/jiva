@@ -15,7 +15,7 @@ function DashboardTenagaMedis() {
 
           <TenagaMedisTable />
 
-          <Button variant="contained">Tambah Tenaga Medis</Button>
+          <Button href="/tenaga-medis/create" variant="contained">Tambah Tenaga Medis</Button>
         </div>
       </Layout>
     </main>
