@@ -5,6 +5,7 @@ import Navbar from "@components/Layout/Navbar";
 import Layout from "@components/Layout";
 import { store } from "@redux/store";
 import { Provider } from "react-redux";
+import Home from "@pages/index";
 
 describe("Layout", () => {
   it("renders a head", () => {
@@ -77,4 +78,38 @@ describe('Sidebar', () => {
       expect(screen.getByText(navItem)).toBeInTheDocument
     })
   })
+})
+
+describe("Home Page", () => {
+  beforeEach(() => {
+    render(
+    <Provider store={store}>
+      <Home />
+    </Provider>);
+  });
+
+  it('renders a title', () => {
+    const title = screen.getByText('ERP terpercaya untuk klinik Anda')
+
+    expect(title).toBeInTheDocument()
+  })
+
+  it('renders a subtitle', () => {
+    const subtitle = screen.getByText('Aplikasi penyelamat klinik Anda. 9 dari 10 klinik terpercaya merekomendasikan aplikasi ini.')
+
+    expect(subtitle).toBeInTheDocument()
+  })
+
+  it('renders a daftarkan klinik button', () => {
+    const button = screen.getByText("Daftarkan Klinik Anda Sekarang")
+
+    expect(button).toBeInTheDocument()
+  })
+
+  it('renders an image', () => {
+    const img = screen.getByRole('img')
+
+    expect(img).toBeInTheDocument()
+  })
+
 })
