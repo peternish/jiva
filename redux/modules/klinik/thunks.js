@@ -22,7 +22,6 @@ export const getKlinik = () => {
   return async (dispatch) => {
     try {
       const res = await jivaAPI.klinik.fetch()
-      console.log(res)
       await dispatch(setKlinik(res.data))
     } catch (error) {
       toast(error.toString(), { type: toast.TYPE.ERROR });
@@ -33,7 +32,6 @@ export const getKlinik = () => {
 export const registerCabang = ({ location } = {}) => {
   return async () => {
     try {
-      console.log("ZCZCZCZC")
       await jivaAPI.cabang.register({ location })
       window.location.assign("/klinik");
     } catch (err) {
