@@ -1,61 +1,55 @@
-import { createTheme } from '@mui/material/styles';
-
 // components
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
+import Layout from '@components/Layout';
 
 // styles
-import styles from '@styles/Home.module.css';
-import buttonStyles from '@styles/Button.module.css';
-
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: '#0052D0',
-    },
-  },
-});
+import layoutStyles from '@styles/Layout.module.css';
 
 function CreateTenagaMedis() {
   return (
-    <main className={styles.container} style={{width: "50%"}}>
-      <h1>Tambah Tenaga Medis</h1>
+    <main>
+      <Layout>
+        <div className={layoutStyles.containerWithSidebar}>
+          <h1>Tambah Tenaga Medis</h1>
 
-      <Stack spacing={2} style={{marginTop: "2em"}}>
-        <TextField 
-          fullWidth 
-          variant="outlined" 
-          label="Nama"
-          placeholder="Budi Budiman"
-        />
+          <Stack spacing={2} style={{marginTop: "2em"}}>
+            <TextField 
+              fullWidth 
+              variant="outlined" 
+              label="Nama"
+              placeholder="Budi Budiman"
+            />
 
-        <TextField 
-          fullWidth 
-          variant="outlined" 
-          label="Email"
-          placeholder="budi.budiman@email.com"
-        />
+            <TextField 
+              fullWidth 
+              variant="outlined" 
+              label="Email"
+              placeholder="budi.budiman@email.com"
+            />
 
-        <TextField 
-          fullWidth 
-          variant="outlined" 
-          label="Nomor Telepon"
-          placeholder="081234567890"
-        />
+            <TextField 
+              fullWidth 
+              variant="outlined" 
+              label="Nomor Telepon"
+              placeholder="081234567890"
+            />
 
-        <TextField 
-          fullWidth 
-          variant="outlined" 
-          label="Input Field"
-          placeholder="Input Field"
-        />
-      </Stack>
+            <TextField 
+              fullWidth 
+              variant="outlined" 
+              label="Input Field"
+              placeholder="Input Field"
+            />
+          </Stack>
 
-      <Stack spacing={2} direction="row" style={{marginTop: "2em"}}>
-        <Button variant="outlined" theme={theme} className={buttonStyles.button}>Batal</Button>
-        <Button variant="contained" theme={theme} className={buttonStyles.button}>Tambah</Button>
-      </Stack>
+          <Stack spacing={2} direction="row" style={{marginTop: "2em"}}>
+            <Button variant="outlined">Batal</Button>
+            <Button variant="contained">Tambah</Button>
+          </Stack>
+        </div>
+      </Layout>
     </main>
   );
 };
