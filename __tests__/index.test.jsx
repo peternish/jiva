@@ -1,38 +1,53 @@
-import { render, screen, fireEvent } from '@testing-library/react'
 import '@testing-library/jest-dom'
-import Navbar from 'components/Navbar'
-import Sidebar from 'components/Sidebar'
+import { render, screen, fireEvent } from '@testing-library/react'
+import Sidebar from '@components/Layout/Sidebar'
+import Navbar from "@components/Layout/Navbar";
+import Layout from "@components/Layout";
+import { store } from "@redux/store";
+import { Provider } from "react-redux";
 
-describe('Navbar', () => {
-  it('renders a navbar', () => {
-    render(<Navbar/>)
+describe("Layout", () => {
+  it("renders a head", () => {
+    const text = "Hello";
+    render(<Layout>{text}</Layout>);
+    expect(screen.getByText(text)).toBeInTheDocument();
+  });
+});
 
-    const nav = screen.getByRole('navigation')
+describe("Navbar", () => {
+  beforeEach(() => {
+    render(
+      <Provider store={store}>
+        <Navbar/>
+      </Provider>
+    );
+  });
 
-    expect(nav).toBeInTheDocument()
-  })
+  it("renders a navbar", () => {
+    const nav = screen.getByRole("navigation");
 
-  it('renders navigation links', () => {
-    render(<Navbar/>)
+    expect(nav).toBeInTheDocument();
+  });
 
-    const links = screen.getAllByRole('link')
-
+  it("renders navigation links", () => {
+    const links = screen.getAllByRole("link");
+    
     expect(links).toHaveLength(3)
   })
 })
 
 describe('Sidebar', () => {
+  beforeEach(() => {
+    render(<Sidebar/>);
+  });
+  
   it('renders a sidebar', () => {
-    render(<Sidebar/>)
-
     const sidebar = screen.getByTestId('sidebar')
 
     expect(sidebar).toBeInTheDocument()
   })
 
   it('toggles the sidebar when the arrow button is clicked', () => {
-    render(<Sidebar/>)
-
     const rightArrow = screen.getByTestId('ChevronRightIcon')
     expect(rightArrow).toBeInTheDocument()
     
@@ -47,8 +62,6 @@ describe('Sidebar', () => {
   })
 
   it('renders the navigation links', () => {
-    render(<Sidebar/>)
-
     const navList = [
       'Pengaturan Formulir Pendaftaran',
       'List Pendaftaran',

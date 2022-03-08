@@ -3,11 +3,11 @@ const localConstants = {
 };
 
 const developmentConstants = {
-  API_BASE_URL: "https://api-dev.domain.com",
+  API_BASE_URL: "https://jiva-backend-staging.herokuapp.com",
 };
 
 const productionConstants = {
-  API_BASE_URL: "https://api.domain.com",
+  API_BASE_URL: "https://jiva-backend.herokuapp.com",
 };
 
 let constants = null;
