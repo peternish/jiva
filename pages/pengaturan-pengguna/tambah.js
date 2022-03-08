@@ -6,6 +6,8 @@ import TextInput from "components/common/TextInput"
 import Layout from "@components/Layout";
 import Container from '@mui/material/Container'
 
+import CSS from "@components/PengaturanPenggunaComponents/CSS";
+
 const TambahForm = () => {
   return (
     <>
@@ -41,27 +43,29 @@ const Tambah = () => {
 
   return (
         <Layout navType="sidebar">
-          <Head>
-            <title>Tambah | Pengaturan Pengguna</title>
-            <meta name="tambah pengaturan pengguna" content="tambah pengaturan pengguna" />
-            <link rel="icon" href="/favicon.ico" />
-          </Head>
-          <Container>
-            <h1>Tambah Pengguna</h1>
-            <Formik
-              initialValues={{fields}}
-              validate={(values) => {}}
-              onSubmit={(values, { setSubmitting }) => {}}
-              >
-              {() => (
-                <Form className="form" role="form">
-                  <TambahForm />
-                </Form>
-              )}
-            </Formik>
-            <Button variant="outlined">Batal</Button>
-            <Button type="submit" variant="contained" >Simpan</Button>
-          </Container>
+          <CSS>
+            <Head>
+              <title>Tambah | Pengaturan Pengguna</title>
+              <meta name="tambah pengaturan pengguna" content="tambah pengaturan pengguna" />
+              <link rel="icon" href="/favicon.ico" />
+            </Head>
+            <Container>
+              <h1>Tambah Pengguna</h1>
+              <Formik
+                initialValues={{fields}}
+                validate={(values) => {}}
+                onSubmit={(values, { setSubmitting }) => {}}
+                >
+                {() => (
+                  <Form className="form" role="form">
+                    <TambahForm />
+                  </Form>
+                )}
+              </Formik>
+              <Button variant="outlined">Batal</Button>
+              <Button type="submit" variant="contained" >Simpan</Button>
+            </Container>
+          </CSS>
         </Layout>
   );
 };

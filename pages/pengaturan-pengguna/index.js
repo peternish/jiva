@@ -11,6 +11,8 @@ import Link from '@mui/material/Link'
 import Layout from "@components/Layout";
 import Container from '@mui/material/Container'
 
+import CSS from "@components/PengaturanPenggunaComponents/CSS";
+
 const PengaturanPenggunaTable = () => {
   return (
     <>
@@ -61,22 +63,24 @@ const Dashboard = () => {
 
   return (
         <Layout navType="sidebar">
-          <Head>
-            <title>Pengaturan Pengguna</title>
-            <meta name="pengaturan pengguna" content="pengaturan pengguna" />
-            <link rel="icon" href="/favicon.ico" />
-          </Head>
-          <Container>
-            <h1>Pengaturan Pengguna</h1>
+          <CSS>
+            <Head>
+              <title>Pengaturan Pengguna</title>
+              <meta name="pengaturan pengguna" content="pengaturan pengguna" />
+              <link rel="icon" href="/favicon.ico" />
+            </Head>
+            <Container>
+              <h1>Pengaturan Pengguna</h1>
 
-            <PengaturanPenggunaTable />
+              <PengaturanPenggunaTable />
 
-            <Link href="/pengaturan-pengguna/tambah">
-              <Button variant="contained" >
-                Tambah Pengguna
-              </Button>
-            </Link>
-          </Container>
+              <Link href="/pengaturan-pengguna/tambah">
+                <Button variant="contained" >
+                  Tambah Pengguna
+                </Button>
+              </Link>
+            </Container>
+          </CSS>
         </Layout>
   );
 };
