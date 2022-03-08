@@ -1,5 +1,16 @@
 import jivaAPI from "@api/index";
-import { setTenagaMedisList } from "@redux/modules/tenagaMedis";
+import { setTenagaMedis, setTenagaMedisList } from "@redux/modules/tenagaMedis";
+
+const getTenagaMedisByID = ({ idTenagaMedis }) => {
+    return async (dispatch) => {
+        try {
+            const { data } = await jivaAPI.tenagaMedis.getTenagaMedisByID({ idTenagaMedis });
+            await dispatch(setTenagaMedis(data[0]));
+        } catch (error) {
+            console.log(error);
+        };
+    };
+};
 
 const getTenagaMedis = () => {
     return async (dispatch) => {
@@ -22,4 +33,4 @@ const createTenagaMedis = ({ nomorTelepon }) => {
     };
 };
 
-export { getTenagaMedis, createTenagaMedis };
+export { getTenagaMedis, getTenagaMedisByID, createTenagaMedis };
