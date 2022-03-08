@@ -1,1 +1,1 @@
-export const isLoggedIn = (state) => state.auth.accessToken;
+export const isLoggedIn = (state) => !!state.auth.accessToken;
