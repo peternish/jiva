@@ -10,7 +10,18 @@ import Link from '@mui/material/Link';
 // styles
 import styles from '@styles/Table.module.css';
 
+// redux
+import { useSelector, useDispatch } from "react-redux";
+import { useEffect } from 'react';
+import { getTenagaMedis } from "@redux/modules/tenagaMedis/thunks";
+
 function TenagaMedisTable() {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getTenagaMedis());
+  });
+  const { tenagaMedisList } = useSelector(state => state.tenagaMedis);
+
   return (
     <TableContainer className={styles.container}>
       <Table>
@@ -24,26 +35,16 @@ function TenagaMedisTable() {
         </TableHead>
 
         <TableBody>
-          <TableRow className={styles.row}>
-            <TableCell>Budi Budiman</TableCell>
-            <TableCell>Jakarta, 2 Januari 2001</TableCell>
-            <TableCell>081234567890</TableCell>
-            <TableCell><Link href="/tenaga-medis/detail" underline="none" className={styles.link}>Lihat</Link></TableCell>
-          </TableRow>
-
-          <TableRow className={styles.row}>
-            <TableCell>Budi Budiman</TableCell>
-            <TableCell>Jakarta, 2 Januari 2001</TableCell>
-            <TableCell>081234567890</TableCell>
-            <TableCell><Link href="/tenaga-medis/detail" underline="none" className={styles.link}>Lihat</Link></TableCell>
-          </TableRow>
-
-          <TableRow className={styles.row}>
-            <TableCell>Budi Budiman</TableCell>
-            <TableCell>Jakarta, 2 Januari 2001</TableCell>
-            <TableCell>081234567890</TableCell>
-            <TableCell><Link href="/tenaga-medis/detail" underline="none" className={styles.link}>Lihat</Link></TableCell>
-          </TableRow>
+          {
+            tenagaMedisList && tenagaMedisList.map((tenagaMedis) => (
+              <TableRow key={tenagaMedis.id} className={styles.row}>
+                <TableCell>{tenagaMedis.name}</TableCell>
+                <TableCell>{tenagaMedis.tempatTanggalLahir}</TableCell>
+                <TableCell>{tenagaMedis.nik}</TableCell>
+                <TableCell><Link href="/tenaga-medis/detail" underline="none" className={styles.link}>Lihat</Link></TableCell>
+              </TableRow>
+            ))
+          }
         </TableBody>
       </Table>
     </TableContainer>

@@ -5,7 +5,29 @@ const BASE_URL = constants?.API_BASE_URL + "/tenaga-medis";
 
 const tenagaMedisEndpoints = {
   getTenagaMedis: () => {
-    return axios.get(BASE_URL);
+    return {
+      data: [
+        {
+          id: 1,
+          name: "Anthony",
+          tempatTanggalLahir: "Berlin, 12 Maret 1976",
+          nik: "1234567890",
+        },
+        {
+          id: 2,
+          name: "Brandon",
+          tempatTanggalLahir: "Hamburg, 5 Oktober 1980",
+          nik: "2345678901",
+        },
+        {
+          id: 3,
+          name: "Connor",
+          tempatTanggalLahir: "Munich, 27 Agustus 1970",
+          nik: "3456789012",
+        },
+      ]
+    };
+    // return axios.get(BASE_URL);
   },
 
   createTenagaMedis: ({ nomorTelepon }) => {
