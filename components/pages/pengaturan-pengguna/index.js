@@ -12,6 +12,7 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Link from '@mui/material/Link'
+import Sidebar from '@components/Sidebar'
 
 const PengaturanPenggunaTable = () => {
   return (
@@ -63,15 +64,16 @@ const Dashboard = () => {
 
   return (
         <main>
-        <h1>Pengaturan Pengguna</h1>
+          <Sidebar/>
+          <h1>Pengaturan Pengguna</h1>
 
-        <PengaturanPenggunaTable />
+          <PengaturanPenggunaTable />
 
-        <Link href="/pengaturan-pengguna/tambah">
-          <Button variant="contained" >
-            Tambah Pengguna
-          </Button>
-        </Link>
+          <Link href="/pengaturan-pengguna/tambah">
+            <Button variant="contained" >
+              Tambah Pengguna
+            </Button>
+          </Link>
         </main>
   );
 };

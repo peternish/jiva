@@ -6,6 +6,7 @@ import styled from "styled-components"
 import { Formik, Field, Form } from "formik"
 import Button from "@mui/material/Button"
 import TextInput from "components/common/TextInput"
+import Sidebar from '@components/Sidebar'
 
 const TambahForm = () => {
   return (
@@ -36,26 +37,27 @@ const Tambah = () => {
 
   return (
     <main>
-    <h1>Tambah Pengguna</h1>
-    <Formik
-      initialValues={{
-        email: "",
-        password: "",
-        input_value: "",
-      }}
-      validate={(values) => {}}
-      onSubmit={(values, { setSubmitting }) => {}}
-    >
-      {() => (
-        <Form className="form" role="form">
-          <TambahForm />
-        </Form>
-      )}
-    </Formik>
-    
+      <Sidebar/>
+      <h1>Tambah Pengguna</h1>
+      <Formik
+        initialValues={{
+          email: "",
+          password: "",
+          input_value: "",
+        }}
+        validate={(values) => {}}
+        onSubmit={(values, { setSubmitting }) => {}}
+      >
+        {() => (
+          <Form className="form" role="form">
+            <TambahForm />
+          </Form>
+        )}
+      </Formik>
+      
 
-    <Button variant="outlined">Batal</Button>
-    <Button type="submit" variant="contained" >Simpan</Button>
+      <Button variant="outlined">Batal</Button>
+      <Button type="submit" variant="contained" >Simpan</Button>
     </main>
   );
 };
