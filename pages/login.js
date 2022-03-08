@@ -81,7 +81,7 @@ const Login = () => {
               try {
                 dispatch(login(values));
               } catch (err) {
-                console.log(err);
+                console.error(err);
               }
             }}
           >
