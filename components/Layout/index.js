@@ -6,6 +6,11 @@ import Head from "next/head";
 
 // utils
 import constants from "@utils/constants";
+<<<<<<< HEAD
+=======
+import Sidebar from "@components/Sidebar";
+import Navbar from "@components/Navbar";
+>>>>>>> feature/navbar
 
 const LayoutStyle = styled.div`
   max-width: ${constants.MAX_WIDTH}px;
@@ -16,7 +21,7 @@ const LayoutStyle = styled.div`
   align-items: center;
 `;
 
-const Layout = ({ children }) => {
+const Layout = ({ children, navType = 'sidebar' }) => {
   return (
     <LayoutStyle>
       <Head>
@@ -24,6 +29,7 @@ const Layout = ({ children }) => {
         <meta name="description" content=""/>
         <link rel="icon" href="/logo.ico" />
       </Head>
+      {navType === 'topbar' ? <Navbar/> : <Sidebar/>}
       {children}
     </LayoutStyle>
   );
