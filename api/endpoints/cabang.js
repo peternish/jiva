@@ -3,7 +3,7 @@ import { axiosInstance as axios } from "@api/http";
 
 const BASE_URL = constants?.API_BASE_URL + "/klinik/cabang";
 
-const endpoints = {
+const cabang = {
   fetch_all: () => axios.get(`${BASE_URL}/`),
   register: ({ location } = {}) =>
     axios.post(`${BASE_URL}/`, {
@@ -17,4 +17,4 @@ const endpoints = {
   unregister: ({ cabang_id } = {}) => axios.get(`${BASE_URL}/${cabang_id}/`),
 };
 
-export default endpoints;
+export default cabang;
