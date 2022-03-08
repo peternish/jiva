@@ -71,10 +71,11 @@ describe('DashboardTenagaMedis', () => {
 
 
   it('should have the tambah tenaga medis button', () => {
-    const button = screen.getByRole('button', {
+    const button = screen.getByRole('link', {
       name: /Tambah Tenaga Medis/,
     });
 
     expect(button).toBeInTheDocument();
+    expect(button).toHaveAttribute('href', '/tenaga-medis/create');
   });
 });
