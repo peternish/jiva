@@ -53,8 +53,6 @@ const Tambah = () => {
               <h1>Tambah Pengguna</h1>
               <Formik
                 initialValues={{fields}}
-                validate={(values) => {}}
-                onSubmit={(values, { setSubmitting }) => {}}
                 >
                 {() => (
                   <Form className="form" role="form">
