@@ -6,11 +6,8 @@ import Head from "next/head";
 
 // utils
 import constants from "@utils/constants";
-<<<<<<< HEAD
-=======
 import Sidebar from "@components/Sidebar";
 import Navbar from "@components/Navbar";
->>>>>>> feature/navbar
 
 const LayoutStyle = styled.div`
   max-width: ${constants.MAX_WIDTH}px;
