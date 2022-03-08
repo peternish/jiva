@@ -1,84 +1,80 @@
-import { render, screen } from '@testing-library/react'
-import DashboardTenagaMedis from '@pages/tenaga-medis/index'
-import '@testing-library/jest-dom'
+import { render, screen } from '@testing-library/react';
+import DashboardTenagaMedis from '@pages/tenaga-medis/index';
+import { Provider } from "react-redux";
+import { store } from "@redux/store";
+import '@testing-library/jest-dom';
 
-describe('Dashboard Tenaga Medis Main Components', () => {
+describe('DashboardTenagaMedis', () => {
+  beforeEach(() => {
+    render(
+      <Provider store={store}>
+        <DashboardTenagaMedis />
+      </Provider>
+    );
+  });
+
+
   it('should render', () => {
-    render(<DashboardTenagaMedis />)
+    const main = screen.getByRole('main');
 
-    const main = screen.getByRole('main')
-
-    expect(main).toBeInTheDocument()
-  })
+    expect(main).toBeInTheDocument();
+  });
 
 
   it('should have the page main heading', () => {
-    render(<DashboardTenagaMedis />)
-
     const heading = screen.getByRole('heading', {
       name: /Daftar Tenaga Medis/,
-    })
+    });
 
-    expect(heading).toBeInTheDocument()
-  })
+    expect(heading).toBeInTheDocument();
+  });
 
 
   it('should have the tenaga medis list table', () => {
-    render(<DashboardTenagaMedis />)
-
-    const table = screen.getByRole('table')
+    const table = screen.getByRole('table');
     
-    expect(table).toBeInTheDocument()
-  })
+    expect(table).toBeInTheDocument();
+  });
+
+
+  it('should the appropriate table columns', () => {
+    const namaColumn = screen.getByRole('columnheader', {
+      name: /Nama/,
+    });
+    const ttlColumn = screen.getByRole('columnheader', {
+      name: /Tempat\/Tanggal Lahir/,
+    });
+    const nikColumn = screen.getByRole('columnheader', {
+      name: /NIK/,
+    });
+    const lihatColumn = screen.getByRole('columnheader', {
+      name: /^$/,
+    });
+    
+    expect(namaColumn).toBeInTheDocument();
+    expect(ttlColumn).toBeInTheDocument();
+    expect(nikColumn).toBeInTheDocument();
+    expect(lihatColumn).toBeInTheDocument();
+  });
+
+
+  it('should have all "Lihat" as link pointing to detail page', () => {
+    const lihatLinks = screen.getAllByRole('link', {
+      name: /Lihat/,
+    });
+
+    lihatLinks.forEach((lihatLink) => {
+      expect(lihatLink).toBeInTheDocument();
+      expect(lihatLink).toHaveAttribute('href', '/tenaga-medis/detail');
+    });
+  });
 
 
   it('should have the tambah tenaga medis button', () => {
-    render(<DashboardTenagaMedis />)
-
     const button = screen.getByRole('button', {
       name: /Tambah Tenaga Medis/,
-    })
+    });
 
-    expect(button).toBeInTheDocument()
-  })
-})
-
-
-
-describe('Tenaga medis list table properties', () => {
-  it('should have the appropriate columns', () => {
-    render(<DashboardTenagaMedis />)
-
-    const namaColumn = screen.getByRole('columnheader', {
-      name: /Nama/,
-    })
-    const ttlColumn = screen.getByRole('columnheader', {
-      name: /Tempat\/Tanggal Lahir/,
-    })
-    const nikColumn = screen.getByRole('columnheader', {
-      name: /NIK/,
-    })
-    const lihatColumn = screen.getByRole('columnheader', {
-      name: /^$/,
-    })
-    
-    expect(namaColumn).toBeInTheDocument()
-    expect(ttlColumn).toBeInTheDocument()
-    expect(nikColumn).toBeInTheDocument()
-    expect(lihatColumn).toBeInTheDocument()
-  })
-
-
-  it('should have all lihat value as link pointing to detail page', () => {
-    render(<DashboardTenagaMedis />)
-
-    const lihatLinks = screen.getAllByRole('link', {
-      name: /Lihat/,
-    })
-
-    lihatLinks.forEach((lihatLink) => {
-      expect(lihatLink).toBeInTheDocument()
-      expect(lihatLink).toHaveAttribute('href', '/tenaga-medis/detail')
-    })
-  })
-})
+    expect(button).toBeInTheDocument();
+  });
+});

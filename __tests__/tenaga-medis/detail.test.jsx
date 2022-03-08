@@ -1,57 +1,58 @@
-import { render, screen } from '@testing-library/react'
-import DetailTenagaMedis from '@pages/tenaga-medis/detail'
-import '@testing-library/jest-dom'
+import { render, screen } from '@testing-library/react';
+import DetailTenagaMedis from '@pages/tenaga-medis/detail';
+import { Provider } from "react-redux";
+import { store } from "@redux/store";
+import '@testing-library/jest-dom';
 
-describe('Detail tenaga medis page main components', () => {
+describe('DetailTenagaMedis', () => {
+  beforeEach(() => {
+    render(
+      <Provider store={store}>
+        <DetailTenagaMedis />
+      </Provider>
+    );
+  });
+  
+
   it('should render', () => {
-    render(<DetailTenagaMedis />)
+    const main = screen.getByRole('main');
 
-    const main = screen.getByRole('main')
-
-    expect(main).toBeInTheDocument()
-  })
+    expect(main).toBeInTheDocument();
+  });
 
 
   it('should have the page main heading', () => {
-    render(<DetailTenagaMedis />)
-
     const heading = screen.getByRole('heading', {
       name: /Detil Informasi Tenaga Medis/,
-    })
+    });
 
-    expect(heading).toBeInTheDocument()
-  })
+    expect(heading).toBeInTheDocument();
+  });
 
 
   it('should have data fields', () => {
-    render(<DetailTenagaMedis />)
-
-    const fields = screen.getAllByRole('textbox')
+    const fields = screen.getAllByRole('textbox');
 
     fields.forEach((field) => {
-      expect(field).toBeInTheDocument()
-    })
-  })
+      expect(field).toBeInTheDocument();
+    });
+  });
 
 
   it('should have the hapus button', () => {
-    render(<DetailTenagaMedis />)
-
     const button = screen.getByRole('button', {
       name: /Hapus/,
-    })
+    });
 
-    expect(button).toBeInTheDocument()
-  })
+    expect(button).toBeInTheDocument();
+  });
 
   
   it('should have the ubah button', () => {
-    render(<DetailTenagaMedis />)
-
     const button = screen.getByRole('button', {
       name: /Ubah/,
-    })
+    });
 
-    expect(button).toBeInTheDocument()
-  })
-})
+    expect(button).toBeInTheDocument();
+  });
+});

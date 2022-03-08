@@ -1,57 +1,58 @@
-import { render, screen } from '@testing-library/react'
-import UpdateTenagaMedis from '@pages/tenaga-medis/update'
-import '@testing-library/jest-dom'
+import { render, screen } from '@testing-library/react';
+import UpdateTenagaMedis from '@pages/tenaga-medis/update';
+import { Provider } from "react-redux";
+import { store } from "@redux/store";
+import '@testing-library/jest-dom';
 
-describe('Update tenaga medis page main components', () => {
+describe('UpdateTenagaMedis', () => {
+  beforeEach(() => {
+    render(
+      <Provider store={store}>
+        <UpdateTenagaMedis />
+      </Provider>
+    );
+  });
+
+
   it('should render', () => {
-    render(<UpdateTenagaMedis />)
+    const main = screen.getByRole('main');
 
-    const main = screen.getByRole('main')
-
-    expect(main).toBeInTheDocument()
-  })
+    expect(main).toBeInTheDocument();
+  });
 
 
   it('should have the page main heading', () => {
-    render(<UpdateTenagaMedis />)
-
     const heading = screen.getByRole('heading', {
       name: /Update Tenaga Medis/,
-    })
+    });
 
-    expect(heading).toBeInTheDocument()
-  })
+    expect(heading).toBeInTheDocument();
+  });
 
 
   it('should have data fields', () => {
-    render(<UpdateTenagaMedis />)
-
-    const fields = screen.getAllByRole('textbox')
+    const fields = screen.getAllByRole('textbox');
 
     fields.forEach((field) => {
-      expect(field).toBeInTheDocument()
-    })
-  })
+      expect(field).toBeInTheDocument();
+    });
+  });
 
 
   it('should have the batal button', () => {
-    render(<UpdateTenagaMedis />)
-
     const button = screen.getByRole('button', {
       name: /Batal/,
-    })
+    });
 
-    expect(button).toBeInTheDocument()
-  })
+    expect(button).toBeInTheDocument();
+  });
 
   
   it('should have the simpan button', () => {
-    render(<UpdateTenagaMedis />)
-
     const button = screen.getByRole('button', {
       name: /Simpan/,
-    })
+    });
 
-    expect(button).toBeInTheDocument()
-  })
-})
+    expect(button).toBeInTheDocument();
+  });
+});
