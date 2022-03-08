@@ -65,7 +65,7 @@ describe('DashboardTenagaMedis', () => {
 
     lihatLinks.forEach((lihatLink) => {
       expect(lihatLink).toBeInTheDocument();
-      expect(lihatLink).toHaveAttribute('href', '/tenaga-medis/detail');
+      expect(lihatLink).toHaveAttribute('href', expect.stringMatching(/\/tenaga-medis\/detail\/\d+/));
     });
   });
 
