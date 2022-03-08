@@ -1,7 +1,7 @@
 import Layout from "@components/Layout";
 import { Button, Box } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
-import Card from "@components/CabangComponents/CabangCards";
+import Card from "@components/KlinikPageComponents/CabangCards";
 import Link from 'next/link'
 import { getCabang, getKlinik } from "@redux/modules/klinik/thunks"
 import { useDispatch, useSelector } from "react-redux"

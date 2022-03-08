@@ -5,7 +5,7 @@ import { Provider } from "react-redux";
 import { store } from "@redux/store";
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import Klinik from "@pages/klinik/index";
-import Card from "@components/CabangComponents/CabangCard";
+import Card from "@components/KlinikPageComponents/CabangCard";
 import "@testing-library/jest-dom";
 
 configure({ adapter: new Adapter() });
