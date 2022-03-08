@@ -11,6 +11,9 @@ const klinikEndpoints = {
 
     return axios.post(BASE_URL + "/", formData);
   },
+  fetch: () => {
+    return axios.get(BASE_URL + "/");
+  },
 };
 
 export default klinikEndpoints;

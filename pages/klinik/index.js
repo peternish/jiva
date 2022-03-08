@@ -1,7 +1,7 @@
 import Layout from "@components/Layout";
 import { Button, Box } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
-import Card from "@components/KlinikPageComponents/CabangCards";
+import Card from "@components/KlinikPageComponents/CabangCard";
 import Link from 'next/link'
 import { getCabang, getKlinik } from "@redux/modules/klinik/thunks"
 import { useDispatch, useSelector } from "react-redux"
@@ -16,8 +16,6 @@ export default function Klinik() {
   }, [dispatch])
 
   const { cabangList, klinik } = useSelector(state => state.klinik)
-  console.log("cabangList")
-  console.log(cabangList)
 
   return (
     <Layout navType="topbar">

@@ -33,6 +33,7 @@ export const getKlinik = () => {
 export const registerCabang = ({ location } = {}) => {
   return async () => {
     try {
+      console.log("ZCZCZCZC")
       await jivaAPI.cabang.register({ location })
       window.location.assign("/klinik");
     } catch (err) {
