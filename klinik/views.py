@@ -30,7 +30,7 @@ class KlinikAPI(APIView):
         try:
             klinik = Klinik.objects.get(owner=owner)
             return klinik
-        except:
+        except Klinik.DoesNotExist:
             return None
 
     def post(self, request):
