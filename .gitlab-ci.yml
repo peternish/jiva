@@ -25,15 +25,23 @@ Install:
   <<: *base_rules
   stage: .pre
   script:
-    - npm ci --cache .npm --prefer-offline --no-audit --production
+    - npm ci --cache .npm --prefer-offline --no-audit
   cache:
+    key: $CI_COMMIT_REF_SLUG-$CI_PROJECT_DIR
     paths:
       - .npm/
+      - node_modules
 
 Build:
   <<: *base_rules
   stage: build
   needs: ['Install']
+  cache:
+    key: $CI_COMMIT_REF_SLUG-$CI_PROJECT_DIR
+    paths:
+      - .npm/
+      - node_modules
+    policy: pull
   script:
     - npm run build
   artifacts:
