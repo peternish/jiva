@@ -33,9 +33,8 @@ Build:
 Test:
   <<: *base_rules
   stage: test
+  needs: ['Build']
   script:
-    - npm ci
-    - npm run build
     - npm run test
   coverage: /All\sfiles.*?\s+(\d+.\d+)/
   artifacts:
