@@ -11,16 +11,24 @@ variables:
     - master
 
 stages:
-  - lint
+  - build
   - test
   - deploy
 
-Lint:
+Build:
   <<: *base_rules
-  stage: lint
+  stage: build
   script:
     - npm ci
-    - npm run lint
+    - npm run build
+  cache:
+    paths:
+      - node_modules
+  artifacts:
+    paths:
+      - .next
+    expire_in: 1 day
+  
 
 Test:
   <<: *base_rules
