@@ -25,11 +25,10 @@ Install:
   <<: *base_rules
   stage: .pre
   script:
-    - npm ci --cache .npm --prefer-offline --progress=false --no-audit --include=dev
+    - npm ci
   cache:
     key: $CI_COMMIT_REF_SLUG-$CI_PROJECT_DIR
     paths:
-      - .npm/
       - node_modules
 
 Build:
@@ -39,7 +38,6 @@ Build:
   cache:
     key: $CI_COMMIT_REF_SLUG-$CI_PROJECT_DIR
     paths:
-      - .npm/
       - node_modules
     policy: pull
   script:
