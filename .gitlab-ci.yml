@@ -24,15 +24,11 @@ stages:
 Install:
   <<: *base_rules
   stage: .pre
+  script:
+    - npm ci --cache .npm --prefer-offline --no-audit --production
   cache:
-    key: NPM_DOWNLOAD_CACHE
     paths:
       - .npm/
-  script:
-    - npm ci --cache .npm --prefer-offline
-  artifacts:
-    paths:
-    - node_modules
 
 Build:
   <<: *base_rules
