@@ -25,7 +25,7 @@ Install:
   <<: *base_rules
   stage: .pre
   script:
-    - npm ci --cache .npm --prefer-offline --no-audit
+    - npm ci --cache .npm --prefer-offline --progress=false --no-audit --include=dev
   cache:
     key: $CI_COMMIT_REF_SLUG-$CI_PROJECT_DIR
     paths:
