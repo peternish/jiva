@@ -1,10 +1,11 @@
 import { useRouter } from 'next/router'
 
 // components
-import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Layout from '@components/Layout';
+import { Formik, Form } from "formik";
+import TextInput from "@components/common/TextInput";
 
 // styles
 import layoutStyles from '@styles/Layout.module.css';
@@ -32,34 +33,53 @@ function UpdateTenagaMedis() {
 
           {
             tenagaMedis && 
-            <Stack spacing={2}>
-              <TextField 
-                fullWidth 
-                variant="outlined" 
-                label="Nama"
-                defaultValue={tenagaMedis.name}
-              />
+            <Formik
+              initialValues={{
+                fullName: tenagaMedis.fullName,
+                email: tenagaMedis.email,
+              }}
+              validate={(values) => {
+                const errors = {};
+                const ERR_MESSAGE = "Input ini wajib diisi";
+                ["fullName", "email"].forEach((key) => {
+                  if (!values[key]) errors[key] = ERR_MESSAGE;
+                });
+                return errors;
+              }}
+              onSubmit={(values) => {
+                try {
+                  console.log(values);
+                } catch (err) {
+                  console.log(err);
+                }
+              }}
+            >
+              {({ isValid, errors }) => (
+                <Form>
+                  <TextInput 
+                    name="fullName"
+                    type="text"
+                    label="Nama Lengkap"
+                    placeholder="dr. Budi Budiman, Sp.A."
+                    error={errors.fullName}
+                  />
 
-              <TextField 
-                fullWidth 
-                variant="outlined" 
-                label="Tempat Tanggal Lahir"
-                defaultValue={tenagaMedis.tempatTanggalLahir}
-              />
+                  <TextInput 
+                    name="email"
+                    type="email"
+                    label="Email"
+                    placeholder="budi.budiman@email.com"
+                    error={errors.email}
+                  />
 
-              <TextField 
-                fullWidth 
-                variant="outlined" 
-                label="NIK"
-                defaultValue={tenagaMedis.nik}
-              />
-            </Stack> 
+                  <Stack spacing={2} direction="row">
+                    <Button variant="outlined">Batal</Button>
+                    <Button variant="contained" type="submit" disabled={!isValid}>Simpan</Button>
+                  </Stack>
+                </Form>
+              )}
+            </Formik>
           }
-          
-          <Stack spacing={2} direction="row">
-            <Button variant="outlined">Batal</Button>
-            <Button variant="contained">Simpan</Button>
-          </Stack>
         </div>
       </Layout>
     </main>
