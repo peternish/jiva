@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, act } from "@testing-library/react";
 import CreateTenagaMedis from '@pages/tenaga-medis/create';
 import { Provider } from "react-redux";
 import { store } from "@redux/store";
@@ -31,11 +31,13 @@ describe('CreateTenagaMedis', () => {
 
 
   it('should have data fields', () => {
-    const fields = screen.getAllByRole('textbox');
+    const fullNameField = screen.getByLabelText("Nama Lengkap");
+    const emailField = screen.getByLabelText("Email");
+    const passwordField = screen.getByLabelText("Password");
 
-    fields.forEach((field) => {
-      expect(field).toBeInTheDocument();
-    });
+    expect(fullNameField).toBeInTheDocument();
+    expect(emailField).toBeInTheDocument();
+    expect(passwordField).toBeInTheDocument();
   });
 
 
@@ -54,5 +56,41 @@ describe('CreateTenagaMedis', () => {
     });
 
     expect(button).toBeInTheDocument();
+  });
+
+
+  it("should show form validation errors", async () => {
+    const button = screen.getByRole("button", { 
+      name: "Tambah" 
+    });
+
+    await act(async () => {
+      await fireEvent.click(button);
+    });
+
+    expect(await screen.getAllByText("Input ini wajib diisi")).toHaveLength(3);
+  });
+
+
+  it("should submit when 'Tambah' is pressed", async () => {
+    const fullNameField = screen.getByLabelText("Nama Lengkap");
+    const emailField = screen.getByLabelText("Email");
+    const passwordField = screen.getByLabelText("Password");
+
+    const button = screen.getByRole("button", { 
+      name: "Tambah" 
+    });
+
+    await act(async () => {
+      await fireEvent.change(fullNameField, {target: {value: 'dr. Budi Budiman, Sp.A.'}});
+      await fireEvent.change(emailField, {target: {value: 'budi.budiman@email.com'}});
+      await fireEvent.change(passwordField, {target: {value: 'password'}});
+
+      await fireEvent.click(button);
+    });
+
+    expect(await screen.getByLabelText("Nama Lengkap")).toHaveValue('dr. Budi Budiman, Sp.A.');
+    expect(await screen.getByLabelText("Email")).toHaveValue('budi.budiman@email.com');
+    expect(await screen.getByLabelText("Password")).toHaveValue('password');
   });
 });
