@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, act } from "@testing-library/react";
 import UpdateTenagaMedis from '@pages/tenaga-medis/update/[id]';
 import { Provider } from "react-redux";
 import { store } from "@redux/store";
@@ -49,11 +49,11 @@ describe('UpdateTenagaMedis', () => {
 
 
   it('should have data fields', () => {
-    const fields = screen.getAllByRole('textbox');
+    const fullNameField = screen.getByLabelText("Nama Lengkap");
+    const emailField = screen.getByLabelText("Email");
 
-    fields.forEach((field) => {
-      expect(field).toBeInTheDocument();
-    });
+    expect(fullNameField).toBeInTheDocument();
+    expect(emailField).toBeInTheDocument();
   });
 
 
@@ -72,5 +72,44 @@ describe('UpdateTenagaMedis', () => {
     });
 
     expect(button).toBeInTheDocument();
+  });
+
+
+  it("should show form validation errors", async () => {
+    const fullNameField = screen.getByLabelText("Nama Lengkap");
+    const emailField = screen.getByLabelText("Email");
+
+    const button = screen.getByRole("button", { 
+      name: "Simpan" 
+    });
+
+    await act(async () => {
+      await fireEvent.change(fullNameField, {target: {value: ''}});
+      await fireEvent.change(emailField, {target: {value: ''}});
+
+      await fireEvent.click(button);
+    });
+
+    expect(await screen.getAllByText("Input ini wajib diisi")).toHaveLength(2);
+  });
+
+
+  it("should submit when 'Simpan' is pressed", async () => {
+    const fullNameField = screen.getByLabelText("Nama Lengkap");
+    const emailField = screen.getByLabelText("Email");
+
+    const button = screen.getByRole("button", { 
+      name: "Simpan" 
+    });
+
+    await act(async () => {
+      await fireEvent.change(fullNameField, {target: {value: 'dr. Budiman Budi, Sp.A.'}});
+      await fireEvent.change(emailField, {target: {value: 'budiman.budi@email.com'}});
+
+      await fireEvent.click(button);
+    });
+
+    expect(await screen.getByLabelText("Nama Lengkap")).toHaveValue('dr. Budiman Budi, Sp.A.');
+    expect(await screen.getByLabelText("Email")).toHaveValue('budiman.budi@email.com');
   });
 });
