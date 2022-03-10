@@ -1,10 +1,11 @@
 import { useRouter } from 'next/router'
 
 // components
-import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Layout from '@components/Layout';
+import { Formik, Form } from "formik";
+import TextInput from "@components/common/TextInput";
 
 // styles
 import layoutStyles from '@styles/Layout.module.css';
@@ -32,43 +33,34 @@ function DetailTenagaMedis() {
           
           {
             tenagaMedis && 
-            <Stack spacing={2}>
-              <TextField 
-                fullWidth 
-                variant="outlined" 
-                label="Nama"
-                defaultValue={tenagaMedis.name}
-                InputProps={{
-                  readOnly: true,
-                }}
-              />
+            <Formik 
+              initialValues={{
+                fullName: tenagaMedis.fullName,
+                email: tenagaMedis.email,
+              }}
+            >
+              <Form>
+                <TextInput 
+                  name="fullName"
+                  type="text"
+                  label="Nama Lengkap"
+                  disabled={true}
+                />
 
-              <TextField 
-                fullWidth 
-                variant="outlined" 
-                label="Tempat Tanggal Lahir"
-                defaultValue={tenagaMedis.tempatTanggalLahir}
-                InputProps={{
-                  readOnly: true,
-                }}
-              />
+                <TextInput 
+                  name="email"
+                  type="email"
+                  label="Email"
+                  disabled={true}
+                />
 
-              <TextField 
-                fullWidth 
-                variant="outlined" 
-                label="NIK"
-                defaultValue={tenagaMedis.nik}
-                InputProps={{
-                  readOnly: true,
-                }}
-              />
-            </Stack> 
+                <Stack spacing={2} direction="row">
+                  <Button variant="outlined">Hapus</Button>
+                  <Button variant="contained">Ubah</Button>
+                </Stack>
+              </Form>
+            </Formik>
           }
-
-          <Stack spacing={2} direction="row">
-            <Button variant="outlined">Hapus</Button>
-            <Button variant="contained">Ubah</Button>
-          </Stack>
         </div>
       </Layout>
     </main>
