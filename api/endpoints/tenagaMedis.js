@@ -9,21 +9,21 @@ const tenagaMedisEndpoints = {
       data: [
         {
           id: 1,
-          name: "Anthony",
-          tempatTanggalLahir: "Berlin, 12 Maret 1976",
-          nik: "1234567890",
+          email: "anthony.davis@email.com",
+          fullName: "Anthony Davis",
+          sipFile: "https://jiva.storage.com/sip/1",
         },
         {
           id: 2,
-          name: "Brandon",
-          tempatTanggalLahir: "Hamburg, 5 Oktober 1980",
-          nik: "2345678901",
+          email: "brandon.jones@email.com",
+          fullName: "Brandon Jones",
+          sipFile: "https://jiva.storage.com/sip/2",
         },
         {
           id: 3,
-          name: "Connor",
-          tempatTanggalLahir: "Munich, 27 Agustus 1970",
-          nik: "3456789012",
+          email: "connor.brown@email.com",
+          fullName: "Connor Brown",
+          sipFile: "https://jiva.storage.com/sip/3",
         },
       ]
     };
@@ -36,9 +36,9 @@ const tenagaMedisEndpoints = {
         data: [
           {
             id: 1,
-            name: "Anthony",
-            tempatTanggalLahir: "Berlin, 12 Maret 1976",
-            nik: "1234567890",
+            email: "anthony.davis@email.com",
+            fullName: "Anthony Davis",
+            sipFile: "https://jiva.storage.com/sip/1",
           },
         ]
       };
@@ -47,9 +47,9 @@ const tenagaMedisEndpoints = {
         data: [
           {
             id: 2,
-            name: "Brandon",
-            tempatTanggalLahir: "Hamburg, 5 Oktober 1980",
-            nik: "2345678901",
+            email: "brandon.jones@email.com",
+            fullName: "Brandon Jones",
+            sipFile: "https://jiva.storage.com/sip/2",
           },
         ]
       };
@@ -58,9 +58,9 @@ const tenagaMedisEndpoints = {
         data: [
           {
             id: 3,
-            name: "Connor",
-            tempatTanggalLahir: "Munich, 27 Agustus 1970",
-            nik: "3456789012",
+            email: "connor.brown@email.com",
+            fullName: "Connor Brown",
+            sipFile: "https://jiva.storage.com/sip/3",
           },
         ]
       };

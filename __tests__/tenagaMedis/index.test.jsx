@@ -38,22 +38,18 @@ describe('DashboardTenagaMedis', () => {
 
 
   it('should the appropriate table columns', () => {
-    const namaColumn = screen.getByRole('columnheader', {
-      name: /Nama/,
+    const namaLengkapColumn = screen.getByRole('columnheader', {
+      name: /Nama Lengkap/,
     });
-    const ttlColumn = screen.getByRole('columnheader', {
-      name: /Tempat\/Tanggal Lahir/,
-    });
-    const nikColumn = screen.getByRole('columnheader', {
-      name: /NIK/,
+    const emailColumn = screen.getByRole('columnheader', {
+      name: /Email/,
     });
     const lihatColumn = screen.getByRole('columnheader', {
       name: /^$/,
     });
     
-    expect(namaColumn).toBeInTheDocument();
-    expect(ttlColumn).toBeInTheDocument();
-    expect(nikColumn).toBeInTheDocument();
+    expect(namaLengkapColumn).toBeInTheDocument();
+    expect(emailColumn).toBeInTheDocument();
     expect(lihatColumn).toBeInTheDocument();
   });
 
