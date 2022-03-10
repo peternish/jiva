@@ -27,9 +27,8 @@ function TenagaMedisTable() {
       <Table>
         <TableHead>
           <TableRow className={styles.header}>
-            <TableCell>Nama</TableCell>
-            <TableCell>Tempat/Tanggal Lahir</TableCell>
-            <TableCell>NIK</TableCell>
+            <TableCell>Nama Lengkap</TableCell>
+            <TableCell>Email</TableCell>
             <TableCell></TableCell>
           </TableRow>
         </TableHead>
@@ -38,9 +37,8 @@ function TenagaMedisTable() {
           {
             tenagaMedisList && tenagaMedisList.map((tenagaMedis) => (
               <TableRow key={tenagaMedis.id} className={styles.row}>
-                <TableCell>{tenagaMedis.name}</TableCell>
-                <TableCell>{tenagaMedis.tempatTanggalLahir}</TableCell>
-                <TableCell>{tenagaMedis.nik}</TableCell>
+                <TableCell>{tenagaMedis.fullName}</TableCell>
+                <TableCell>{tenagaMedis.email}</TableCell>
                 <TableCell><Link href={`/tenaga-medis/detail/${tenagaMedis.id}`} underline="none" className={styles.link}>Lihat</Link></TableCell>
               </TableRow>
             ))
