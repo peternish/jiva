@@ -6,6 +6,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Link from '@mui/material/Link';
+import ModifyDropdownMenu from '@components/TenagaMedisPageComponents/ModifyDropdownMenu';
 
 // styles
 import styles from '@styles/Table.module.css';
@@ -30,6 +31,7 @@ function TenagaMedisTable() {
             <TableCell>Nama Lengkap</TableCell>
             <TableCell>Email</TableCell>
             <TableCell></TableCell>
+            <TableCell></TableCell>
           </TableRow>
         </TableHead>
 
@@ -39,7 +41,12 @@ function TenagaMedisTable() {
               <TableRow key={tenagaMedis.id} className={styles.row}>
                 <TableCell>{tenagaMedis.fullName}</TableCell>
                 <TableCell>{tenagaMedis.email}</TableCell>
-                <TableCell><Link href={`/tenaga-medis/detail/${tenagaMedis.id}`} underline="none" className={styles.link}>Lihat</Link></TableCell>
+                <TableCell>
+                  <Link href={`/tenaga-medis/detail/${tenagaMedis.id}`} underline="none" className={styles.link}>Lihat</Link>
+                </TableCell>
+                <TableCell>
+                  <ModifyDropdownMenu id={tenagaMedis.id}/>
+                </TableCell>
               </TableRow>
             ))
           }
