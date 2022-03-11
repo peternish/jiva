@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, act } from "@testing-library/react";
 import DashboardTenagaMedis from '@pages/tenaga-medis/index';
 import { Provider } from "react-redux";
 import { store } from "@redux/store";
@@ -44,13 +44,13 @@ describe('DashboardTenagaMedis', () => {
     const emailColumn = screen.getByRole('columnheader', {
       name: /Email/,
     });
-    const lihatColumn = screen.getByRole('columnheader', {
+    const sideColumns = screen.getAllByRole('columnheader', {
       name: /^$/,
     });
     
     expect(namaLengkapColumn).toBeInTheDocument();
     expect(emailColumn).toBeInTheDocument();
-    expect(lihatColumn).toBeInTheDocument();
+    expect(sideColumns).toHaveLength(2);
   });
 
 
@@ -59,10 +59,64 @@ describe('DashboardTenagaMedis', () => {
       name: /Lihat/,
     });
 
+    expect(lihatLinks).toHaveLength(3);
     lihatLinks.forEach((lihatLink) => {
       expect(lihatLink).toBeInTheDocument();
       expect(lihatLink).toHaveAttribute('href', expect.stringMatching(/\/tenaga-medis\/detail\/\d+/));
     });
+  });
+
+
+  it('should have modify dropdown menu', () => {
+    const menus = screen.getAllByTestId("modify-dropdown-menu");
+
+    expect(menus).toHaveLength(3);
+  });
+
+
+  it("should show dropdown when kebab menu icon is pressed", async () => {
+    const menus = screen.getAllByTestId("modify-dropdown-menu");
+    const menu = menus[0];
+
+    act(async () => {
+      await fireEvent.click(menu);
+    });
+
+    expect(await screen.getByText("Ubah")).toBeInTheDocument();
+    expect(await screen.getByText("Hapus")).toBeInTheDocument();
+  });
+
+
+  it("should close dropdown when a menu option is clicked", async () => {
+    const menus = screen.getAllByTestId("modify-dropdown-menu");
+    const menu = menus[0];
+
+    await act(async () => {
+      await fireEvent.click(menu);
+      const ubah = await screen.getByText("Ubah");
+      await fireEvent.click(ubah);
+
+      await fireEvent.click(menu);
+      const Hapus = await screen.getByText("Hapus");
+      await fireEvent.click(Hapus);
+    });
+
+    // expect(await screen.getByText("Ubah")).not.toBeInTheDocument();
+    // expect(await screen.getByText("Hapus")).not.toBeInTheDocument();
+  });
+
+
+  it("should close dropdown when button is pressed again", async () => {
+    const menus = screen.getAllByTestId("modify-dropdown-menu");
+    const menu = menus[0];
+
+    await act(async () => {
+      await fireEvent.click(menu);
+      await fireEvent.click(menu);
+    });
+
+    // expect(await screen.getByText("Ubah")).not.toBeInTheDocument();
+    // expect(await screen.getByText("Hapus")).not.toBeInTheDocument();
   });
 
 
