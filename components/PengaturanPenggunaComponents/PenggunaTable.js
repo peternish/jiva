@@ -39,7 +39,7 @@ function PenggunaTable() {
             penggunaTable && penggunaTable.map((pengaturanPengguna) => (
               <TableRow key={pengaturanPengguna.id} className={tableStyles.row}>
                 <TableCell>
-                  placeholder nama
+                {pengaturanPengguna.full_name}
                 </TableCell>
                 <TableCell>
                   {pengaturanPengguna.email}

@@ -1,0 +1,29 @@
+.container {
+    margin-bottom: 2em;
+}
+
+.header {
+    background-color: #656565;
+    border: 1px solid #C4C4C4;
+}
+
+.header > th {
+    color: #FFFFFF;
+    border-top: 1px solid #C4C4C4;
+    border-bottom: 1px solid #C4C4C4;
+}
+
+.row {
+    background-color: #FFFFFF;
+    border: 1px solid #C4C4C4;
+}
+
+.row > td {
+    color: #171717;
+    border-top: 1px solid #C4C4C4;
+    border-bottom: 1px solid #C4C4C4;
+}
+
+.link {
+    color: #171717;
+}

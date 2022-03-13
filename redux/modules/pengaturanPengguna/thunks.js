@@ -30,11 +30,24 @@ export const getPengaturanPengguna = () => {
   };
 };
 
-export const createPengaturanPengguna = ({ email }) => {
+export const createPengaturanPengguna = ({ 
+  email,
+  password,
+  fullName,
+} = {}) => {
   return async (dispatch) => {
     try {
-      await jivaAPI.pengaturanPengguna.createPengaturanPengguna();
-    } catch (error) {
+      await jivaAPI.pengaturanPengguna.createPengaturanPengguna({ email, password, full_name: fullName });
+      const { data } = await jivaAPI.pengaturanPengguna.getPengaturanPengguna()[-1]
+      await dispatch(setPengaturanPengguna(data))
+    } catch (error) { 
+      let errorMessage = "Something went wrong 😥";
+      if (error?.response?.status === 400 && error?.response?.data) {
+        errorMessage = getStringOrFirstArrayValue(
+          Object.values(error.response.data)[0]
+        );
+        errorMessage = capitalize(errorMessage);
+      }
       toast(error.toString(), { type: toast.TYPE.ERROR });
     };
   };

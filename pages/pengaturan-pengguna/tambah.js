@@ -6,16 +6,22 @@ import TextInput from "components/common/TextInput"
 import Layout from "@components/Layout";
 import Container from '@mui/material/Container'
 import Stack from '@mui/material/Stack';
+import Router from 'next/router'
 
 import CSS from "@components/PengaturanPenggunaComponents/CSS";
 
-const fields = {
-  email: "",
-  password: "",
-  inputValue: "",
-};
+import { useDispatch } from "react-redux";
+import { createPengaturanPengguna } from "@redux/modules/pengaturanPengguna/thunks";
+
+
 
 const Tambah = () => {
+  const dispatch = useDispatch();
+  const fields = {
+    email: "",
+    password: "",
+    full_name: "",
+  };
 
   return (
         <Layout navType="sidebar">
@@ -40,6 +46,7 @@ const Tambah = () => {
                 onSubmit={(values) => {
                   try {
                     console.log(values);
+                    dispatch(createPengaturanPengguna({ ...values }))
                   } catch (err) {
                     console.log(err);
                   }
@@ -62,14 +69,14 @@ const Tambah = () => {
                     error={errors.password}
                   />
                   <TextInput
-                    name="inputValue"
+                    name="full_name"
                     type="text"
-                    label="Input Value"
-                    placeholder="Input Value"
-                    error={errors.inputValue}
+                    label="Full Name"
+                    placeholder="Satudua Tiga"
+                    error={errors.full_name}
                   />
                   <Stack spacing={2} direction="row">
-                    <Button variant="outlined">Batal</Button>
+                    <Button variant="outlined" onClick={() => Router.back()}>Batal</Button>
                     <Button variant="contained" type="submit" disabled={!isValid}>Simpan</Button>
                   </Stack>
                 </Form>

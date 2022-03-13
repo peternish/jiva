@@ -14,7 +14,6 @@ describe("Pengaturan Pengguna Tambah", () => {
   });
 
   it('renders a heading', () => {
-    render(<Tambah/>)
 
     const heading = screen.getAllByRole('heading', {
       name: /Tambah Staf/,
@@ -26,15 +25,14 @@ describe("Pengaturan Pengguna Tambah", () => {
   it('renders data fields', () => {
     const emailField = screen.getByLabelText("Email");
     const passwordField = screen.getByLabelText("Password");
-    const inputValueField = screen.getByLabelText("Input Value");
+    const fullNameField = screen.getByLabelText("Full Name");
 
     expect(emailField ).toBeInTheDocument();
     expect(passwordField).toBeInTheDocument();
-    expect(inputValueField).toBeInTheDocument();
+    expect(fullNameField).toBeInTheDocument();
   });
 
   it('renders the buttons', () => {
-    render(<Tambah/>)
 
     const buttonback = screen.getAllByRole('button', {
       name: /Batal/,
@@ -59,10 +57,10 @@ describe("Pengaturan Pengguna Tambah", () => {
     expect(await screen.getAllByText("Input ini wajib diisi")).toHaveLength(3);
   });
 
-  it("should submit when 'Tambah' is pressed", async () => {
+  it("submits when 'Simpan' is pressed", async () => {
     const emailField = screen.getByLabelText("Email");
     const passwordField = screen.getByLabelText("Password");
-    const inputValueField = screen.getByLabelText("Input Value");
+    const fullNameField = screen.getByLabelText("Full Name");
 
     const button = screen.getAllByRole('button', {
       name: /Simpan/,
@@ -71,13 +69,29 @@ describe("Pengaturan Pengguna Tambah", () => {
     await act(async () => {
       await fireEvent.change(emailField, {target: {value: 'hesotam@maile.com'}});
       await fireEvent.change(passwordField, {target: {value: 'password123'}});
-      await fireEvent.change(inputValueField, {target: {value: 'Admin'}});
+      await fireEvent.change(fullNameField, {target: {value: 'Admin'}});
 
       await fireEvent.click(button);
     });
 
     expect(await screen.getByLabelText("Email")).toHaveValue('hesotam@maile.com');
     expect(await screen.getByLabelText("Password")).toHaveValue('password123');
-    expect(await screen.getByLabelText("Input Value")).toHaveValue('Admin');
+    expect(await screen.getByLabelText("Full Name")).toHaveValue('Admin');
+  });
+
+  it('back when button pressed', () => {
+    const buttonback = screen.getAllByRole('button', {
+      name: /Batal/,
+    })[0]
+
+    
+    const mockCallBack = jest.fn();
+    // fireEvent.click(buttonback)
+    buttonback.simulate('click');
+    expect(mockCallBack.mock.calls.length).toEqual(1);
+
+    // expect(emailField ).toBeInTheDocument();
+    // expect(passwordField).toBeInTheDocument();
+    // expect(fullNameField).toBeInTheDocument();
   });
 });
