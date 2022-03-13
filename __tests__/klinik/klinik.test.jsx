@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, act } from "@testing-library/react";
 import { shallow, configure } from 'enzyme'
 import { setCabangList, setKlinik } from "@redux/modules/klinik";
 import { Provider } from "react-redux";
@@ -16,7 +16,7 @@ const component = shallow(
   </Provider>
 );
 
-describe("<Klinik/>", () => {
+describe("<Klinik />", () => {
   beforeEach(() => {
     render(
       <Provider store={store}>
@@ -38,8 +38,10 @@ describe("<Klinik/>", () => {
   })
 
   it("shows a card when at least have one cabang", async () => {
-    await store.dispatch(setCabangList([{ location: "Alam Sutra", id: 1 }]))
-    await store.dispatch(setKlinik({ name: "Klinik Lalita" }))
+    await act(async () => {
+      await store.dispatch(setKlinik({ name: "Klinik Lalita" }))
+      await store.dispatch(setCabangList([{ location: "Alam Sutra", id: 1 }]))
+    });
 
     expect(screen.getByText("Alam Sutra")).toBeInTheDocument()
     expect(screen.getByText("Klinik Lalita")).toBeInTheDocument()
