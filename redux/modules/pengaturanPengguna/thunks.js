@@ -15,7 +15,7 @@ export const getPengaturanPenggunaByID = ({ idPengaturanPengguna }) => {
       await dispatch(setPengaturanPengguna(data[0]));
     } catch (error) {
       toast(error.toString(), { type: toast.TYPE.ERROR });
-    };
+    }
   };
 };
 
@@ -26,7 +26,7 @@ export const getPengaturanPengguna = () => {
       await dispatch(setPenggunaTable(data));
     } catch (error) {
       toast(error.toString(), { type: toast.TYPE.ERROR });
-    };
+    }
   };
 };
 
@@ -40,7 +40,7 @@ export const deletePengaturanPengguna = ({ idPengaturanPengguna }) => {
         { idPengaturanPengguna });
     } catch (error) {
       toast(error.toString(), { type: toast.TYPE.ERROR });
-    };
+    }
   };
 };
 
@@ -60,10 +60,9 @@ export const createPengaturanPengguna = ({
         errorMessage = getStringOrFirstArrayValue(
           Object.values(error.response.data)[0]
         );
-        errorMessage = capitalize(errorMessage);
       }
       toast(error.toString(), { type: toast.TYPE.ERROR });
     };
-  };
+  }
 };
 

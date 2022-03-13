@@ -75,6 +75,6 @@ function ModifyDropdownMenu({ pengaturanPengguna }) {
       }/>
     </div>
   );
-};
+}
 
 export default ModifyDropdownMenu;
