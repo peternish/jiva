@@ -67,7 +67,7 @@ describe('DetailTenagaMedis', () => {
 
   
   it('should have the ubah button', () => {
-    const button = screen.getByRole('button', {
+    const button = screen.getByRole('link', {
       name: /Ubah/,
     });
 

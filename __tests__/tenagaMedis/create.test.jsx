@@ -44,7 +44,7 @@ describe('CreateTenagaMedis', () => {
 
 
   it('should have the batal button', () => {
-    const button = screen.getByRole('button', {
+    const button = screen.getByRole('link', {
       name: /Batal/,
     });
 
