@@ -1,10 +1,10 @@
 import { combineReducers } from "redux";
 import { persistReducer } from "redux-persist";
-import storage from "redux-persist/lib/storage";
+import storage from "@redux/storage";
 
 // reducers
-import generalReducer from "../modules/general";
 import authReducer from "../modules/auth";
+import klinikReducer from "../modules/klinik";
 
 const authPersistConfig = {
   key: "auth",
@@ -13,8 +13,8 @@ const authPersistConfig = {
 };
 
 export const rootReducer = combineReducers({
-  general: generalReducer,
   auth: persistReducer(authPersistConfig, authReducer),
+  klinik: klinikReducer,
 });
 
 export default rootReducer;
