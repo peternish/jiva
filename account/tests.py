@@ -1,5 +1,4 @@
 # Django imports
-import secrets
 from django.test import TestCase
 from django.urls import reverse
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -13,7 +12,7 @@ from rest_framework.test import APITestCase
 # other imports
 from . import views
 from .models import Account
-from klinik.models import Cabang, Klinik, OwnerProfile, StafProfile
+from klinik.models import Cabang, Klinik, OwnerProfile, StafProfile, TenagaMedisProfile
 import os
 
 TEST_USER_EMAIL = "test@email.com"
@@ -144,7 +143,7 @@ class StafTestSetup(APITestCase):
         self.owner_profile = OwnerProfile.objects.create(account=self.owner_account)
         
         # klinik
-        test_file = SimpleUploadedFile("best_file_eva.txt", b'test file')
+        test_file = SimpleUploadedFile("testfile.txt", b'test file')
         self.klinik = Klinik.objects.create(name='kliniktest', owner=self.owner_profile, sik=test_file)
 
         # cabang
@@ -156,15 +155,6 @@ class StafTestSetup(APITestCase):
         self.url_staf_list = "account:staf-list"
         
         # test staf account
-        # self.staf_email = 'teststaf@mail.com'
-        # self.staf_full_name = 'Test Staf'
-
-        # self.staf_account = Account.objects.create_user(
-        #     email = self.staf_email,
-        #     full_name = self.staf_full_name,
-        #     password = self.password
-        # )
-        # self.staf_profile = StafProfile.objects.create(account=self.staf_account, cabang = self.cabang)
         for i in range(1,4):
             staf_account = Account.objects.create_user(
                 email = f'teststaf{i}@mail.com',
@@ -182,10 +172,6 @@ class StafTestSetup(APITestCase):
 
         self.owner_token = resp1.data["access"]
         self.owner_auth = "Bearer " + self.owner_token
-
-        # resp2 = self.client.post(url, {"email": self.staf_email, "password": self.password }, format="json")
-        # self.staf_token = resp1.data["access"]
-        # self.staf_auth = "Bearer " + self.token
 
 class StafAPITest(StafTestSetup):
     def test_post_staf(self):
@@ -231,8 +217,7 @@ class StafAPITest(StafTestSetup):
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
     
     def test_get_staf_detail(self):
-        staf_list = list(StafProfile.objects.all())
-        account_id = secrets.choice(staf_list).account.id
+        account_id = StafProfile.objects.last().account.id
         self.client.credentials(HTTP_AUTHORIZATION=self.owner_auth)
         url = reverse(self.url_detail, kwargs= { 'pk' : account_id})
         resp = self.client.get(url)
@@ -249,8 +234,7 @@ class StafAPITest(StafTestSetup):
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_patch_staf(self):
-        staf_list = list(StafProfile.objects.all())
-        account_id = secrets.choice(staf_list).account.id
+        account_id = StafProfile.objects.last().account.id
         self.client.credentials(HTTP_AUTHORIZATION=self.owner_auth)
         url = reverse(self.url_detail, kwargs= { 'pk' : account_id})
         email_update = 'teststafupdated@test.com'
@@ -277,9 +261,8 @@ class StafAPITest(StafTestSetup):
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_delete_staf(self):
-        staf_list = list(StafProfile.objects.all())
         count_before = StafProfile.objects.count()
-        account_id = secrets.choice(staf_list).account.id
+        account_id = StafProfile.objects.first().account.id
         self.client.credentials(HTTP_AUTHORIZATION=self.owner_auth)
         url = reverse(self.url_detail, kwargs= { 'pk' : account_id})
         resp = self.client.delete(url)
@@ -288,6 +271,132 @@ class StafAPITest(StafTestSetup):
         self.assertEqual(count_after, count_before - 1)
 
     def test_delete_staf_fail_not_found(self):
+        self.client.credentials(HTTP_AUTHORIZATION=self.owner_auth)
+        url = reverse(self.url_detail, kwargs= { 'pk' : 9999})
+        resp = self.client.delete(url)
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+
+class TenagaMedisTestSetup(APITestCase):
+    def setUp(self) -> None:
+        # test owener account
+        self.owner_email = 'testowner@mail.com'
+        self.password = 'testpassword'
+        self.owner_full_name = 'Test Owner'
+        self.owner_account = Account.objects.create_user(
+            email = self.owner_email,
+            full_name = self.owner_full_name,
+            password = self.password
+        )
+        self.owner_profile = OwnerProfile.objects.create(account=self.owner_account)
+        
+        # klinik
+        test_file = SimpleUploadedFile("best_file_eva.txt", b'test file')
+        self.klinik = Klinik.objects.create(name='kliniktest', owner=self.owner_profile, sik=test_file)
+
+        # cabang
+        self.cabang_location = 'testcabang'
+        self.cabang = Cabang.objects.create(klinik=self.klinik, location = self.cabang_location)
+
+        # urls
+        self.url_detail = "account:tenaga-medis-detail"
+        self.url_list = "account:tenaga-medis-list"
+
+        self.file_content = b"sip file contents"
+        self.sip = 'test'
+        # test tenaga medis account
+        for i in range(1,4):
+            staf_account = Account.objects.create_user(
+                email = f'testtenagamedis{i}@mail.com',
+                full_name = f'Test TenagaMedis {i}',
+                password = self.password
+            )
+            TenagaMedisProfile.objects.create(account=staf_account, cabang = self.cabang, sip=self.sip)
+
+        url = reverse("account:login")
+        resp1 = self.client.post(url, {"email": self.owner_email, "password": self.password }, format="json")
+
+        self.assertEqual(resp1.status_code, status.HTTP_200_OK)
+        self.assertTrue("access" in resp1.data)
+        self.assertTrue("refresh" in resp1.data)
+
+        self.owner_token = resp1.data["access"]
+        self.owner_auth = "Bearer " + self.owner_token
+
+class TenagaMedisAPITest(TenagaMedisTestSetup):
+    def test_post_tenaga_medis_fail_no_auth(self):
+        data = {
+            "account.email" : "testtenagamedis@testmail.com",
+            "account.password" : "password",
+            "account.full_name" : "Tenaga Medis Test",
+            "sip" : self.sip
+        }
+        url = reverse(self.url_list, kwargs= { 'location' : self.cabang_location})
+        resp = self.client.post(url, data=data)
+        self.assertEqual(resp.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_get_tenaga_medis_list(self):
+        self.client.credentials(HTTP_AUTHORIZATION=self.owner_auth)
+        url = reverse(self.url_list, kwargs= { 'location' : self.cabang_location})
+        resp = self.client.get(url)
+        self.assertTrue(len(resp.data) > 0)
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+    
+    def test_get_tenaga_medis_detail(self):
+        account_id = TenagaMedisProfile.objects.first().account.id
+        self.client.credentials(HTTP_AUTHORIZATION=self.owner_auth)
+        url = reverse(self.url_detail, kwargs= { 'pk' : account_id})
+        resp = self.client.get(url)
+
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertIn('id',resp.data['account'])
+        self.assertIn('email',resp.data['account'])
+        self.assertIn('full_name',resp.data['account'])
+
+    def test_get_tenaga_medis_detail_fail_not_found(self):
+        self.client.credentials(HTTP_AUTHORIZATION=self.owner_auth)
+        url = reverse(self.url_detail, kwargs= { 'pk' : 9999})
+        resp = self.client.get(url)
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_patch_tenaga_medis(self, format='json'):
+        account_id = TenagaMedisProfile.objects.first().account.id
+        self.client.credentials(HTTP_AUTHORIZATION=self.owner_auth)
+        url = reverse(self.url_detail, kwargs= { 'pk' : account_id})
+        email_update = 'testtenaga_medisupdated@test.com'
+        full_name_update = 'Test Staf Updated'
+        data = {
+            'account.email' : email_update,
+            'account.full_name' : full_name_update
+        }
+        resp = self.client.patch(url, data)
+        account_data = resp.data['account']
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(account_data['email'], email_update)
+        self.assertEqual(account_data['full_name'], full_name_update)
+
+    def test_patch_tenaga_medis_fail_not_found(self):
+        self.client.credentials(HTTP_AUTHORIZATION=self.owner_auth)
+        url = reverse(self.url_detail, kwargs= { 'pk' : 9999})
+        email_update = 'testtenaga_medisupdated@test.com'
+        full_name_update = 'Test Staf Updated'
+        data = {
+            'account.email' : email_update,
+            'account.full_name' : full_name_update
+        }
+        resp = self.client.patch(url, data)
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_delete_tenaga_medis(self):
+        count_before = TenagaMedisProfile.objects.count()
+        account_id = TenagaMedisProfile.objects.first().account.id
+        self.client.credentials(HTTP_AUTHORIZATION=self.owner_auth)
+        url = reverse(self.url_detail, kwargs= { 'pk' : account_id})
+        resp = self.client.delete(url)
+        count_after = TenagaMedisProfile.objects.count()
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(count_after, count_before - 1)
+
+    def test_delete_tenaga_medis_fail_not_found(self):
         self.client.credentials(HTTP_AUTHORIZATION=self.owner_auth)
         url = reverse(self.url_detail, kwargs= { 'pk' : 9999})
         resp = self.client.delete(url)

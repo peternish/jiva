@@ -1,9 +1,10 @@
 # django imports
-from email.policy import HTTP
+from functools import partial
+import profile
 from jiva_be.utils import IsStafPermission
-from .serializers import AccountSerializer, StafAccountSerializer, StafProfileSerializer, TenagaMedisAccountSerializer
+from .serializers import AccountSerializer, StafAccountSerializer, StafProfileSerializer, TenagaMedisProfileSerializer
 from .models import Account
-from klinik.models import Cabang, OwnerProfile, StafProfile
+from klinik.models import Cabang, OwnerProfile, StafProfile, TenagaMedisProfile
 from django.db import models
 from urllib.request import Request
 
@@ -49,12 +50,12 @@ class StafListApi(APIView):
         cabang_location = location
         serializer = StafAccountSerializer(data=request.data)
         if serializer.is_valid():
-            email = serializer.save()
-            account = Account.objects.get(email=email)
             try:
                 cabang = Cabang.objects.get(location = cabang_location)
             except Cabang.DoesNotExist:
                 return Response({ "error" : f"no 'cabang' found with location : {cabang_location}" }, status=status.HTTP_404_NOT_FOUND)
+            email = serializer.save()
+            account = Account.objects.get(email=email)
             profile = StafProfile(account=account, cabang=cabang)
             profile.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -90,6 +91,71 @@ class StafApi(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request: Request, pk: int, format=None):
+        account = get_object(Account, pk)
+        if account is not None:
+            account.delete()
+            return Response({ 'success' : 'Delete Success'}, status=status.HTTP_200_OK)
+        else:
+            return Response({ 'error' : 'Not Found'},status=status.HTTP_404_NOT_FOUND)
+
+class TenagaMedisListApi(APIView):
+    permission_classes = [
+        IsStafPermission
+    ]
+
+    def post(self, request, location):
+        cabang_location = location
+        serializer = TenagaMedisProfileSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            try:
+                cabang = Cabang.objects.get(location = cabang_location)
+            except Cabang.DoesNotExist:
+                return Response({ "error" : f"no 'cabang' found with location : {cabang_location}" }, status=status.HTTP_404_NOT_FOUND)
+            account = Account.objects.create_user(
+                email = request.data['account.email'],
+                password = request.data['account.password'],
+                full_name = request.data['account.full_name'] 
+            )
+            serializer.save(cabang=cabang, account = account)
+
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def get(self, request, location):
+        cabang = Cabang.objects.get(location = location)
+        teanga_medis_profiles = TenagaMedisProfile.objects.filter(cabang=cabang)
+        serializer = TenagaMedisProfileSerializer(teanga_medis_profiles, many = True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+class TenagaMedisApi(APIView):
+
+    permission_classes = [
+        IsStafPermission,
+    ]
+
+    def get(self, request: Request, pk: int, format=None):
+        account = get_object(Account, pk)
+        staf_profile = get_profile(TenagaMedisProfile, account)
+        serializer = TenagaMedisProfileSerializer(staf_profile)
+        if staf_profile is not None:
+            return Response(data=serializer.data, status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    def patch(self, request: Request, pk: int, format=None):
+        account = get_object(Account, pk)
+        profile = get_profile(TenagaMedisProfile, account=account)
+
+        if not account or not profile:
+            return Response({ 'error' : 'Not Found'},status=status.HTTP_404_NOT_FOUND)
+
+        profile_serializer = TenagaMedisProfileSerializer(instance=profile, data=request.data, partial=True)
+        if profile_serializer.is_valid(raise_exception=True):
+            profile_serializer.save()
+            return Response(profile_serializer.data)
+
+        return Response(profile_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request: Request, pk: int, format=None):
         account = get_object(Account, pk)
