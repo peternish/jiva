@@ -108,7 +108,7 @@ class StafApi(APIView):
     def patch(self, request: Request, pk: int, format=None):
         account = get_object(Account, pk)
         if account is None:
-            return Response({"error": "Not Found"}, status=status.HTTP_404_NOT_FOUND)
+            return Response(status=status.HTTP_404_NOT_FOUND)
         serializer = StafAccountSerializer(
             instance=account, data=request.data, partial=True
         )
@@ -124,7 +124,7 @@ class StafApi(APIView):
             account.delete()
             return Response({"success": "Delete Success"}, status=status.HTTP_200_OK)
         else:
-            return Response({"error": "Not Found"}, status=status.HTTP_404_NOT_FOUND)
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 class TenagaMedisListApi(APIView):
@@ -176,7 +176,7 @@ class TenagaMedisApi(APIView):
         profile = get_profile(TenagaMedisProfile, account=account)
 
         if not account or not profile:
-            return Response({"error": "Not Found"}, status=status.HTTP_404_NOT_FOUND)
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
         profile_serializer = TenagaMedisProfileSerializer(
             instance=profile, data=request.data, partial=True
@@ -193,4 +193,4 @@ class TenagaMedisApi(APIView):
             account.delete()
             return Response({"success": "Delete Success"}, status=status.HTTP_200_OK)
         else:
-            return Response({"error": "Not Found"}, status=status.HTTP_404_NOT_FOUND)
+            return Response(status=status.HTTP_404_NOT_FOUND)
