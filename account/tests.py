@@ -1,5 +1,4 @@
 # Django imports
-import secrets
 from django.test import TestCase
 from django.urls import reverse
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -218,8 +217,7 @@ class StafAPITest(StafTestSetup):
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
     
     def test_get_staf_detail(self):
-        staf_list = list(StafProfile.objects.all())
-        account_id = secrets.choice(staf_list).account.id
+        account_id = StafProfile.objects.last().account.id
         self.client.credentials(HTTP_AUTHORIZATION=self.owner_auth)
         url = reverse(self.url_detail, kwargs= { 'pk' : account_id})
         resp = self.client.get(url)
@@ -236,8 +234,7 @@ class StafAPITest(StafTestSetup):
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_patch_staf(self):
-        staf_list = list(StafProfile.objects.all())
-        account_id = secrets.choice(staf_list).account.id
+        account_id = StafProfile.objects.last().account.id
         self.client.credentials(HTTP_AUTHORIZATION=self.owner_auth)
         url = reverse(self.url_detail, kwargs= { 'pk' : account_id})
         email_update = 'teststafupdated@test.com'
