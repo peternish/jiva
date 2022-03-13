@@ -45,21 +45,22 @@ describe("<Register/>", () => {
   });
 
   describe("Renders second page correctly", () => {
+    const DUMMY_TEXT = "dummy@email.com";
     beforeEach(async () => {
       const emailInput = screen.getByLabelText("Email");
       const passwordInput = screen.getByLabelText("Password");
       const fullNameInput = screen.getByLabelText("Nama Lengkap");
       const options = {
-        target: { value: "dummy" },
+        target: { value: DUMMY_TEXT },
       };
       await act(async () => {
         await fireEvent.change(emailInput, options);
         await fireEvent.change(passwordInput, options);
         await fireEvent.change(fullNameInput, options);
       });
-      expect(emailInput.getAttribute("value")).toBe("dummy");
-      expect(passwordInput.getAttribute("value")).toBe("dummy");
-      expect(fullNameInput.getAttribute("value")).toBe("dummy");
+      expect(emailInput.getAttribute("value")).toBe(DUMMY_TEXT);
+      expect(passwordInput.getAttribute("value")).toBe(DUMMY_TEXT);
+      expect(fullNameInput.getAttribute("value")).toBe(DUMMY_TEXT);
 
       const nextButton = screen.getByText("Lanjut");
       await act(async () => {
@@ -80,8 +81,12 @@ describe("<Register/>", () => {
 
     it("renders buttons correctly", () => {
       expect(screen.getByText("Kembali")).toBeInTheDocument();
-      expect(screen.getByRole('button', {name: /Daftar/})).toBeInTheDocument();
-      expect(screen.getByRole('button', {name: /Daftar/}).getAttribute("type")).toBe("submit");
+      expect(
+        screen.getByRole("button", { name: /Daftar/ })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole("button", { name: /Daftar/ }).getAttribute("type")
+      ).toBe("submit");
     });
   });
 });

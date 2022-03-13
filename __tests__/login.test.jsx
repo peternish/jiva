@@ -36,6 +36,7 @@ describe("<Login/>", () => {
     await act(async () => {
       await fireEvent.click(button);
     });
-    expect(await screen.getAllByText("Input ini wajib diisi")).toHaveLength(2);
+    expect(screen.getByText("Email wajib diisi")).toBeInTheDocument();
+    expect(screen.getByText("Password wajib diisi")).toBeInTheDocument();
   });
 });
