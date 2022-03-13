@@ -1,37 +1,82 @@
-import { render, screen } from '@testing-library/react'
-import Tambah from 'pages/pengaturan-pengguna/tambah'
+import { fireEvent, render, screen, act } from "@testing-library/react";
+import Tambah from '@pages/klinik/[idKlinik]/[idCabang]/pengaturan-pengguna/tambah'
+import { Provider } from "react-redux";
+import { store } from "@redux/store";
 import '@testing-library/jest-dom'
 
 describe("Pengaturan Pengguna Tambah", () => {
-  it('renders a heading', () => {
-    render(<Tambah/>)
+  beforeEach(() => {
+    render(
+      <Provider store={store}>
+        <Tambah/>
+      </Provider>
+    );
+  });
 
-    const heading = screen.getByRole('heading', {
-      name: /Tambah Pengguna/,
-    })
+  it('renders a heading', () => {
+
+    const heading = screen.getAllByRole('heading', {
+      name: /Tambah Staf/,
+    })[0]
 
     expect(heading).toBeInTheDocument()
   })
 
-  it('renders a form', () => {
-    render(<Tambah/>)
+  it('renders data fields', () => {
+    const emailField = screen.getByLabelText("Email");
+    const passwordField = screen.getByLabelText("Password");
+    const fullNameField = screen.getByLabelText("Full Name");
 
-    const form = screen.getByRole('form')
+    expect(emailField ).toBeInTheDocument();
+    expect(passwordField).toBeInTheDocument();
+    expect(fullNameField).toBeInTheDocument();
+  });
 
-    expect(form).toBeInTheDocument()
-  })
+  it('renders the buttons', () => {
 
-  it('renders a button', () => {
-    render(<Tambah/>)
-
-    const buttonback = screen.getByRole('button', {
+    const buttonback = screen.getAllByRole('button', {
       name: /Batal/,
-    })
-    const buttonsubmit = screen.getByRole('button', {
+    })[0]
+    const buttonsubmit = screen.getAllByRole('button', {
       name: /Simpan/,
-    })
+    })[0]
 
     expect(buttonback).toBeInTheDocument()
     expect(buttonsubmit).toBeInTheDocument()
   })
+
+  it("renders form validation errors", async () => {
+    const button = screen.getAllByRole('button', {
+      name: /Simpan/,
+    })[0]
+
+    await act(async () => {
+      await fireEvent.click(button);
+    });
+
+    expect(await screen.getAllByText("Input ini wajib diisi")).toHaveLength(3);
+  });
+
+  it("submits when 'Simpan' is pressed", async () => {
+    const emailField = screen.getByLabelText("Email");
+    const passwordField = screen.getByLabelText("Password");
+    const fullNameField = screen.getByLabelText("Full Name");
+
+    const button = screen.getAllByRole('button', {
+      name: /Simpan/,
+    })[0]
+
+    await act(async () => {
+      await fireEvent.change(emailField, {target: {value: 'hesotam@maile.com'}});
+      await fireEvent.change(passwordField, {target: {value: 'password123'}});
+      await fireEvent.change(fullNameField, {target: {value: 'Admin'}});
+
+      await fireEvent.click(button);
+    });
+
+    expect(await screen.getByLabelText("Email")).toHaveValue('hesotam@maile.com');
+    expect(await screen.getByLabelText("Password")).toHaveValue('password123');
+    expect(await screen.getByLabelText("Full Name")).toHaveValue('Admin');
+  });
+
 });

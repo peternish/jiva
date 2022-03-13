@@ -1,5 +1,8 @@
 const constants = {
-  MAX_WIDTH: 1920
-}
+  MAX_WIDTH: 1920,
+  COLORS: {
+    ERROR: "#f44336",
+  },
+};
 
-export default constants
+export default constants;
