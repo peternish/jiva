@@ -88,11 +88,7 @@ const NewCabang = () => {
               return errors;
             }}
             onSubmit={(values) => {
-              try {
-                dispatch(registerCabang(values));
-              } catch (err) {
-                console.error(err);
-              }
+              dispatch(registerCabang(values));
             }}
           >
             {({ isValid, errors }) => (
@@ -101,7 +97,7 @@ const NewCabang = () => {
                   name="location"
                   label="Lokasi"
                   placeholder="Alam Sutra"
-                  error={errors.lokasi}
+                  error={errors.location}
                 />
                 <div id="button-container">
                   <Link href="/klinik" passHref={true}>

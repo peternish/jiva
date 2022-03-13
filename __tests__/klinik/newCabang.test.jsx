@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, act, fireEvent } from "@testing-library/react";
 import { Provider } from "react-redux";
 import { store } from "@redux/store";
 import NewCabang from "@pages/klinik/newcabang";
@@ -33,4 +33,32 @@ describe("<Klinik/>", () => {
     expect(btn2).toBeInTheDocument();
   });
 
+  it("shows error correctly", async () => {
+    const btn1 = screen.getByText("Buat");
+
+    await act(async () => {
+      await fireEvent.click(btn1);
+    });
+
+    expect(screen.getByText("Input ini wajib diisi")).toBeInTheDocument();
+  });
+
+  it("submits correctly", async () => {
+    const locationInput = screen.getByLabelText("Lokasi");
+
+    const DUMMY_TEXT = "Alam Baka";
+    const options = {
+      target: { value: DUMMY_TEXT },
+    }
+
+    await act(async () => {
+      await fireEvent.change(locationInput, options);
+    });
+
+    const btn1 = screen.getByText("Buat");
+    await act(async () => {
+      await fireEvent.click(btn1);
+    });
+
+  });
 });
