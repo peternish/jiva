@@ -156,15 +156,6 @@ class StafTestSetup(APITestCase):
         self.url_staf_list = "account:staf-list"
         
         # test staf account
-        # self.staf_email = 'teststaf@mail.com'
-        # self.staf_full_name = 'Test Staf'
-
-        # self.staf_account = Account.objects.create_user(
-        #     email = self.staf_email,
-        #     full_name = self.staf_full_name,
-        #     password = self.password
-        # )
-        # self.staf_profile = StafProfile.objects.create(account=self.staf_account, cabang = self.cabang)
         for i in range(1,4):
             staf_account = Account.objects.create_user(
                 email = f'teststaf{i}@mail.com',
@@ -182,10 +173,6 @@ class StafTestSetup(APITestCase):
 
         self.owner_token = resp1.data["access"]
         self.owner_auth = "Bearer " + self.owner_token
-
-        # resp2 = self.client.post(url, {"email": self.staf_email, "password": self.password }, format="json")
-        # self.staf_token = resp1.data["access"]
-        # self.staf_auth = "Bearer " + self.token
 
 class StafAPITest(StafTestSetup):
     def test_post_staf(self):
