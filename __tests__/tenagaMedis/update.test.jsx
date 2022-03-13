@@ -1,5 +1,5 @@
 import { fireEvent, render, screen, act } from "@testing-library/react";
-import UpdateTenagaMedis from '@pages/tenaga-medis/update/[id]';
+import UpdateTenagaMedis from '@pages/klinik/[idKlinik]/[idCabang]/tenaga-medis/update/[id]';
 import { Provider } from "react-redux";
 import { store } from "@redux/store";
 import '@testing-library/jest-dom';
