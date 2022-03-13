@@ -36,30 +36,66 @@ describe("<Register/>", () => {
       expect(screen.getByPlaceholderText("John Doe")).toBeInTheDocument();
     });
 
-    it("renders buttons correctly", () => {
+    it("renders buttons correctly", async () => {
       const cta1 = screen.getByText("Batal");
       const cta2 = screen.getByText("Lanjut");
       expect(cta1).toBeInTheDocument();
       expect(cta2).toBeInTheDocument();
-    });
-  });
 
-  describe("Renders second page correctly", () => {
-    beforeEach(async () => {
+      await act(async () => {
+        await fireEvent.click(cta1);
+      });
+    });
+
+    it("renders errors correctly", async () => {
       const emailInput = screen.getByLabelText("Email");
       const passwordInput = screen.getByLabelText("Password");
       const fullNameInput = screen.getByLabelText("Nama Lengkap");
+
+      const nextButton = screen.getByText("Lanjut");
+      await act(async () => {
+        await fireEvent.click(nextButton);
+      });
+
+      expect(screen.getByText("Email wajib diisi")).toBeInTheDocument();
+      expect(screen.getByText("Password wajib diisi")).toBeInTheDocument();
+      expect(screen.getByText("Nama lengkap wajib diisi")).toBeInTheDocument();
+
+      const DUMMY_TEXT = "dummy";
       const options = {
-        target: { value: "dummy" },
+        target: { value: DUMMY_TEXT },
       };
       await act(async () => {
         await fireEvent.change(emailInput, options);
         await fireEvent.change(passwordInput, options);
         await fireEvent.change(fullNameInput, options);
       });
-      expect(emailInput.getAttribute("value")).toBe("dummy");
-      expect(passwordInput.getAttribute("value")).toBe("dummy");
-      expect(fullNameInput.getAttribute("value")).toBe("dummy");
+
+      await act(async () => {
+        await fireEvent.click(nextButton);
+      });
+
+      expect(screen.getByText("Masukkan email yang valid")).toBeInTheDocument();
+    });
+  });
+
+  describe("Renders second page correctly", () => {
+    const DUMMY_TEXT = "dummy@email.com";
+    beforeEach(async () => {
+      const emailInput = screen.getByLabelText("Email");
+      const passwordInput = screen.getByLabelText("Password");
+      const fullNameInput = screen.getByLabelText("Nama Lengkap");
+      const options = {
+        target: { value: DUMMY_TEXT },
+      };
+      await act(async () => {
+        await fireEvent.change(emailInput, options);
+        await fireEvent.change(passwordInput, options);
+        await fireEvent.change(fullNameInput, options);
+      });
+      expect(emailInput.getAttribute("value")).toBe(DUMMY_TEXT);
+      expect(passwordInput.getAttribute("value")).toBe(DUMMY_TEXT);
+      expect(fullNameInput.getAttribute("value")).toBe(DUMMY_TEXT);
 
       const nextButton = screen.getByText("Lanjut");
       await act(async () => {
@@ -80,8 +116,38 @@ describe("<Register/>", () => {
 
     it("renders buttons correctly", () => {
       expect(screen.getByText("Kembali")).toBeInTheDocument();
-      expect(screen.getByRole('button', {name: /Daftar/})).toBeInTheDocument();
-      expect(screen.getByRole('button', {name: /Daftar/}).getAttribute("type")).toBe("submit");
+      expect(
+        screen.getByRole("button", { name: /Daftar/ })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole("button", { name: /Daftar/ }).getAttribute("type")
+      ).toBe("submit");
+    });
+
+    it("submits correctly", async () => {
+      const clinicNameInput = screen.getByLabelText("Nama Klinik");
+      await act(async () => {
+        await fireEvent.change(clinicNameInput, {
+          target: { value: "Kinik Test" },
+        });
+      });
+
+      const input = screen.getByTestId("input");
+      const fileName = "fileName.pdf";
+      const file = new File([new Blob()], fileName, {
+        type: "application/pdf",
+      });
+      await act(async () => {
+        await fireEvent.change(input, {
+          target: { files: [file] },
+        });
+      });
+
+      const submitButton = screen.getByRole("button", { name: /Daftar/ });
+      expect(submitButton.getAttribute("disabled")).toBeNull();
+      await act(async () => {
+        await fireEvent.click(submitButton);
+      });
     });
   });
 });

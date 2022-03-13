@@ -23,7 +23,8 @@ export const signup = ({
       await jivaAPI.auth.signup({ email, password, full_name: fullName });
       await dispatch(getTokens({ email, password }));
       await jivaAPI.klinik.createKlinik({ clinicName, sikFile });
-      location.assign("/");
+      toast("Klinik berhasil dibuat", { type: toast.TYPE.SUCCESS });
+      location.assign("/klinik");
     } catch (error) {
       let errorMessage = "Something went wrong 😥";
       if (error?.response?.status === 400 && error?.response?.data) {
@@ -38,30 +39,31 @@ export const signup = ({
 };
 
 export const login = ({ email, password } = {}) => {
-  return async (dispatch) => {
+  return async (dispatch, _getState) => {
     try {
       await dispatch(getTokens({ email, password }));
-      location.assign("/");
-    } catch (err) {
-      toast(err, { type: toast.TYPE.ERROR });
+      location.assign("/klinik");
+    } catch (error) {
+      let errorMessage = "Something went wrong 😥";
+      if (error?.response?.status === 401 && error?.response?.data) {
+        const { detail } = error.response.data;
+        errorMessage = capitalize(detail);
+      }
+      toast(errorMessage, { type: toast.TYPE.ERROR });
     }
   };
 };
 
 export const getTokens = ({ email, password } = {}) => {
   return async (dispatch) => {
-    try {
-      const {
-        data: { access, refresh },
-      } = await jivaAPI.auth.login({
-        email,
-        password,
-      });
-      await dispatch(setAccessToken(access));
-      await dispatch(setRefreshToken(refresh));
-    } catch (err) {
-      toast(err, { type: toast.TYPE.ERROR });
-    }
+    const {
+      data: { access, refresh },
+    } = await jivaAPI.auth.login({
+      email,
+      password,
+    });
+    await dispatch(setAccessToken(access));
+    await dispatch(setRefreshToken(refresh));
   };
 };
 
