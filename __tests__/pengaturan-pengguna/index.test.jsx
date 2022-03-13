@@ -16,7 +16,7 @@ describe("Pengaturan Pengguna Main", () => {
   it('renders a heading', () => {
 
     const heading = screen.getByRole('heading', {
-      name: /Pengaturan Pengguna/,
+      name: /Pengaturan Staf/,
     })
 
     expect(heading).toBeInTheDocument()
@@ -35,17 +35,8 @@ describe("Pengaturan Pengguna Main", () => {
       name: /Tambah Staf/,
     })
 
-    expect(button).toBeInTheDocument()
+    expect(button).toBeInTheDocument();
+    expect(button).toHaveAttribute('href');
   })
-
-  it('renders a link to tambah', () => {
-
-    const linktambah = screen.getByRole('link', {
-      name: /Tambah Pengguna/,
-    })
-
-    expect(linktambah).toBeInTheDocument()
-  })
-
 
 });
