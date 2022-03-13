@@ -48,11 +48,7 @@ const Register = () => {
             validate={(values) => {
               const errors = {};
               if (!values.email) errors.email = "Email wajib diisi";
-              else if (
-                !/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(
-                  values.email
-                )
-              ) {
+              else if (!/.+@.+\..+/.test(values.email)) {
                 errors.email = "Masukkan email yang valid";
               }
 
