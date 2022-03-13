@@ -106,7 +106,7 @@ describe('DashboardTenagaMedis', () => {
   });
 
 
-  it("should close dropdown when button is pressed again", async () => {
+  it("should close dropdown when 'Esc' key is pressed", async () => {
     const menus = screen.getAllByTestId("modify-dropdown-menu");
     const menu = menus[0];
 
@@ -117,6 +117,39 @@ describe('DashboardTenagaMedis', () => {
 
     // expect(await screen.getByText("Ubah")).not.toBeInTheDocument();
     // expect(await screen.getByText("Hapus")).not.toBeInTheDocument();
+  });
+
+  
+  it('should show deletion confirmation modal when "Hapus" is pressed', async () => {
+    const menus = screen.getAllByTestId("modify-dropdown-menu");
+    const menu = menus[0];
+    
+    await act(async () => {
+      await fireEvent.click(menu);
+      const Hapus = await screen.getByText("Hapus");
+      await fireEvent.click(Hapus);
+    });
+
+    expect(await screen.getByText("Konfirmasi Hapus Tenaga Medis")).toBeInTheDocument();
+  });
+
+
+  it('should close the modal when "Batal" is clicked', async () => {
+    const menus = screen.getAllByTestId("modify-dropdown-menu");
+    const menu = menus[0];
+    
+    await act(async () => {
+      await fireEvent.click(menu);
+      const Hapus = await screen.getByText("Hapus");
+      await fireEvent.click(Hapus);
+
+      const batalButton = await screen.getByRole('button', {
+        name: /Batal/,
+      });
+      await fireEvent.click(batalButton);
+    });
+
+    // expect(await screen.getByText("Konfirmasi Hapus Tenaga Medis")).not.toBeInTheDocument();
   });
 
 
