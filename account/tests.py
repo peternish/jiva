@@ -264,9 +264,8 @@ class StafAPITest(StafTestSetup):
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_delete_staf(self):
-        staf_list = list(StafProfile.objects.all())
         count_before = StafProfile.objects.count()
-        account_id = secrets.choice(staf_list).account.id
+        account_id = StafProfile.objects.first().account.id
         self.client.credentials(HTTP_AUTHORIZATION=self.owner_auth)
         url = reverse(self.url_detail, kwargs= { 'pk' : account_id})
         resp = self.client.delete(url)
@@ -294,7 +293,7 @@ class TenagaMedisTestSetup(APITestCase):
         self.owner_profile = OwnerProfile.objects.create(account=self.owner_account)
         
         # klinik
-        # test_file = SimpleUploadedFile("best_file_eva.txt", b'test file')
+        test_file = SimpleUploadedFile("best_file_eva.txt", b'test file')
         self.klinik = Klinik.objects.create(name='kliniktest', owner=self.owner_profile, sik=test_file)
 
         # cabang
@@ -302,7 +301,7 @@ class TenagaMedisTestSetup(APITestCase):
         self.cabang = Cabang.objects.create(klinik=self.klinik, location = self.cabang_location)
 
         # urls
-        # self.url_detail = "account:tenaga-medis-detail"
+        self.url_detail = "account:tenaga-medis-detail"
         self.url_list = "account:tenaga-medis-list"
 
         self.file_content = b"sip file contents"
@@ -344,3 +343,64 @@ class TenagaMedisAPITest(TenagaMedisTestSetup):
         resp = self.client.get(url)
         self.assertTrue(len(resp.data) > 0)
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
+    
+    def test_get_tenaga_medis_detail(self):
+        account_id = TenagaMedisProfile.objects.first().account.id
+        self.client.credentials(HTTP_AUTHORIZATION=self.owner_auth)
+        url = reverse(self.url_detail, kwargs= { 'pk' : account_id})
+        resp = self.client.get(url)
+
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertIn('id',resp.data['account'])
+        self.assertIn('email',resp.data['account'])
+        self.assertIn('full_name',resp.data['account'])
+
+    def test_get_tenaga_medis_detail_fail_not_found(self):
+        self.client.credentials(HTTP_AUTHORIZATION=self.owner_auth)
+        url = reverse(self.url_detail, kwargs= { 'pk' : 9999})
+        resp = self.client.get(url)
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_patch_tenaga_medis(self, format='json'):
+        account_id = TenagaMedisProfile.objects.first().account.id
+        self.client.credentials(HTTP_AUTHORIZATION=self.owner_auth)
+        url = reverse(self.url_detail, kwargs= { 'pk' : account_id})
+        email_update = 'testtenaga_medisupdated@test.com'
+        full_name_update = 'Test Staf Updated'
+        data = {
+            'account.email' : email_update,
+            'account.full_name' : full_name_update
+        }
+        resp = self.client.patch(url, data)
+        account_data = resp.data['account']
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(account_data['email'], email_update)
+        self.assertEqual(account_data['full_name'], full_name_update)
+
+    def test_patch_tenaga_medis_fail_not_found(self):
+        self.client.credentials(HTTP_AUTHORIZATION=self.owner_auth)
+        url = reverse(self.url_detail, kwargs= { 'pk' : 9999})
+        email_update = 'testtenaga_medisupdated@test.com'
+        full_name_update = 'Test Staf Updated'
+        data = {
+            'account.email' : email_update,
+            'account.full_name' : full_name_update
+        }
+        resp = self.client.patch(url, data)
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_delete_tenaga_medis(self):
+        count_before = TenagaMedisProfile.objects.count()
+        account_id = TenagaMedisProfile.objects.first().account.id
+        self.client.credentials(HTTP_AUTHORIZATION=self.owner_auth)
+        url = reverse(self.url_detail, kwargs= { 'pk' : account_id})
+        resp = self.client.delete(url)
+        count_after = TenagaMedisProfile.objects.count()
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(count_after, count_before - 1)
+
+    def test_delete_tenaga_medis_fail_not_found(self):
+        self.client.credentials(HTTP_AUTHORIZATION=self.owner_auth)
+        url = reverse(self.url_detail, kwargs= { 'pk' : 9999})
+        resp = self.client.delete(url)
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
