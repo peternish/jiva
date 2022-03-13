@@ -18,7 +18,9 @@ staf_patterns = [
 staf_patterns = format_suffix_patterns(staf_patterns)
 
 tenaga_medis_patterns = [
-    path("<int:cabang_id>/", views.TenagaMedisListApi.as_view(), name="tenaga-medis-list"),
+    path(
+        "<int:cabang_id>/", views.TenagaMedisListApi.as_view(), name="tenaga-medis-list"
+    ),
     path("id/<int:pk>/", views.TenagaMedisApi.as_view(), name="tenaga-medis-detail"),
 ]
 
@@ -29,5 +31,5 @@ urlpatterns = [
     path("login/", TokenObtainPairView.as_view(), name="login"),
     path("token/refresh/", TokenRefreshView.as_view(), name="refresh"),
     path("staf/", include(staf_patterns)),
-    path("tenaga-medis/", include(tenaga_medis_patterns))
+    path("tenaga-medis/", include(tenaga_medis_patterns)),
 ]
