@@ -13,9 +13,6 @@ import { useDispatch } from "react-redux";
 import { signup } from "@redux/modules/auth/thunks";
 import Layout from "@components/Layout";
 
-// utils
-import { capitalize } from "@utils/index";
-
 const Register = () => {
   const dispatch = useDispatch();
   const [pageNum, setPageNum] = useState(0);
