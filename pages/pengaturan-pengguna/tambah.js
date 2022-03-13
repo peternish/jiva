@@ -5,38 +5,14 @@ import Button from "@mui/material/Button"
 import TextInput from "components/common/TextInput"
 import Layout from "@components/Layout";
 import Container from '@mui/material/Container'
+import Stack from '@mui/material/Stack';
 
 import CSS from "@components/PengaturanPenggunaComponents/CSS";
-
-const TambahForm = () => {
-  return (
-    <>
-      <TextInput
-        name="email"
-        type="email"
-        label="Email"
-        placeholder="jiva@goog.com"
-      />
-      <TextInput
-        name="password"
-        type="password"
-        label="Password"
-        placeholder="password"
-      />
-      <TextInput
-        name="input_value"
-        type="text"
-        label="Input Value"
-        placeholder="Input Value"
-      />
-    </>
-  );
-};
 
 const fields = {
   email: "",
   password: "",
-  input_value: "",
+  inputValue: "",
 };
 
 const Tambah = () => {
@@ -45,23 +21,60 @@ const Tambah = () => {
         <Layout navType="sidebar">
           <CSS>
             <Head>
-              <title>Tambah | Pengaturan Pengguna</title>
-              <meta name="tambah pengaturan pengguna" content="tambah pengaturan pengguna" />
+              <title>Tambah | Pengaturan Staf</title>
+              <meta name="tambah pengaturan Staf" content="tambah pengaturan Staf" />
               <link rel="icon" href="/favicon.ico" />
             </Head>
-            <Container>
-              <h1>Tambah Pengguna</h1>
+            <Container /*className={layoutStyles.containerWithSidebar}*/>
+              <h1>Tambah Staf</h1>
               <Formik
-                initialValues={{fields}}
-                >
-                {() => (
-                  <Form className="form" role="form">
-                    <TambahForm />
-                  </Form>
+                initialValues={fields}
+                validate={(values) => {
+                  const errors = {};
+                  const ERR_MESSAGE = "Input ini wajib diisi";
+                  Object.keys(fields).forEach((key) => {
+                    if (!values[key]) errors[key] = ERR_MESSAGE;
+                  });
+                  return errors;
+                }}
+                onSubmit={(values) => {
+                  try {
+                    console.log(values);
+                  } catch (err) {
+                    console.log(err);
+                  }
+                }}
+              >
+                {({ isValid, errors }) => (
+                <Form>
+                  <TextInput
+                    name="email"
+                    type="email"
+                    label="Email"
+                    placeholder="jiva@goog.com"
+                    error={errors.email}
+                  />
+                  <TextInput
+                    name="password"
+                    type="password"
+                    label="Password"
+                    placeholder="password"
+                    error={errors.password}
+                  />
+                  <TextInput
+                    name="inputValue"
+                    type="text"
+                    label="Input Value"
+                    placeholder="Input Value"
+                    error={errors.inputValue}
+                  />
+                  <Stack spacing={2} direction="row">
+                    <Button variant="outlined">Batal</Button>
+                    <Button variant="contained" type="submit" disabled={!isValid}>Simpan</Button>
+                  </Stack>
+                </Form>
                 )}
               </Formik>
-              <Button variant="outlined">Batal</Button>
-              <Button type="submit" variant="contained" >Simpan</Button>
             </Container>
           </CSS>
         </Layout>

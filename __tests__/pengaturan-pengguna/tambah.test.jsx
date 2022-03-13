@@ -1,5 +1,7 @@
-import { render, screen } from '@testing-library/react'
+import { fireEvent, render, screen, act } from "@testing-library/react";
 import Tambah from '@pages/pengaturan-pengguna/tambah'
+import { Provider } from "react-redux";
+import { store } from "@redux/store";
 import '@testing-library/jest-dom'
 
 describe("Pengaturan Pengguna Tambah", () => {
@@ -12,6 +14,7 @@ describe("Pengaturan Pengguna Tambah", () => {
   });
 
   it('renders a heading', () => {
+    render(<Tambah/>)
 
     const heading = screen.getAllByRole('heading', {
       name: /Tambah Staf/,
@@ -30,7 +33,8 @@ describe("Pengaturan Pengguna Tambah", () => {
     expect(inputValueField).toBeInTheDocument();
   });
 
-  it('renders a button', () => {
+  it('renders the buttons', () => {
+    render(<Tambah/>)
 
     const buttonback = screen.getAllByRole('button', {
       name: /Batal/,
