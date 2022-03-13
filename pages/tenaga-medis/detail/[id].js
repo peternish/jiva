@@ -28,7 +28,7 @@ function DetailTenagaMedis() {
     if (!router.isReady) return;
     const { id } = router.query;
     dispatch(getTenagaMedisByID({ idTenagaMedis: id }));
-  }, [router.isReady, dispatch]);
+  }, [router.isReady, router.query, dispatch]);
   const { tenagaMedis } = useSelector(state => state.tenagaMedis);
   
   return (
