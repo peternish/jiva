@@ -59,7 +59,9 @@ describe('DashboardTenagaMedis', () => {
       name: /Lihat/,
     });
 
-    expect(lihatLinks).toHaveLength(3);
+    const expectedLength = store.getState().tenagaMedis.tenagaMedisList.length;
+
+    expect(lihatLinks).toHaveLength(expectedLength);
     lihatLinks.forEach((lihatLink) => {
       expect(lihatLink).toBeInTheDocument();
       expect(lihatLink).toHaveAttribute('href', expect.stringMatching(/\/tenaga-medis\/detail\/\d+/));
@@ -70,7 +72,9 @@ describe('DashboardTenagaMedis', () => {
   it('should have modify dropdown menu', () => {
     const menus = screen.getAllByTestId("modify-dropdown-menu");
 
-    expect(menus).toHaveLength(3);
+    const expectedLength = store.getState().tenagaMedis.tenagaMedisList.length;
+
+    expect(menus).toHaveLength(expectedLength);
   });
 
 
