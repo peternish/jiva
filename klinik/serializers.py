@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from klinik.models import Klinik, Cabang
+from django.template.defaultfilters import slugify
 
 
 class KlinikSerializer(serializers.ModelSerializer):
@@ -14,3 +15,7 @@ class CabangSerializer(serializers.ModelSerializer):
         model = Cabang
         fields = ["id", "klinik_id", "location"]
         read_only_fields = ["id", "klinik_id"]
+
+    def create(self, validated_data):
+        validated_data["location"] = slugify(validated_data["location"])
+        return super(CabangSerializer, self).create(validated_data)
