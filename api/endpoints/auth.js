@@ -19,6 +19,9 @@ const auth = {
     axios.post(`${BASE_URL}/token/refresh/`, {
       refresh,
     }),
+  profile: () =>
+    axios.get(`${BASE_URL}/profile/`),
+
   logout: () => { },
 };
 

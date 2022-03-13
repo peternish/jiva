@@ -42,7 +42,15 @@ export const login = ({ email, password } = {}) => {
   return async (dispatch, _getState) => {
     try {
       await dispatch(getTokens({ email, password }));
-      location.assign("/klinik");
+      const {
+        data: { cabang, klinik },
+      } = await jivaAPI.auth.profile()
+
+      if ( cabang != null && klinik != null) {
+        location.assign(`/klinik/${klinik}/${cabang}`);
+      } else {
+        location.assign("/klinik");
+      }
     } catch (error) {
       let errorMessage = "Something went wrong 😥";
       if (error?.response?.status === 401 && error?.response?.data) {
