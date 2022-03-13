@@ -79,19 +79,4 @@ describe("Pengaturan Pengguna Tambah", () => {
     expect(await screen.getByLabelText("Full Name")).toHaveValue('Admin');
   });
 
-  it('back when button pressed', () => {
-    const buttonback = screen.getAllByRole('button', {
-      name: /Batal/,
-    })[0]
-
-    
-    const mockCallBack = jest.fn();
-    // fireEvent.click(buttonback)
-    buttonback.simulate('click');
-    expect(mockCallBack.mock.calls.length).toEqual(1);
-
-    // expect(emailField ).toBeInTheDocument();
-    // expect(passwordField).toBeInTheDocument();
-    // expect(fullNameField).toBeInTheDocument();
-  });
 });
