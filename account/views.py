@@ -46,14 +46,13 @@ class StafListApi(APIView):
         IsStafPermission
     ]
 
-    def post(self, request, location):
-        cabang_location = location
+    def post(self, request, cabang_id):
         serializer = StafAccountSerializer(data=request.data)
         if serializer.is_valid():
             try:
-                cabang = Cabang.objects.get(location = cabang_location)
+                cabang = Cabang.objects.get(id = cabang_id)
             except Cabang.DoesNotExist:
-                return Response({ "error" : f"no 'cabang' found with location : {cabang_location}" }, status=status.HTTP_404_NOT_FOUND)
+                return Response({ "error" : f"no 'cabang' found with id : {cabang_id}" }, status=status.HTTP_404_NOT_FOUND)
             email = serializer.save()
             account = Account.objects.get(email=email)
             profile = StafProfile(account=account, cabang=cabang)
@@ -61,8 +60,8 @@ class StafListApi(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    def get(self, request, location):
-        cabang = Cabang.objects.get(location = location)
+    def get(self, request, cabang_id):
+        cabang = Cabang.objects.get(id = cabang_id)
         staf_profiles = StafProfile.objects.filter(cabang=cabang)
         serializer = StafProfileSerializer(staf_profiles, many = True)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -105,14 +104,13 @@ class TenagaMedisListApi(APIView):
         IsStafPermission
     ]
 
-    def post(self, request, location):
-        cabang_location = location
+    def post(self, request, cabang_id):
         serializer = TenagaMedisProfileSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             try:
-                cabang = Cabang.objects.get(location = cabang_location)
+                cabang = Cabang.objects.get(id = cabang_id)
             except Cabang.DoesNotExist:
-                return Response({ "error" : f"no 'cabang' found with location : {cabang_location}" }, status=status.HTTP_404_NOT_FOUND)
+                return Response({ "error" : f"no 'cabang' found with id : {cabang_id}" }, status=status.HTTP_404_NOT_FOUND)
             account = Account.objects.create_user(
                 email = request.data['account.email'],
                 password = request.data['account.password'],
@@ -123,8 +121,8 @@ class TenagaMedisListApi(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    def get(self, request, location):
-        cabang = Cabang.objects.get(location = location)
+    def get(self, request, cabang_id):
+        cabang = Cabang.objects.get(id= cabang_id)
         teanga_medis_profiles = TenagaMedisProfile.objects.filter(cabang=cabang)
         serializer = TenagaMedisProfileSerializer(teanga_medis_profiles, many = True)
         return Response(serializer.data, status=status.HTTP_200_OK)
