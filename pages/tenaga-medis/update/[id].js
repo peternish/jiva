@@ -22,7 +22,7 @@ function UpdateTenagaMedis() {
     if (!router.isReady) return;
     const { id } = router.query;
     dispatch(getTenagaMedisByID({ idTenagaMedis: id }));
-  }, [router.isReady]);
+  }, [router.isReady, dispatch]);
   const { tenagaMedis } = useSelector(state => state.tenagaMedis);
 
   return (
