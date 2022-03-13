@@ -28,6 +28,9 @@ function ModifyDropdownMenu({ tenagaMedis }) {
   const handleUpdate = () => {
     setAnchorEl(null);
     console.log("update:" + tenagaMedis.id);
+
+    const redirectUrl = `/tenaga-medis/update/${tenagaMedis.id}`;
+    location.assign(redirectUrl);
   };
 
   const handleDelete = () => {

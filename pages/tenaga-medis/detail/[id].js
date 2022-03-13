@@ -62,7 +62,7 @@ function DetailTenagaMedis() {
 
                 <Stack spacing={2} direction="row">
                   <Button variant="outlined" onClick={handleModalOpen}>Hapus</Button>
-                  <Button variant="contained">Ubah</Button>
+                  <Button href={`/tenaga-medis/update/${tenagaMedis.id}`} variant="contained">Ubah</Button>
                 </Stack>
 
                 <DeleteConfirmationModal tenagaMedis={tenagaMedis} open={modalOpen} handleClose={handleModalClose}/>
