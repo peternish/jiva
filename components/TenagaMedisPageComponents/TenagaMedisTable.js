@@ -45,7 +45,7 @@ function TenagaMedisTable() {
                   <Link href={`/tenaga-medis/detail/${tenagaMedis.id}`} underline="none" className={styles.link}>Lihat</Link>
                 </TableCell>
                 <TableCell>
-                  <ModifyDropdownMenu id={tenagaMedis.id}/>
+                  <ModifyDropdownMenu tenagaMedis={tenagaMedis}/>
                 </TableCell>
               </TableRow>
             ))
