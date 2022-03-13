@@ -144,7 +144,7 @@ class StafTestSetup(APITestCase):
         self.owner_profile = OwnerProfile.objects.create(account=self.owner_account)
         
         # klinik
-        test_file = SimpleUploadedFile("best_file_eva.txt", b'test file')
+        test_file = SimpleUploadedFile("testfile.txt", b'test file')
         self.klinik = Klinik.objects.create(name='kliniktest', owner=self.owner_profile, sik=test_file)
 
         # cabang
@@ -294,7 +294,7 @@ class TenagaMedisTestSetup(APITestCase):
         self.owner_profile = OwnerProfile.objects.create(account=self.owner_account)
         
         # klinik
-        test_file = SimpleUploadedFile("best_file_eva.txt", b'test file')
+        # test_file = SimpleUploadedFile("best_file_eva.txt", b'test file')
         self.klinik = Klinik.objects.create(name='kliniktest', owner=self.owner_profile, sik=test_file)
 
         # cabang
@@ -302,9 +302,11 @@ class TenagaMedisTestSetup(APITestCase):
         self.cabang = Cabang.objects.create(klinik=self.klinik, location = self.cabang_location)
 
         # urls
-        self.url_detail = "account:tenaga-medis-detail"
+        # self.url_detail = "account:tenaga-medis-detail"
         self.url_list = "account:tenaga-medis-list"
-        
+
+        self.file_content = b"sip file contents"
+        self.sip = 'test'
         # test tenaga medis account
         for i in range(1,4):
             staf_account = Account.objects.create_user(
@@ -312,7 +314,7 @@ class TenagaMedisTestSetup(APITestCase):
                 full_name = f'Test TenagaMedis {i}',
                 password = self.password
             )
-            TenagaMedisProfile.objects.create(account=staf_account, cabang = self.cabang)
+            TenagaMedisProfile.objects.create(account=staf_account, cabang = self.cabang, sip=self.sip)
 
         url = reverse("account:login")
         resp1 = self.client.post(url, {"email": self.owner_email, "password": self.password }, format="json")
@@ -325,36 +327,12 @@ class TenagaMedisTestSetup(APITestCase):
         self.owner_auth = "Bearer " + self.owner_token
 
 class TenagaMedisAPITest(TenagaMedisTestSetup):
-    def test_post_tenaga_medis(self):
-        account_count_before = Account.objects.count()
-        self.client.credentials(HTTP_AUTHORIZATION=self.owner_auth)
-        data = {
-            "email" : "testtenagamedis@testmail.com",
-            "password" : "password",
-            "full_name" : "Tenaga Medis Test"
-        }
-        url = reverse(self.url_staf_list, kwargs= { 'location' : self.cabang_location})
-        resp = self.client.post(url, data=data)
-        account_count_after = Account.objects.count()
-        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(account_count_after, account_count_before + 1)
-    
-    def test_post_tenaga_medis_fail_cabang_not_found(self):
-        self.client.credentials(HTTP_AUTHORIZATION=self.owner_auth)
-        data = {
-            "email" : "testtenaga_medis@testmail.com",
-            "password" : "password",
-            "full_name" : "tenaga_medis Test"
-        }
-        url = reverse(self.url_list, kwargs= { 'location' : 'ngasal'})
-        resp = self.client.post(url, data=data)
-        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
-
     def test_post_tenaga_medis_fail_no_auth(self):
         data = {
-            "email" : "testtenaga_medis@testmail.com",
-            "password" : "password",
-            "full_name" : "tenaga_medis Test"
+            "account.email" : "testtenagamedis@testmail.com",
+            "account.password" : "password",
+            "account.full_name" : "Tenaga Medis Test",
+            "sip" : self.sip
         }
         url = reverse(self.url_list, kwargs= { 'location' : self.cabang_location})
         resp = self.client.post(url, data=data)

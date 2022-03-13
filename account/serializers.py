@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
-from klinik.models import StafProfile
+from klinik.models import Cabang, StafProfile, TenagaMedisProfile
+from klinik.serializers import CabangSerializer
 from .models import Account
 from django.contrib.auth.hashers import make_password
 
@@ -40,17 +41,9 @@ class StafProfileSerializer(serializers.ModelSerializer):
         fields = ["role", "account"]
         read_only_fields = ["account"]
 
-class TenagaMedisAccountSerializer(serializers.ModelSerializer):
-    role = serializers.CharField(default='tenaga_medis')
+class TenagaMedisProfileSerializer(serializers.ModelSerializer):
+    account = AccountSerializer()
     class Meta:
-        model = Account
-        fields = ["id", "full_name", "email", "password", "date_joined", "last_login", "role"]
-
-        read_only_fields = ["id", "date_joined", "last_login"]
-
-        extra_kwargs = {"password": {"write_only": True}}
-    
-    def create(self, validated_data):
-        validated_data["password"] = make_password(validated_data.get("password"))
-        validated_data.pop('role')
-        return super(TenagaMedisAccountSerializer, self).create(validated_data)
+        model = TenagaMedisProfile
+        fields = ["account", "sip"]
+        read_only_fields = ['account']
