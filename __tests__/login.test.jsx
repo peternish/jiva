@@ -36,6 +36,38 @@ describe("<Login/>", () => {
     await act(async () => {
       await fireEvent.click(button);
     });
-    expect(await screen.getAllByText("Input ini wajib diisi")).toHaveLength(2);
+    expect(screen.getByText("Email wajib diisi")).toBeInTheDocument();
+    expect(screen.getByText("Password wajib diisi")).toBeInTheDocument();
+
+    const emailInput = screen.getByLabelText("Email");
+    await act(async () => {
+      await fireEvent.change(emailInput, { target: { value: "dummy" } });
+    });
+    await act(async () => {
+      await fireEvent.click(button);
+    });
+    expect(screen.getByText("Masukkan email yang valid")).toBeInTheDocument();
+  });
+
+  it("submits correctly", async () => {
+    const emailInput = screen.getByLabelText("Email");
+    const passwordInput = screen.getByLabelText("Password");
+
+    const DUMMY_TEXT = "dummy@email.com";
+    const options = {
+      target: { value: DUMMY_TEXT },
+    };
+
+    await act(async () => {
+      await fireEvent.change(emailInput, options);
+      await fireEvent.change(passwordInput, options);
+    });
+
+    const button = screen.getByRole("button", { name: "Masuk" });
+    await act(async () => {
+      await fireEvent.click(button);
+    });
+
+    expect(store.getState().auth.accessToken).toBeUndefined();
   });
 });

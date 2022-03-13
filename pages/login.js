@@ -71,18 +71,15 @@ const Login = () => {
             initialValues={fields}
             validate={(values) => {
               const errors = {};
-              const ERR_MESSAGE = "Input ini wajib diisi";
-              Object.keys(fields).forEach((key) => {
-                if (!values[key]) errors[key] = ERR_MESSAGE;
-              });
+              if (!values.email) errors.email = "Email wajib diisi";
+              else if (!/.+@.+\..+/.test(values.email)) {
+                errors.email = "Masukkan email yang valid";
+              }
+              if (!values.password) errors.password = "Password wajib diisi";
               return errors;
             }}
             onSubmit={(values) => {
-              try {
-                dispatch(login(values));
-              } catch (err) {
-                console.error(err);
-              }
+              dispatch(login(values));
             }}
           >
             {({ isValid, errors }) => (
