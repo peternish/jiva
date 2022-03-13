@@ -13,6 +13,7 @@ from rest_framework.decorators import authentication_classes, permission_classes
 from rest_framework.decorators import api_view
 from rest_framework_simplejwt.views import TokenObtainPairView as BaseTokenObtainPairView
 from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
 
 
 def get_object(model: models.Model, pk: int):
@@ -39,6 +40,13 @@ def register(request):
         profile.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(["GET"])
+@permission_classes([ IsAuthenticated ])
+def profile(request):
+    qs = Account.objects.get(email=request.user)
+    serializer = AccountSerializer(qs, many=False)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 class TokenObtainPairView(BaseTokenObtainPairView):
     serializer_class = TokenObtainPairSerializer
