@@ -132,23 +132,19 @@ class IntegrationTest(APITestCase):
         """
         Ensure get profile
         """
-        # test owener account
-        self.owner_email = "testowner@mail.com"
-        self.password = "testpassword"
-        self.owner_full_name = "Test Owner"
         self.client.post(
             reverse("account:register"),
             {
-                "email": self.owner_email,
-                "password": self.password,
-                "full_name": self.owner_full_name,
+                "email": TEST_USER_EMAIL,
+                "password": TEST_USER_PASSWORD,
+                "full_name": TEST_USER_FULL_NAME,
             },
             format="json",
         )
 
         url = reverse("account:login")
         resp1 = self.client.post(
-            url, {"email": self.owner_email, "password": self.password}, format="json"
+            url, {"email": TEST_USER_EMAIL, "password": TEST_USER_PASSWORD}, format="json"
         )
 
         self.owner_token = resp1.data["access"]
@@ -156,15 +152,15 @@ class IntegrationTest(APITestCase):
 
         self.client.credentials(HTTP_AUTHORIZATION=self.owner_auth)
         resp2 = self.client.get(reverse("account:profile"))
-        self.assertEquals(self.owner_email, resp2.data["email"])
+        self.assertEquals(TEST_USER_EMAIL, resp2.data["email"])
 
 
 class StafTestSetup(APITestCase):
     def setUp(self) -> None:
         # test owener account
-        self.owner_email = "testowner@mail.com"
-        self.password = "testpassword"
-        self.owner_full_name = "Test Owner"
+        self.owner_email = TEST_USER_EMAIL
+        self.password = TEST_USER_PASSWORD
+        self.owner_full_name = TEST_USER_FULL_NAME
         self.owner_account = Account.objects.create_user(
             email=self.owner_email,
             full_name=self.owner_full_name,
@@ -216,9 +212,9 @@ class StafAPITest(StafTestSetup):
         account_count_before = Account.objects.count()
         self.client.credentials(HTTP_AUTHORIZATION=self.owner_auth)
         data = {
-            "email": "teststaf@testmail.com",
-            "password": "password",
-            "full_name": "Staf Test",
+            "email": "emailunik1@gmail.com",
+            "password": TEST_USER_PASSWORD,
+            "full_name": TEST_USER_FULL_NAME,
         }
         url = reverse(self.url_staf_list, kwargs={"cabang_id": self.cabang_id})
         resp = self.client.post(url, data=data)
@@ -229,9 +225,9 @@ class StafAPITest(StafTestSetup):
     def test_post_staf_fail_cabang_not_found(self):
         self.client.credentials(HTTP_AUTHORIZATION=self.owner_auth)
         data = {
-            "email": "teststaf@testmail.com",
-            "password": "password",
-            "full_name": "Staf Test",
+            "email": "emailunik@gmail.com",
+            "password": TEST_USER_PASSWORD,
+            "full_name": TEST_USER_FULL_NAME,
         }
         url = reverse(self.url_staf_list, kwargs={"cabang_id": 9999})
         resp = self.client.post(url, data=data)
@@ -239,9 +235,9 @@ class StafAPITest(StafTestSetup):
 
     def test_post_staf_fail_no_auth(self):
         data = {
-            "email": "teststaf@testmail.com",
-            "password": "password",
-            "full_name": "Staf Test",
+            "email": TEST_USER_EMAIL,
+            "password": TEST_USER_PASSWORD,
+            "full_name": TEST_USER_FULL_NAME,
         }
         url = reverse(self.url_staf_list, kwargs={"cabang_id": self.cabang_id})
         resp = self.client.post(url, data=data)
@@ -312,9 +308,9 @@ class StafAPITest(StafTestSetup):
 class TenagaMedisTestSetup(APITestCase):
     def setUp(self) -> None:
         # test owener account
-        self.owner_email = "testowner@mail.com"
-        self.password = "testpassword"
-        self.owner_full_name = "Test Owner"
+        self.owner_email = TEST_USER_EMAIL
+        self.password = TEST_USER_PASSWORD
+        self.owner_full_name = TEST_USER_FULL_NAME
         self.owner_account = Account.objects.create_user(
             email=self.owner_email,
             full_name=self.owner_full_name,
