@@ -72,7 +72,7 @@ class ModelTest(TestCase):
         self.assertTrue(account.has_module_perms("account"))
 
 
-class IntegrationTest(TestCase):
+class IntegrationTest(APITestCase):
     def test_create_account(self):
         """
         Ensure we can create a new account object.
@@ -127,6 +127,36 @@ class IntegrationTest(TestCase):
 
         self.assertEquals(refresh_response.status_code, 200)
         self.assertTrue("access" in refresh_response.data)
+
+    def test_profile_200(self):
+        """
+        Ensure get profile
+        """
+        # test owener account
+        self.owner_email = "testowner@mail.com"
+        self.password = "testpassword"
+        self.owner_full_name = "Test Owner"
+        self.client.post(
+            reverse("account:register"),
+            {
+                "email": self.owner_email,
+                "password": self.password,
+                "full_name": self.owner_full_name,
+            },
+            format="json",
+        )
+
+        url = reverse("account:login")
+        resp1 = self.client.post(
+            url, {"email": self.owner_email, "password": self.password}, format="json"
+        )
+
+        self.owner_token = resp1.data["access"]
+        self.owner_auth = "Bearer " + self.owner_token
+
+        self.client.credentials(HTTP_AUTHORIZATION=self.owner_auth)
+        resp2 = self.client.get(reverse("account:profile"))
+        self.assertEquals(self.owner_email, resp2.data["email"])
 
 
 class StafTestSetup(APITestCase):

@@ -1,12 +1,11 @@
 # django imports
-from functools import partial
-import profile
 from jiva_be.utils import IsStafPermission
 from .serializers import (
     AccountSerializer,
     StafAccountSerializer,
     StafProfileSerializer,
     TenagaMedisProfileSerializer,
+    TokenObtainPairSerializer,
 )
 from .models import Account
 from klinik.models import Cabang, OwnerProfile, StafProfile, TenagaMedisProfile
@@ -18,7 +17,11 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import authentication_classes, permission_classes
 from rest_framework.decorators import api_view
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView as BaseTokenObtainPairView,
+)
 from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
 
 
 def get_object(model: models.Model, pk: int):
@@ -47,6 +50,18 @@ def register(request):
         profile.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def profile(request):
+    qs = Account.objects.get(email=request.user)
+    serializer = AccountSerializer(qs, many=False)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class TokenObtainPairView(BaseTokenObtainPairView):
+    serializer_class = TokenObtainPairSerializer
 
 
 class StafListApi(APIView):

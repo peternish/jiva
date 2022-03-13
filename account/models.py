@@ -21,7 +21,9 @@ class AccountManager(BaseUserManager):
 class Account(AbstractBaseUser):
     objects = AccountManager()
 
-    email = models.EmailField(unique=True)
+    email = models.EmailField(
+        unique=True, error_messages={"unique": "Email ini sudah digunakan"}
+    )
     full_name = models.CharField(max_length=256)
 
     # Dates
