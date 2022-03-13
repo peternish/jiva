@@ -1,9 +1,9 @@
 # django imports
 from django.urls import path
-from .views import register
+from .views import register, TokenObtainPairView
 
 # rest imports
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from rest_framework_simplejwt.views import TokenRefreshView
 
 app_name = "account"
 
