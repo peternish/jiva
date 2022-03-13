@@ -22,7 +22,7 @@ function UpdateTenagaMedis() {
     if (!router.isReady) return;
     const { id } = router.query;
     dispatch(getTenagaMedisByID({ idTenagaMedis: id }));
-  }, [router.isReady]);
+  }, [router.isReady, router.query, dispatch]);
   const { tenagaMedis } = useSelector(state => state.tenagaMedis);
 
   return (
@@ -73,7 +73,7 @@ function UpdateTenagaMedis() {
                   />
 
                   <Stack spacing={2} direction="row">
-                    <Button variant="outlined">Batal</Button>
+                    <Button href={`/tenaga-medis/detail/${tenagaMedis.id}`} variant="outlined">Batal</Button>
                     <Button variant="contained" type="submit" disabled={!isValid}>Simpan</Button>
                   </Stack>
                 </Form>

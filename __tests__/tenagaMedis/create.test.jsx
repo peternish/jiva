@@ -1,5 +1,5 @@
 import { fireEvent, render, screen, act } from "@testing-library/react";
-import CreateTenagaMedis from '@pages/tenaga-medis/create';
+import CreateTenagaMedis from '@pages/klinik/[idKlinik]/[idCabang]/tenaga-medis/create';
 import Dropzone, { getColor } from '@components/TenagaMedisPageComponents/Dropzone';
 import { Provider } from "react-redux";
 import { store } from "@redux/store";
@@ -44,7 +44,7 @@ describe('CreateTenagaMedis', () => {
 
 
   it('should have the batal button', () => {
-    const button = screen.getByRole('button', {
+    const button = screen.getByRole('link', {
       name: /Batal/,
     });
 

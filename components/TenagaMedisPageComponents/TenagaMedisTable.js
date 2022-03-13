@@ -20,7 +20,7 @@ function TenagaMedisTable() {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getTenagaMedis());
-  });
+  }, [dispatch]);
   const { tenagaMedisList } = useSelector(state => state.tenagaMedis);
 
   return (

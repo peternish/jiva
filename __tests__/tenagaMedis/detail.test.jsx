@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import DetailTenagaMedis from '@pages/tenaga-medis/detail/[id]';
+import DetailTenagaMedis from '@pages/klinik/[idKlinik]/[idCabang]/tenaga-medis/detail/[id]';
 import { Provider } from "react-redux";
 import { store } from "@redux/store";
 import '@testing-library/jest-dom';
@@ -67,7 +67,7 @@ describe('DetailTenagaMedis', () => {
 
   
   it('should have the ubah button', () => {
-    const button = screen.getByRole('button', {
+    const button = screen.getByRole('link', {
       name: /Ubah/,
     });
 

@@ -16,12 +16,9 @@ const authPersistConfig = {
 
 export const rootReducer = combineReducers({
   auth: persistReducer(authPersistConfig, authReducer),
-<<<<<<< HEAD
   klinik: klinikReducer,
   pengaturanPengguna: pengaturanPenggunaReducer,
-=======
   tenagaMedis: tenagaMedisReducer,
->>>>>>> feat/dashboard-tenaga-medis
 });
 
 export default rootReducer;

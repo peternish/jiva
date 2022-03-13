@@ -28,7 +28,7 @@ function DetailTenagaMedis() {
     if (!router.isReady) return;
     const { id } = router.query;
     dispatch(getTenagaMedisByID({ idTenagaMedis: id }));
-  }, [router.isReady]);
+  }, [router.isReady, router.query, dispatch]);
   const { tenagaMedis } = useSelector(state => state.tenagaMedis);
   
   return (
@@ -62,7 +62,7 @@ function DetailTenagaMedis() {
 
                 <Stack spacing={2} direction="row">
                   <Button variant="outlined" onClick={handleModalOpen}>Hapus</Button>
-                  <Button variant="contained">Ubah</Button>
+                  <Button href={`/tenaga-medis/update/${tenagaMedis.id}`} variant="contained">Ubah</Button>
                 </Stack>
 
                 <DeleteConfirmationModal tenagaMedis={tenagaMedis} open={modalOpen} handleClose={handleModalClose}/>

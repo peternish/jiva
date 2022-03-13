@@ -73,7 +73,7 @@ function CreateTenagaMedis() {
                 <Dropzone setSipFile={setSipFile} sipFile={sipFile} />
 
                 <Stack spacing={2} direction="row">
-                  <Button variant="outlined">Batal</Button>
+                  <Button href="/tenaga-medis" variant="outlined">Batal</Button>
                   <Button variant="contained" type="submit" disabled={!isValid || !sipFile }>Tambah</Button>
                 </Stack>
               </Form>

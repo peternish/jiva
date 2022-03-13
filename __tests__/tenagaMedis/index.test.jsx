@@ -1,5 +1,5 @@
 import { fireEvent, render, screen, act } from "@testing-library/react";
-import DashboardTenagaMedis from '@pages/tenaga-medis/index';
+import DashboardTenagaMedis from '@pages/klinik/[idKlinik]/[idCabang]/tenaga-medis/index';
 import { Provider } from "react-redux";
 import { store } from "@redux/store";
 import '@testing-library/jest-dom';
@@ -59,7 +59,9 @@ describe('DashboardTenagaMedis', () => {
       name: /Lihat/,
     });
 
-    expect(lihatLinks).toHaveLength(3);
+    const expectedLength = store.getState().tenagaMedis.tenagaMedisList.length;
+
+    expect(lihatLinks).toHaveLength(expectedLength);
     lihatLinks.forEach((lihatLink) => {
       expect(lihatLink).toBeInTheDocument();
       expect(lihatLink).toHaveAttribute('href', expect.stringMatching(/\/tenaga-medis\/detail\/\d+/));
@@ -70,7 +72,9 @@ describe('DashboardTenagaMedis', () => {
   it('should have modify dropdown menu', () => {
     const menus = screen.getAllByTestId("modify-dropdown-menu");
 
-    expect(menus).toHaveLength(3);
+    const expectedLength = store.getState().tenagaMedis.tenagaMedisList.length;
+
+    expect(menus).toHaveLength(expectedLength);
   });
 
 
