@@ -5,6 +5,7 @@ import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
+import ModifyDropdownMenu from '@components/PengaturanPenggunaComponents/ModifyDropdownMenu';
 
 // styles
 import tableStyles from '@styles/Table.module.css';
@@ -28,8 +29,6 @@ function PenggunaTable() {
           <TableRow className={tableStyles.header}>
             <TableCell>Nama</TableCell>
             <TableCell>Email</TableCell>
-            <TableCell>No.Telp</TableCell>
-            <TableCell>Role</TableCell>
             <TableCell></TableCell>
           </TableRow>
         </TableHead>
@@ -45,33 +44,11 @@ function PenggunaTable() {
                   {pengaturanPengguna.email}
                 </TableCell>
                 <TableCell>
-                  {pengaturanPengguna.inputValue}
-                </TableCell>
-                <TableCell>
-                  placeholder role
-                </TableCell>
-                <TableCell>
-                  :
+                  <ModifyDropdownMenu pengaturanPengguna={pengaturanPengguna}/>
                 </TableCell>
               </TableRow>
             ))
           }
-
-          <TableRow>
-            <TableCell>Sata Ganaga</TableCell>
-            <TableCell>examels@gomail.com</TableCell>
-            <TableCell>081234567890</TableCell>
-            <TableCell>Moderator</TableCell>
-            <TableCell>:</TableCell>
-          </TableRow>
-
-          <TableRow>
-            <TableCell>Sata Ganaga</TableCell>
-            <TableCell>examels@gomail.com</TableCell>
-            <TableCell>081234567890</TableCell>
-            <TableCell>Moderator</TableCell>
-            <TableCell>:</TableCell>
-          </TableRow>
         </TableBody>
       </Table>
     </TableContainer>

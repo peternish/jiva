@@ -30,6 +30,20 @@ export const getPengaturanPengguna = () => {
   };
 };
 
+export const deletePengaturanPengguna = ({ idPengaturanPengguna }) => {
+  return async (dispatch) => {
+    try {
+      const { data } = await jivaAPI.pengaturanPengguna.getPengaturanPenggunaByID(
+        { idPengaturanPengguna });
+      await dispatch(setPengaturanPengguna(data[0]));
+      await jivaAPI.pengaturanPengguna.deletePengaturanPengguna(
+        { idPengaturanPengguna });
+    } catch (error) {
+      toast(error.toString(), { type: toast.TYPE.ERROR });
+    };
+  };
+};
+
 export const createPengaturanPengguna = ({ 
   email,
   password,
