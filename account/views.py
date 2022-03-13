@@ -1,4 +1,6 @@
 # django imports
+from functools import partial
+import profile
 from jiva_be.utils import IsStafPermission
 from .serializers import AccountSerializer, StafAccountSerializer, StafProfileSerializer, TenagaMedisProfileSerializer
 from .models import Account
@@ -126,3 +128,39 @@ class TenagaMedisListApi(APIView):
         teanga_medis_profiles = TenagaMedisProfile.objects.filter(cabang=cabang)
         serializer = TenagaMedisProfileSerializer(teanga_medis_profiles, many = True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+class TenagaMedisApi(APIView):
+
+    permission_classes = [
+        IsStafPermission,
+    ]
+
+    def get(self, request: Request, pk: int, format=None):
+        account = get_object(Account, pk)
+        staf_profile = get_profile(TenagaMedisProfile, account)
+        serializer = TenagaMedisProfileSerializer(staf_profile)
+        if staf_profile is not None:
+            return Response(data=serializer.data, status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    def patch(self, request: Request, pk: int, format=None):
+        account = get_object(Account, pk)
+        profile = get_profile(TenagaMedisProfile, account=account)
+
+        if not account or not profile:
+            return Response({ 'error' : 'Not Found'},status=status.HTTP_404_NOT_FOUND)
+
+        profile_serializer = TenagaMedisProfileSerializer(instance=profile, data=request.data, partial=True)
+        if profile_serializer.is_valid(raise_exception=True):
+            profile_serializer.save()
+            return Response(profile_serializer.data)
+
+        return Response(profile_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request: Request, pk: int, format=None):
+        account = get_object(Account, pk)
+        if account is not None:
+            account.delete()
+            return Response({ 'success' : 'Delete Success'}, status=status.HTTP_200_OK)
+        else:
+            return Response({ 'error' : 'Not Found'},status=status.HTTP_404_NOT_FOUND)

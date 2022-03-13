@@ -19,7 +19,7 @@ staf_patterns = format_suffix_patterns(staf_patterns)
 
 tenaga_medis_patterns = [
     path("<slug:location>/", views.TenagaMedisListApi.as_view(), name="tenaga-medis-list"),
-    # path("id/<int:pk>/", views.TenagaMedisApi.as_view(), name="tenaga-medis-detail"),
+    path("id/<int:pk>/", views.TenagaMedisApi.as_view(), name="tenaga-medis-detail"),
 ]
 
 tenaga_medis_patterns = format_suffix_patterns(tenaga_medis_patterns)

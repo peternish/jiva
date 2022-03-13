@@ -39,7 +39,7 @@ class StafProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = StafProfile
         fields = ["role", "account"]
-        read_only_fields = ["account"]
+        # read_only_fields = ["account"]
 
 class TenagaMedisProfileSerializer(serializers.ModelSerializer):
     account = AccountSerializer()
@@ -47,3 +47,16 @@ class TenagaMedisProfileSerializer(serializers.ModelSerializer):
         model = TenagaMedisProfile
         fields = ["account", "sip"]
         read_only_fields = ['account']
+    
+    def update(self, instance, validated_data):
+        account = instance.account
+        sip = validated_data.pop('sip', None)
+        account_data = validated_data.get('account', {})
+        if sip:
+            instance.sip = sip
+        if account:
+            account.email = account_data.get('email', account.email)
+            account.full_name = account_data.get('full_name', account.full_name)
+            account.password = account_data.get('password', account.password)
+            account.save()
+        return instance
