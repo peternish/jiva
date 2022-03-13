@@ -17,10 +17,13 @@ import { useEffect } from 'react';
 import { getTenagaMedis } from "@redux/modules/tenagaMedis/thunks";
 
 function TenagaMedisTable() {
+  const router = useRouter();
   const dispatch = useDispatch();
   useEffect(() => {
+    if (!router.isReady) return;
+    const { idKlinik, idCabang } = router.query;
     dispatch(getTenagaMedis());
-  }, [dispatch]);
+  }, [router.isReady, router.query, dispatch]);
   const { tenagaMedisList } = useSelector(state => state.tenagaMedis);
 
   return (
