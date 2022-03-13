@@ -23,6 +23,7 @@ export const signup = ({
       await jivaAPI.auth.signup({ email, password, full_name: fullName });
       await dispatch(getTokens({ email, password }));
       await jivaAPI.klinik.createKlinik({ clinicName, sikFile });
+      toast("Klinik berhasil dibuat", { type: toast.TYPE.SUCCESS });
       location.assign("/klinik");
     } catch (error) {
       let errorMessage = "Something went wrong 😥";
