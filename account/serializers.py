@@ -39,7 +39,6 @@ class StafProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = StafProfile
         fields = ["role", "account"]
-        # read_only_fields = ["account"]
 
 class TenagaMedisProfileSerializer(serializers.ModelSerializer):
     account = AccountSerializer()
