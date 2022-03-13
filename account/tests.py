@@ -183,6 +183,7 @@ class StafTestSetup(APITestCase):
         self.cabang = Cabang.objects.create(
             klinik=self.klinik, location=self.cabang_location
         )
+        self.cabang_id = self.cabang.id
 
         # urls
         self.url_detail = "account:staf-detail"
@@ -219,7 +220,7 @@ class StafAPITest(StafTestSetup):
             "password": "password",
             "full_name": "Staf Test",
         }
-        url = reverse(self.url_staf_list, kwargs={"location": self.cabang_location})
+        url = reverse(self.url_staf_list, kwargs={"cabang_id": self.cabang_id})
         resp = self.client.post(url, data=data)
         account_count_after = Account.objects.count()
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
@@ -232,7 +233,7 @@ class StafAPITest(StafTestSetup):
             "password": "password",
             "full_name": "Staf Test",
         }
-        url = reverse(self.url_staf_list, kwargs={"location": "ngasal"})
+        url = reverse(self.url_staf_list, kwargs={"cabang_id": 9999})
         resp = self.client.post(url, data=data)
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
 
@@ -242,13 +243,13 @@ class StafAPITest(StafTestSetup):
             "password": "password",
             "full_name": "Staf Test",
         }
-        url = reverse(self.url_staf_list, kwargs={"location": self.cabang_location})
+        url = reverse(self.url_staf_list, kwargs={"cabang_id": self.cabang_id})
         resp = self.client.post(url, data=data)
         self.assertEqual(resp.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_get_staf_list(self):
         self.client.credentials(HTTP_AUTHORIZATION=self.owner_auth)
-        url = reverse(self.url_staf_list, kwargs={"location": self.cabang_location})
+        url = reverse(self.url_staf_list, kwargs={"cabang_id": self.cabang_id})
         resp = self.client.get(url)
         self.assertTrue(len(resp.data) > 0)
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
@@ -332,6 +333,7 @@ class TenagaMedisTestSetup(APITestCase):
         self.cabang = Cabang.objects.create(
             klinik=self.klinik, location=self.cabang_location
         )
+        self.cabang_id = self.cabang.id
 
         # urls
         self.url_detail = "account:tenaga-medis-detail"
@@ -371,13 +373,13 @@ class TenagaMedisAPITest(TenagaMedisTestSetup):
             "account.full_name": "Tenaga Medis Test",
             "sip": self.sip,
         }
-        url = reverse(self.url_list, kwargs={"location": self.cabang_location})
+        url = reverse(self.url_list, kwargs={"cabang_id": self.cabang_id})
         resp = self.client.post(url, data=data)
         self.assertEqual(resp.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_get_tenaga_medis_list(self):
         self.client.credentials(HTTP_AUTHORIZATION=self.owner_auth)
-        url = reverse(self.url_list, kwargs={"location": self.cabang_location})
+        url = reverse(self.url_list, kwargs={"cabang_id": self.cabang_id})
         resp = self.client.get(url)
         self.assertTrue(len(resp.data) > 0)
         self.assertEqual(resp.status_code, status.HTTP_200_OK)

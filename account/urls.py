@@ -11,7 +11,7 @@ from rest_framework.urlpatterns import format_suffix_patterns
 app_name = "account"
 
 staf_patterns = [
-    path("<slug:location>/", views.StafListApi.as_view(), name="staf-list"),
+    path("<int:cabang_id>/", views.StafListApi.as_view(), name="staf-list"),
     path("id/<int:pk>/", views.StafApi.as_view(), name="staf-detail"),
 ]
 
@@ -19,7 +19,7 @@ staf_patterns = format_suffix_patterns(staf_patterns)
 
 tenaga_medis_patterns = [
     path(
-        "<slug:location>/", views.TenagaMedisListApi.as_view(), name="tenaga-medis-list"
+        "<int:cabang_id>/", views.TenagaMedisListApi.as_view(), name="tenaga-medis-list"
     ),
     path("id/<int:pk>/", views.TenagaMedisApi.as_view(), name="tenaga-medis-detail"),
 ]
