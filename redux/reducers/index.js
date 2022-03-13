@@ -6,6 +6,7 @@ import storage from "@redux/storage";
 import authReducer from "../modules/auth";
 import klinikReducer from "../modules/klinik";
 import pengaturanPenggunaReducer from "../modules/pengaturanPengguna";
+import tenagaMedisReducer from "../modules/tenagaMedis";
 
 const authPersistConfig = {
   key: "auth",
@@ -15,8 +16,12 @@ const authPersistConfig = {
 
 export const rootReducer = combineReducers({
   auth: persistReducer(authPersistConfig, authReducer),
+<<<<<<< HEAD
   klinik: klinikReducer,
   pengaturanPengguna: pengaturanPenggunaReducer,
+=======
+  tenagaMedis: tenagaMedisReducer,
+>>>>>>> feat/dashboard-tenaga-medis
 });
 
 export default rootReducer;
