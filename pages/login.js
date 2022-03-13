@@ -83,11 +83,7 @@ const Login = () => {
               return errors;
             }}
             onSubmit={(values) => {
-              try {
-                dispatch(login(values));
-              } catch (err) {
-                console.error(err);
-              }
+              dispatch(login(values));
             }}
           >
             {({ isValid, errors }) => (
