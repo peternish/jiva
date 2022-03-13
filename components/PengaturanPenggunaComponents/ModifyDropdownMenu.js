@@ -11,20 +11,22 @@ import DeleteConfirmationModal from "@components/PengaturanPenggunaComponents/De
 import { deletePengaturanPengguna } from "@redux/modules/pengaturanPengguna/thunks";
 import { useDispatch } from "react-redux";
 
+
 function ModifyDropdownMenu({ pengaturanPengguna }) {
+  const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
-
+  
   const [modalOpen, setModalOpen] = useState(false);
   const handleModalClose = () => {
     setAnchorEl(null);
     setModalOpen(false);
   };
-
+  
   const handleModalDelete = () => {
     setAnchorEl(null);
     setModalOpen(false);
-    useDispatch(deletePengaturanPengguna(pengaturanPengguna.id))
+    dispatch(deletePengaturanPengguna(pengaturanPengguna.id))
   };
 
   const handleClick = (event) => {
@@ -40,8 +42,6 @@ function ModifyDropdownMenu({ pengaturanPengguna }) {
     console.log("delete:" + pengaturanPengguna.id);
   };
 
-  const dispatch = useDispatch();
-  
   return (
     <div>
       <IconButton

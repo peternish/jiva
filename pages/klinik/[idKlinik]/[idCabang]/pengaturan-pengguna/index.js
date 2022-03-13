@@ -10,8 +10,10 @@ import CSS from "@components/PengaturanPenggunaComponents/CSS";
 
 import { Provider } from "react-redux";
 import { store } from "@redux/store";
+import { useDispatch } from "react-redux";
 
 const Dashboard = () => {
+  const dispatch = useDispatch();
 
   return (
         <Layout navType="sidebar">

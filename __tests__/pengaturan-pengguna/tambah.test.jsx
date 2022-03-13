@@ -1,5 +1,5 @@
 import { fireEvent, render, screen, act } from "@testing-library/react";
-import Tambah from '@pages/pengaturan-pengguna/tambah'
+import Tambah from '@pages/klinik/[idKlinik]/[idCabang]/pengaturan-pengguna/tambah'
 import { Provider } from "react-redux";
 import { store } from "@redux/store";
 import '@testing-library/jest-dom'
