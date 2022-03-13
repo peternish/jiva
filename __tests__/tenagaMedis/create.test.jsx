@@ -1,8 +1,10 @@
 import { fireEvent, render, screen, act } from "@testing-library/react";
 import CreateTenagaMedis from '@pages/tenaga-medis/create';
+import Dropzone, { getColor } from '@components/TenagaMedisPageComponents/Dropzone';
 import { Provider } from "react-redux";
 import { store } from "@redux/store";
 import '@testing-library/jest-dom';
+import constants from "@utils/constants";
 
 describe('CreateTenagaMedis', () => {
   beforeEach(() => {
@@ -64,6 +66,15 @@ describe('CreateTenagaMedis', () => {
       name: "Tambah" 
     });
 
+    const input = screen.getByTestId("input");
+    const fileName = "fileName.pdf";
+    const file = new File([new Blob()], fileName, { type: "application/pdf" });
+    await act(async () => {
+      await fireEvent.change(input, {
+        target: { files: [file] },
+      });
+    });
+
     await act(async () => {
       await fireEvent.click(button);
     });
@@ -85,12 +96,66 @@ describe('CreateTenagaMedis', () => {
       await fireEvent.change(fullNameField, {target: {value: 'dr. Budi Budiman, Sp.A.'}});
       await fireEvent.change(emailField, {target: {value: 'budi.budiman@email.com'}});
       await fireEvent.change(passwordField, {target: {value: 'password'}});
+      await fireEvent.click(button);
+    });
 
+    const input = screen.getByTestId("input");
+    const fileName = "fileName.pdf";
+    const file = new File([new Blob()], fileName, { type: "application/pdf" });
+    await act(async () => {
+      await fireEvent.change(input, {
+        target: { files: [file] },
+      });
+    });
+
+    await act(async () => {
       await fireEvent.click(button);
     });
 
     expect(await screen.getByLabelText("Nama Lengkap")).toHaveValue('dr. Budi Budiman, Sp.A.');
     expect(await screen.getByLabelText("Email")).toHaveValue('budi.budiman@email.com');
     expect(await screen.getByLabelText("Password")).toHaveValue('password');
+  });
+});
+
+
+
+describe("Dropzone", () => {
+  const setSipFile = jest.fn();
+
+  beforeEach(() => {
+    render(<Dropzone setSipFile={setSipFile} />);
+  });
+
+
+  it("renders label", () => {
+    expect(screen.getByText("Surat Izin Praktik")).toBeInTheDocument();
+  });
+
+
+  it("renders dropzone label", () => {
+    expect(screen.getByText("Unggah File"));
+  });
+
+
+  it("handles file upload correctly", async () => {
+    const input = screen.getByTestId("input");
+    expect(input).toBeInTheDocument();
+    const fileName = "fileName.pdf";
+    const file = new File([new Blob()], fileName, { type: "application/pdf" });
+    await act(async () => {
+      await fireEvent.change(input, {
+        target: { files: [file] },
+      });
+    });
+    expect(setSipFile).toHaveBeenCalledTimes(1);
+  });
+
+  it("returns correct color", () => {
+    expect(getColor({ isDragAccept: true })).toBe("#00e676");
+    expect(getColor({ isDragReject: true })).toBe("#ff1744");
+    expect(getColor({ isFocused: true })).toBe("#2196f3");
+    expect(getColor({ error: true })).toBe(constants.COLORS.ERROR);
+    expect(getColor({})).toBe("#eeeeee");
   });
 });
