@@ -61,15 +61,4 @@ describe("<Klinik/>", () => {
     });
 
   });
-
-  it("redirects correctly", async () => {
-    const backBtn = screen.getByLabelText("Kembali");
-
-    await act(async () => {
-      await fireEvent.click(backBtn);
-    });
-
-    expect(global.window.location.pathname).toEqual("/klinik");
-  });
-
 });
