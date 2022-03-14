@@ -42,8 +42,15 @@ export default function Klinik() {
           }}>
             <h1>Cabang Klinik</h1>
             <Link href="/klinik/newcabang" passHref={true}>
-              <Button variant="contained" type="submit" sx={{ width: 'min-content' }}>
+              <Button variant="contained" type="submit" sx={{
+                whiteSpace: 'nowrap',
+                minWidth: 'auto',
+                width: 'min-content'
+              }}>
                 <AddIcon />
+                <Box sx={{ pt: 0.2, pl: 1 }}>
+                  Tambah Cabang
+                </Box>
               </Button>
             </Link>
           </Box>
@@ -53,6 +60,7 @@ export default function Klinik() {
             flexDirection: 'row',
             justifyContent: 'flex-start',
             alignItems: 'center',
+            alignContent: 'flex-start',
             columnGap: '1em',
             flexWrap: 'wrap',
             alignContent: 'flex-start',
