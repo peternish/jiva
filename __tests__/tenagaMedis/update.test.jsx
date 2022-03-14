@@ -33,6 +33,14 @@ describe('UpdateTenagaMedis', () => {
   });
 
 
+  afterEach(() => {
+    let assignMock = jest.fn();
+    delete window.location;
+    window.location = { assign: assignMock };
+    assignMock.mockClear();
+  });
+
+
   it('should render', () => {
     const main = screen.getByRole('main');
 
@@ -76,19 +84,16 @@ describe('UpdateTenagaMedis', () => {
   });
 
 
-  it("should show form validation errors", async () => {
+  it("should not show validation errors when no empty fields", async () => {
     const fullNameField = screen.getByLabelText("Nama Lengkap");
 
-    const button = screen.getByRole("button", { 
-      name: "Simpan" 
-    });
-
     await act(async () => {
-      await fireEvent.change(fullNameField, {target: {value: ''}});
-      await fireEvent.click(button);
+      await fireEvent.change(fullNameField, {target: {value: 'dr. Adi Abdullah, Sp.A.'}});
     });
 
-    expect(await screen.getAllByText("Input ini wajib diisi")).toHaveLength(1);
+    expect(fullNameField.value).toBe('dr. Adi Abdullah, Sp.A.');
+
+    expect(screen.queryAllByText("Input ini wajib diisi")).toHaveLength(0);
   });
 
 
