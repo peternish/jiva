@@ -6,7 +6,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "jest --collect-coverage"
+    "test": "jest",
+    "coverage": "jest --collect-coverage --ci --silent --useStderr"
   },
   "dependencies": {
     "@emotion/react": "^11.8.1",

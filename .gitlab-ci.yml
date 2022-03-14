@@ -53,7 +53,8 @@ Test:
   stage: test
   needs: ['Install', 'Build']
   script:
-    - npm run test
+    - npm i jest --save-dev --quiet
+    - npm run coverage
   coverage: /All\sfiles.*?\s+(\d+.\d+)/
   artifacts:
     paths:
