@@ -54,6 +54,12 @@ export const createPengaturanPengguna = ({
       console.log(error);
       if (error.response.data != null){
         toast(error.response.data.email.toString(), { type: toast.TYPE.ERROR });
+      } else if (error?.response?.status === 400 && error?.response?.data) {
+        errorMessage = getStringOrFirstArrayValue(
+          Object.values(error.response.data)[0]
+        );
+        errorMessage = capitalize(errorMessage);
+        toast("Waduh error, " + errorMessage, { type: toast.TYPE.ERROR });
       } else {
         toast("Waduh error", { type: toast.TYPE.ERROR })
       }
