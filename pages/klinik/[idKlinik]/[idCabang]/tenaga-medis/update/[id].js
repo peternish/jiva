@@ -52,9 +52,7 @@ function UpdateTenagaMedis() {
                 return errors;
               }}
               onSubmit={(values) => {
-                const fullName = values.fullName;
-                const idTenagaMedis = tenagaMedis.account.id;
-                dispatch(updateTenagaMedisByID({ idKlinik, idCabang, idTenagaMedis, fullName }));
+                dispatch(updateTenagaMedisByID({ idKlinik, idCabang, idTenagaMedis: tenagaMedis.account.id, fullName: values.fullName }));
               }}
             >
               {({ isValid, errors }) => (
