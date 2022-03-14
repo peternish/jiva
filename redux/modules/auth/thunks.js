@@ -26,7 +26,7 @@ export const signup = ({
       toast("Klinik berhasil dibuat", { type: toast.TYPE.SUCCESS });
       location.assign("/klinik");
     } catch (error) {
-      let errorMessage = "Something went wrong 😥";
+      let errorMessage = "Terjadi kesalahan 😥";
       if (error?.response?.status === 400 && error?.response?.data) {
         errorMessage = getStringOrFirstArrayValue(
           Object.values(error.response.data)[0]
@@ -44,7 +44,7 @@ export const login = ({ email, password } = {}) => {
       await dispatch(getTokens({ email, password }));
       location.assign("/klinik");
     } catch (error) {
-      let errorMessage = "Something went wrong 😥";
+      let errorMessage = "Terjadi kesalahan 😥";
       if (error?.response?.status === 401 && error?.response?.data) {
         const { detail } = error.response.data;
         errorMessage = capitalize(detail);
