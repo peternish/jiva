@@ -1,6 +1,7 @@
 // api
 import jivaAPI from "@api/index";
-
+//toast
+import { toast } from "react-toastify";
 // actions
 import { setPengaturanPengguna, setPenggunaTable } from "@redux/modules/pengaturanPengguna";
 
@@ -11,7 +12,7 @@ export const getPengaturanPenggunaByID = ({ idPengaturanPengguna }) => {
         { idPengaturanPengguna });
       await dispatch(setPengaturanPengguna(data));
     } catch (error) {
-      // toast(error.toString(), { type: toast.TYPE.ERROR });
+      toast("Waduh error " + error.toString(), { type: toast.TYPE.ERROR });
     }
   };
 };
@@ -33,7 +34,7 @@ export const deletePengaturanPengguna = ({ idPengaturanPengguna }) => {
       await jivaAPI.pengaturanPengguna.deletePengaturanPengguna(
         { idPengaturanPengguna });
     } catch (error) {
-      // toast(error.toString(), { type: toast.TYPE.ERROR });
+      toast("Waduh error " + error.toString(), { type: toast.TYPE.ERROR });
     }
   };
 };
@@ -51,7 +52,11 @@ export const createPengaturanPengguna = ({
       window.location.assign(`/klinik/${idKlinik}/${idCabang}/pengaturan-pengguna`);
     } catch (error) { 
       console.log(error);
-      // toast(error.toString(), { type: toast.TYPE.ERROR });
+      if (error.response.data != null){
+        toast(error.response.data.email.toString(), { type: toast.TYPE.ERROR });
+      } else {
+        toast("Waduh error", { type: toast.TYPE.ERROR })
+      }
     };
   }
 };
