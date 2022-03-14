@@ -1,5 +1,9 @@
 import Link from 'next/link'
 import { useState } from 'react';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
+import { useDispatch } from "react-redux";
+import { logout } from "@redux/modules/auth/thunks";
 
 import styles from '@styles/Sidebar.module.css'
 
@@ -13,10 +17,15 @@ import TodayIcon from '@mui/icons-material/Today';
 import ConstructionIcon from '@mui/icons-material/Construction';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import Divider from "@mui/material/Divider";
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-
+import LogoutIcon from '@mui/icons-material/Logout';
 
 export default function Sidebar() {
+    const { query, isReady } = useRouter();
+    useEffect(() => {
+        if (!isReady) return;
+    }, [isReady]);
+    const { idKlinik, idCabang } = query;
+    const dispatch = useDispatch()
 
     const navItems = [
         {divider : 'Pasien'},
@@ -29,6 +38,7 @@ export default function Sidebar() {
         
         {divider : 'Tenaga Medis'},
         {title : 'Pengaturan Jadwal Praktik', icon: <TodayIcon/>, link: '#'},
+        {title : 'Pengaturan Tenaga Medis', icon: <GroupIcon/>, link: `/klinik/${idKlinik}/${idCabang}/tenaga-medis`},
         
         {divider : 'Rekaman Medis'},
         {title : 'Pengaturan Formulir Rekaman Medis', icon: <ConstructionIcon/>, link: '#'},
@@ -66,10 +76,14 @@ export default function Sidebar() {
                 ))}
             </div>
         </div>
-        <div className={styles.sidebarFooter}>
-            <AccountCircleIcon/>
-            Akun
-        </div>
+        <Link href="/login">
+            <a onClick={dispatch(logout)}>
+                <div className={styles.sidebarFooter}>
+                    <LogoutIcon/>
+                    Logout
+                </div>
+            </a>
+        </Link>
     </nav>
   )
 }

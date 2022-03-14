@@ -6,11 +6,25 @@ import Layout from "@components/Layout";
 import { store } from "@redux/store";
 import { Provider } from "react-redux";
 import Home from "@pages/index";
+import * as nextRouter from 'next/router';
 
 describe("Layout", () => {
+  beforeEach(() => {
+    nextRouter.useRouter = jest.fn();
+    nextRouter.useRouter.mockImplementation(() => ({ 
+      route: '/klinik/1/1', 
+      query: { idKlinik: 1, idCabang: 1 },
+      isReady: true, 
+    }));
+  });
+  
   it("renders a head", () => {
     const text = "Hello";
-    render(<Layout>{text}</Layout>);
+    render(
+      <Provider store={store}>
+        <Layout>{text}</Layout>
+      </Provider>
+    );
     expect(screen.getByText(text)).toBeInTheDocument();
   });
 });
@@ -39,7 +53,18 @@ describe("Navbar", () => {
 
 describe('Sidebar', () => {
   beforeEach(() => {
-    render(<Sidebar/>);
+    nextRouter.useRouter = jest.fn();
+    nextRouter.useRouter.mockImplementation(() => ({ 
+      route: '/klinik/1/1', 
+      query: { idKlinik: 1, idCabang: 1 },
+      isReady: true, 
+    }));
+
+    render(
+      <Provider store={store}>
+        <Sidebar/>
+      </Provider>
+    )
   });
   
   it('renders a sidebar', () => {
@@ -71,7 +96,7 @@ describe('Sidebar', () => {
       'Pengaturan Jadwal Praktik',
       'Pengaturan Formulir Rekaman Medis',
       'Rekaman Medis',
-      'Akun'
+      'Logout'
     ]
 
     navList.forEach((navItem) => {
