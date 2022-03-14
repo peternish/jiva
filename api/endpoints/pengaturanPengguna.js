@@ -3,7 +3,7 @@ import { axiosInstance as axios } from "@api/http";
 
 const BASE_URL = constants?.API_BASE_URL + "/pengaturan-pengguna";
 
-const Endpoints = {
+const pengaturanPengguna = {
   getPengaturanPengguna: () => {
     // return {
     //   data: [
@@ -103,4 +103,4 @@ const Endpoints = {
     }),
 };
 
-export default Endpoints;
+export default pengaturanPengguna;

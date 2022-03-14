@@ -18,7 +18,7 @@ const style = {
   padding: '2em 3em',
 };
 
-function DeletionConfirmationModal({ pengaturanPengguna, open, handleClose, handleDelete }) {
+function DeleteConfirmationModal({ pengaturanPengguna, open, handleClose, handleDelete }) {
   return (
     <div>
       <Modal
@@ -53,4 +53,4 @@ function DeletionConfirmationModal({ pengaturanPengguna, open, handleClose, hand
   );
 };
 
-export default DeletionConfirmationModal;
+export default DeleteConfirmationModal;

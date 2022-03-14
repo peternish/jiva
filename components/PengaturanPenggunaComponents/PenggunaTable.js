@@ -53,6 +53,6 @@ function PenggunaTable() {
       </Table>
     </TableContainer>
   );
-};
+}
 
 export default PenggunaTable;
