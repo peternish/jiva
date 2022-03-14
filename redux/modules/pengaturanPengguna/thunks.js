@@ -12,7 +12,8 @@ export const getPengaturanPenggunaByID = ({ idPengaturanPengguna }) => {
         { idPengaturanPengguna });
       await dispatch(setPengaturanPengguna(data));
     } catch (error) {
-      toast("Waduh error " + error.toString(), { type: toast.TYPE.ERROR });
+      console.log(error)
+      toast("Terjadi kesalahan 😥", { type: toast.TYPE.ERROR });
     }
   };
 };
@@ -34,7 +35,8 @@ export const deletePengaturanPengguna = ({ idPengaturanPengguna }) => {
       await jivaAPI.pengaturanPengguna.deletePengaturanPengguna(
         { idPengaturanPengguna });
     } catch (error) {
-      toast("Waduh error " + error.toString(), { type: toast.TYPE.ERROR });
+      console.log(error)
+      toast("Terjadi kesalahan 😥", { type: toast.TYPE.ERROR });
     }
   };
 };
@@ -59,9 +61,9 @@ export const createPengaturanPengguna = ({
           Object.values(error.response.data)[0]
         );
         errorMessage = capitalize(errorMessage);
-        toast("Waduh error, " + errorMessage, { type: toast.TYPE.ERROR });
+        toast("Terjadi kesalahan 😥, " + errorMessage, { type: toast.TYPE.ERROR });
       } else {
-        toast("Waduh error", { type: toast.TYPE.ERROR })
+        toast("Terjadi kesalahan 😥", { type: toast.TYPE.ERROR })
       }
     };
   }
