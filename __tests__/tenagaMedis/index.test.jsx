@@ -3,9 +3,44 @@ import DashboardTenagaMedis from '@pages/klinik/[idKlinik]/[idCabang]/tenaga-med
 import { Provider } from "react-redux";
 import { store } from "@redux/store";
 import '@testing-library/jest-dom';
+import { setTenagaMedisList } from "@redux/modules/tenagaMedis";
+import * as nextRouter from 'next/router';
 
 describe('DashboardTenagaMedis', () => {
-  beforeEach(() => {
+  beforeEach( async () => {
+    await store.dispatch(setTenagaMedisList(
+      [
+        {
+          account: {
+            email: "budi@email.com",
+            full_name: "Budi Doremi",
+            id: 1,
+          }
+        },
+        {
+          account: {
+            email: "andi@email.com",
+            full_name: "Andi Doremi",
+            id: 2,
+          }
+        },
+        {
+          account: {
+            email: "carli@email.com",
+            full_name: "Carli Doremi",
+            id: 3,
+          }
+        },
+      ]
+    ));
+
+    nextRouter.useRouter = jest.fn();
+    nextRouter.useRouter.mockImplementation(() => ({ 
+      route: '/klinik/1/1/tenaga-medis', 
+      query: { idKlinik: 1, idCabang: 1 },
+      isReady: true, 
+    }));
+
     render(
       <Provider store={store}>
         <DashboardTenagaMedis />
@@ -64,7 +99,7 @@ describe('DashboardTenagaMedis', () => {
     expect(lihatLinks).toHaveLength(expectedLength);
     lihatLinks.forEach((lihatLink) => {
       expect(lihatLink).toBeInTheDocument();
-      expect(lihatLink).toHaveAttribute('href', expect.stringMatching(/\/tenaga-medis\/detail\/\d+/));
+      expect(lihatLink).toHaveAttribute('href', expect.stringMatching(/\/klinik\/\d+\/\d+\/tenaga-medis\/detail\/\d+/));
     });
   });
 
@@ -163,6 +198,6 @@ describe('DashboardTenagaMedis', () => {
     });
 
     expect(button).toBeInTheDocument();
-    expect(button).toHaveAttribute('href', '/tenaga-medis/create');
+    expect(button).toHaveAttribute('href', expect.stringMatching(/\/klinik\/\d+\/\d+\/tenaga-medis\/create/));
   });
 });
