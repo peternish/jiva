@@ -16,21 +16,9 @@ variables:
 
 
 stages:
-  - .pre
   - build
   - test
   - deploy
-
-Install:
-  <<: *base_rules
-  stage: .pre
-  script:
-    - npm ci --cache .npm --prefer-offline --progress=false --no-audit --include=dev
-  cache:
-    key: $CI_COMMIT_REF_SLUG-$CI_PROJECT_DIR
-    paths:
-      - .npm/
-      - node_modules
 
 Build:
   <<: *base_rules
@@ -43,7 +31,14 @@ Build:
       - node_modules
     policy: pull
   script:
+    - npm ci --cache .npm --prefer-offline --progress=false --no-audit --include=dev
+    - npm i jest --save-dev --quiet
     - npm run build
+  cache:
+    key: $CI_COMMIT_REF_SLUG-$CI_PROJECT_DIR
+    paths:
+      - .npm/
+      - node_modules
   artifacts:
     paths:
       - .next
@@ -53,7 +48,6 @@ Test:
   stage: test
   needs: ['Install', 'Build']
   script:
-    - npm i jest --save-dev --quiet
     - npm run coverage
   coverage: /All\sfiles.*?\s+(\d+.\d+)/
   artifacts:
@@ -80,30 +74,24 @@ SonarScanner:
 
 DeployStaging:
   stage: deploy
-  only:
-    - staging
-  
   environment:
     name: staging
-  
   variables:
     VERCEL_PROJECT_ID: $VERCEL_PROJECT_ID_STAGING
-
   script:
     - npm i -g vercel
     - vercel --confirm -t $VERCEL_TOKEN --prod
+  only:
+    - staging
 
 DeployProduction:
   stage: deploy
-  only:
-    - master
-  
   environment:
     name: production
-  
   variables:
     VERCEL_PROJECT_ID: $VERCEL_PROJECT_ID_PRODUCTION
-
   script:
     - npm i -g vercel
     - vercel --confirm -t $VERCEL_TOKEN --prod
+  only:
+    - master
