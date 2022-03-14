@@ -84,7 +84,7 @@ describe('Sidebar', () => {
       'Pengaturan Formulir Pendaftaran',
       'List Pendaftaran',
       'Pengaturan Klinik',
-      'Pengaturan Pengguna',
+      'Pengaturan Staf',
       'Pengaturan Jadwal Praktik',
       'Pengaturan Formulir Rekaman Medis',
       'Rekaman Medis',
