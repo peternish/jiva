@@ -1,0 +1,16 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+echo
+echo '🏗️👷 Checking and fixing your styling...';
+npm run lint --fix --strict --max-warnings=0 || (
+  echo
+  echo '😥😔 Found an non-fixable errors, aborting commit.'
+  echo
+  exit 1;
+)
+
+echo
+echo 'All is well🔥🔥✌'
+echo
+
