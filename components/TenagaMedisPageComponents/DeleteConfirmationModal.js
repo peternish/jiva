@@ -50,7 +50,7 @@ function DeletionConfirmationModal({ idKlinik, idCabang, tenagaMedis, open, hand
             </Typography>
 
             <Typography id="transition-modal-description" sx={{ mt: 2, mb: 2 }}>
-              Anda akan menghapus <Box fontWeight='bold' display='inline'>{tenagaMedis.account.full_name}</Box> dari daftar tenaga medis. Semua data milik <Box fontWeight='bold' display='inline'>{tenagaMedis.account.full_name}</Box> akan dihapus dari sistem. Setelah dihapus, Anda tidak dapat membatalkan data tersebut.
+              Anda akan menghapus <b>{tenagaMedis.account.full_name}</b> dari daftar tenaga medis. Semua data milik <b>{tenagaMedis.account.full_name}</b> akan dihapus dari sistem. Setelah dihapus, Anda tidak dapat membatalkan data tersebut.
             </Typography>
 
             <Stack spacing={2} direction="row" justifyContent='center' sx={{ mb: 1 }}>
