@@ -88,7 +88,7 @@ describe('Sidebar', () => {
       'Pengaturan Jadwal Praktik',
       'Pengaturan Formulir Rekaman Medis',
       'Rekaman Medis',
-      'Akun'
+      'Logout'
     ]
 
     navList.forEach((navItem) => {
