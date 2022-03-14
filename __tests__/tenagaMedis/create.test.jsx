@@ -95,37 +95,6 @@ describe('CreateTenagaMedis', () => {
     expect(await screen.getByText("Masukkan email yang valid")).toBeInTheDocument();
     expect(await screen.getByText("Unggah surat izin praktik")).toBeInTheDocument();
   });
-
-
-  it("should submit when 'Tambah' is pressed", async () => {
-  //   const fullNameField = screen.getByLabelText("Nama Lengkap");
-  //   const emailField = screen.getByLabelText("Email");
-  //   const passwordField = screen.getByLabelText("Password");
-
-  //   await act(async () => {
-  //     await fireEvent.change(fullNameField, {target: {value: 'dr. Budi Budiman, Sp.A.'}});
-  //     await fireEvent.change(emailField, {target: {value: 'budi.budiman@email.com'}});
-  //     await fireEvent.change(passwordField, {target: {value: 'password'}});
-  //   });
-
-  //   const input = screen.getByRole("input");
-  //   const fileName = "fileName.pdf";
-  //   const file = new File([new Blob()], fileName, { type: "application/pdf" });
-  //   await act(async () => {
-  //     await fireEvent.change(input, {
-  //       target: { files: [file] },
-  //     });
-  //   });
-
-  //   const button = screen.getByRole('button', {
-  //     name: /Tambah/,
-  //   });
-  //   expect(button).toBeInTheDocument();
-
-  //   await act(async () => {
-  //     await fireEvent.click(button);
-  //   });
-  });
 });
 
 

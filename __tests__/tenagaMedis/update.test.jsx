@@ -95,21 +95,4 @@ describe('UpdateTenagaMedis', () => {
 
     expect(screen.queryByText("Input ini wajib diisi")).toBe(null);
   });
-
-
-  it("should submit when 'Simpan' is pressed", async () => {
-    // const fullNameField = screen.getByLabelText("Nama Lengkap");
-
-    // const button = screen.getByRole("button", { 
-    //   name: "Simpan" 
-    // });
-
-    // await act(async () => {
-    //   await fireEvent.change(fullNameField, {target: {value: 'dr. Budiman Budi, Sp.A.'}});
-    //   await fireEvent.click(button);
-    // });
-
-    // expect(await screen.getByLabelText("Nama Lengkap")).toHaveValue('dr. Budiman Budi, Sp.A.');
-    // expect(await screen.getByLabelText("Email")).toHaveValue('budiman.budi@email.com');
-  });
 });
