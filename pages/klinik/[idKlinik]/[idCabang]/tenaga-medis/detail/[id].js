@@ -66,7 +66,8 @@ function DetailTenagaMedis() {
                 />
 
                 <Stack spacing={2} direction="row">
-                  <Button variant="outlined" onClick={handleModalOpen}>Hapus</Button>
+                  <Button href={`/klinik/${idKlinik}/${idCabang}/tenaga-medis`}>Kembali</Button>
+                  <Button variant="outlined" onClick={handleModalOpen} style={{ color: "#F44336", borderColor: "#F44336" }}>Hapus</Button>
                   <Button href={`/klinik/${idKlinik}/${idCabang}/tenaga-medis/update/${tenagaMedis.account.id}`} variant="contained">Ubah</Button>
                 </Stack>
 

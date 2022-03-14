@@ -55,7 +55,7 @@ function DeletionConfirmationModal({ idKlinik, idCabang, tenagaMedis, open, hand
 
             <Stack spacing={2} direction="row" justifyContent='center' sx={{ mb: 1 }}>
               <Button variant="contained" onClick={handleClose}>Batal</Button>
-              <Button variant="outlined" onClick={handleDelete}>Hapus</Button>
+              <Button variant="outlined" onClick={handleDelete} style={{ color: "#F44336", borderColor: "#F44336" }}>Hapus</Button>
             </Stack>
           </Box>
         </Fade>
