@@ -130,7 +130,18 @@ describe('DashboardTenagaMedis', () => {
   });
 
 
-  it("should close dropdown when a menu option is clicked", async () => {
+  it("should close the dropdown when the dropdown closed", async () => {
+    const menus = screen.getAllByTestId("modify-dropdown-menu");
+    const menu = menus[0];
+
+    await act(async () => {
+      await fireEvent.click(menu);
+      await fireEvent.click(await screen.getByRole('presentation').firstChild);
+    });
+  });
+
+
+  it("should be able to click the 'Ubah' option", async () => {
     const menus = screen.getAllByTestId("modify-dropdown-menu");
     const menu = menus[0];
 
