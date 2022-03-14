@@ -33,7 +33,7 @@ function ModifyDropdownMenu({ idKlinik, idCabang, tenagaMedis }) {
 
   const handleDelete = () => {
     setModalOpen(true);
-  };
+  }
   
   return (
     <div>

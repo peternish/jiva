@@ -64,6 +64,6 @@ function TenagaMedisTable() {
       </Table>
     </TableContainer>
   );
-};
+}
 
 export default TenagaMedisTable;

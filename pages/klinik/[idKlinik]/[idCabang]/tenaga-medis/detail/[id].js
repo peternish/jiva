@@ -78,6 +78,6 @@ function DetailTenagaMedis() {
       </Layout>
     </main>
   );
-};
+}
 
 export default DetailTenagaMedis;
