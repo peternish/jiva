@@ -33,7 +33,7 @@ function ModifyDropdownMenu({ idKlinik, idCabang, tenagaMedis }) {
 
   const handleDelete = () => {
     setModalOpen(true);
-  };
+  }
   
   return (
     <div>
@@ -64,6 +64,6 @@ function ModifyDropdownMenu({ idKlinik, idCabang, tenagaMedis }) {
       <DeleteConfirmationModal idKlinik={idKlinik} idCabang={idCabang} tenagaMedis={tenagaMedis} open={modalOpen} handleClose={handleModalClose}/>
     </div>
   );
-};
+}
 
 export default ModifyDropdownMenu;

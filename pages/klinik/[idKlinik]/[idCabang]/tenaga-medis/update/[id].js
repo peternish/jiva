@@ -89,6 +89,6 @@ function UpdateTenagaMedis() {
       </Layout>
     </main>
   );
-};
+}
 
 export default UpdateTenagaMedis;

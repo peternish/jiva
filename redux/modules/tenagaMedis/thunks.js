@@ -8,7 +8,7 @@ const getTenagaMedisByID = ({ idTenagaMedis }) => {
             await dispatch(setTenagaMedis(data));
         } catch (error) {
             console.log(error);
-        };
+        }
     };
 };
 
@@ -19,7 +19,7 @@ const getTenagaMedis = ({ idCabang }) => {
             await dispatch(setTenagaMedisList(data));
         } catch (error) {
             console.log(error);
-        };
+        }
     };
 };
 
@@ -30,7 +30,7 @@ const updateTenagaMedisByID = ({ idKlinik, idCabang, idTenagaMedis, fullName }) 
             window.location.assign(`/klinik/${idKlinik}/${idCabang}/tenaga-medis`);
         } catch (error) {
             console.log(error);
-        };
+        }
     };
 };
 
@@ -41,7 +41,7 @@ const createTenagaMedis = ({ idKlinik, idCabang, email, password, fullName, sipF
             window.location.assign(`/klinik/${idKlinik}/${idCabang}/tenaga-medis`);
         } catch (error) {
             console.log(error);
-        };
+        }
     };
 };
 
@@ -52,7 +52,7 @@ const deleteTenagaMedisByID = ({ idKlinik, idCabang, idTenagaMedis }) => {
             window.location.assign(`/klinik/${idKlinik}/${idCabang}/tenaga-medis`);
         } catch {
             console.log(error);
-        };
+        }
     };
 };
 
