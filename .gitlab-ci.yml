@@ -31,8 +31,7 @@ Build:
       - node_modules
     policy: pull
   script:
-    - npm ci --cache .npm --prefer-offline --progress=false --no-audit --include=dev
-    - npm i jest --save-dev --quiet
+    - npm ci --cache .npm --prefer-offline --progress=false --no-audit
     - npm run build
   cache:
     key: $CI_COMMIT_REF_SLUG-$CI_PROJECT_DIR
@@ -48,6 +47,7 @@ Test:
   stage: test
   needs: ['Build']
   script:
+    - npm i jest --save-dev --quiet
     - npm run coverage
   coverage: /All\sfiles.*?\s+(\d+.\d+)/
   artifacts:
