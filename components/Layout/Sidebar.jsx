@@ -1,5 +1,7 @@
 import Link from 'next/link'
 import { useState } from 'react';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 
 import styles from '@styles/Sidebar.module.css'
 
@@ -17,6 +19,11 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 
 export default function Sidebar() {
+    const { query, isReady } = useRouter();
+    useEffect(() => {
+        if (!isReady) return;
+    }, [isReady]);
+    const { idKlinik, idCabang } = query;
 
     const navItems = [
         {divider : 'Pasien'},
@@ -29,6 +36,7 @@ export default function Sidebar() {
         
         {divider : 'Tenaga Medis'},
         {title : 'Pengaturan Jadwal Praktik', icon: <TodayIcon/>, link: '#'},
+        {title : 'Pengaturan Tenaga Medis', icon: <GroupIcon/>, link: `/klinik/${idKlinik}/${idCabang}/tenaga-medis`},
         
         {divider : 'Rekaman Medis'},
         {title : 'Pengaturan Formulir Rekaman Medis', icon: <ConstructionIcon/>, link: '#'},

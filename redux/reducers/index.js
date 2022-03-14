@@ -4,6 +4,7 @@ import storage from "@redux/storage";
 
 // reducers
 import authReducer from "../modules/auth";
+import tenagaMedisReducer from "../modules/tenagaMedis";
 import klinikReducer from "../modules/klinik";
 
 const authPersistConfig = {
@@ -14,6 +15,7 @@ const authPersistConfig = {
 
 export const rootReducer = combineReducers({
   auth: persistReducer(authPersistConfig, authReducer),
+  tenagaMedis: tenagaMedisReducer,
   klinik: klinikReducer,
 });
 
