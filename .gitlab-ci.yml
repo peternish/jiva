@@ -23,7 +23,7 @@ stages:
 Build:
   <<: *base_rules
   stage: build
-  needs: ['Install']
+  needs: []
   cache:
     key: $CI_COMMIT_REF_SLUG-$CI_PROJECT_DIR
     paths:
@@ -46,7 +46,7 @@ Build:
 Test:
   <<: *base_rules
   stage: test
-  needs: ['Install', 'Build']
+  needs: ['Build']
   script:
     - npm run coverage
   coverage: /All\sfiles.*?\s+(\d+.\d+)/
