@@ -23,46 +23,60 @@ export default function Klinik() {
       <Box sx={{
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        pt: 20,
-        rowGap: 5
+        width: '70%',
+        margin: 'auto',
       }}>
         <Box sx={{
           display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center',
-          columnGap: 2
-        }}>
-          <h1>Cabang Klinik</h1>
-          <Link href="/klinik/newcabang" passHref={true}>
-            <Button variant="contained" type="submit">
-              <AddIcon />
-            </Button>
-          </Link>
-        </Box>
-
-        <Box sx={{
-          display: 'inline-flex',
-          flexDirection: 'row',
+          flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center',
-          columnGap: '1em',
-          flexWrap: 'wrap-reverse',
-          maxWidth: '60%',
-          alignContent: 'flex-start',
+          rowGap: 5
         }}>
-
-          {klinik && cabangList?.map((cabang) => (
-            <Link key={cabang.id} href={`/klinik/${klinik.id}/${cabang.id}`} passHref={true}>
-              <a>
-                <Card klinik={klinik.name} location={cabang.location} />
-              </a>
+          <Box sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'flex-start',
+            width: '100%',
+            rowGap: 2,
+          }}>
+            <h1>Cabang Klinik</h1>
+            <Link href="/klinik/newcabang" passHref={true}>
+              <Button variant="contained" type="submit" sx={{
+                whiteSpace: 'nowrap',
+                minWidth: 'auto',
+                width: 'min-content'
+              }}>
+                <AddIcon />
+                <Box sx={{ pt: 0.2, pl: 1 }}>
+                  Tambah Cabang
+                </Box>
+              </Button>
             </Link>
-          ))}
+          </Box>
 
+          <Box sx={{
+            display: 'inline-flex',
+            flexDirection: 'row',
+            justifyContent: 'flex-start',
+            alignItems: 'center',
+            alignContent: 'flex-start',
+            columnGap: '1em',
+            flexWrap: 'wrap',
+            alignContent: 'flex-start',
+          }}>
+
+            {klinik && cabangList?.map((cabang) => (
+              <Link key={cabang.id} href={`/klinik/${klinik.id}/${cabang.id}`} passHref={true}>
+                <a>
+                  <Card klinik={klinik.name} location={cabang.location} />
+                </a>
+              </Link>
+            ))}
+
+          </Box>
         </Box>
       </Box>
-    </Layout>
+    </Layout >
   )
 }
