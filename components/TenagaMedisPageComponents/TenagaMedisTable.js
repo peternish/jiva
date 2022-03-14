@@ -1,3 +1,5 @@
+import { useRouter } from 'next/router';
+
 // components
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -17,10 +19,18 @@ import { useEffect } from 'react';
 import { getTenagaMedis } from "@redux/modules/tenagaMedis/thunks";
 
 function TenagaMedisTable() {
+  const { query, isReady } = useRouter();
+  useEffect(() => {
+    if (!isReady) return;
+  }, [isReady]);
+
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(getTenagaMedis());
-  }, [dispatch]);
+    const { idCabang } = query;
+    dispatch(getTenagaMedis({ idCabang }));
+  });
+  const { idKlinik, idCabang } = query;
+
   const { tenagaMedisList } = useSelector(state => state.tenagaMedis);
 
   return (
@@ -38,14 +48,14 @@ function TenagaMedisTable() {
         <TableBody>
           {
             tenagaMedisList && tenagaMedisList.map((tenagaMedis) => (
-              <TableRow key={tenagaMedis.id} className={styles.row}>
-                <TableCell>{tenagaMedis.fullName}</TableCell>
-                <TableCell>{tenagaMedis.email}</TableCell>
+              <TableRow key={tenagaMedis.account.id} className={styles.row}>
+                <TableCell>{tenagaMedis.account.full_name}</TableCell>
+                <TableCell>{tenagaMedis.account.email}</TableCell>
                 <TableCell>
-                  <Link href={`/tenaga-medis/detail/${tenagaMedis.id}`} underline="none" className={styles.link}>Lihat</Link>
+                  <Link href={`/klinik/${idKlinik}/${idCabang}/tenaga-medis/detail/${tenagaMedis.account.id}`} underline="none" className={styles.link}>Lihat</Link>
                 </TableCell>
                 <TableCell>
-                  <ModifyDropdownMenu tenagaMedis={tenagaMedis}/>
+                  <ModifyDropdownMenu idKlinik={idKlinik} idCabang={idCabang} tenagaMedis={tenagaMedis}/>
                 </TableCell>
               </TableRow>
             ))

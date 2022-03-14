@@ -1,78 +1,36 @@
 import constants from "@api/constants";
 import { axiosInstance as axios } from "@api/http";
 
-const BASE_URL = constants?.API_BASE_URL + "/tenaga-medis";
+const BASE_URL = constants?.API_BASE_URL;
 
 const tenagaMedisEndpoints = {
-  getTenagaMedis: () => {
-    return {
-      data: [
-        {
-          id: 1,
-          email: "anthony.davis@email.com",
-          fullName: "Anthony Davis",
-          sipFile: "https://jiva.storage.com/sip/1",
-        },
-        {
-          id: 2,
-          email: "brandon.jones@email.com",
-          fullName: "Brandon Jones",
-          sipFile: "https://jiva.storage.com/sip/2",
-        },
-        {
-          id: 3,
-          email: "connor.brown@email.com",
-          fullName: "Connor Brown",
-          sipFile: "https://jiva.storage.com/sip/3",
-        },
-      ]
-    };
-    // return axios.get(BASE_URL);
+  getTenagaMedis: ({ idCabang }) => {
+    return axios.get(`${BASE_URL}/account/tenaga-medis/${idCabang}/`);
   },
 
   getTenagaMedisByID: ({ idTenagaMedis }) => {
-    if (idTenagaMedis == 1) {
-      return {
-        data: [
-          {
-            id: 1,
-            email: "anthony.davis@email.com",
-            fullName: "Anthony Davis",
-            sipFile: "https://jiva.storage.com/sip/1",
-          },
-        ]
-      };
-    } else if (idTenagaMedis == 2) {
-      return {
-        data: [
-          {
-            id: 2,
-            email: "brandon.jones@email.com",
-            fullName: "Brandon Jones",
-            sipFile: "https://jiva.storage.com/sip/2",
-          },
-        ]
-      };
-    } else if (idTenagaMedis == 3) {
-      return {
-        data: [
-          {
-            id: 3,
-            email: "connor.brown@email.com",
-            fullName: "Connor Brown",
-            sipFile: "https://jiva.storage.com/sip/3",
-          },
-        ]
-      };
-    };
+    return axios.get(`${BASE_URL}/account/tenaga-medis/id/${idTenagaMedis}/`);
   },
 
-  updateTenagaMedisByID: ({ id, name, tempatTanggalLahir, nik }) => {
-    return null;
+  updateTenagaMedisByID: ({ idTenagaMedis, fullName }) => {
+    const formData = new FormData();
+    formData.append("account.full_name", fullName);
+
+    return axios.patch(`${BASE_URL}/account/tenaga-medis/id/${idTenagaMedis}/`, formData);
   },
 
-  createTenagaMedis: ({ nomorTelepon }) => {
-    return axios.post(BASE_URL, { nomorTelepon });
+  createTenagaMedis: ({ idCabang, email, password, fullName, sipFile } = {}) => {
+    const formData = new FormData();
+    formData.append("account.email", email);
+    formData.append("account.password", password);
+    formData.append("account.full_name", fullName);
+    formData.append("sip", sipFile);
+
+    return axios.post(`${BASE_URL}/account/tenaga-medis/${idCabang}/`, formData);
+  },
+
+  deleteTenagaMedisByID: ({ idTenagaMedis }) => {
+    return axios.delete(`${BASE_URL}/account/tenaga-medis/id/${idTenagaMedis}/`);
   },
 };
 

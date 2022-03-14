@@ -6,8 +6,18 @@ import Layout from "@components/Layout";
 import { store } from "@redux/store";
 import { Provider } from "react-redux";
 import Home from "@pages/index";
+import * as nextRouter from 'next/router';
 
 describe("Layout", () => {
+  beforeEach(() => {
+    nextRouter.useRouter = jest.fn();
+    nextRouter.useRouter.mockImplementation(() => ({ 
+      route: '/klinik/1/1', 
+      query: { idKlinik: 1, idCabang: 1 },
+      isReady: true, 
+    }));
+  });
+  
   it("renders a head", () => {
     const text = "Hello";
     render(<Layout>{text}</Layout>);
@@ -39,6 +49,13 @@ describe("Navbar", () => {
 
 describe('Sidebar', () => {
   beforeEach(() => {
+    nextRouter.useRouter = jest.fn();
+    nextRouter.useRouter.mockImplementation(() => ({ 
+      route: '/klinik/1/1', 
+      query: { idKlinik: 1, idCabang: 1 },
+      isReady: true, 
+    }));
+
     render(<Sidebar/>);
   });
   

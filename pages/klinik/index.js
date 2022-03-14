@@ -54,7 +54,7 @@ export default function Klinik() {
         }}>
 
           {klinik && cabangList?.map((cabang) => (
-            <Link href={`/klinik/${klinik.id}/${cabang.id}`} passHref={true} key={cabang.id}>
+            <Link key={cabang.id} href={`/klinik/${klinik.id}/${cabang.id}`} passHref={true}>
               <a>
                 <Card klinik={klinik.name} location={cabang.location} />
               </a>
