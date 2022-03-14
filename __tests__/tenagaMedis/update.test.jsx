@@ -93,7 +93,7 @@ describe('UpdateTenagaMedis', () => {
 
     expect(fullNameField.value).toBe('dr. Adi Abdullah, Sp.A.');
 
-    expect(screen.queryAllByText("Input ini wajib diisi")).toHaveLength(0);
+    expect(screen.queryByText("Input ini wajib diisi")).toBe(null);
   });
 
 

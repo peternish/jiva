@@ -77,21 +77,22 @@ describe('CreateTenagaMedis', () => {
   });
 
 
-  it("should show form validation errors when there are empty fields", async () => {
+  it("should show form validation errors when there are invalid or empty fields", async () => {
     const fullNameField = screen.getByLabelText("Nama Lengkap");
     const emailField = screen.getByLabelText("Email");
     const passwordField = screen.getByLabelText("Password");
 
     await act(async () => {
       await fireEvent.change(fullNameField, {target: {value: 'dr. Budi Budiman, Sp.A.'}});
-      await fireEvent.change(emailField, {target: {value: 'budi.budiman@email.com'}});
+      await fireEvent.change(emailField, {target: {value: 'budi.budiman'}});
       await fireEvent.change(passwordField, {target: {value: 'password'}});
 
       expect(fullNameField.value).toBe('dr. Budi Budiman, Sp.A.');
-      expect(emailField.value).toBe('budi.budiman@email.com');
+      expect(emailField.value).toBe('budi.budiman');
       expect(passwordField.value).toBe('password');
     });
 
+    expect(await screen.getByText("Masukkan email yang valid")).toBeInTheDocument();
     expect(await screen.getByText("Unggah surat izin praktik")).toBeInTheDocument();
   });
 
