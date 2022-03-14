@@ -3,12 +3,20 @@ import Tambah from '@pages/klinik/[idKlinik]/[idCabang]/pengaturan-pengguna/tamb
 import { Provider } from "react-redux";
 import { store } from "@redux/store";
 import '@testing-library/jest-dom'
+import * as nextRouter from 'next/router';
 
 describe("Pengaturan Pengguna Tambah", () => {
   beforeEach(() => {
+    nextRouter.useRouter = jest.fn();
+    nextRouter.useRouter.mockImplementation(() => ({ 
+      route: '/klinik/1/1/pengaturan-pengguna/tambah', 
+      query: { idKlinik: 1, idCabang: 1 },
+      isReady: true, 
+    }));
+
     render(
       <Provider store={store}>
-        <Tambah/>
+        <Tambah />
       </Provider>
     );
   });
@@ -32,16 +40,16 @@ describe("Pengaturan Pengguna Tambah", () => {
     expect(fullNameField).toBeInTheDocument();
   });
 
-  it('renders the buttons', () => {
+  it('renders the buttons and buttonlinks', () => {
 
-    const buttonback = screen.getAllByRole('button', {
+    const buttonlinkback = screen.getAllByRole('link', {
       name: /Batal/,
     })[0]
     const buttonsubmit = screen.getAllByRole('button', {
       name: /Simpan/,
     })[0]
 
-    expect(buttonback).toBeInTheDocument()
+    expect(buttonlinkback).toBeInTheDocument()
     expect(buttonsubmit).toBeInTheDocument()
   })
 
@@ -57,26 +65,26 @@ describe("Pengaturan Pengguna Tambah", () => {
     expect(await screen.getAllByText("Input ini wajib diisi")).toHaveLength(3);
   });
 
-  it("submits when 'Simpan' is pressed", async () => {
-    const emailField = screen.getByLabelText("Email");
-    const passwordField = screen.getByLabelText("Password");
-    const fullNameField = screen.getByLabelText("Full Name");
+  // it("submits when 'Simpan' is pressed", async () => {
+  //   const emailField = screen.getByLabelText("Email");
+  //   const passwordField = screen.getByLabelText("Password");
+  //   const fullNameField = screen.getByLabelText("Full Name");
 
-    const button = screen.getAllByRole('button', {
-      name: /Simpan/,
-    })[0]
+  //   const button = screen.getAllByRole('button', {
+  //     name: /Simpan/,
+  //   })[0]
 
-    await act(async () => {
-      await fireEvent.change(emailField, {target: {value: 'hesotam@maile.com'}});
-      await fireEvent.change(passwordField, {target: {value: 'password123'}});
-      await fireEvent.change(fullNameField, {target: {value: 'Admin'}});
+  //   await act(async () => {
+  //     await fireEvent.change(emailField, {target: {value: 'hesotam@maile.com'}});
+  //     await fireEvent.change(passwordField, {target: {value: 'password123'}});
+  //     await fireEvent.change(fullNameField, {target: {value: 'Admin'}});
 
-      await fireEvent.click(button);
-    });
+  //     await fireEvent.click(button);
+  //   });
 
-    expect(await screen.getByLabelText("Email")).toHaveValue('hesotam@maile.com');
-    expect(await screen.getByLabelText("Password")).toHaveValue('password123');
-    expect(await screen.getByLabelText("Full Name")).toHaveValue('Admin');
-  });
+  //   expect(await screen.getByLabelText("Email")).toHaveValue('hesotam@maile.com');
+  //   expect(await screen.getByLabelText("Password")).toHaveValue('password123');
+  //   expect(await screen.getByLabelText("Full Name")).toHaveValue('Admin');
+  // });
 
 });

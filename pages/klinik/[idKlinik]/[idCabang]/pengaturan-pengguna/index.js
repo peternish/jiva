@@ -8,9 +8,16 @@ import PenggunaTable from "@components/PengaturanPenggunaComponents/PenggunaTabl
 // styles
 import CSS from "@components/PengaturanPenggunaComponents/CSS";
 
-import { useDispatch } from "react-redux";
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 
 const Dashboard = () => {
+
+  const { query, isReady } = useRouter();
+  useEffect(() => {
+    if (!isReady) return;
+  }, [isReady]);
+  const { idKlinik, idCabang } = query;
 
   return (
         <Layout navType="sidebar">
@@ -25,7 +32,7 @@ const Dashboard = () => {
               
                 <PenggunaTable />
 
-              <Button href="/pengaturan-pengguna/tambah" variant="contained" role="button">
+              <Button href={`/klinik/${idKlinik}/${idCabang}/pengaturan-pengguna/tambah`} variant="contained" role="button">
                 Tambah Staf
               </Button>
             </Container>

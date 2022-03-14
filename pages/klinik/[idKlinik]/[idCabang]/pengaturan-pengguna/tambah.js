@@ -10,13 +10,20 @@ import Router from 'next/router'
 
 import CSS from "@components/PengaturanPenggunaComponents/CSS";
 
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 import { useDispatch } from "react-redux";
 import { createPengaturanPengguna } from "@redux/modules/pengaturanPengguna/thunks";
 
-
-
 const Tambah = () => {
   const dispatch = useDispatch();
+
+  const { query, isReady } = useRouter();
+  useEffect(() => {
+    if (!isReady) return;
+  }, [isReady]);
+  const { idKlinik, idCabang } = query;
+
   const fields = {
     email: "",
     password: "",
@@ -76,7 +83,7 @@ const Tambah = () => {
                     error={errors.full_name}
                   />
                   <Stack spacing={2} direction="row">
-                    <Button variant="outlined" onClick={() => Router.back()}>Batal</Button>
+                    <Button variant="outlined" href={`/klinik/${idKlinik}/${idCabang}/pengaturan-pengguna/`}>Batal</Button>
                     <Button variant="contained" type="submit" disabled={!isValid}>Simpan</Button>
                   </Stack>
                 </Form>
