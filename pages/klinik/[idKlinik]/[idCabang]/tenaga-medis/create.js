@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 
 // components
 import Button from '@mui/material/Button';
@@ -11,13 +12,25 @@ import Dropzone from '@components/TenagaMedisPageComponents/Dropzone';
 // styles
 import layoutStyles from '@styles/Layout.module.css';
 
+// redux
+import { useDispatch } from "react-redux";
+import { createTenagaMedis as createTenagaMedisHelper } from "@redux/modules/tenagaMedis/thunks";
+import { useEffect } from 'react';
+
 function CreateTenagaMedis() {
+  const dispatch = useDispatch();
   const [sipFile, setSipFile] = useState(null);
 
+  const { query, isReady } = useRouter();
+  useEffect(() => {
+    if (!isReady) return;
+  }, [isReady]);
+  const { idKlinik, idCabang } = query;
+
   const fields = {
-    fullName: "",
     email: "",
     password: "",
+    fullName: "",
   };
 
   return (
@@ -37,11 +50,7 @@ function CreateTenagaMedis() {
               return errors;
             }}
             onSubmit={(values) => {
-              try {
-                console.log({ ...values, sipFile });
-              } catch (err) {
-                console.log(err);
-              }
+              dispatch(createTenagaMedisHelper({ idKlinik, idCabang, ...values, sipFile }));
             }}
           >
             {({ isValid, errors }) => (
@@ -73,7 +82,7 @@ function CreateTenagaMedis() {
                 <Dropzone setSipFile={setSipFile} sipFile={sipFile} />
 
                 <Stack spacing={2} direction="row">
-                  <Button href="/tenaga-medis" variant="outlined">Batal</Button>
+                  <Button href={`/klinik/${idKlinik}/${idCabang}/tenaga-medis`} variant="outlined">Batal</Button>
                   <Button variant="contained" type="submit" disabled={!isValid || !sipFile }>Tambah</Button>
                 </Stack>
               </Form>

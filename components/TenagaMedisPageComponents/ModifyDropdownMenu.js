@@ -5,9 +5,9 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import DeleteConfirmationModal from "@components/TenagaMedisPageComponents/DeleteConfirmationModal"
+import DeleteConfirmationModal from "@components/TenagaMedisPageComponents/DeleteConfirmationModal";
 
-function ModifyDropdownMenu({ tenagaMedis }) {
+function ModifyDropdownMenu({ idKlinik, idCabang, tenagaMedis }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
@@ -27,23 +27,20 @@ function ModifyDropdownMenu({ tenagaMedis }) {
 
   const handleUpdate = () => {
     setAnchorEl(null);
-    console.log("update:" + tenagaMedis.id);
-
-    const redirectUrl = `/tenaga-medis/update/${tenagaMedis.id}`;
+    const redirectUrl = `/klinik/${idKlinik}/${idCabang}/tenaga-medis/update/${tenagaMedis.account.id}`;
     location.assign(redirectUrl);
   };
 
   const handleDelete = () => {
     setModalOpen(true);
-    console.log("delete:" + tenagaMedis.id);
   };
   
   return (
     <div>
       <IconButton
         data-testid="modify-dropdown-menu"
-        id={`more-button-${tenagaMedis.id}`}
-        aria-controls={open ? `modify-menu-${tenagaMedis.id}` : undefined}
+        id={`more-button-${tenagaMedis.account.id}`}
+        aria-controls={open ? `modify-menu-${tenagaMedis.account.id}` : undefined}
         aria-expanded={open ? 'true' : undefined}
         aria-haspopup="true"
         onClick={handleClick}
@@ -52,19 +49,19 @@ function ModifyDropdownMenu({ tenagaMedis }) {
       </IconButton>
 
       <Menu
-        id={`modify-menu-${tenagaMedis.id}`}
+        id={`modify-menu-${tenagaMedis.account.id}`}
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
         MenuListProps={{
-          'aria-labelledby': `more-button-${tenagaMedis.id}`,
+          'aria-labelledby': `more-button-${tenagaMedis.account.id}`,
         }}
       >
         <MenuItem onClick={handleUpdate}>Ubah</MenuItem>
         <MenuItem onClick={handleDelete}>Hapus</MenuItem>
       </Menu>
 
-      <DeleteConfirmationModal tenagaMedis={tenagaMedis} open={modalOpen} handleClose={handleModalClose}/>
+      <DeleteConfirmationModal idKlinik={idKlinik} idCabang={idCabang} tenagaMedis={tenagaMedis} open={modalOpen} handleClose={handleModalClose}/>
     </div>
   );
 };

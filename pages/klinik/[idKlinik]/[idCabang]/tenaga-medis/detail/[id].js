@@ -22,13 +22,18 @@ function DetailTenagaMedis() {
   const handleModalOpen = () => setModalOpen(true);
   const handleModalClose = () => setModalOpen(false);
 
-  const router = useRouter();
+  const { query, isReady } = useRouter();
+  useEffect(() => {
+    if (!isReady) return;
+  }, [isReady]);
+
   const dispatch = useDispatch();
   useEffect(() => {
-    if (!router.isReady) return;
-    const { id } = router.query;
+    const { id } = query;
     dispatch(getTenagaMedisByID({ idTenagaMedis: id }));
-  }, [router.isReady, router.query, dispatch]);
+  });
+  const { idKlinik, idCabang } = query;
+
   const { tenagaMedis } = useSelector(state => state.tenagaMedis);
   
   return (
@@ -41,8 +46,8 @@ function DetailTenagaMedis() {
             tenagaMedis && 
             <Formik 
               initialValues={{
-                fullName: tenagaMedis.fullName,
-                email: tenagaMedis.email,
+                fullName: tenagaMedis.account.full_name,
+                email: tenagaMedis.account.email,
               }}
             >
               <Form>
@@ -62,10 +67,10 @@ function DetailTenagaMedis() {
 
                 <Stack spacing={2} direction="row">
                   <Button variant="outlined" onClick={handleModalOpen}>Hapus</Button>
-                  <Button href={`/tenaga-medis/update/${tenagaMedis.id}`} variant="contained">Ubah</Button>
+                  <Button href={`/klinik/${idKlinik}/${idCabang}/tenaga-medis/update/${tenagaMedis.account.id}`} variant="contained">Ubah</Button>
                 </Stack>
 
-                <DeleteConfirmationModal tenagaMedis={tenagaMedis} open={modalOpen} handleClose={handleModalClose}/>
+                <DeleteConfirmationModal idKlinik={idKlinik} idCabang={idCabang} tenagaMedis={tenagaMedis} open={modalOpen} handleClose={handleModalClose}/>
               </Form>
             </Formik>
           }

@@ -13,16 +13,21 @@ import layoutStyles from '@styles/Layout.module.css';
 // redux
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from 'react';
-import { getTenagaMedisByID } from "@redux/modules/tenagaMedis/thunks";
+import { getTenagaMedisByID, updateTenagaMedisByID } from "@redux/modules/tenagaMedis/thunks";
 
 function UpdateTenagaMedis() {
-  const router = useRouter();
+  const { query, isReady } = useRouter();
+  useEffect(() => {
+    if (!isReady) return;
+  }, [isReady]);
+
   const dispatch = useDispatch();
   useEffect(() => {
-    if (!router.isReady) return;
-    const { id } = router.query;
+    const { id } = query;
     dispatch(getTenagaMedisByID({ idTenagaMedis: id }));
-  }, [router.isReady, router.query, dispatch]);
+  });
+  const { idKlinik, idCabang } = query;
+
   const { tenagaMedis } = useSelector(state => state.tenagaMedis);
 
   return (
@@ -35,8 +40,8 @@ function UpdateTenagaMedis() {
             tenagaMedis && 
             <Formik
               initialValues={{
-                fullName: tenagaMedis.fullName,
-                email: tenagaMedis.email,
+                fullName: tenagaMedis.account.full_name,
+                email: tenagaMedis.account.email,
               }}
               validate={(values) => {
                 const errors = {};
@@ -47,11 +52,10 @@ function UpdateTenagaMedis() {
                 return errors;
               }}
               onSubmit={(values) => {
-                try {
-                  console.log(values);
-                } catch (err) {
-                  console.log(err);
-                }
+                const fullName = values.fullName;
+                const idTenagaMedis = tenagaMedis.account.id;
+                dispatch(updateTenagaMedisByID({ idKlinik, idCabang, idTenagaMedis, fullName }));
+                console.log(values);
               }}
             >
               {({ isValid, errors }) => (
@@ -70,10 +74,11 @@ function UpdateTenagaMedis() {
                     label="Email"
                     placeholder="budi.budiman@email.com"
                     error={errors.email}
+                    disabled={true}
                   />
 
                   <Stack spacing={2} direction="row">
-                    <Button href={`/tenaga-medis/detail/${tenagaMedis.id}`} variant="outlined">Batal</Button>
+                    <Button href={`/klinik/${idKlinik}/${idCabang}/tenaga-medis/detail/${tenagaMedis.account.id}`} variant="outlined">Batal</Button>
                     <Button variant="contained" type="submit" disabled={!isValid}>Simpan</Button>
                   </Stack>
                 </Form>

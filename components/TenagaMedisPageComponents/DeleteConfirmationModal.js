@@ -7,6 +7,10 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 
+// redux
+import { useDispatch } from "react-redux";
+import { deleteTenagaMedisByID } from "@redux/modules/tenagaMedis/thunks";
+
 const style = {
   position: 'absolute',
   top: '50%',
@@ -18,7 +22,14 @@ const style = {
   padding: '2em 3em',
 };
 
-function DeletionConfirmationModal({ tenagaMedis, open, handleClose }) {
+function DeletionConfirmationModal({ idKlinik, idCabang, tenagaMedis, open, handleClose }) {
+  const dispatch = useDispatch();
+
+  const handleDelete = () => {
+    const idTenagaMedis = tenagaMedis.account.id;
+    dispatch(deleteTenagaMedisByID({ idKlinik, idCabang, idTenagaMedis }));
+  };
+
   return (
     <div>
       <Modal
@@ -39,12 +50,12 @@ function DeletionConfirmationModal({ tenagaMedis, open, handleClose }) {
             </Typography>
 
             <Typography id="transition-modal-description" sx={{ mt: 2, mb: 2 }}>
-              Anda akan menghapus <Box fontWeight='bold' display='inline'>{tenagaMedis.fullName}</Box> dari daftar tenaga medis. Semua data milik <Box fontWeight='bold' display='inline'>{tenagaMedis.fullName}</Box> akan dihapus dari sistem. Setelah dihapus, Anda tidak dapat membatalkan data tersebut.
+              Anda akan menghapus <Box fontWeight='bold' display='inline'>{tenagaMedis.account.full_name}</Box> dari daftar tenaga medis. Semua data milik <Box fontWeight='bold' display='inline'>{tenagaMedis.account.full_name}</Box> akan dihapus dari sistem. Setelah dihapus, Anda tidak dapat membatalkan data tersebut.
             </Typography>
 
             <Stack spacing={2} direction="row" justifyContent='center' sx={{ mb: 1 }}>
               <Button variant="contained" onClick={handleClose}>Batal</Button>
-              <Button variant="outlined">Hapus</Button>
+              <Button variant="outlined" onClick={handleDelete}>Hapus</Button>
             </Stack>
           </Box>
         </Fade>
