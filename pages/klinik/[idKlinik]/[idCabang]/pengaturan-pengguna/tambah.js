@@ -27,7 +27,7 @@ const Tambah = () => {
   const fields = {
     email: "",
     password: "",
-    full_name: "",
+    fullName: "",
   };
 
   return (
@@ -53,7 +53,7 @@ const Tambah = () => {
                 onSubmit={(values) => {
                   try {
                     console.log(values);
-                    dispatch(createPengaturanPengguna({ ...values }))
+                    dispatch(createPengaturanPengguna({ idKlinik, idCabang, ...values }))
                   } catch (err) {
                     console.log(err);
                   }
@@ -76,11 +76,11 @@ const Tambah = () => {
                     error={errors.password}
                   />
                   <TextInput
-                    name="full_name"
+                    name="fullName"
                     type="text"
                     label="Full Name"
                     placeholder="Satudua Tiga"
-                    error={errors.full_name}
+                    error={errors.fullName}
                   />
                   <Stack spacing={2} direction="row">
                     <Button variant="outlined" href={`/klinik/${idKlinik}/${idCabang}/pengaturan-pengguna/`}>Batal</Button>

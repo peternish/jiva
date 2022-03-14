@@ -7,6 +7,9 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 
+import { useDispatch } from "react-redux";
+import { deletePengaturanPengguna } from "@redux/modules/pengaturanPengguna/thunks";
+
 const style = {
   position: 'absolute',
   top: '50%',
@@ -18,7 +21,14 @@ const style = {
   padding: '2em 3em',
 };
 
-function DeleteConfirmationModal({ pengaturanPengguna, open, handleClose, handleDelete }) {
+function DeleteConfirmationModal({ pengaturanPengguna, open, handleClose, }) {
+  const dispatch = useDispatch();
+
+  const handleDelete = () => {
+    const idPengaturanPengguna = pengaturanPengguna.account.id;
+    dispatch(deletePengaturanPengguna({ idPengaturanPengguna }));
+  };
+  
   return (
     <div>
       <Modal
@@ -39,12 +49,16 @@ function DeleteConfirmationModal({ pengaturanPengguna, open, handleClose, handle
             </Typography>
 
             <Typography id="transition-modal-description" sx={{ mt: 2, mb: 2 }}>
-              Anda akan menghapus <Box fontWeight='bold' display='inline'>{pengaturanPengguna.fullName}</Box> dari daftar staf. Semua data milik <Box fontWeight='bold' display='inline'>{pengaturanPengguna.fullName}</Box> akan dihapus dari sistem. Setelah dihapus, Anda tidak dapat membatalkan data tersebut.
+              Anda akan menghapus <Box fontWeight='bold' display='inline'>
+                {pengaturanPengguna.account.full_name} </Box> 
+                dari daftar staf. Semua data milik <Box fontWeight='bold' display='inline'>
+                  {pengaturanPengguna.account.full_name} </Box> 
+                  akan dihapus dari sistem. Setelah dihapus, Anda tidak dapat membatalkan data tersebut.
             </Typography>
 
             <Stack spacing={2} direction="row" justifyContent='center' sx={{ mb: 1 }}>
               <Button variant="contained" onClick={handleClose}>Batal</Button>
-              <Button variant="outlined" onClick={handleDelete}>Hapus</Button>
+              <Button variant="outlined" onClick={handleDelete} style={{ color: "#F44336", borderColor: "#F44336" }}>Hapus</Button>
             </Stack>
           </Box>
         </Fade>

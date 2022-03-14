@@ -1,3 +1,5 @@
+import { useRouter } from 'next/router';
+
 // table
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
@@ -16,10 +18,19 @@ import { useEffect } from 'react';
 import { getPengaturanPengguna } from "@redux/modules/pengaturanPengguna/thunks";
 
 function PenggunaTable() {
+  const { query, isReady } = useRouter();
+  useEffect(() => {
+    if (!isReady) return;
+  }, [isReady]);
+
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(getPengaturanPengguna());
+    const { idCabang } = query;
+    dispatch(getPengaturanPengguna({ idCabang }));
   });
+
+  const { idKlinik, idCabang } = query;
+
   const { penggunaTable } = useSelector(state => state.pengaturanPengguna);
 
   return (
@@ -36,12 +47,12 @@ function PenggunaTable() {
         <TableBody>
           {
             penggunaTable && penggunaTable.map((pengaturanPengguna) => (
-              <TableRow key={pengaturanPengguna.id} className={tableStyles.row}>
+              <TableRow key={pengaturanPengguna.account.id} className={tableStyles.row}>
                 <TableCell>
-                {pengaturanPengguna.full_name}
+                {pengaturanPengguna.account.full_name}
                 </TableCell>
                 <TableCell>
-                  {pengaturanPengguna.email}
+                  {pengaturanPengguna.account.email}
                 </TableCell>
                 <TableCell>
                   <ModifyDropdownMenu pengaturanPengguna={pengaturanPengguna}/>
