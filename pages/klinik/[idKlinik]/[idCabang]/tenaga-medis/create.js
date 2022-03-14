@@ -92,6 +92,6 @@ function CreateTenagaMedis() {
       </Layout>
     </main>
   );
-};
+}
 
 export default CreateTenagaMedis;

@@ -28,6 +28,6 @@ function IndexCabang() {
       </Layout>
     </main>
   );
-};
+}
 
 export default IndexCabang;

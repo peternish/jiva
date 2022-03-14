@@ -31,6 +31,6 @@ function DashboardTenagaMedis() {
       </Layout>
     </main>
   );
-};
+}
 
 export default DashboardTenagaMedis;
