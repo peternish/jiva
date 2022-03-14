@@ -20,7 +20,11 @@ describe("Layout", () => {
   
   it("renders a head", () => {
     const text = "Hello";
-    render(<Layout>{text}</Layout>);
+    render(
+      <Provider store={store}>
+        <Layout>{text}</Layout>
+      </Provider>
+    );
     expect(screen.getByText(text)).toBeInTheDocument();
   });
 });
@@ -56,7 +60,11 @@ describe('Sidebar', () => {
       isReady: true, 
     }));
 
-    render(<Sidebar/>);
+    render(
+      <Provider store={store}>
+        <Sidebar/>
+      </Provider>
+    )
   });
   
   it('renders a sidebar', () => {
