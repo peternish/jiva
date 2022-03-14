@@ -22,6 +22,14 @@ describe('CreateTenagaMedis', () => {
       </Provider>
     );
   });
+
+
+  afterEach(() => {
+    let assignMock = jest.fn();
+    delete window.location;
+    window.location = { assign: assignMock };
+    assignMock.mockClear();
+  });
   
 
   it('should render', () => {
@@ -69,60 +77,23 @@ describe('CreateTenagaMedis', () => {
   });
 
 
-  it("should show form validation errors", async () => {
-    // const button = screen.getByRole("button", { 
-    //   name: "Tambah" 
-    // });
+  it("should show form validation errors when there are invalid or empty fields", async () => {
+    const fullNameField = screen.getByLabelText("Nama Lengkap");
+    const emailField = screen.getByLabelText("Email");
+    const passwordField = screen.getByLabelText("Password");
 
-    // const input = screen.getByTestId("input");
-    // const fileName = "fileName.pdf";
-    // const file = new File([new Blob()], fileName, { type: "application/pdf" });
-    // await act(async () => {
-    //   await fireEvent.change(input, {
-    //     target: { files: [file] },
-    //   });
-    // });
+    await act(async () => {
+      await fireEvent.change(fullNameField, {target: {value: 'dr. Budi Budiman, Sp.A.'}});
+      await fireEvent.change(emailField, {target: {value: 'budi.budiman'}});
+      await fireEvent.change(passwordField, {target: {value: 'password'}});
 
-    // await act(async () => {
-    //   await fireEvent.click(button);
-    // });
+      expect(fullNameField.value).toBe('dr. Budi Budiman, Sp.A.');
+      expect(emailField.value).toBe('budi.budiman');
+      expect(passwordField.value).toBe('password');
+    });
 
-    // expect(await screen.getAllByText("Input ini wajib diisi")).toHaveLength(3);
-  });
-
-
-  it("should submit when 'Tambah' is pressed", async () => {
-    // const fullNameField = screen.getByLabelText("Nama Lengkap");
-    // const emailField = screen.getByLabelText("Email");
-    // const passwordField = screen.getByLabelText("Password");
-
-    // const button = screen.getByRole("button", { 
-    //   name: "Tambah" 
-    // });
-
-    // await act(async () => {
-    //   await fireEvent.change(fullNameField, {target: {value: 'dr. Budi Budiman, Sp.A.'}});
-    //   await fireEvent.change(emailField, {target: {value: 'budi.budiman@email.com'}});
-    //   await fireEvent.change(passwordField, {target: {value: 'password'}});
-    //   await fireEvent.click(button);
-    // });
-
-    // const input = screen.getByLabelText("Surat Izin Praktik");
-    // const fileName = "fileName.pdf";
-    // const file = new File([new Blob()], fileName, { type: "application/pdf" });
-    // await act(async () => {
-    //   await fireEvent.change(input, {
-    //     target: { files: [file] },
-    //   });
-    // });
-
-    // await act(async () => {
-    //   await fireEvent.click(button);
-    // });
-
-    // expect(await screen.getByLabelText("Nama Lengkap")).toHaveValue('dr. Budi Budiman, Sp.A.');
-    // expect(await screen.getByLabelText("Email")).toHaveValue('budi.budiman@email.com');
-    // expect(await screen.getByLabelText("Password")).toHaveValue('password');
+    expect(await screen.getByText("Masukkan email yang valid")).toBeInTheDocument();
+    expect(await screen.getByText("Unggah surat izin praktik")).toBeInTheDocument();
   });
 });
 
