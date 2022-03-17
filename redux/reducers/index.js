@@ -4,8 +4,9 @@ import storage from "@redux/storage";
 
 // reducers
 import authReducer from "../modules/auth";
-import tenagaMedisReducer from "../modules/tenagaMedis";
 import klinikReducer from "../modules/klinik";
+import pengaturanPenggunaReducer from "../modules/pengaturanPengguna";
+import tenagaMedisReducer from "../modules/tenagaMedis";
 
 const authPersistConfig = {
   key: "auth",
@@ -15,8 +16,9 @@ const authPersistConfig = {
 
 export const rootReducer = combineReducers({
   auth: persistReducer(authPersistConfig, authReducer),
-  tenagaMedis: tenagaMedisReducer,
   klinik: klinikReducer,
+  pengaturanPengguna: pengaturanPenggunaReducer,
+  tenagaMedis: tenagaMedisReducer,
 });
 
 export default rootReducer;

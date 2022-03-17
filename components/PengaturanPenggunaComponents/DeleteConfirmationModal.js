@@ -7,9 +7,8 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 
-// redux
 import { useDispatch } from "react-redux";
-import { deleteTenagaMedisByID } from "@redux/modules/tenagaMedis/thunks";
+import { deletePengaturanPengguna } from "@redux/modules/pengaturanPengguna/thunks";
 
 const style = {
   position: 'absolute',
@@ -22,14 +21,14 @@ const style = {
   padding: '2em 3em',
 };
 
-function DeletionConfirmationModal({ idKlinik, idCabang, tenagaMedis, open, handleClose }) {
+function DeleteConfirmationModal({ pengaturanPengguna, open, handleClose, }) {
   const dispatch = useDispatch();
 
   const handleDelete = () => {
-    const idTenagaMedis = tenagaMedis.account.id;
-    dispatch(deleteTenagaMedisByID({ idKlinik, idCabang, idTenagaMedis }));
+    const idPengaturanPengguna = pengaturanPengguna.account.id;
+    dispatch(deletePengaturanPengguna({ idPengaturanPengguna }));
   };
-
+  
   return (
     <div>
       <Modal
@@ -46,11 +45,15 @@ function DeletionConfirmationModal({ idKlinik, idCabang, tenagaMedis, open, hand
         <Fade in={open}>
           <Box sx={style}>
             <Typography id="transition-modal-title" variant="h6" component="h2" align='center'>
-              Konfirmasi Hapus Tenaga Medis
+              Konfirmasi Hapus Staf
             </Typography>
 
             <Typography id="transition-modal-description" sx={{ mt: 2, mb: 2 }}>
-              Anda akan menghapus <b>{tenagaMedis.account.full_name}</b> dari daftar tenaga medis. Semua data milik <b>{tenagaMedis.account.full_name}</b> akan dihapus dari sistem. Setelah dihapus, Anda tidak dapat membatalkan data tersebut.
+              Anda akan menghapus <Box fontWeight='bold' display='inline'>
+                {pengaturanPengguna.account.full_name} </Box> 
+                dari daftar staf. Semua data milik <Box fontWeight='bold' display='inline'>
+                  {pengaturanPengguna.account.full_name} </Box> 
+                  akan dihapus dari sistem. Setelah dihapus, Anda tidak dapat membatalkan data tersebut.
             </Typography>
 
             <Stack spacing={2} direction="row" justifyContent='center' sx={{ mb: 1 }}>
@@ -62,6 +65,6 @@ function DeletionConfirmationModal({ idKlinik, idCabang, tenagaMedis, open, hand
       </Modal>
     </div>
   );
-}
+};
 
-export default DeletionConfirmationModal;
+export default DeleteConfirmationModal;

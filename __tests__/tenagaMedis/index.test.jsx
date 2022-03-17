@@ -48,6 +48,14 @@ describe('DashboardTenagaMedis', () => {
     );
   });
 
+  
+  afterEach(() => {
+    let assignMock = jest.fn();
+    delete window.location;
+    window.location = { assign: assignMock };
+    assignMock.mockClear();
+  });
+
 
   it('should render', () => {
     const main = screen.getByRole('main');
@@ -94,9 +102,7 @@ describe('DashboardTenagaMedis', () => {
       name: /Lihat/,
     });
 
-    const expectedLength = store.getState().tenagaMedis.tenagaMedisList.length;
-
-    expect(lihatLinks).toHaveLength(expectedLength);
+    expect(lihatLinks).toHaveLength(3);
     lihatLinks.forEach((lihatLink) => {
       expect(lihatLink).toBeInTheDocument();
       expect(lihatLink).toHaveAttribute('href', expect.stringMatching(/\/klinik\/\d+\/\d+\/tenaga-medis\/detail\/\d+/));
@@ -107,9 +113,7 @@ describe('DashboardTenagaMedis', () => {
   it('should have modify dropdown menu', () => {
     const menus = screen.getAllByTestId("modify-dropdown-menu");
 
-    const expectedLength = store.getState().tenagaMedis.tenagaMedisList.length;
-
-    expect(menus).toHaveLength(expectedLength);
+    expect(menus).toHaveLength(3);
   });
 
 
@@ -126,7 +130,18 @@ describe('DashboardTenagaMedis', () => {
   });
 
 
-  it("should close dropdown when a menu option is clicked", async () => {
+  it("should close the dropdown when the dropdown closed", async () => {
+    const menus = screen.getAllByTestId("modify-dropdown-menu");
+    const menu = menus[0];
+
+    await act(async () => {
+      await fireEvent.click(menu);
+      await fireEvent.click(await screen.getByRole('presentation').firstChild);
+    });
+  });
+
+
+  it("should be able to click the 'Ubah' option", async () => {
     const menus = screen.getAllByTestId("modify-dropdown-menu");
     const menu = menus[0];
 
@@ -134,28 +149,7 @@ describe('DashboardTenagaMedis', () => {
       await fireEvent.click(menu);
       const ubah = await screen.getByText("Ubah");
       await fireEvent.click(ubah);
-
-      await fireEvent.click(menu);
-      const Hapus = await screen.getByText("Hapus");
-      await fireEvent.click(Hapus);
     });
-
-    // expect(await screen.getByText("Ubah")).not.toBeInTheDocument();
-    // expect(await screen.getByText("Hapus")).not.toBeInTheDocument();
-  });
-
-
-  it("should close dropdown when 'Esc' key is pressed", async () => {
-    const menus = screen.getAllByTestId("modify-dropdown-menu");
-    const menu = menus[0];
-
-    await act(async () => {
-      await fireEvent.click(menu);
-      await fireEvent.click(menu);
-    });
-
-    // expect(await screen.getByText("Ubah")).not.toBeInTheDocument();
-    // expect(await screen.getByText("Hapus")).not.toBeInTheDocument();
   });
 
   
@@ -165,8 +159,8 @@ describe('DashboardTenagaMedis', () => {
     
     await act(async () => {
       await fireEvent.click(menu);
-      const Hapus = await screen.getByText("Hapus");
-      await fireEvent.click(Hapus);
+      const hapus = await screen.getByText("Hapus");
+      await fireEvent.click(hapus);
     });
 
     expect(await screen.getByText("Konfirmasi Hapus Tenaga Medis")).toBeInTheDocument();
@@ -179,16 +173,33 @@ describe('DashboardTenagaMedis', () => {
     
     await act(async () => {
       await fireEvent.click(menu);
-      const Hapus = await screen.getByText("Hapus");
-      await fireEvent.click(Hapus);
+      const hapus = await screen.getByText("Hapus");
+      await fireEvent.click(hapus);
+
+      const modalHeading = await screen.getByText("Konfirmasi Hapus Tenaga Medis");
+      expect(modalHeading).toBeInTheDocument();
 
       const batalButton = await screen.getByRole('button', {
         name: /Batal/,
       });
+      expect(batalButton).toBeInTheDocument();
       await fireEvent.click(batalButton);
     });
+  });
 
-    // expect(await screen.getByText("Konfirmasi Hapus Tenaga Medis")).not.toBeInTheDocument();
+
+  it('should delete the tenaga medis when "Hapus" is selected', async () => {
+    const menus = screen.getAllByTestId("modify-dropdown-menu");
+    const menu = menus[0];
+    
+    await act(async () => {
+      await fireEvent.click(menu);
+      const Hapus = await screen.getByText("Hapus");
+      await fireEvent.click(Hapus);
+
+      const hapusConfirm = await screen.getByRole("button", { name: "Hapus" });
+      await fireEvent.click(hapusConfirm);
+    });
   });
 
 

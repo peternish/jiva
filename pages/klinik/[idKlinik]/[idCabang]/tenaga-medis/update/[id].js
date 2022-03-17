@@ -45,17 +45,13 @@ function UpdateTenagaMedis() {
               }}
               validate={(values) => {
                 const errors = {};
-                const ERR_MESSAGE = "Input ini wajib diisi";
-                ["fullName", "email"].forEach((key) => {
-                  if (!values[key]) errors[key] = ERR_MESSAGE;
-                });
+                
+                if (!values.fullName) errors.fullName = "Nama lengkap wajib diisi";
+                
                 return errors;
               }}
               onSubmit={(values) => {
-                const fullName = values.fullName;
-                const idTenagaMedis = tenagaMedis.account.id;
-                dispatch(updateTenagaMedisByID({ idKlinik, idCabang, idTenagaMedis, fullName }));
-                console.log(values);
+                dispatch(updateTenagaMedisByID({ idKlinik, idCabang, idTenagaMedis: tenagaMedis.account.id, fullName: values.fullName }));
               }}
             >
               {({ isValid, errors }) => (
