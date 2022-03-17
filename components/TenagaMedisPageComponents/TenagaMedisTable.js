@@ -47,7 +47,11 @@ function TenagaMedisTable() {
 
         <TableBody>
           {
-            tenagaMedisList && tenagaMedisList.map((tenagaMedis) => (
+            tenagaMedisList && tenagaMedisList.length == 0 ? (
+              <TableRow className={styles.row}>
+                <TableCell colSpan={4} align='center'>Belum ada Tenaga Medis yang terdaftar</TableCell>
+              </TableRow>
+            ) : tenagaMedisList && tenagaMedisList.map((tenagaMedis) => (
               <TableRow key={tenagaMedis.account.id} className={styles.row}>
                 <TableCell>{tenagaMedis.account.full_name}</TableCell>
                 <TableCell>{tenagaMedis.account.email}</TableCell>
