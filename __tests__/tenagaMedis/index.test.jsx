@@ -80,7 +80,7 @@ describe('DashboardTenagaMedis', () => {
   });
 
 
-  it('should the appropriate table columns', () => {
+  it('should have the appropriate table columns', () => {
     const namaLengkapColumn = screen.getByRole('columnheader', {
       name: /Nama Lengkap/,
     });
@@ -200,6 +200,112 @@ describe('DashboardTenagaMedis', () => {
       const hapusConfirm = await screen.getByRole("button", { name: "Hapus" });
       await fireEvent.click(hapusConfirm);
     });
+  });
+
+
+  it('should have the tambah tenaga medis button', () => {
+    const button = screen.getByRole('link', {
+      name: /Tambah Tenaga Medis/,
+    });
+
+    expect(button).toBeInTheDocument();
+    expect(button).toHaveAttribute('href', expect.stringMatching(/\/klinik\/\d+\/\d+\/tenaga-medis\/create/));
+  });
+});
+
+
+
+describe('DashboardTenagaMedis Empty List Table', () => {
+  beforeEach( async () => {
+    await store.dispatch(setTenagaMedisList(
+      [
+        // no tenaga medis registered
+      ]
+    ));
+
+    nextRouter.useRouter = jest.fn();
+    nextRouter.useRouter.mockImplementation(() => ({ 
+      route: '/klinik/1/1/tenaga-medis', 
+      query: { idKlinik: 1, idCabang: 1 },
+      isReady: true, 
+    }));
+
+    render(
+      <Provider store={store}>
+        <DashboardTenagaMedis />
+      </Provider>
+    );
+  });
+
+  
+  afterEach(() => {
+    let assignMock = jest.fn();
+    delete window.location;
+    window.location = { assign: assignMock };
+    assignMock.mockClear();
+  });
+
+
+  it('should render', () => {
+    const main = screen.getByRole('main');
+
+    expect(main).toBeInTheDocument();
+  });
+
+
+  it('should have the page main heading', () => {
+    const heading = screen.getByRole('heading', {
+      name: /Daftar Tenaga Medis/,
+    });
+
+    expect(heading).toBeInTheDocument();
+  });
+
+
+  it('should have the tenaga medis list table', () => {
+    const table = screen.getByRole('table');
+    
+    expect(table).toBeInTheDocument();
+  });
+
+
+  it('should have the appropriate table columns', () => {
+    const namaLengkapColumn = screen.getByRole('columnheader', {
+      name: /Nama Lengkap/,
+    });
+    const emailColumn = screen.getByRole('columnheader', {
+      name: /Email/,
+    });
+    const sideColumns = screen.getAllByRole('columnheader', {
+      name: /^$/,
+    });
+    
+    expect(namaLengkapColumn).toBeInTheDocument();
+    expect(emailColumn).toBeInTheDocument();
+    expect(sideColumns).toHaveLength(2);
+  });
+
+
+  it('should display no tenaga medis prompt', () => {
+    const prompt = screen.getByText("Belum ada Tenaga Medis yang terdaftar");
+
+    expect(prompt).toBeInTheDocument();
+  });
+
+
+  it('should not have any "Lihat" link', () => {
+    const lihatLinks = screen.queryAllByRole('link', {
+      name: /Lihat/,
+    });
+
+    expect(lihatLinks).toHaveLength(0);
+  });
+
+
+  it('should not have modify dropdown menu', () => {
+    const menus = screen.queryAllByTestId("modify-dropdown-menu");
+
+    expect(menus).toHaveLength(0);
   });
 
 
