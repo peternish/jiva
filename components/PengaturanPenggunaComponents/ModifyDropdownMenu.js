@@ -7,9 +7,6 @@ import IconButton from '@mui/material/IconButton';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DeleteConfirmationModal from "@components/PengaturanPenggunaComponents/DeleteConfirmationModal"
 
-// redux
-import { useDispatch } from "react-redux";
-
 
 function ModifyDropdownMenu({ pengaturanPengguna }) {
   const [anchorEl, setAnchorEl] = useState(null);
