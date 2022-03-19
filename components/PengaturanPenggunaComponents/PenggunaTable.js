@@ -25,11 +25,8 @@ function PenggunaTable() {
 
   const dispatch = useDispatch();
   useEffect(() => {
-    const { idCabang } = query;
-    dispatch(getPengaturanPengguna({ idCabang }));
+    dispatch(getPengaturanPengguna( query ));
   });
-
-  const { idKlinik, idCabang } = query;
 
   const { penggunaTable } = useSelector(state => state.pengaturanPengguna);
 

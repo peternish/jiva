@@ -12,7 +12,6 @@ import { useDispatch } from "react-redux";
 
 
 function ModifyDropdownMenu({ pengaturanPengguna }) {
-  const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   
