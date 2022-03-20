@@ -67,4 +67,4 @@ function DeleteConfirmationModal({ pengaturanPengguna, open, handleClose, }) {
   );
 };
 
-export default DeleteConfirmationModal;
+export default DeleteConfirmationModal

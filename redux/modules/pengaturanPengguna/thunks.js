@@ -65,7 +65,7 @@ export const createPengaturanPengguna = ({
       } else {
         toast("Terjadi kesalahan 😥", { type: toast.TYPE.ERROR })
       }
-    };
+    }
   }
 };
 
