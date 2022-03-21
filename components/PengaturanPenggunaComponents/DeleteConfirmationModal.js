@@ -65,6 +65,6 @@ function DeleteConfirmationModal({ pengaturanPengguna, open, handleClose, }) {
       </Modal>
     </div>
   );
-};
+}
 
-export default DeleteConfirmationModal;
+export default DeleteConfirmationModal
