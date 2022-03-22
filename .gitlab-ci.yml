@@ -34,12 +34,6 @@ variables:
     - apt -y upgrade
     - pip3 install -r requirements.txt
 
-# Applies on MR
-.apply_on_mr: &apply_on_mr
-  rules:
-    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "staging"'
-
-
 # ======
 # STAGES
 # ======
@@ -86,7 +80,6 @@ unit_testing:
 
 # Testing: SonarQube testing
 sonar_scanner:
-  <<: *apply_on_mr
   stage: test
   image:
     name: sonarsource/sonar-scanner-cli:4.6
@@ -104,6 +97,11 @@ sonar_scanner:
       -Dsonar.qualitygate.wait=true
       -Dsonar.python.coverage.reportPaths=coverage.xml
       -Dsonar.coverage.exclusions=**/*manage.py,**/*asgi.py,**/*wsgi.py,**/*settings.py
+  rules:
+    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master"'
+    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "staging"'
+    - if: '$CI_COMMIT_REF_NAME == "staging"'
+    - if: '$CI_COMMIT_REF_NAME == "master"'
 
 # Deploy: Staging
 staging:
