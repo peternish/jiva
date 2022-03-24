@@ -1,5 +1,8 @@
 import TextInput from "@components/common/TextInput";
-import { render, screen } from "@testing-library/react";
+import FormBuilder from "@components/common/FormBuilder";
+import FormRender from "@components/common/FormRender";
+
+import { render, screen, act, fireEvent } from "@testing-library/react";
 import { Formik } from "formik";
 import "@testing-library/jest-dom";
 
@@ -18,5 +21,93 @@ describe("<TextInput/>", () => {
     expect(screen.getByLabelText(props.label)).toBeInTheDocument();
     expect(screen.getByText(props.error)).toBeInTheDocument();
     expect(screen.getByPlaceholderText(props.placeholder)).toBeInTheDocument();
+  });
+});
+
+describe("<FormBuilder/>", () => {
+  beforeEach(() => {
+    render(<FormBuilder />);
+  });
+
+  it("renders the input options", () => {
+    expect(screen.getByText("Save")).toBeInTheDocument();
+    expect(screen.getByText("Clear")).toBeInTheDocument();
+  });
+
+  it("ensure the clear button works", async () => {
+    const clearButton = screen.getByText("Clear");
+    expect(() => fireEvent.click(clearButton)).not.toThrowError();
+  });
+
+  it("ensure the save button works", async () => {
+    const saveButton = screen.getByText("Save");
+    expect(() => fireEvent.click(saveButton)).not.toThrowError();
+  });
+});
+
+describe("<FormRender/>", () => {
+  it("renders the buttons", () => {
+    render(<FormRender />);
+    expect(screen.getByText("Submit")).toBeInTheDocument();
+  });
+
+  it("ensure the save button doesn't throw an error", async () => {
+    render(<FormRender />);
+    const submitButton = screen.getByText("Submit");
+    expect(() => fireEvent.click(submitButton)).not.toThrowError();
+  });
+
+  it("renders input with schema", async () => {
+    render(
+      <FormRender
+        schema={[
+          {
+            type: "text",
+            required: true,
+            label: "Field 1",
+            className: "form-control",
+            name: "text-1648102772033-0",
+            access: false,
+            subtype: "text",
+          },
+        ]}
+      />
+    );
+    expect(screen.getByText("Field 1")).toBeInTheDocument();
+  });
+
+  it("shows required form", async () => {
+    render(
+      <FormRender
+        schema={[
+          {
+            type: "text",
+            required: true,
+            label: "Field 1",
+            className: "form-control",
+            name: "text-1648102772033-0",
+            access: false,
+            subtype: "text",
+          },
+        ]}
+      />
+    );
+
+    const submitButton = screen.getByText("Submit");
+
+    await act(async () => {
+      await fireEvent.click(submitButton);
+    });
+    // expect the required warning is shown
+    expect(
+      screen.getByText("text-1648102772033-0 is required")
+    ).toBeInTheDocument();
+  });
+
+  it("doesn't render input because schema is empty", async () => {
+    render(<FormRender schema={[]} />);
+
+    // negative: ensure field is no longer rendered
+    expect(screen.queryByRole("input")).not.toBeInTheDocument();
   });
 });
