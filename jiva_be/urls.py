@@ -20,4 +20,5 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("account/", include("account.urls", namespace="account")),
     path("klinik/", include("klinik.urls", namespace="klinik")),
+    path("jadwal/", include("jadwal.urls", namespace="jadwal")),
 ]
