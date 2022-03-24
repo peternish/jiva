@@ -14,6 +14,7 @@ const loadPackages = () => {
 const options = {
   disabledActionButtons: ["data", "save", "clear"],
   disableHTMLLabels: true,
+  disableFields: ["button", "hidden"],
 };
 
 const FormBuilder = () => {
