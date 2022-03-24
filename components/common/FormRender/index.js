@@ -72,7 +72,7 @@ const FormRender = ({ schema, submit }) => {
 
 /**
  * Usage Example:
- * Obtain the form schmea from the <FormBuilder/> component
+ * Obtain the form schema from the <FormBuilder/> component
  * <FormRender
       schema={[
         {
