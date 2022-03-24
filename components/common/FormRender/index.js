@@ -1,6 +1,8 @@
 import React, { useEffect, useRef } from "react";
 
-const FormRender = ({ schema }) => {
+const excludedFields = ["header", "paragraph"];
+
+const FormRender = ({ schema, submit }) => {
   const fr = useRef();
 
   useEffect(() => {
@@ -24,14 +26,42 @@ const FormRender = ({ schema }) => {
       onSubmit={(e) => {
         e.preventDefault();
         const values = {};
+
+        // map field values to key, value pairs
         $("form")
           .serializeArray()
           .forEach(({ name, value }) => (values[name] = value));
+
+        // map fields to payload object
+        const payload = [];
+        schema.forEach(({ type, required, name }) => {
+          const inputValue = {
+            type,
+            required,
+            name,
+            value: values[name],
+          };
+          if (type === "file") {
+            const file = document.querySelector(`[name=${name}]`).files[0];
+            inputValue.value = file;
+          } else if (type === "checkbox-group") {
+            const options = document.getElementsByName(`${name}[]`);
+            const checkedVals = [];
+            options.forEach((el) => {
+              if (el.checked) checkedVals.push(el.value);
+            });
+            inputValue.value = checkedVals.join(",");
+          }
+          if (!excludedFields.includes(type)) {
+            payload.push(inputValue);
+          }
+        });
         $("[data-custom-required='true']").each(function () {
           if (!values[$(this).attr("name")]) {
             $(this).after(`<small>${$(this).attr("name")} is required</small>`);
           }
         });
+        submit(payload);
       }}
     >
       <div id="fb-render" ref={fr}></div>
