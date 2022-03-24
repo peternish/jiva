@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 // components
 import Layout from '@components/Layout';
 import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
 
 // styles
 import layoutStyles from '@styles/Layout.module.css';
@@ -19,12 +20,10 @@ function IndexCabang() {
   
   return (
     <main>
-      <Layout>
-        <div className={layoutStyles.containerWithSidebar}>
-          <h1>Welcome to Cabang</h1>
-
+      <Layout title='Welcome To Cabang'>
+        <Box>
           <Button href={`/klinik/${idKlinik}/${idCabang}/tenaga-medis`}>Tenaga Medis</Button>
-        </div>
+        </Box>
       </Layout>
     </main>
   );
