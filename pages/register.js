@@ -40,7 +40,7 @@ const Register = () => {
   };
 
   return (
-    <Layout navType="topbar">
+    <Layout navType="topbar" title="Daftar Pemilik Klinik">
       <CSS>
         <Card id="register-card">
           <Formik

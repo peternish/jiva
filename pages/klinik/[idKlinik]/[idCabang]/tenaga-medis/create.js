@@ -35,10 +35,7 @@ function CreateTenagaMedis() {
 
   return (
     <main>
-      <Layout>
-        <div className={layoutStyles.containerWithSidebar}>
-          <h1>Tambah Tenaga Medis</h1>
-          
+      <Layout title="Tambah Tenaga Medis">
           <Formik
             initialValues={{ ...fields }}
             validate={(values) => {
@@ -94,7 +91,6 @@ function CreateTenagaMedis() {
               </Form>
             )}
           </Formik>
-        </div>
       </Layout>
     </main>
   );

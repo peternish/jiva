@@ -25,7 +25,7 @@ function UpdateTenagaMedis() {
   useEffect(() => {
     const { id } = query;
     dispatch(getTenagaMedisByID({ idTenagaMedis: id }));
-  });
+  }, [dispatch, query]);
   const { idKlinik, idCabang } = query;
 
   const { tenagaMedis } = useSelector(state => state.tenagaMedis);

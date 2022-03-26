@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import styles from "@styles/Layout.module.css";
 
 // components
 import Head from "next/head";
@@ -8,6 +9,7 @@ import Head from "next/head";
 import constants from "@utils/constants";
 import Sidebar from "@components/Layout/Sidebar";
 import Navbar from "@components/Layout/Navbar";
+import PageHeader from "./PageHeader";
 
 const LayoutStyle = styled.div`
   max-width: ${constants.MAX_WIDTH}px;
@@ -17,15 +19,25 @@ const LayoutStyle = styled.div`
   flex-direction: column;
 `;
 
-const Layout = ({ children, navType = 'sidebar' }) => {
+const Layout = ({ children, navType = "sidebar", title }) => {
+  const classStyle =
+    navType === "sidebar" ? styles.sidebarContainer : styles.topbarContainer;
   return (
-    <LayoutStyle>
+    <LayoutStyle className={classStyle}>
       <Head>
-        <title></title>
-        <meta name="description" content=""/>
-        <link rel="icon" href="/logo.ico" />
+        <title>{title || 'Jiva'}</title>
       </Head>
-      {navType === 'topbar' ? <Navbar/> : <Sidebar/>}
+      {{
+          sidebar: (
+            <>
+              <Sidebar />
+              <PageHeader>{title || "Title"}</PageHeader>
+            </>
+          ),
+          topbar: (
+            <Navbar/>
+          ),
+      }[navType]}
       {children}
     </LayoutStyle>
   );

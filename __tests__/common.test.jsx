@@ -1,10 +1,11 @@
+import "@testing-library/jest-dom";
 import TextInput from "@components/common/TextInput";
 import FormBuilder from "@components/common/FormBuilder";
 import FormRender from "@components/common/FormRender";
-
 import { render, screen, act, fireEvent } from "@testing-library/react";
 import { Formik } from "formik";
-import "@testing-library/jest-dom";
+import PageHeader from "@components/Layout/PageHeader";
+import * as nextRouter from 'next/router';
 
 describe("<TextInput/>", () => {
   it("renders a input", () => {
@@ -111,3 +112,24 @@ describe("<FormRender/>", () => {
     expect(screen.queryByRole("input")).not.toBeInTheDocument();
   });
 });
+describe("<PageHeader/>", () => {
+  beforeEach(() => {
+    nextRouter.useRouter = jest.fn();
+    nextRouter.useRouter.mockImplementation(() => ({ 
+      back: () => {},
+    }));
+
+    render(<PageHeader>Title</PageHeader>)
+  })
+
+  it("renders a heading", () => {
+    expect(screen.getByRole("heading")).toBeInTheDocument()
+  })
+
+  it("renders a clickable back button", () => {
+    const backButton = screen.getByTestId('ArrowBackIcon')
+    fireEvent.click(backButton)
+    
+    expect(backButton).toBeInTheDocument()
+  })
+})

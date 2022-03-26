@@ -1,18 +1,16 @@
 // component imports
-import Head from "next/head";
 import Button from "@mui/material/Button";
 import Layout from "@components/Layout";
-import Container from '@mui/material/Container';
+import Box from "@mui/material/Box";
 import PenggunaTable from "@components/PengaturanPenggunaComponents/PenggunaTable";
 
 // styles
 import CSS from "@components/PengaturanPenggunaComponents/CSS";
 
-import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 const Dashboard = () => {
-
   const { query, isReady } = useRouter();
   useEffect(() => {
     if (!isReady) return;
@@ -20,24 +18,20 @@ const Dashboard = () => {
   const { idKlinik, idCabang } = query;
 
   return (
-        <Layout navType="sidebar">
-          <CSS>
-            <Head>
-              <title>Pengaturan Staf</title>
-              <meta name="pengaturan pengguna" content="pengaturan pengguna" />
-              <link rel="icon" href="/favicon.ico" />
-            </Head>
-            <Container /*className={layoutStyles.containerWithSidebar}*/>
-              <h1>Pengaturan Staf</h1>
-              
-                <PenggunaTable />
-
-              <Button href={`/klinik/${idKlinik}/${idCabang}/pengaturan-pengguna/tambah`} variant="contained" role="button">
-                Tambah Staf
-              </Button>
-            </Container>
-          </CSS>
-        </Layout>
+    <Layout navType="sidebar" title="Pengaturan Staf">
+      <CSS>
+        <Box>
+          <PenggunaTable />
+          <Button
+            href={`/klinik/${idKlinik}/${idCabang}/pengaturan-pengguna/tambah`}
+            variant="contained"
+            role="button"
+          >
+            Tambah Staf
+          </Button>
+        </Box>
+      </CSS>
+    </Layout>
   );
 };
 
