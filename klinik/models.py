@@ -56,4 +56,11 @@ class TenagaMedisProfile(Profile):
 
 
 class DynamicForm(models.Model):
-    pass
+    def default_fields():
+        return {
+            "nik": "",
+            "tenaga_medis": "",
+        }
+    cabang = models.ForeignKey(Cabang, on_delete=models.CASCADE)
+    formtype = models.CharField(max_length=100)
+    fields = models.JSONField("Fields", default=default_fields)
