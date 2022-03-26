@@ -129,8 +129,9 @@ class DynamicFormListApi(APIView):
             account__email=request.user)
         klinik: Klinik = Klinik.objects.get(owner=owner)
         cabang: Cabang = get_object(Cabang, cabang_pk)
-        if cabang.klinik.pk == klinik.pk:
-            schema = DynamicForm.objects.all()
-            schema = schema.filter(cabang=cabang)
-            serializer = DynamicFormSerializer(schema, many=True)
-            return Response(serializer.data)
+        if klinik is None or cabang.klinik.pk != klinik.pk:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        schema = DynamicForm.objects.all()
+        schema = schema.filter(cabang=cabang)
+        serializer = DynamicFormSerializer(schema, many=True)
+        return Response(serializer.data)
