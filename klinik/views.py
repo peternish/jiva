@@ -2,8 +2,8 @@ from functools import partial
 from urllib import request
 from rest_framework.permissions import IsAuthenticated
 from urllib.request import Request
-from .serializers import KlinikSerializer, CabangSerializer
-from .models import Cabang, Klinik, OwnerProfile
+from .serializers import DynamicFormSerializer, KlinikSerializer, CabangSerializer
+from klinik.models import Cabang, Klinik, OwnerProfile, DynamicForm
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -116,3 +116,21 @@ class CabangDetailApi(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
         cabang.delete()
         return Response(status=status.HTTP_200_OK)
+
+
+class DynamicFormListApi(APIView):
+
+    permission_classes = [
+        IsAuthenticated,
+    ]
+
+    def get(self, request: Request, cabang_id: int, format=None) -> Response:
+        owner: OwnerProfile = OwnerProfile.objects.get(
+            account__email=request.user)
+        klinik: Klinik = Klinik.objects.get(owner=owner)
+        cabang: Cabang = get_object(Cabang, cabang_id)
+        if cabang.klinik.pk == klinik.pk:
+            schema = DynamicForm.objects.all()
+            schema = schema.filter(cabang=cabang)
+            serializer = DynamicFormSerializer(schema, many=True)
+            return Response(serializer.data)
