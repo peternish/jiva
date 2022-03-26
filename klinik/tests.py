@@ -262,61 +262,61 @@ class FormAPITest(APITestCase):
 
         return super().setUp()
 
-    def test_get_all_form_schema_from_klinik(self):
+    def test_get_all_form_schema_from_cabang(self):
         pass
 
-    def test_get_all_form_schema_from_klinik_but_klinik_not_found(self):
+    def test_get_all_form_schema_from_cabang_but_cabang_not_found(self):
         pass
 
-    def test_get_all_form_schema_from_klinik_but_unauthorized(self):
+    def test_get_all_form_schema_from_cabang_but_unauthorized(self):
         pass
 
-    def test_get_form_schema_from_klinik_by_id(self):
+    def test_get_form_schema_from_cabang_by_id(self):
         pass
 
-    def test_get_form_schema_from_klinik_by_id_but_id_not_found(self):
+    def test_get_form_schema_from_cabang_by_id_but_id_not_found(self):
         pass
 
-    def test_get_form_schema_from_klinik_by_id_but_unauthorized(self):
+    def test_get_form_schema_from_cabang_by_id_but_unauthorized(self):
         pass
 
-    def test_post_form_schema_to_klinik(self):
+    def test_post_form_schema_to_cabang(self):
         pass
 
-    def test_post_form_schema_to_klinik_but_not_json_serializeable(self):
+    def test_post_form_schema_to_cabang_but_not_json_serializeable(self):
         pass
 
-    def test_post_form_schema_to_klinik_but_empty_payload(self):
+    def test_post_form_schema_to_cabang_but_empty_payload(self):
         pass
 
-    def test_post_form_schema_to_klinik_but_payload_malformed(self):
+    def test_post_form_schema_to_cabang_but_payload_malformed(self):
         pass
 
-    def test_post_form_schema_to_klinik_but_klinik_not_found(self):
+    def test_post_form_schema_to_cabang_but_cabang_not_found(self):
         pass
 
-    def test_post_form_schema_to_klinik_but_unauthorized(self):
+    def test_post_form_schema_to_cabang_but_unauthorized(self):
         pass
 
-    def test_update_form_schema_to_klinik(self):
+    def test_update_form_schema_to_cabang(self):
         pass
 
-    def test_update_form_schema_to_klinik_but_not_json_serializeable(self):
+    def test_update_form_schema_to_cabang_but_not_json_serializeable(self):
         pass
 
-    def test_update_form_schema_to_klinik_but_empty_payload(self):
+    def test_update_form_schema_to_cabang_but_empty_payload(self):
         pass
 
-    def test_update_form_schema_to_klinik_but_payload_malformed(self):
+    def test_update_form_schema_to_cabang_but_payload_malformed(self):
         pass
 
-    def test_update_form_schema_to_klinik_but_klinik_not_found(self):
+    def test_update_form_schema_to_cabang_but_cabang_not_found(self):
         pass
 
-    def test_update_form_schema_to_klinik_but_unauthorized(self):
+    def test_update_form_schema_to_cabang_but_unauthorized(self):
         pass
 
-    def test_update_form_schema_to_klinik_but_unauthorized(self):
+    def test_update_form_schema_to_cabang_but_unauthorized(self):
         pass
 
     def test_delete_form_schema_by_id(self):
