@@ -55,8 +55,10 @@ class KlinikTestSetUp(APITestCase):
             tmp.save()
 
         # Should have ID 2
-        test_file2 = SimpleUploadedFile("not_the_best_file_eva.txt", self.file_content)
-        self.klinik2 = Klinik(name="klinik2", owner=self.owner2, sik=test_file2)
+        test_file2 = SimpleUploadedFile(
+            "not_the_best_file_eva.txt", self.file_content)
+        self.klinik2 = Klinik(
+            name="klinik2", owner=self.owner2, sik=test_file2)
         self.klinik2.save()
         for _ in range(10):
             tmp = Cabang(location="alam sutra", klinik=self.klinik2)
@@ -106,13 +108,15 @@ class KlinikAPITest(KlinikTestSetUp):
     def test_patch_klinik(self):
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         resp = self.client.patch(
-            self.url_klinik_list, data={"name": "apeture", "sik": self.test_file3}
+            self.url_klinik_list, data={
+                "name": "apeture", "sik": self.test_file3}
         )
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
 
     def test_patch_klinik_fail(self):
         self.client.credentials(HTTP_AUTHORIZATION=self.auth3)
-        resp = self.client.patch(self.url_klinik_list, data={"name": "klinik3"})
+        resp = self.client.patch(self.url_klinik_list,
+                                 data={"name": "klinik3"})
         self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_delete_klinik(self):
@@ -256,6 +260,18 @@ class FormAPITest(APITestCase):
                 formtype="example" + i,
             )
             self.dform.save()
+
+        url = reverse("account:login")
+        resp = self.client.post(
+            url,
+            {"email": self.email, "password": os.getenv("SECRET_KEY")},
+            format="json",
+        )
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertTrue("access" in resp.data)
+        self.assertTrue("refresh" in resp.data)
+        self.token = resp.data["access"]
+        self.auth = "Bearer " + self.token
 
         return super().setUp()
 
