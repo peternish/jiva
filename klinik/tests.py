@@ -254,11 +254,12 @@ class FormAPITest(APITestCase):
         self.cabang = Cabang(location=secrets.token_hex(), klinik=self.klinik)
         self.cabang.save()
 
-        self.dform = DynamicForm(  # using default fields
-            cabang=self.cabang,
-            formtype='example1',
-        )
-        self.dform.save()
+        for i in range(3):
+            self.dform = DynamicForm(  # using default fields
+                cabang=self.cabang,
+                formtype='example' + i,
+            )
+            self.dform.save()
 
         return super().setUp()
 
