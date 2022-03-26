@@ -288,7 +288,7 @@ class FormAPITest(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         uri = reverse(self.urls_dform, kwargs={"cabang_pk": 99999})
         resp = self.client.get(uri)
-        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
         self.assertEqual(len(resp.data), 3)
 
     def test_get_all_form_schema_from_cabang_but_unauthorized(self):

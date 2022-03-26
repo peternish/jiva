@@ -129,7 +129,9 @@ class DynamicFormListApi(APIView):
             account__email=request.user)
         klinik: Klinik = Klinik.objects.get(owner=owner)
         cabang: Cabang = get_object(Cabang, cabang_pk)
-        if klinik is None or cabang.klinik.pk != klinik.pk:
+        if klinik is None:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        if cabang.klinik.pk != klinik.pk:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
         schema = DynamicForm.objects.all()
         schema = schema.filter(cabang=cabang)
