@@ -129,7 +129,8 @@ class DynamicFormListApi(APIView):
         if cabang is None:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-        owner: OwnerProfile = OwnerProfile.objects.get(account__email=request.user)
+        owner: OwnerProfile = OwnerProfile.objects.get(
+            account__email=request.user)
         klinik: Klinik = Klinik.objects.get(owner=owner)
         if cabang.klinik.pk != klinik.pk:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
