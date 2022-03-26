@@ -257,7 +257,7 @@ class FormAPITest(APITestCase):
         for i in range(3):
             self.dform = DynamicForm(  # using default fields
                 cabang=self.cabang,
-                formtype="example" + i,
+                formtype=f"example{i}",
             )
             self.dform.save()
 
