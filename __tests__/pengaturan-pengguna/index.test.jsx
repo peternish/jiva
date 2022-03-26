@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, act } from '@testing-library/react'
+import { fireEvent, render, screen, act, waitFor } from '@testing-library/react'
 import { Provider } from "react-redux"
 import { store } from "@redux/store"
 import Dashboard from '@pages/klinik/[idKlinik]/[idCabang]/pengaturan-pengguna/index'
@@ -98,37 +98,6 @@ describe("Pengaturan Pengguna Main", () => {
     expect(await screen.getByText("Hapus")).toBeInTheDocument();
   });
 
-
-  it("should close dropdown when a menu option is clicked", async () => {
-    const menus = screen.getAllByTestId("modify-dropdown-menu");
-    const menu = menus[0];
-
-    await act(async () => {
-
-      await fireEvent.click(menu);
-      const Hapus = await screen.getByText("Hapus");
-      await fireEvent.click(Hapus);
-    });
-
-    // expect(await screen.getByText("Ubah")).not.toBeInTheDocument();
-    // expect(await screen.getByText("Hapus")).not.toBeInTheDocument();
-  });
-
-
-  it("should close dropdown when 'Esc' key is pressed", async () => {
-    const menus = screen.getAllByTestId("modify-dropdown-menu");
-    const menu = menus[0];
-
-    await act(async () => {
-      await fireEvent.click(menu);
-      await fireEvent.click(menu);
-    });
-
-    // expect(await screen.getByText("Ubah")).not.toBeInTheDocument();
-    // expect(await screen.getByText("Hapus")).not.toBeInTheDocument();
-  });
-
-  
   it('should show deletion confirmation modal when "Hapus" is pressed', async () => {
     const menus = screen.getAllByTestId("modify-dropdown-menu");
     const menu = menus[0];
@@ -141,24 +110,4 @@ describe("Pengaturan Pengguna Main", () => {
 
     expect(await screen.getByText("Konfirmasi Hapus Staf")).toBeInTheDocument();
   });
-
-
-  it('should close the modal when "Batal" is clicked', async () => {
-    const menus = screen.getAllByTestId("modify-dropdown-menu");
-    const menu = menus[0];
-    
-    await act(async () => {
-      await fireEvent.click(menu);
-      const Hapus = await screen.getByText("Hapus");
-      await fireEvent.click(Hapus);
-
-      const batalButton = await screen.getByRole('button', {
-        name: /Batal/,
-      });
-      await fireEvent.click(batalButton);
-    });
-
-    // expect(await screen.getByText("Konfirmasi Hapus Tenaga Medis")).not.toBeInTheDocument();
-  });
-
 });
