@@ -1,7 +1,6 @@
-from .models import Cabang, Klinik, OwnerProfile
+from klinik.models import Cabang, Klinik, OwnerProfile, DynamicForm
 from rest_framework.test import APITestCase
 from django.urls import reverse
-from django.contrib.auth import login
 from rest_framework import status
 from account.models import Account
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -237,6 +236,32 @@ class CabangAPITest(KlinikTestSetUp):
 
 
 class FormAPITest(APITestCase):
+    def setUp(self) -> None:
+        self.email = "test@example.com"
+        self.account = Account.objects.create_user(
+            email=self.email,
+            full_name="John Doe",
+            password=os.getenv("SECRET_KEY"),
+        )
+
+        self.owner = OwnerProfile(account=self.account)
+        self.owner.save()
+
+        sample_file = b"this is a file example"
+        mock_file = SimpleUploadedFile("sip_example.pdf", sample_file)
+        self.klinik = Klinik(name="klinik", owner=self.owner, sik=mock_file)
+        self.klinik.save()
+        self.cabang = Cabang(location=secrets.token_hex(), klinik=self.klinik)
+        self.cabang.save()
+
+        self.dform = DynamicForm(  # using default fields
+            cabang=self.cabang,
+            formtype='example1',
+        )
+        self.dform.save()
+
+        return super().setUp()
+
     def test_get_all_form_schema_from_klinik(self):
         pass
 
