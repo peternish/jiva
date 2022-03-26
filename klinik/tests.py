@@ -56,8 +56,10 @@ class KlinikTestSetUp(APITestCase):
             tmp.save()
 
         # Should have ID 2
-        test_file2 = SimpleUploadedFile("not_the_best_file_eva.txt", self.file_content)
-        self.klinik2 = Klinik(name="klinik2", owner=self.owner2, sik=test_file2)
+        test_file2 = SimpleUploadedFile(
+            "not_the_best_file_eva.txt", self.file_content)
+        self.klinik2 = Klinik(
+            name="klinik2", owner=self.owner2, sik=test_file2)
         self.klinik2.save()
         for _ in range(10):
             tmp = Cabang(location="alam sutra", klinik=self.klinik2)
@@ -107,13 +109,15 @@ class KlinikAPITest(KlinikTestSetUp):
     def test_patch_klinik(self):
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         resp = self.client.patch(
-            self.url_klinik_list, data={"name": "apeture", "sik": self.test_file3}
+            self.url_klinik_list, data={
+                "name": "apeture", "sik": self.test_file3}
         )
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
 
     def test_patch_klinik_fail(self):
         self.client.credentials(HTTP_AUTHORIZATION=self.auth3)
-        resp = self.client.patch(self.url_klinik_list, data={"name": "klinik3"})
+        resp = self.client.patch(self.url_klinik_list,
+                                 data={"name": "klinik3"})
         self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_delete_klinik(self):
@@ -230,3 +234,71 @@ class CabangAPITest(KlinikTestSetUp):
         resp = self.client.delete(uri)
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
         self.assertEqual(Cabang.objects.count(), 20)
+
+
+class FormAPITest(APITestCase):
+    def test_get_all_form_schema_from_klinik(self):
+        pass
+
+    def test_get_all_form_schema_from_klinik_but_klinik_not_found(self):
+        pass
+
+    def test_get_all_form_schema_from_klinik_but_unauthorized(self):
+        pass
+
+    def test_get_form_schema_from_klinik_by_id(self):
+        pass
+
+    def test_get_form_schema_from_klinik_by_id_but_id_not_found(self):
+        pass
+
+    def test_get_form_schema_from_klinik_by_id_but_unauthorized(self):
+        pass
+
+    def test_post_form_schema_to_klinik(self):
+        pass
+
+    def test_post_form_schema_to_klinik_but_not_json_serializeable(self):
+        pass
+
+    def test_post_form_schema_to_klinik_but_empty_payload(self):
+        pass
+
+    def test_post_form_schema_to_klinik_but_payload_malformed(self):
+        pass
+
+    def test_post_form_schema_to_klinik_but_klinik_not_found(self):
+        pass
+
+    def test_post_form_schema_to_klinik_but_unauthorized(self):
+        pass
+
+    def test_update_form_schema_to_klinik(self):
+        pass
+
+    def test_update_form_schema_to_klinik_but_not_json_serializeable(self):
+        pass
+
+    def test_update_form_schema_to_klinik_but_empty_payload(self):
+        pass
+
+    def test_update_form_schema_to_klinik_but_payload_malformed(self):
+        pass
+
+    def test_update_form_schema_to_klinik_but_klinik_not_found(self):
+        pass
+
+    def test_update_form_schema_to_klinik_but_unauthorized(self):
+        pass
+
+    def test_update_form_schema_to_klinik_but_unauthorized(self):
+        pass
+
+    def test_delete_form_schema_by_id(self):
+        pass
+
+    def test_delete_form_schema_by_id_but_id_not_found(self):
+        pass
+
+    def test_delete_form_schema_by_id_but_unauthorized(self):
+        pass
