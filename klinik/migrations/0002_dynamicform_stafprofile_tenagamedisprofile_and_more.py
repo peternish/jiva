@@ -10,58 +10,125 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('klinik', '0001_initial'),
+        ("klinik", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='DynamicForm',
+            name="DynamicForm",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('formtype', models.CharField(max_length=100)),
-                ('fields', models.JSONField(default=klinik.models.DynamicForm.default_fields, verbose_name='Fields')),
-                ('cabang', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='klinik.cabang')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("formtype", models.CharField(max_length=100)),
+                (
+                    "fields",
+                    models.JSONField(
+                        default=klinik.models.DynamicForm.default_fields,
+                        verbose_name="Fields",
+                    ),
+                ),
+                (
+                    "cabang",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="klinik.cabang"
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='StafProfile',
+            name="StafProfile",
             fields=[
-                ('profile_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='klinik.profile')),
-                ('cabang', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='staf', to='klinik.cabang')),
+                (
+                    "profile_ptr",
+                    models.OneToOneField(
+                        auto_created=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        parent_link=True,
+                        primary_key=True,
+                        serialize=False,
+                        to="klinik.profile",
+                    ),
+                ),
+                (
+                    "cabang",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="staf",
+                        to="klinik.cabang",
+                    ),
+                ),
             ],
-            bases=('klinik.profile',),
+            bases=("klinik.profile",),
         ),
         migrations.CreateModel(
-            name='TenagaMedisProfile',
+            name="TenagaMedisProfile",
             fields=[
-                ('profile_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='klinik.profile')),
-                ('sip', models.FileField(upload_to='')),
-                ('cabang', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='tenaga_medis', to='klinik.cabang')),
+                (
+                    "profile_ptr",
+                    models.OneToOneField(
+                        auto_created=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        parent_link=True,
+                        primary_key=True,
+                        serialize=False,
+                        to="klinik.profile",
+                    ),
+                ),
+                ("sip", models.FileField(upload_to="")),
+                (
+                    "cabang",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="tenaga_medis",
+                        to="klinik.cabang",
+                    ),
+                ),
             ],
-            bases=('klinik.profile',),
+            bases=("klinik.profile",),
         ),
         migrations.AddField(
-            model_name='klinik',
-            name='sik',
-            field=models.FileField(default=b'this is manually inputted as per django requirement', upload_to=''),
+            model_name="klinik",
+            name="sik",
+            field=models.FileField(
+                default=b"this is manually inputted as per django requirement",
+                upload_to="",
+            ),
             preserve_default=False,
         ),
         migrations.AlterField(
-            model_name='klinik',
-            name='owner',
-            field=models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to='klinik.ownerprofile'),
+            model_name="klinik",
+            name="owner",
+            field=models.OneToOneField(
+                on_delete=django.db.models.deletion.CASCADE, to="klinik.ownerprofile"
+            ),
         ),
         migrations.AlterField(
-            model_name='profile',
-            name='account',
-            field=models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
+            model_name="profile",
+            name="account",
+            field=models.OneToOneField(
+                on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL
+            ),
         ),
         migrations.AlterField(
-            model_name='profile',
-            name='role',
-            field=models.CharField(choices=[('owner', 'Owner'), ('staf', 'Staf'), ('tenaga_medis', 'Tenaga Medis')], max_length=30),
+            model_name="profile",
+            name="role",
+            field=models.CharField(
+                choices=[
+                    ("owner", "Owner"),
+                    ("staf", "Staf"),
+                    ("tenaga_medis", "Tenaga Medis"),
+                ],
+                max_length=30,
+            ),
         ),
         migrations.DeleteModel(
-            name='Account',
+            name="Account",
         ),
     ]

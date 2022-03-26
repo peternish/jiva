@@ -6,13 +6,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('account', '0001_initial'),
+        ("account", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='account',
-            name='email',
-            field=models.EmailField(error_messages={'unique': 'Email ini sudah digunakan'}, max_length=254, unique=True),
+            model_name="account",
+            name="email",
+            field=models.EmailField(
+                error_messages={"unique": "Email ini sudah digunakan"},
+                max_length=254,
+                unique=True,
+            ),
         ),
     ]
