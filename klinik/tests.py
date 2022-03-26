@@ -273,25 +273,27 @@ class FormAPITest(APITestCase):
         self.token = resp.data["access"]
         self.auth = "Bearer " + self.token
 
-        self.urls_dform = self.url_list = reverse("klinik:dform")
+        self.urls_dform = "klinik:dform-list"
 
         return super().setUp()
 
     def test_get_all_form_schema_from_cabang(self):
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
-        resp = self.client.get(self.urls_dform, data={
-                               "cabang": self.cabang.id})
+        uri = reverse(self.urls_dform, kwargs={"cabang_pk": self.cabang.id})
+        resp = self.client.get(uri)
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         self.assertEqual(len(resp.data), 3)
 
     def test_get_all_form_schema_from_cabang_but_cabang_not_found(self):
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
-        resp = self.client.get(self.urls_dform, data={"cabang": 99999})
+        uri = reverse(self.urls_dform, kwargs={"cabang_pk": 99999})
+        resp = self.client.get(uri)
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         self.assertEqual(len(resp.data), 3)
 
     def test_get_all_form_schema_from_cabang_but_unauthorized(self):
-        resp = self.client.get(self.urls_dform)
+        uri = reverse(self.urls_dform, kwargs={"cabang_pk": self.cabang.id})
+        resp = self.client.get(uri)
         self.assertEqual(resp.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_get_form_schema_from_cabang_by_id(self):

@@ -124,11 +124,11 @@ class DynamicFormListApi(APIView):
         IsAuthenticated,
     ]
 
-    def get(self, request: Request, cabang_id: int, format=None) -> Response:
+    def get(self, request: Request, cabang_pk: int, format=None) -> Response:
         owner: OwnerProfile = OwnerProfile.objects.get(
             account__email=request.user)
         klinik: Klinik = Klinik.objects.get(owner=owner)
-        cabang: Cabang = get_object(Cabang, cabang_id)
+        cabang: Cabang = get_object(Cabang, cabang_pk)
         if cabang.klinik.pk == klinik.pk:
             schema = DynamicForm.objects.all()
             schema = schema.filter(cabang=cabang)
