@@ -28,6 +28,4 @@ class DynamicFormSerializer(serializers.ModelSerializer):
         fields = ["id", "cabang_id", "formtype", "fields"]
         read_only_fields = ["id", "cabang_id"]
 
-    fields = serializers.ListField(
-        child=serializers.JSONField()
-    )
+    fields = serializers.ListField(child=serializers.JSONField())
