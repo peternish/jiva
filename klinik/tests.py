@@ -452,7 +452,15 @@ class FormAPITest(APITestCase):
         self.assertEqual(resp.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_delete_form_schema_by_id(self):
-        pass
+        self.assertEqual(len(DynamicForm.objects.all()), 3)
+        schema_list = list(DynamicForm.objects.all())
+        schema = secrets.choice(schema_list)
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        uri = reverse(self.urls_dform_detail, kwargs={
+                      "cabang_pk": self.cabang.id, "pk": schema.pk})
+        resp = self.client.delete(uri)
+        self.assertEqual(resp.status_code, status.HTTP_202_ACCEPTED)
+        self.assertEqual(DynamicForm.objects.count(), 2)
 
     def test_delete_form_schema_by_id_but_id_not_found(self):
         pass
