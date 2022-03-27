@@ -331,7 +331,15 @@ class FormAPITest(APITestCase):
         self.assertEqual(resp.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_post_form_schema_to_cabang(self):
-        pass
+        self.assertEqual(len(DynamicForm.objects.all()), 3)
+        data = {
+            "cabang_id": 1,
+            "formtype": "test",
+            "fields": [{"example": "example"}],
+        }
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        self.client.post(self.urls_dform, data=data)
+        self.assertEqual(DynamicForm.objects.count(), 4)
 
     def test_post_form_schema_to_cabang_but_not_json_serializeable(self):
         pass
