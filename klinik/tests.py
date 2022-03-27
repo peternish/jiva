@@ -405,19 +405,51 @@ class FormAPITest(APITestCase):
         self.assertEqual(resp.data["fields"], schema.fields)
 
     def test_update_form_schema_to_cabang_but_empty_payload(self):
-        pass
+        schema_list = list(DynamicForm.objects.all())
+        schema = secrets.choice(schema_list)
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        uri = reverse(
+            self.urls_dform_detail,
+            kwargs={"cabang_pk": self.cabang.id, "pk": schema.pk},
+        )
+        resp = self.client.patch(uri, data={})
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(resp.data["id"], schema.id)
+        self.assertEqual(resp.data["cabang_id"], schema.cabang_id)
+        self.assertEqual(resp.data["formtype"], schema.formtype)
+        self.assertEqual(resp.data["fields"], schema.fields)
 
     def test_update_form_schema_to_cabang_but_payload_malformed(self):
-        pass
+        schema_list = list(DynamicForm.objects.all())
+        schema = secrets.choice(schema_list)
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        uri = reverse(
+            self.urls_dform_detail,
+            kwargs={"cabang_pk": self.cabang.id, "pk": schema.pk},
+        )
+        resp = self.client.patch(uri, data={"zzzzz": "malformed"})
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
 
     def test_update_form_schema_to_cabang_but_cabang_not_found(self):
-        pass
+        schema_list = list(DynamicForm.objects.all())
+        schema = secrets.choice(schema_list)
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        uri = reverse(
+            self.urls_dform_detail,
+            kwargs={"cabang_pk": 99999, "pk": schema.pk},
+        )
+        resp = self.client.patch(uri, data={"zzzzz": "malformed"})
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_update_form_schema_to_cabang_but_unauthorized(self):
-        pass
-
-    def test_update_form_schema_to_cabang_but_unauthorized(self):
-        pass
+        schema_list = list(DynamicForm.objects.all())
+        schema = secrets.choice(schema_list)
+        uri = reverse(
+            self.urls_dform_detail,
+            kwargs={"cabang_pk": self.cabang.id, "pk": schema.pk},
+        )
+        resp = self.client.patch(uri, data={})
+        self.assertEqual(resp.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_delete_form_schema_by_id(self):
         pass
