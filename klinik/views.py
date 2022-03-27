@@ -138,7 +138,7 @@ class DynamicFormListApi(APIView):
         serializer = DynamicFormSerializer(schema, many=True)
         return Response(serializer.data)
 
-    def post(self, request: Request, cabang_pk: int, format=None):
+    def post(self, request: Request, cabang_pk: int, format=None) -> Response:
         cabang: Cabang = get_object(Cabang, cabang_pk)
         if cabang is None:
             return Response(status=status.HTTP_404_NOT_FOUND)
