@@ -21,7 +21,7 @@ class CabangSerializer(serializers.ModelSerializer):
         return super(CabangSerializer, self).create(validated_data)
 
 
-class DynamicFormSerializer(serializers.Serializer):
+class DynamicFormSerializer(serializers.ModelSerializer):
     class Meta:
         model = DynamicForm
         fields = ["id", "cabang_id", "formtype", "fields"]

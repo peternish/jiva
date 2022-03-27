@@ -127,8 +127,7 @@ class DynamicFormListApi(APIView):
         if cabang is None:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-        owner: OwnerProfile = OwnerProfile.objects.get(
-            account__email=request.user)
+        owner: OwnerProfile = OwnerProfile.objects.get(account__email=request.user)
         klinik: Klinik = Klinik.objects.get(owner=owner)
         if cabang.klinik.pk != klinik.pk:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
@@ -145,9 +144,10 @@ class DynamicFormDetailApi(APIView):
         IsAuthenticated,
     ]
 
-    def _is_legally_owned(self, request: Request, cabang: Cabang, schema: DynamicForm) -> bool:
-        owner: OwnerProfile = OwnerProfile.objects.get(
-            account__email=request.user)
+    def _is_legally_owned(
+        self, request: Request, cabang: Cabang, schema: DynamicForm
+    ) -> bool:
+        owner: OwnerProfile = OwnerProfile.objects.get(account__email=request.user)
         klinik: Klinik = Klinik.objects.get(owner=owner)
 
         return cabang.pk == schema.cabang.pk and cabang.klinik.pk == klinik.pk
@@ -155,15 +155,10 @@ class DynamicFormDetailApi(APIView):
     def get(self, request: Request, cabang_pk: int, pk: int, format=None) -> Response:
         cabang: Cabang = get_object(Cabang, cabang_pk)
         schema: DynamicForm = get_object(DynamicForm, pk)
+
         if cabang is None or schema is None:
             return Response(status=status.HTTP_404_NOT_FOUND)
         if self._is_legally_owned(request, cabang, schema):
             serializer = DynamicFormSerializer(schema)
-            print("ZCZC")
-            print(serializer)
-            print("ZCZC")
-            print(serializer.data)
-            print("ZCZC")
-
-            return Response(serializer.data)
+            return Response(data=serializer.data)
         return Response(status=status.HTTP_401_UNAUTHORIZED)
