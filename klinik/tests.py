@@ -55,8 +55,10 @@ class KlinikTestSetUp(APITestCase):
             tmp.save()
 
         # Should have ID 2
-        test_file2 = SimpleUploadedFile("not_the_best_file_eva.txt", self.file_content)
-        self.klinik2 = Klinik(name="klinik2", owner=self.owner2, sik=test_file2)
+        test_file2 = SimpleUploadedFile(
+            "not_the_best_file_eva.txt", self.file_content)
+        self.klinik2 = Klinik(
+            name="klinik2", owner=self.owner2, sik=test_file2)
         self.klinik2.save()
         for _ in range(10):
             tmp = Cabang(location="alam sutra", klinik=self.klinik2)
@@ -106,13 +108,15 @@ class KlinikAPITest(KlinikTestSetUp):
     def test_patch_klinik(self):
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         resp = self.client.patch(
-            self.url_klinik_list, data={"name": "apeture", "sik": self.test_file3}
+            self.url_klinik_list, data={
+                "name": "apeture", "sik": self.test_file3}
         )
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
 
     def test_patch_klinik_fail(self):
         self.client.credentials(HTTP_AUTHORIZATION=self.auth3)
-        resp = self.client.patch(self.url_klinik_list, data={"name": "klinik3"})
+        resp = self.client.patch(self.url_klinik_list,
+                                 data={"name": "klinik3"})
         self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_delete_klinik(self):
@@ -292,7 +296,18 @@ class FormAPITest(APITestCase):
         self.assertEqual(resp.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_get_form_schema_from_cabang_by_id(self):
-        pass
+        schema_list = list(DynamicForm.objects.all())
+        schema = secrets.choice(schema_list)
+        uri = reverse(self.urls_dform, kwargs={
+                      "cabang_pk": self.cabang.id, "pk": schema.pk})
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        uri = reverse(self.urls_dform, kwargs={"cabang_pk": self.cabang.id})
+        resp = self.client.get(uri)
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(resp.data["id"], schema.id)
+        self.assertEqual(resp.data["cabang_id"], schema.cabang_id)
+        self.assertEqual(resp.data["formtype"], schema.formtype)
+        self.assertEqual(resp.data["fields"], schema.fields)
 
     def test_get_form_schema_from_cabang_by_id_but_id_not_found(self):
         pass
