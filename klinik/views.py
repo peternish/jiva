@@ -1,5 +1,3 @@
-from functools import partial
-from urllib import request
 from rest_framework.permissions import IsAuthenticated
 from urllib.request import Request
 from .serializers import DynamicFormSerializer, KlinikSerializer, CabangSerializer

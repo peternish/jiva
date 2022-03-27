@@ -21,7 +21,7 @@ dform_patterns = [
     ),
     path(
         "<int:cabang_pk>/dform/<int:pk>/",
-        views.CabangDetailApi.as_view(),
+        views.DynamicFormDetailApi.as_view(),
         name="dform-detail",
     ),
 ]
