@@ -8,6 +8,10 @@ import secrets
 import os
 
 
+def bearer_factory(token):
+    return "Bearer" + token
+
+
 class KlinikTestSetUp(APITestCase):
     def setUp(self):
         self.url_klinik_list = reverse("klinik:klinik-list")
@@ -78,7 +82,7 @@ class KlinikTestSetUp(APITestCase):
         self.assertTrue("access" in resp.data)
         self.assertTrue("refresh" in resp.data)
         self.token = resp.data["access"]
-        self.auth = "Bearer " + self.token
+        self.auth = bearer_factory(self.token)
 
         resp = self.client.post(
             url,
@@ -89,7 +93,7 @@ class KlinikTestSetUp(APITestCase):
         self.assertTrue("access" in resp.data)
         self.assertTrue("refresh" in resp.data)
         self.token3 = resp.data["access"]
-        self.auth3 = "Bearer " + self.token3
+        self.auth3 = bearer_factory(self.token3)
 
         self.alt_location = "alam baka"
 
