@@ -338,17 +338,36 @@ class FormAPITest(APITestCase):
             "fields": [{"example": "example"}],
         }
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
-        self.client.post(self.urls_dform, data=data)
+        resp = self.client.post(self.urls_dform, data=data)
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
         self.assertEqual(DynamicForm.objects.count(), 4)
 
     def test_post_form_schema_to_cabang_but_not_json_serializeable(self):
-        pass
+        self.assertEqual(len(DynamicForm.objects.all()), 3)
+        data = "not a json"
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        resp = self.client.post(self.urls_dform, data=data)
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(DynamicForm.objects.count(), 3)
 
     def test_post_form_schema_to_cabang_but_empty_payload(self):
-        pass
+        self.assertEqual(len(DynamicForm.objects.all()), 3)
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        resp = self.client.post(self.urls_dform, data={})
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(DynamicForm.objects.count(), 3)
 
     def test_post_form_schema_to_cabang_but_payload_malformed(self):
-        pass
+        self.assertEqual(len(DynamicForm.objects.all()), 3)
+        data = {
+            "pppp": 1,
+            "asas": "test",
+            "zzzz": [{"example": "example"}],
+        }
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        resp = self.client.post(self.urls_dform, data=data)
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(DynamicForm.objects.count(), 3)
 
     def test_post_form_schema_to_cabang_but_cabang_not_found(self):
         pass
