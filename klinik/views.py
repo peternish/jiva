@@ -159,5 +159,11 @@ class DynamicFormDetailApi(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
         if self._is_legally_owned(request, cabang, schema):
             serializer = DynamicFormSerializer(schema)
+            print("ZCZC")
+            print(serializer)
+            print("ZCZC")
+            print(serializer.data)
+            print("ZCZC")
+
             return Response(serializer.data)
         return Response(status=status.HTTP_401_UNAUTHORIZED)

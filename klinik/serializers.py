@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from klinik.models import Klinik, Cabang
+from klinik.models import Klinik, Cabang, DynamicForm
 from django.template.defaultfilters import slugify
 
 
@@ -23,6 +23,6 @@ class CabangSerializer(serializers.ModelSerializer):
 
 class DynamicFormSerializer(serializers.Serializer):
     class Meta:
-        model = Cabang
+        model = DynamicForm
         fields = ["id", "cabang_id", "formtype", "fields"]
         read_only_fields = ["id", "cabang_id"]
