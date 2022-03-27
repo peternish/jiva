@@ -1,3 +1,4 @@
+from functools import partial
 from rest_framework.permissions import IsAuthenticated
 from urllib.request import Request
 from .serializers import DynamicFormSerializer, KlinikSerializer, CabangSerializer
@@ -180,14 +181,12 @@ class DynamicFormDetailApi(APIView):
         return Response(status=status.HTTP_401_UNAUTHORIZED)
 
     def put(self, request: Request, cabang_pk: int, pk: int, format=None):
+        schema: DynamicForm = get_object(DynamicForm, pk)
         cabang: Cabang = get_object(Cabang, cabang_pk)
-        cabang_id = request.data.get("cabang")
-        if cabang_id is None:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-        cabang_payload: Cabang = get_object(Cabang, cabang_id)
-        if cabang_payload is None or int(cabang_id) != cabang_pk:
+        if cabang is None or schema is None or schema.cabang.pk != cabang_pk:
             return Response(status=status.HTTP_404_NOT_FOUND)
-        serializer = DynamicFormSerializer(data=request.data)
+        serializer = DynamicFormSerializer(
+            schema, data=request.data, partial=True)  # TODO: Refactor to patch
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
