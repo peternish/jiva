@@ -178,3 +178,17 @@ class DynamicFormDetailApi(APIView):
             serializer = DynamicFormSerializer(schema)
             return Response(data=serializer.data)
         return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+    def put(self, request: Request, cabang_pk: int, pk: int, format=None):
+        cabang: Cabang = get_object(Cabang, cabang_pk)
+        cabang_id = request.data.get("cabang")
+        if cabang_id is None:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        cabang_payload: Cabang = get_object(Cabang, cabang_id)
+        if cabang_payload is None or int(cabang_id) != cabang_pk:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        serializer = DynamicFormSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
