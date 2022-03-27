@@ -404,9 +404,6 @@ class FormAPITest(APITestCase):
         self.assertEqual(resp.data["formtype"], "edited")
         self.assertEqual(resp.data["fields"], schema.fields)
 
-    def test_update_form_schema_to_cabang_but_not_json_serializeable(self):
-        pass
-
     def test_update_form_schema_to_cabang_but_empty_payload(self):
         pass
 
