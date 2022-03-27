@@ -140,7 +140,11 @@ class DynamicFormListApi(APIView):
 
     def post(self, request: Request, cabang_pk: int, format=None) -> Response:
         cabang: Cabang = get_object(Cabang, cabang_pk)
-        if cabang is None:
+        cabang_id = request.data.get("cabang")
+        if cabang_id is None:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        cabang_payload: Cabang = get_object(Cabang, cabang_id)
+        if cabang_payload is None or int(cabang_id) != cabang_pk:
             return Response(status=status.HTTP_404_NOT_FOUND)
         serializer = DynamicFormSerializer(data=request.data)
         if serializer.is_valid():
