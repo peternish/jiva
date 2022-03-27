@@ -9,7 +9,7 @@ import os
 
 
 def bearer_factory(token):
-    return "Bearer" + token
+    return "Bearer " + token
 
 
 class KlinikTestSetUp(APITestCase):

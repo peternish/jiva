@@ -36,7 +36,8 @@ class Cabang(models.Model):
 
 
 class StafProfile(Profile):
-    cabang = models.ForeignKey(Cabang, on_delete=models.CASCADE, related_name="staf")
+    cabang = models.ForeignKey(
+        Cabang, on_delete=models.CASCADE, related_name="staf")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
