@@ -192,3 +192,10 @@ class DynamicFormDetailApi(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request: Request, cabang_pk: int, pk: int, format=None):
+        schema: DynamicForm = get_object(DynamicForm, pk)
+        if schema is None or schema.cabang.pk != cabang_pk:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        schema.delete()
+        return Response(status=status.HTTP_202_ACCEPTED)
