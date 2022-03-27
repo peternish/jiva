@@ -55,10 +55,8 @@ class KlinikTestSetUp(APITestCase):
             tmp.save()
 
         # Should have ID 2
-        test_file2 = SimpleUploadedFile(
-            "not_the_best_file_eva.txt", self.file_content)
-        self.klinik2 = Klinik(
-            name="klinik2", owner=self.owner2, sik=test_file2)
+        test_file2 = SimpleUploadedFile("not_the_best_file_eva.txt", self.file_content)
+        self.klinik2 = Klinik(name="klinik2", owner=self.owner2, sik=test_file2)
         self.klinik2.save()
         for _ in range(10):
             tmp = Cabang(location="alam sutra", klinik=self.klinik2)
@@ -108,15 +106,13 @@ class KlinikAPITest(KlinikTestSetUp):
     def test_patch_klinik(self):
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         resp = self.client.patch(
-            self.url_klinik_list, data={
-                "name": "apeture", "sik": self.test_file3}
+            self.url_klinik_list, data={"name": "apeture", "sik": self.test_file3}
         )
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
 
     def test_patch_klinik_fail(self):
         self.client.credentials(HTTP_AUTHORIZATION=self.auth3)
-        resp = self.client.patch(self.url_klinik_list,
-                                 data={"name": "klinik3"})
+        resp = self.client.patch(self.url_klinik_list, data={"name": "klinik3"})
         self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_delete_klinik(self):
@@ -314,8 +310,7 @@ class FormAPITest(APITestCase):
     def test_get_form_schema_from_cabang_by_id_but_id_not_found(self):
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         uri = reverse(
-            self.urls_dform_detail, kwargs={
-                "cabang_pk": self.cabang.id, "pk": 9999}
+            self.urls_dform_detail, kwargs={"cabang_pk": self.cabang.id, "pk": 9999}
         )
         resp = self.client.get(uri)
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
@@ -456,8 +451,10 @@ class FormAPITest(APITestCase):
         schema_list = list(DynamicForm.objects.all())
         schema = secrets.choice(schema_list)
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
-        uri = reverse(self.urls_dform_detail, kwargs={
-                      "cabang_pk": self.cabang.id, "pk": schema.pk})
+        uri = reverse(
+            self.urls_dform_detail,
+            kwargs={"cabang_pk": self.cabang.id, "pk": schema.pk},
+        )
         resp = self.client.delete(uri)
         self.assertEqual(resp.status_code, status.HTTP_202_ACCEPTED)
         self.assertEqual(DynamicForm.objects.count(), 2)
@@ -467,8 +464,9 @@ class FormAPITest(APITestCase):
         schema_list = list(DynamicForm.objects.all())
         schema = secrets.choice(schema_list)
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
-        uri = reverse(self.urls_dform_detail, kwargs={
-                      "cabang_pk": self.cabang.id, "pk": 99999})
+        uri = reverse(
+            self.urls_dform_detail, kwargs={"cabang_pk": self.cabang.id, "pk": 99999}
+        )
         resp = self.client.delete(uri)
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
         self.assertEqual(DynamicForm.objects.count(), 3)
@@ -477,8 +475,10 @@ class FormAPITest(APITestCase):
         self.assertEqual(len(DynamicForm.objects.all()), 3)
         schema_list = list(DynamicForm.objects.all())
         schema = secrets.choice(schema_list)
-        uri = reverse(self.urls_dform_detail, kwargs={
-                      "cabang_pk": self.cabang.id, "pk": schema.pk})
+        uri = reverse(
+            self.urls_dform_detail,
+            kwargs={"cabang_pk": self.cabang.id, "pk": schema.pk},
+        )
         resp = self.client.delete(uri)
         self.assertEqual(resp.status_code, status.HTTP_401_UNAUTHORIZED)
         self.assertEqual(DynamicForm.objects.count(), 3)
