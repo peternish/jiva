@@ -390,7 +390,19 @@ class FormAPITest(APITestCase):
         self.assertEqual(DynamicForm.objects.count(), 3)
 
     def test_update_form_schema_to_cabang(self):
-        pass
+        schema_list = list(DynamicForm.objects.all())
+        schema = secrets.choice(schema_list)
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        uri = reverse(
+            self.urls_dform_detail,
+            kwargs={"cabang_pk": self.cabang.id, "pk": schema.pk},
+        )
+        resp = self.client.put(uri, data={"formtype": "edited"})
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(resp.data["id"], schema.id)
+        self.assertEqual(resp.data["cabang_id"], schema.cabang_id)
+        self.assertEqual(resp.data["formtype"], "edited")
+        self.assertEqual(resp.data["fields"], schema.fields)
 
     def test_update_form_schema_to_cabang_but_not_json_serializeable(self):
         pass
