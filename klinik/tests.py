@@ -333,7 +333,7 @@ class FormAPITest(APITestCase):
     def test_post_form_schema_to_cabang(self):
         self.assertEqual(len(DynamicForm.objects.all()), 3)
         data = {
-            "cabang_id": 1,
+            "cabang": 1,
             "formtype": "test",
             "fields": [{"example": "example"}],
         }

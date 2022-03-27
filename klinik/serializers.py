@@ -1,3 +1,4 @@
+from dataclasses import fields
 from rest_framework import serializers
 from klinik.models import Klinik, Cabang, DynamicForm
 from django.template.defaultfilters import slugify
@@ -26,3 +27,7 @@ class DynamicFormSerializer(serializers.ModelSerializer):
         model = DynamicForm
         fields = ["id", "cabang_id", "formtype", "fields"]
         read_only_fields = ["id", "cabang_id"]
+
+    fields = serializers.ListField(
+        child=serializers.JSONField()
+    )
