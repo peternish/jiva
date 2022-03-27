@@ -33,6 +33,11 @@ describe("<FormBuilder/>", () => {
   it("renders the input options", () => {
     expect(screen.getByText("Save")).toBeInTheDocument();
     expect(screen.getByText("Clear")).toBeInTheDocument();
+    expect(screen.getByText("Pratinjau")).toBeInTheDocument();
+  });
+
+  it("renders the copy button url button ", () => {
+    expect(screen.getByTestId("ContentCopyIcon")).toBeInTheDocument();
   });
 
   it("ensure the clear button works", async () => {
