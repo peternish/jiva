@@ -32,10 +32,7 @@ function UpdateTenagaMedis() {
 
   return (
     <main>
-      <Layout>
-        <div className={layoutStyles.containerWithSidebar}>
-          <h1>Update Tenaga Medis</h1>
-
+      <Layout title='Update Tenaga Medis'>
           {
             tenagaMedis && 
             <Formik
@@ -81,7 +78,6 @@ function UpdateTenagaMedis() {
               )}
             </Formik>
           }
-        </div>
       </Layout>
     </main>
   );
