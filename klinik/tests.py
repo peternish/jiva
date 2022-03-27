@@ -365,10 +365,29 @@ class FormAPITest(APITestCase):
         self.assertEqual(DynamicForm.objects.count(), 3)
 
     def test_post_form_schema_to_cabang_but_cabang_not_found(self):
-        pass
+        self.assertEqual(len(DynamicForm.objects.all()), 3)
+        data = {
+            "cabang": 99999,
+            "formtype": "test",
+            "fields": [{"example": "example"}],
+        }
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        uri = reverse(self.urls_dform, kwargs={"cabang_pk": self.cabang.id})
+        resp = self.client.post(uri, data=data)
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(DynamicForm.objects.count(), 3)
 
     def test_post_form_schema_to_cabang_but_unauthorized(self):
-        pass
+        self.assertEqual(len(DynamicForm.objects.all()), 3)
+        data = {
+            "cabang": 1,
+            "formtype": "test",
+            "fields": [{"example": "example"}],
+        }
+        uri = reverse(self.urls_dform, kwargs={"cabang_pk": self.cabang.id})
+        resp = self.client.post(uri, data=data)
+        self.assertEqual(resp.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(DynamicForm.objects.count(), 3)
 
     def test_update_form_schema_to_cabang(self):
         pass
