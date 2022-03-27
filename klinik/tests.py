@@ -274,6 +274,7 @@ class FormAPITest(APITestCase):
         self.auth = "Bearer " + self.token
 
         self.urls_dform = "klinik:dform-list"
+        self.urls_dform_detail = "klinik:dform-detail"
 
         return super().setUp()
 
@@ -298,10 +299,9 @@ class FormAPITest(APITestCase):
     def test_get_form_schema_from_cabang_by_id(self):
         schema_list = list(DynamicForm.objects.all())
         schema = secrets.choice(schema_list)
-        uri = reverse(self.urls_dform, kwargs={
-                      "cabang_pk": self.cabang.id, "pk": schema.pk})
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
-        uri = reverse(self.urls_dform, kwargs={"cabang_pk": self.cabang.id})
+        uri = reverse(self.urls_dform_detail, kwargs={
+                      "cabang_pk": self.cabang.id, "pk": schema.pk})
         resp = self.client.get(uri)
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         self.assertEqual(resp.data["id"], schema.id)
