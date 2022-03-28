@@ -61,6 +61,7 @@ class JadwalTenagaMedisTestSetUp(APITestCase, TestCase):
             account=self.tenaga_medis_2_account, cabang=self.cabang, sip="sip"
         )
 
+
 class JadwalTenagaMedisModelTest(JadwalTenagaMedisTestSetUp):
     def test_create_jadwal_tenaga_medis(self):
         jadwal_tenaga_medis_1 = JadwalTenagaMedis.objects.create(
