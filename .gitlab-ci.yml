@@ -34,10 +34,13 @@ variables:
     - apt -y upgrade
     - pip3 install -r requirements.txt
 
-# Applies on MR
-.apply_on_mr: &apply_on_mr
+# Sonar scanner rules
+.sonar_scanner_rules: &sonar_scanner_rules
   rules:
-    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "staging"'
+    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master"'
+    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "staging"'
+    - if: '$CI_COMMIT_REF_NAME == "staging"'
+    - if: '$CI_COMMIT_REF_NAME == "master"'
 
 
 # ======
@@ -76,7 +79,7 @@ unit_testing:
   stage: test
   needs: ['migrations']
   script:
-    - coverage run --omit="manage.py,jiva_be/*" manage.py test
+    - coverage run --omit="manage.py,jiva_be/*,*migrations*" manage.py test
     - coverage report -m
     - coverage xml
   only:
@@ -86,7 +89,7 @@ unit_testing:
 
 # Testing: SonarQube testing
 sonar_scanner:
-  <<: *apply_on_mr
+  <<: *sonar_scanner_rules
   stage: test
   image:
     name: sonarsource/sonar-scanner-cli:4.6

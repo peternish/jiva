@@ -144,7 +144,9 @@ class IntegrationTest(APITestCase):
 
         url = reverse("account:login")
         resp1 = self.client.post(
-            url, {"email": TEST_USER_EMAIL, "password": TEST_USER_PASSWORD}, format="json"
+            url,
+            {"email": TEST_USER_EMAIL, "password": TEST_USER_PASSWORD},
+            format="json",
         )
 
         self.owner_token = resp1.data["access"]
