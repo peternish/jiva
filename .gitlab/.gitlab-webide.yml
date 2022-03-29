@@ -1,0 +1,12 @@
+
+terminal:
+  # This can be any image that has the necessary runtime environment for your project.
+  image:
+    name: python:3.9.10-buster
+  tags:
+    - interactive
+  services:
+    - name: registry.gitlab.com/gitlab-org/webide-file-sync:latest
+      alias: webide-file-sync
+      entrypoint: ["/bin/sh"]
+      command: ["-c", "sleep 5 && ./webide-file-sync -project-dir $CI_PROJECT_DIR"]
