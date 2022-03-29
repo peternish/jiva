@@ -65,3 +65,45 @@ class CreateJadwalTenagaMedisAPI(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+class JadwalTenagaMedisAPI(APIView):
+
+    permission_classes = [
+        IsStafPermission
+    ]
+
+    def get(self, request: Request, jadwal_tenaga_medis_id: int, format=None):
+        jadwal_tenaga_medis = get_object(JadwalTenagaMedis, pk=jadwal_tenaga_medis_id)
+        if jadwal_tenaga_medis is None:
+            return Response(
+                {"error": f"no 'jadwal tenaga medis' found with id : {jadwal_tenaga_medis_id}"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+        serializer = JadwalTenagaMedisSerializer(jadwal_tenaga_medis)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+    def patch(self, request: Request, jadwal_tenaga_medis_id: int, format=None):
+        jadwal_tenaga_medis = get_object(JadwalTenagaMedis, pk=jadwal_tenaga_medis_id)
+        if jadwal_tenaga_medis is None:
+            return Response(
+                {"error": f"no 'jadwal tenaga medis' found with id : {jadwal_tenaga_medis_id}"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+        serializer = JadwalTenagaMedisSerializer(instance=jadwal_tenaga_medis, data=request.data, partial=True)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self, request: Request, jadwal_tenaga_medis_id: int, format=None):
+        jadwal_tenaga_medis = get_object(JadwalTenagaMedis, pk=jadwal_tenaga_medis_id)
+        if jadwal_tenaga_medis is None:
+            return Response(
+                {"error": f"no 'jadwal tenaga medis' found with id : {jadwal_tenaga_medis_id}"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+        jadwal_tenaga_medis.delete()
+        return Response(
+            {"success": "delete success"}, 
+            status=status.HTTP_200_OK
+        )

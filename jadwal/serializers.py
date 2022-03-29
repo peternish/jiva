@@ -21,3 +21,11 @@ class JadwalTenagaMedisSerializer(serializers.ModelSerializer):
         read_only_fields = [
             "tenaga_medis"
         ]
+
+    def update(self, instance, validated_data):
+        instance.start_time = validated_data.get("start_time", instance.start_time)
+        instance.end_time = validated_data.get("end_time", instance.end_time)
+        instance.quota = validated_data.get("quota", instance.quota)
+        instance.day = validated_data.get("day", instance.day)
+        instance.save()
+        return instance
