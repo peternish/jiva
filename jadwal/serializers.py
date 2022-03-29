@@ -1,4 +1,5 @@
 # rest imports
+from account.serializers import TenagaMedisProfileSerializer
 from rest_framework import serializers
 
 # model imports
@@ -20,5 +21,3 @@ class JadwalTenagaMedisSerializer(serializers.ModelSerializer):
         read_only_fields = [
             "tenaga_medis"
         ]
-
-    

@@ -43,3 +43,25 @@ class JadwalTenagaMedisListAPI(APIView):
         serializer = JadwalTenagaMedisSerializer(jadwal_query, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
+
+class CreateJadwalTenagaMedisAPI(APIView):
+
+    permission_classes = [
+        IsStafPermission
+    ]
+
+    def post(self, request: Request, tenaga_medis_id: int, format=None):
+        serializer = JadwalTenagaMedisSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            try:
+                tenaga_medis = TenagaMedisProfile.objects.get(id=tenaga_medis_id)
+            except TenagaMedisProfile.DoesNotExist:
+                return Response(
+                    {"error": f"no 'tenaga medis' found with id : {tenaga_medis_id}"},
+                    status=status.HTTP_404_NOT_FOUND,
+                )
+            serializer.save(tenaga_medis=tenaga_medis)
+
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
