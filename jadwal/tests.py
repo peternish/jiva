@@ -155,3 +155,105 @@ class CreateJadwalTenagaMedisAPI(JadwalTenagaMedisTestSetUp):
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         self.assertEqual(JadwalTenagaMedis.objects.count(), 0)
 
+
+class JadwalTenagaMedisAPI(JadwalTenagaMedisTestSetUp):
+    def test_get_jadwal_tenaga_medis(self):
+        jadwal_tenaga_medis = JadwalTenagaMedis.objects.create(
+            tenaga_medis=self.tenaga_medis_profile,
+            start_time=datetime.time(6, 0, 0),
+            end_time=datetime.time(8, 0, 0),
+            quota=5,
+            day="mon"
+        )
+        jadwal_tenaga_medis.save()
+        url = reverse(self.jadwal_tenaga_medis_url, kwargs={ "jadwal_tenaga_medis_id" : jadwal_tenaga_medis.id })
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["start_time"], "06:00:00")
+        self.assertEqual(response.data["end_time"], "08:00:00")
+        self.assertEqual(response.data["quota"], 5)
+        self.assertEqual(response.data["day"], "mon")
+    
+    def test_get_jadwal_tenaga_medis_not_found(self):
+        url = reverse(self.jadwal_tenaga_medis_url, kwargs={ "jadwal_tenaga_medis_id" : 1999 })
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+    
+    def test_update_jadwal_tenaga_medis(self):
+        jadwal_tenaga_medis = JadwalTenagaMedis.objects.create(
+            tenaga_medis=self.tenaga_medis_profile,
+            start_time=datetime.time(6, 0, 0),
+            end_time=datetime.time(8, 0, 0),
+            quota=5,
+            day="mon"
+        )
+        jadwal_tenaga_medis.save()
+        data = {
+            "start_time" : "10:00:00",
+            "end_time" : "12:00:00",
+            "quota" : 10,
+            "day" : "fri"
+        }
+        url = reverse(self.jadwal_tenaga_medis_url, kwargs={ "jadwal_tenaga_medis_id" : jadwal_tenaga_medis.id })
+        response = self.client.patch(url, data=data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        jadwal_tenaga_medis = JadwalTenagaMedis.objects.first()
+        self.assertEqual(jadwal_tenaga_medis.start_time, datetime.time(10, 0, 0))
+        self.assertEqual(jadwal_tenaga_medis.end_time, datetime.time(12, 0, 0))
+        self.assertEqual(jadwal_tenaga_medis.quota, 10)
+        self.assertEqual(jadwal_tenaga_medis.day, "fri")
+    
+    def test_update_jadwal_tenaga_medis_not_found(self):
+        data = {
+            "start_time" : "10:00:00",
+            "end_time" : "12:00:00",
+            "quota" : 10,
+            "day" : "fri"
+        }
+        url = reverse(self.jadwal_tenaga_medis_url, kwargs={ "jadwal_tenaga_medis_id" : 1999 })
+        response = self.client.patch(url, data=data)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+    
+    def test_update_jadwal_tenaga_medis_invalid(self):
+        jadwal_tenaga_medis = JadwalTenagaMedis.objects.create(
+            tenaga_medis=self.tenaga_medis_profile,
+            start_time=datetime.time(6, 0, 0),
+            end_time=datetime.time(8, 0, 0),
+            quota=5,
+            day="mon"
+        )
+        jadwal_tenaga_medis.save()
+        data = {
+            "start_time" : "not a valid time",
+            "end_time" : "not a valid time",
+            "quota" : "not a number",
+            "day" : "not a day"
+        }
+        url = reverse(self.jadwal_tenaga_medis_url, kwargs={ "jadwal_tenaga_medis_id" : jadwal_tenaga_medis.id })
+        response = self.client.patch(url, data=data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        jadwal_tenaga_medis = JadwalTenagaMedis.objects.first()
+        self.assertEqual(jadwal_tenaga_medis.start_time, datetime.time(6, 0, 0))
+        self.assertEqual(jadwal_tenaga_medis.end_time, datetime.time(8, 0, 0))
+        self.assertEqual(jadwal_tenaga_medis.quota, 5)
+        self.assertEqual(jadwal_tenaga_medis.day, "mon")
+
+    def test_delete_jadwal_tenaga_medis(self):
+        jadwal_tenaga_medis = JadwalTenagaMedis.objects.create(
+            tenaga_medis=self.tenaga_medis_profile,
+            start_time=datetime.time(6, 0, 0),
+            end_time=datetime.time(8, 0, 0),
+            quota=5,
+            day="mon"
+        )
+        jadwal_tenaga_medis.save()
+        self.assertEqual(JadwalTenagaMedis.objects.count(), 1)
+        url = reverse(self.jadwal_tenaga_medis_url, kwargs={ "jadwal_tenaga_medis_id" : jadwal_tenaga_medis.id })
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(JadwalTenagaMedis.objects.count(), 0)
+    
+    def test_delete_jadwal_tenaga_medis_not_found(self):
+        url = reverse(self.jadwal_tenaga_medis_url, kwargs={ "jadwal_tenaga_medis_id" : 1999 })
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
