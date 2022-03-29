@@ -93,3 +93,26 @@ class JadwalTenagaMedisModelTest(JadwalTenagaMedisTestSetUp):
         self.assertEqual(jadwal_tenaga_medis.quota, 5)
         self.assertEqual(jadwal_tenaga_medis.day, "mon")
         self.assertEqual(str(jadwal_tenaga_medis), f"{self.tenaga_medis_profile.account}'s Jadwal")
+
+
+class JadwalTenagaMedisListAPITest(JadwalTenagaMedisTestSetUp):
+    def test_get_jadwal_tenaga_medis_list(self):
+        for i in range(5):
+            jadwal_tenaga_medis = JadwalTenagaMedis.objects.create(
+                tenaga_medis=self.tenaga_medis_profile,
+                start_time=datetime.time(i+1, 0, 0),
+                end_time=datetime.time(i+2, 0, 0),
+                quota=5,
+                day="mon"
+            )
+            jadwal_tenaga_medis.save()
+        url = reverse(self.jadwal_tenaga_medis_list_url, kwargs={ "cabang_id" : self.cabang.id })
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), JadwalTenagaMedis.objects.count())
+
+    def test_get_jadwal_tenaga_medis_list_cabang_not_found(self):
+        url = reverse(self.jadwal_tenaga_medis_list_url, kwargs={ "cabang_id" : 1999 })
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+    
