@@ -9,9 +9,6 @@ import { Formik, Form } from "formik";
 import TextInput from "@components/common/TextInput";
 import Dropzone from '@components/TenagaMedisPageComponents/Dropzone';
 
-// styles
-import layoutStyles from '@styles/Layout.module.css';
-
 // redux
 import { useDispatch } from "react-redux";
 import { createTenagaMedis as createTenagaMedisHelper } from "@redux/modules/tenagaMedis/thunks";
