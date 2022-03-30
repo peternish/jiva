@@ -134,8 +134,7 @@ class CreateJadwalTenagaMedisAPI(JadwalTenagaMedisTestSetUp):
     def test_create_jadwal_tenaga_medis_invalid(self):
         self.assertEqual(JadwalTenagaMedis.objects.count(), 0)
         data = {
-            "start_time" : "8:00:00",
-            "end_time" : "9:00:00",
+            # all missing fields
         }
         url = reverse(self.create_jadwal_tenaga_medis_url, kwargs={ "tenaga_medis_id" : self.tenaga_medis_profile.id })
         response = self.client.post(url, data=data)
@@ -259,6 +258,8 @@ class JadwalTenagaMedisAPI(JadwalTenagaMedisTestSetUp):
         )
         jadwal_tenaga_medis.save()
         data = {
+            "start_time" : "not a time",
+            "end_time" : "not a time",
             "quota" : "not a number",
             "day" : "not a day"
         }
