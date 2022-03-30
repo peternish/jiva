@@ -259,8 +259,6 @@ class JadwalTenagaMedisAPI(JadwalTenagaMedisTestSetUp):
         )
         jadwal_tenaga_medis.save()
         data = {
-            "start_time" : "not a valid time",
-            "end_time" : "not a valid time",
             "quota" : "not a number",
             "day" : "not a day"
         }
@@ -270,6 +268,62 @@ class JadwalTenagaMedisAPI(JadwalTenagaMedisTestSetUp):
         jadwal_tenaga_medis = JadwalTenagaMedis.objects.first()
         self.assertEqual(jadwal_tenaga_medis.start_time, datetime.time(6, 0, 0))
         self.assertEqual(jadwal_tenaga_medis.end_time, datetime.time(8, 0, 0))
+        self.assertEqual(jadwal_tenaga_medis.quota, 5)
+        self.assertEqual(jadwal_tenaga_medis.day, "mon")
+
+    def test_update_jadwal_tenaga_medis_invalid_time_range(self):
+        jadwal_tenaga_medis = JadwalTenagaMedis.objects.create(
+            tenaga_medis=self.tenaga_medis_profile,
+            start_time=datetime.time(6, 0, 0),
+            end_time=datetime.time(8, 0, 0),
+            quota=5,
+            day="mon"
+        )
+        jadwal_tenaga_medis.save()
+        data = {
+            "start_time" : "10:00:00",
+            "end_time" : "8:00:00",
+            "quota" : 10,
+            "day" : "fri"
+        }
+        url = reverse(self.jadwal_tenaga_medis_url, kwargs={ "jadwal_tenaga_medis_id" : jadwal_tenaga_medis.id })
+        response = self.client.patch(url, data=data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        jadwal_tenaga_medis = JadwalTenagaMedis.objects.first()
+        self.assertEqual(jadwal_tenaga_medis.start_time, datetime.time(6, 0, 0))
+        self.assertEqual(jadwal_tenaga_medis.end_time, datetime.time(8, 0, 0))
+        self.assertEqual(jadwal_tenaga_medis.quota, 5)
+        self.assertEqual(jadwal_tenaga_medis.day, "mon")
+
+    def test_update_jadwal_tenaga_medis_overlap(self):
+        jadwal_tenaga_medis_1 = JadwalTenagaMedis.objects.create(
+            tenaga_medis=self.tenaga_medis_profile,
+            start_time=datetime.time(6, 0, 0),
+            end_time=datetime.time(8, 0, 0),
+            quota=5,
+            day="mon"
+        )
+        jadwal_tenaga_medis_1.save()
+        jadwal_tenaga_medis_2 = JadwalTenagaMedis.objects.create(
+            tenaga_medis=self.tenaga_medis_profile,
+            start_time=datetime.time(8, 0, 0),
+            end_time=datetime.time(10, 0, 0),
+            quota=5,
+            day="mon"
+        )
+        jadwal_tenaga_medis_2.save()
+        data = {
+            "start_time" : "7:00:00",
+            "end_time" : "10:00:00",
+            "quota" : 5,
+            "day" : "mon"
+        }
+        url = reverse(self.jadwal_tenaga_medis_url, kwargs={ "jadwal_tenaga_medis_id" : jadwal_tenaga_medis_2.id })
+        response = self.client.patch(url, data=data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        jadwal_tenaga_medis = JadwalTenagaMedis.objects.get(id=jadwal_tenaga_medis_2.id)
+        self.assertEqual(jadwal_tenaga_medis.start_time, datetime.time(8, 0, 0))
+        self.assertEqual(jadwal_tenaga_medis.end_time, datetime.time(10, 0, 0))
         self.assertEqual(jadwal_tenaga_medis.quota, 5)
         self.assertEqual(jadwal_tenaga_medis.day, "mon")
 
