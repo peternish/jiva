@@ -91,6 +91,9 @@ class JadwalTenagaMedisAPI(APIView):
                 {"error": f"no 'jadwal tenaga medis' found with id : {jadwal_tenaga_medis_id}"},
                 status=status.HTTP_404_NOT_FOUND,
             )
+        time_validation_errors = validate_time(current_jadwal=jadwal_tenaga_medis, data=request.data)
+        if time_validation_errors:
+            return Response(time_validation_errors, status=status.HTTP_400_BAD_REQUEST)
         serializer = JadwalTenagaMedisSerializer(instance=jadwal_tenaga_medis, data=request.data, partial=True)
         if serializer.is_valid(raise_exception=True):
             serializer.save()

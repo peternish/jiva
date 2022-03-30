@@ -9,13 +9,25 @@ from klinik.models import TenagaMedisProfile
 import datetime
 
 
-def validate_time(tenaga_medis: TenagaMedisProfile, data: dict):
-    start_time = datetime.datetime.strptime(data.get("start_time"), "%H:%M:%S").time()
-    end_time = datetime.datetime.strptime(data.get("end_time"), "%H:%M:%S").time()
+def validate_time(data: dict, tenaga_medis: TenagaMedisProfile=None, current_jadwal: JadwalTenagaMedis=None):
+    if tenaga_medis:
+        start_time = datetime.datetime.strptime(data.get("start_time"), "%H:%M:%S").time()
+        end_time = datetime.datetime.strptime(data.get("end_time"), "%H:%M:%S").time()
+        current_jadwals = JadwalTenagaMedis.objects.filter(tenaga_medis=tenaga_medis, day=data.get("day"))
+
+    elif current_jadwal:
+        start_time = data.get("start_time", current_jadwal.start_time.strftime("%H:%M:%S"))
+        start_time = datetime.datetime.strptime(start_time, "%H:%M:%S").time()
+        end_time = data.get("end_time", current_jadwal.end_time.strftime("%H:%M:%S"))
+        end_time = datetime.datetime.strptime(end_time, "%H:%M:%S").time()
+        current_jadwals = JadwalTenagaMedis.objects.filter(
+            tenaga_medis=current_jadwal.tenaga_medis,
+            day=data.get("day", current_jadwal.day)
+        ).exclude(id=current_jadwal.id)
+    
     if not time_range_is_valid(start_time=start_time, end_time=end_time):
         return { "time": "start_time must be before end_time" }
-    current_jadwals = JadwalTenagaMedis.objects.filter(tenaga_medis=tenaga_medis, day=data.get("day"))
-    if time_range_will_overlap(current_jadwals, (start_time, end_time)):
+    if time_range_will_overlap(current_jadwals=current_jadwals, new_time=(start_time, end_time)):
         return { "overlap": "the time will overlap with current jadwal tenaga medis times" }
     return {}
 
