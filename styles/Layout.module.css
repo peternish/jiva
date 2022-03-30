@@ -1,4 +1,7 @@
-.containerWithSidebar {
-    padding: 1em 1em 1em 5em;
-    max-width: 175vh;
+.sidebarContainer {
+    padding: 1em 2em 2em 6em;  
+}
+
+.pageHeader {
+    padding-bottom: 1em;
 }

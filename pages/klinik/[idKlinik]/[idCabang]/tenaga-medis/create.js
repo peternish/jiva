@@ -9,9 +9,6 @@ import { Formik, Form } from "formik";
 import TextInput from "@components/common/TextInput";
 import Dropzone from '@components/TenagaMedisPageComponents/Dropzone';
 
-// styles
-import layoutStyles from '@styles/Layout.module.css';
-
 // redux
 import { useDispatch } from "react-redux";
 import { createTenagaMedis as createTenagaMedisHelper } from "@redux/modules/tenagaMedis/thunks";
@@ -35,10 +32,7 @@ function CreateTenagaMedis() {
 
   return (
     <main>
-      <Layout>
-        <div className={layoutStyles.containerWithSidebar}>
-          <h1>Tambah Tenaga Medis</h1>
-          
+      <Layout title="Tambah Tenaga Medis">
           <Formik
             initialValues={{ ...fields }}
             validate={(values) => {
@@ -94,7 +88,6 @@ function CreateTenagaMedis() {
               </Form>
             )}
           </Formik>
-        </div>
       </Layout>
     </main>
   );

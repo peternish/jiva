@@ -63,7 +63,7 @@ const fields = {
 const Login = () => {
   const dispatch = useDispatch();
   return (
-    <Layout navType="topbar">
+    <Layout navType="topbar" title="Masuk">
       <CSS>
         <Card id="card">
           <h1 id="title">Masuk</h1>
