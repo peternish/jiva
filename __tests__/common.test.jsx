@@ -47,12 +47,12 @@ describe("<FormBuilder/>", () => {
 
 describe("<FormRender/>", () => {
   it("renders the buttons", () => {
-    render(<FormRender />);
+    render(<FormRender schema={[]} submit={() => {}} />);
     expect(screen.getByText("Submit")).toBeInTheDocument();
   });
 
   it("ensure the save button doesn't throw an error", async () => {
-    render(<FormRender />);
+    render(<FormRender schema={[]} submit={() => {}} />);
     const submitButton = screen.getByText("Submit");
     expect(() => fireEvent.click(submitButton)).not.toThrowError();
   });
@@ -60,6 +60,7 @@ describe("<FormRender/>", () => {
   it("renders input with schema", async () => {
     render(
       <FormRender
+        submit={() => {}}
         schema={[
           {
             type: "text",
@@ -79,6 +80,7 @@ describe("<FormRender/>", () => {
   it("shows required form", async () => {
     render(
       <FormRender
+        submit={() => {}}
         schema={[
           {
             type: "text",
@@ -105,7 +107,7 @@ describe("<FormRender/>", () => {
   });
 
   it("doesn't render input because schema is empty", async () => {
-    render(<FormRender schema={[]} />);
+    render(<FormRender schema={[]} submit={() => {}} />);
 
     // negative: ensure field is no longer rendered
     expect(screen.queryByRole("input")).not.toBeInTheDocument();
