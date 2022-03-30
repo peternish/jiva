@@ -5,6 +5,7 @@ from django.db import models
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework import serializers
 
 # model and serializer imports
 from .models import JadwalTenagaMedis
@@ -14,7 +15,7 @@ from klinik.models import Cabang, TenagaMedisProfile
 # other import
 from urllib.request import Request
 from jiva_be.utils import IsStafPermission
-from .utils import validate_time
+import json
 
 
 def get_object(klass: models.Model, pk: int):
@@ -58,13 +59,14 @@ class CreateJadwalTenagaMedisAPI(APIView):
                 {"error": f"no 'tenaga medis' found with id : {tenaga_medis_id}"},
                 status=status.HTTP_404_NOT_FOUND,
             )
-        time_validation_errors = validate_time(tenaga_medis=tenaga_medis, data=request.data)
-        if time_validation_errors:
-            return Response(time_validation_errors, status=status.HTTP_400_BAD_REQUEST)
         serializer = JadwalTenagaMedisSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
-            serializer.save(tenaga_medis=tenaga_medis)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            try:
+                serializer.save(tenaga_medis=tenaga_medis)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            except serializers.ValidationError as errors:
+                errors = json.loads(json.dumps(errors.__dict__["detail"]))
+                return Response(errors, status=status.HTTP_400_BAD_REQUEST)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -91,13 +93,14 @@ class JadwalTenagaMedisAPI(APIView):
                 {"error": f"no 'jadwal tenaga medis' found with id : {jadwal_tenaga_medis_id}"},
                 status=status.HTTP_404_NOT_FOUND,
             )
-        time_validation_errors = validate_time(current_jadwal=jadwal_tenaga_medis, data=request.data)
-        if time_validation_errors:
-            return Response(time_validation_errors, status=status.HTTP_400_BAD_REQUEST)
         serializer = JadwalTenagaMedisSerializer(instance=jadwal_tenaga_medis, data=request.data, partial=True)
         if serializer.is_valid(raise_exception=True):
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            try:
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            except serializers.ValidationError as errors:
+                errors = json.loads(json.dumps(errors.__dict__["detail"]))
+                return Response(errors, status=status.HTTP_400_BAD_REQUEST)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     def delete(self, request: Request, jadwal_tenaga_medis_id: int, format=None):

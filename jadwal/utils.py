@@ -11,15 +11,13 @@ import datetime
 
 def validate_time(data: dict, tenaga_medis: TenagaMedisProfile=None, current_jadwal: JadwalTenagaMedis=None):
     if tenaga_medis:
-        start_time = datetime.datetime.strptime(data.get("start_time"), "%H:%M:%S").time()
-        end_time = datetime.datetime.strptime(data.get("end_time"), "%H:%M:%S").time()
+        start_time = data.get("start_time")
+        end_time = data.get("end_time")
         current_jadwals = JadwalTenagaMedis.objects.filter(tenaga_medis=tenaga_medis, day=data.get("day"))
 
     elif current_jadwal:
-        start_time = data.get("start_time", current_jadwal.start_time.strftime("%H:%M:%S"))
-        start_time = datetime.datetime.strptime(start_time, "%H:%M:%S").time()
-        end_time = data.get("end_time", current_jadwal.end_time.strftime("%H:%M:%S"))
-        end_time = datetime.datetime.strptime(end_time, "%H:%M:%S").time()
+        start_time = data.get("start_time", current_jadwal.start_time)
+        end_time = data.get("end_time", current_jadwal.end_time)
         current_jadwals = JadwalTenagaMedis.objects.filter(
             tenaga_medis=current_jadwal.tenaga_medis,
             day=data.get("day", current_jadwal.day)
