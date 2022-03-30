@@ -4,9 +4,7 @@ import { useRouter } from 'next/router';
 import Button from '@mui/material/Button';
 import TenagaMedisTable from '@components/TenagaMedisPageComponents/TenagaMedisTable';
 import Layout from '@components/Layout';
-
-// styles
-import layoutStyles from '@styles/Layout.module.css';
+import Box from "@mui/material/Box";
 
 // redux
 import { useEffect } from 'react';
@@ -20,14 +18,11 @@ function DashboardTenagaMedis() {
 
   return (
     <main>
-      <Layout>
-        <div className={layoutStyles.containerWithSidebar}>
-          <h1>Daftar Tenaga Medis</h1>
-
+      <Layout title="Daftar Tenaga Medis">
+        <Box sx={{ width : '85%'}}>
           <TenagaMedisTable />
-
           <Button href={`/klinik/${idKlinik}/${idCabang}/tenaga-medis/create`} variant="contained">Tambah Tenaga Medis</Button>
-        </div>
+        </Box>
       </Layout>
     </main>
   );

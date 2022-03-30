@@ -57,7 +57,7 @@ describe('Sidebar', () => {
     nextRouter.useRouter.mockImplementation(() => ({ 
       route: '/klinik/1/1', 
       query: { idKlinik: 1, idCabang: 1 },
-      isReady: true, 
+      isReady: false, 
     }));
 
     render(

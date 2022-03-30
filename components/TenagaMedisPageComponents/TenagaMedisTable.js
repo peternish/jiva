@@ -28,7 +28,7 @@ function TenagaMedisTable() {
   useEffect(() => {
     const { idCabang } = query;
     dispatch(getTenagaMedis({ idCabang }));
-  });
+  }, [query, dispatch]);
   const { idKlinik, idCabang } = query;
 
   const { tenagaMedisList } = useSelector(state => state.tenagaMedis);

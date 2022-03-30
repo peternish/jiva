@@ -7,9 +7,6 @@ import Layout from '@components/Layout';
 import { Formik, Form } from "formik";
 import TextInput from "@components/common/TextInput";
 
-// styles
-import layoutStyles from '@styles/Layout.module.css';
-
 // redux
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from 'react';
@@ -25,17 +22,14 @@ function UpdateTenagaMedis() {
   useEffect(() => {
     const { id } = query;
     dispatch(getTenagaMedisByID({ idTenagaMedis: id }));
-  });
+  }, [dispatch, query]);
   const { idKlinik, idCabang } = query;
 
   const { tenagaMedis } = useSelector(state => state.tenagaMedis);
 
   return (
     <main>
-      <Layout>
-        <div className={layoutStyles.containerWithSidebar}>
-          <h1>Update Tenaga Medis</h1>
-
+      <Layout title="Update Tenaga Medis">
           {
             tenagaMedis && 
             <Formik
@@ -81,7 +75,6 @@ function UpdateTenagaMedis() {
               )}
             </Formik>
           }
-        </div>
       </Layout>
     </main>
   );

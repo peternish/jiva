@@ -1,10 +1,9 @@
 // component imports
-import Head from "next/head";
 import { Formik, Form } from "formik"
 import Button from "@mui/material/Button"
 import TextInput from "components/common/TextInput"
 import Layout from "@components/Layout";
-import Container from '@mui/material/Container'
+import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack';
 
 import CSS from "@components/PengaturanPenggunaComponents/CSS";
@@ -30,15 +29,9 @@ const Tambah = () => {
   };
 
   return (
-        <Layout navType="sidebar">
+        <Layout navType="sidebar" title="Tambah Staf">
           <CSS>
-            <Head>
-              <title>Tambah | Pengaturan Staf</title>
-              <meta name="tambah pengaturan Staf" content="tambah pengaturan Staf" />
-              <link rel="icon" href="/favicon.ico" />
-            </Head>
-            <Container /*className={layoutStyles.containerWithSidebar}*/>
-              <h1>Tambah Staf</h1>
+            <Box>
               <Formik
                 initialValues={fields}
                 validate={(values) => {
@@ -88,7 +81,7 @@ const Tambah = () => {
                 </Form>
                 )}
               </Formik>
-            </Container>
+            </Box>
           </CSS>
         </Layout>
   );

@@ -26,7 +26,7 @@ function PenggunaTable() {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getPengaturanPengguna( query ));
-  });
+  },[dispatch, query]);
 
   const { penggunaTable } = useSelector(state => state.pengaturanPengguna);
 
