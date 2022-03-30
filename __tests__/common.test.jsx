@@ -2,7 +2,6 @@ import "@testing-library/jest-dom";
 import TextInput from "@components/common/TextInput";
 import FormBuilder from "@components/common/FormBuilder";
 import FormRender from "@components/common/FormRender";
-
 import { render, screen, act, fireEvent } from "@testing-library/react";
 import { Formik } from "formik";
 import PageHeader from "@components/Layout/PageHeader";
@@ -34,6 +33,11 @@ describe("<FormBuilder/>", () => {
   it("renders the input options", () => {
     expect(screen.getByText("Save")).toBeInTheDocument();
     expect(screen.getByText("Clear")).toBeInTheDocument();
+    expect(screen.getByText("Pratinjau")).toBeInTheDocument();
+  });
+
+  it("renders the copy button url button ", () => {
+    expect(screen.getByTestId("ContentCopyIcon")).toBeInTheDocument();
   });
 
   it("ensure the clear button works", async () => {
