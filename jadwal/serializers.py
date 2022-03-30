@@ -1,4 +1,5 @@
 # rest imports
+from account.serializers import TenagaMedisProfileSerializer
 from rest_framework import serializers
 
 # model imports
@@ -6,6 +7,8 @@ from .models import JadwalTenagaMedis
 
 
 class JadwalTenagaMedisSerializer(serializers.ModelSerializer):
+    tenaga_medis = TenagaMedisProfileSerializer(read_only=True)
+
     class Meta:
         model = JadwalTenagaMedis
         fields = [
