@@ -169,6 +169,7 @@ class JadwalTenagaMedisAPI(JadwalTenagaMedisTestSetUp):
         url = reverse(self.jadwal_tenaga_medis_url, kwargs={ "jadwal_tenaga_medis_id" : jadwal_tenaga_medis.id })
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data.tenaga_medis.account["id"], self.tenaga_medis_profile.id)
         self.assertEqual(response.data["start_time"], "06:00:00")
         self.assertEqual(response.data["end_time"], "08:00:00")
         self.assertEqual(response.data["quota"], 5)
