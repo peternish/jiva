@@ -141,6 +141,40 @@ class CreateJadwalTenagaMedisAPI(JadwalTenagaMedisTestSetUp):
         response = self.client.post(url, data=data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(JadwalTenagaMedis.objects.count(), 0)
+
+    def test_create_jadwal_tenaga_medis_invalid_time_range(self):
+        self.assertEqual(JadwalTenagaMedis.objects.count(), 0)
+        data = {
+            "start_time" : "10:00:00",
+            "end_time" : "8:00:00",
+            "quota" : 5,
+            "day" : "mon"
+        }
+        url = reverse(self.create_jadwal_tenaga_medis_url, kwargs={ "tenaga_medis_id" : self.tenaga_medis_profile.id })
+        response = self.client.post(url, data=data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(JadwalTenagaMedis.objects.count(), 0)
+    
+    def test_create_jadwal_tenaga_medis_overlap(self):
+        jadwal_tenaga_medis = JadwalTenagaMedis.objects.create(
+            tenaga_medis=self.tenaga_medis_profile,
+            start_time=datetime.time(8, 0, 0),
+            end_time=datetime.time(10, 0, 0),
+            quota=5,
+            day="mon"
+        )
+        jadwal_tenaga_medis.save()
+        self.assertEqual(JadwalTenagaMedis.objects.count(), 1)
+        data = {
+            "start_time" : "9:00:00",
+            "end_time" : "11:00:00",
+            "quota" : 5,
+            "day" : "mon"
+        }
+        url = reverse(self.create_jadwal_tenaga_medis_url, kwargs={ "tenaga_medis_id" : self.tenaga_medis_profile.id })
+        response = self.client.post(url, data=data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(JadwalTenagaMedis.objects.count(), 1)
     
     def test_create_jadwal_tenaga_medis_not_found(self):
         self.assertEqual(JadwalTenagaMedis.objects.count(), 0)
