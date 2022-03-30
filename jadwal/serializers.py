@@ -28,15 +28,21 @@ class JadwalTenagaMedisSerializer(serializers.ModelSerializer):
         ]
     
     def create(self, validated_data):
-        time_validation_errors = validate_time(tenaga_medis=validated_data["tenaga_medis"], data=validated_data)
-        if time_validation_errors:
-            raise serializers.ValidationError(time_validation_errors)
+        validation_errors = {}
+        validation_errors.update(validate_time(tenaga_medis=validated_data["tenaga_medis"], data=validated_data))
+        if validated_data.get("quota") < 0:
+            validation_errors.update({ "quota": "should be a positive number" })
+        if validation_errors:
+            raise serializers.ValidationError(validation_errors)
         return super(JadwalTenagaMedisSerializer, self).create(validated_data)
 
     def update(self, instance, validated_data):
-        time_validation_errors = validate_time(current_jadwal=instance, data=validated_data)
-        if time_validation_errors:
-            raise serializers.ValidationError(time_validation_errors)
+        validation_errors = {}
+        validation_errors.update(validate_time(current_jadwal=instance, data=validated_data))
+        if validated_data.get("quota", instance.quota) < 0:
+            validation_errors.update({ "quota": "should be a positive number" })
+        if validation_errors:
+            raise serializers.ValidationError(validation_errors)
         instance.start_time = validated_data.get("start_time", instance.start_time)
         instance.end_time = validated_data.get("end_time", instance.end_time)
         instance.quota = validated_data.get("quota", instance.quota)
