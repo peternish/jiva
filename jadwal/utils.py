@@ -38,6 +38,6 @@ def time_range_will_overlap(current_jadwals: QuerySet, new_time: tuple):
     for jadwal in current_jadwals:
         time_start = jadwal.start_time
         time_end = jadwal.end_time
-        if (time_start < new_time_end)  and  (time_end > new_time_start):
+        if (time_start < new_time_end) and (time_end > new_time_start):
             return True
     return False

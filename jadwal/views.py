@@ -35,7 +35,7 @@ class JadwalTenagaMedisListAPI(APIView):
         cabang = get_object(Cabang, pk=cabang_id)
         if cabang is None:
             return Response(
-                {"error": f"no 'cabang' found with id : {cabang_id}"},
+                { "error": f"no 'cabang' found with id : {cabang_id}" },
                 status=status.HTTP_404_NOT_FOUND,
             )
         tenaga_medis_profiles = TenagaMedisProfile.objects.filter(cabang=cabang)
@@ -56,7 +56,7 @@ class CreateJadwalTenagaMedisAPI(APIView):
         tenaga_medis = get_object(TenagaMedisProfile, pk=tenaga_medis_id)
         if tenaga_medis is None:
             return Response(
-                {"error": f"no 'tenaga medis' found with id : {tenaga_medis_id}"},
+                { "error": f"no 'tenaga medis' found with id : {tenaga_medis_id}" },
                 status=status.HTTP_404_NOT_FOUND,
             )
         serializer = JadwalTenagaMedisSerializer(data=request.data)
@@ -80,7 +80,7 @@ class JadwalTenagaMedisAPI(APIView):
         jadwal_tenaga_medis = get_object(JadwalTenagaMedis, pk=jadwal_tenaga_medis_id)
         if jadwal_tenaga_medis is None:
             return Response(
-                {"error": f"no 'jadwal tenaga medis' found with id : {jadwal_tenaga_medis_id}"},
+                { "error": f"no 'jadwal tenaga medis' found with id : {jadwal_tenaga_medis_id}" },
                 status=status.HTTP_404_NOT_FOUND,
             )
         serializer = JadwalTenagaMedisSerializer(jadwal_tenaga_medis)
@@ -90,7 +90,7 @@ class JadwalTenagaMedisAPI(APIView):
         jadwal_tenaga_medis = get_object(JadwalTenagaMedis, pk=jadwal_tenaga_medis_id)
         if jadwal_tenaga_medis is None:
             return Response(
-                {"error": f"no 'jadwal tenaga medis' found with id : {jadwal_tenaga_medis_id}"},
+                { "error": f"no 'jadwal tenaga medis' found with id : {jadwal_tenaga_medis_id}" },
                 status=status.HTTP_404_NOT_FOUND,
             )
         serializer = JadwalTenagaMedisSerializer(instance=jadwal_tenaga_medis, data=request.data, partial=True)
@@ -107,11 +107,11 @@ class JadwalTenagaMedisAPI(APIView):
         jadwal_tenaga_medis = get_object(JadwalTenagaMedis, pk=jadwal_tenaga_medis_id)
         if jadwal_tenaga_medis is None:
             return Response(
-                {"error": f"no 'jadwal tenaga medis' found with id : {jadwal_tenaga_medis_id}"},
+                { "error": f"no 'jadwal tenaga medis' found with id : {jadwal_tenaga_medis_id}" },
                 status=status.HTTP_404_NOT_FOUND,
             )
         jadwal_tenaga_medis.delete()
         return Response(
-            {"success": "delete success"}, 
+            { "success": "delete success" }, 
             status=status.HTTP_200_OK
         )

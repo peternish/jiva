@@ -24,7 +24,7 @@ class JadwalTenagaMedisSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = [
             "id",
-            "tenaga_medis"
+            "tenaga_medis",
         ]
     
     def create(self, validated_data):

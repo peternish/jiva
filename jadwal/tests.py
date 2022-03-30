@@ -31,7 +31,7 @@ class JadwalTenagaMedisTestSetUp(APITestCase, TestCase):
         self.owner_account = Account.objects.create_user(
             email="owner@email.com",
             full_name="Gordon Matthew Thomas Sumner",
-            password=TEST_USER_PASSWORD,
+            password=TEST_USER_PASSWORD
         )
         self.owner_profile = OwnerProfile.objects.create(account=self.owner_account)
 
@@ -50,7 +50,7 @@ class JadwalTenagaMedisTestSetUp(APITestCase, TestCase):
         self.tenaga_medis_account = Account.objects.create_user(
             email="tenaga_medis@email.com",
             full_name="dr. DisRespect",
-            password=TEST_USER_PASSWORD,
+            password=TEST_USER_PASSWORD
         )
         self.tenaga_medis_profile = TenagaMedisProfile.objects.create(
             account=self.tenaga_medis_account, cabang=self.cabang, sip="sip"
@@ -64,7 +64,7 @@ class JadwalTenagaMedisTestSetUp(APITestCase, TestCase):
                 "email": self.owner_account.email, 
                 "password": TEST_USER_PASSWORD 
             },
-            format="json",
+            format="json"
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTrue("access" in response.data)
