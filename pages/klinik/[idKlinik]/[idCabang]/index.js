@@ -1,15 +1,11 @@
-import { useRouter } from 'next/router';
-
 // components
 import Layout from '@components/Layout';
-import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
-
-// styles
-import layoutStyles from '@styles/Layout.module.css';
-
+import Button from '@mui/material/Button';
+import { useRouter } from 'next/router';
 // redux
 import { useEffect } from 'react';
+
 
 function IndexCabang() {
   const router = useRouter();

@@ -7,9 +7,6 @@ import Layout from '@components/Layout';
 import { Formik, Form } from "formik";
 import TextInput from "@components/common/TextInput";
 
-// styles
-import layoutStyles from '@styles/Layout.module.css';
-
 // redux
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from 'react';
@@ -32,7 +29,7 @@ function UpdateTenagaMedis() {
 
   return (
     <main>
-      <Layout title='Update Tenaga Medis'>
+      <Layout title="Update Tenaga Medis">
           {
             tenagaMedis && 
             <Formik
