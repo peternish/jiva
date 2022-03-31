@@ -30,14 +30,15 @@ class Klinik(models.Model):
 
 class Cabang(models.Model):
     location = models.CharField(max_length=300)
-    klinik = models.ForeignKey(Klinik, on_delete=models.CASCADE)
+    klinik: Klinik = models.ForeignKey(Klinik, on_delete=models.CASCADE)
 
     def __str__(self) -> str:
         return self.location
 
 
 class StafProfile(Profile):
-    cabang = models.ForeignKey(Cabang, on_delete=models.CASCADE, related_name="staf")
+    cabang = models.ForeignKey(
+        Cabang, on_delete=models.CASCADE, related_name="staf")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -68,3 +69,8 @@ class JadwalPasien(models.Model):
     #     JadwalTenagaMedis, on_delete=models.CASCADE)
     def __str__(self) -> str:
         return f"Jadwal pasien dengan NIK:{self.lamaranPasien.nik}"
+
+class DynamicForm(models.Model):
+    cabang = models.ForeignKey(Cabang, on_delete=models.CASCADE)
+    formtype = models.CharField(max_length=100)
+    fields = models.JSONField("Fields", default=list)
