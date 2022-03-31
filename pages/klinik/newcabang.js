@@ -111,7 +111,6 @@ const NewCabang = () => {
                     variant="contained"
                     type="submit"
                     disabled={!isValid}
-                    loadingPosition="start"
                     loading={isSubmitting}
                   >
                     Buat

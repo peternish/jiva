@@ -142,7 +142,6 @@ const Register = () => {
                         variant="contained"
                         type="submit"
                         disabled={!isValid || !sikFile}
-                        loadingPosition="start"
                         loading={isSubmitting}
                       >
                         Daftar
