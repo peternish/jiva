@@ -1,3 +1,4 @@
+from email.policy import default
 from django.db import models
 from account.models import Account
 
@@ -52,3 +53,18 @@ class TenagaMedisProfile(Profile):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.role = "tenaga_medis"
+
+class LamaranPasien(models.Model):
+    nik = models.CharField(max_length=20)
+    JSONfields = models.JSONField(default=dict)
+    def __str__(self) -> str:
+        return self.nik
+
+class JadwalPasien(models.Model):
+    date = models.DateField
+    lamaranPasien = models.OneToOneField(
+        LamaranPasien, on_delete=models.CASCADE)
+    # jadwalTenagaMedis = models.ForeignKey(
+    #     JadwalTenagaMedis, on_delete=models.CASCADE)
+    def __str__(self) -> str:
+        return f"Jadwal pasien dengan NIK:{self.lamaranPasien.nik}"

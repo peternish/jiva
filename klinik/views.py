@@ -2,8 +2,8 @@ from functools import partial
 from urllib import request
 from rest_framework.permissions import IsAuthenticated
 from urllib.request import Request
-from .serializers import KlinikSerializer, CabangSerializer
-from .models import Cabang, Klinik, OwnerProfile
+from .serializers import KlinikSerializer, CabangSerializer, LamaranPasienSerializer
+from .models import Cabang, Klinik, OwnerProfile, LamaranPasien
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -115,4 +115,40 @@ class CabangDetailApi(APIView):
         if cabang is None:
             return Response(status=status.HTTP_404_NOT_FOUND)
         cabang.delete()
+        return Response(status=status.HTTP_200_OK)
+
+class LamaranPasienApi(APIView):
+
+    permission_classes = [
+        IsAuthenticated,
+    ]
+
+    def post(self, request: Request):
+        serializer = LamaranPasienSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def get(self, request: Request, pk: int):
+        try:
+            lamaranPasien = get_object(LamaranPasien, pk)
+            serializer = LamaranPasienSerializer(lamaranPasien)
+            return Response(data=serializer.data, status=status.HTTP_200_OK)
+        except LamaranPasien.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+    def patch(self, request: Request, pk: int):
+        lamaranPasien = get_object(LamaranPasien, pk)
+        serializer = LamaranPasienSerializer(data=request.data)
+        if serializer.is_valid() and lamaranPasien is not None:
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request: Request, pk: int):
+        lamaranPasien = get_object(LamaranPasien, pk)
+        if lamaranPasien is None:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        lamaranPasien.delete()
         return Response(status=status.HTTP_200_OK)
