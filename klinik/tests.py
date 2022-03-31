@@ -100,15 +100,29 @@ class KlinikTestSetUp(APITestCase):
         self.pasien_list = reverse("klinik:pasien-list")
         self.pasien_detail = "klinik:pasien-detail"
 
-        self.json_test = {
-        "name": "Water Bowl",
-        "files": {
-            "one": "1",
-            "two": "2"
-        }
-    }
+        self.json_test = [
+            {
+                "name": "John",
+                "example": "example",
+                "tags": [
+                    "esse",
+                    "sunt",
+                    "quis"
+                    ],
+                "friends": [
+                        {
+                        "id": 0,
+                        "name": "Contreras Weeks"
+                        },
+                        {
+                        "id": 1,
+                        "name": "Dawn Lott"
+                        }
+                    ]
+            }
+        ]
         for _ in range(10):
-            pas = LamaranPasien(nik=f"420691337{_}", JSONfields={"nama": f"Abdullah{_}"})
+            pas = LamaranPasien(nik=f"420691337{_}", fields=[{"nama": f"Abdullah{_}"}])
             pas.save()
 
 
@@ -271,9 +285,9 @@ class LamaranPasienApiTest(KlinikTestSetUp):
 
     def test_post_lamaran_pasien(self):
         self.assertEqual(LamaranPasien.objects.count(), 10)
-        data = {"nik": "13371337", "JSONfields": self.json_test}
+        data = {"nik": "13371337", "fields": self.json_test}
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
-        resp = self.client.post(self.pasien_list, data=data, format='json')
+        resp = self.client.post(self.pasien_list, data=data)
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
         self.assertEqual(LamaranPasien.objects.count(), 11)
 
@@ -288,7 +302,7 @@ class LamaranPasienApiTest(KlinikTestSetUp):
     def test_patch_lamaran_pasien(self):
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         uri = reverse(self.pasien_detail, kwargs={"pk": 1})
-        resp = self.client.patch(uri, data={"nik": "13377", "JSONfields": self.json_test }, format='json')
+        resp = self.client.patch(uri, data={"fields": self.json_test})
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
 
     def test_patch_lamaran_pasien_fail(self):
