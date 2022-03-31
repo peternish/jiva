@@ -59,9 +59,6 @@ function DetailTenagaMedis() {
               />
 
               <Stack spacing={2} direction="row">
-                <Button href={`/klinik/${idKlinik}/${idCabang}/tenaga-medis`}>
-                  Kembali
-                </Button>
                 <Button
                   variant="outlined"
                   onClick={handleModalOpen}
