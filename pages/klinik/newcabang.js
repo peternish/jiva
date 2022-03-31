@@ -6,6 +6,7 @@ import Card from "@mui/material/Card";
 import { Formik, Form } from "formik";
 import TextInput from "@components/common/TextInput";
 import Button from "@mui/material/Button";
+import LoadingButton from "@mui/lab/LoadingButton";
 
 // redux
 import { useDispatch } from "react-redux";
@@ -87,11 +88,12 @@ const NewCabang = () => {
               });
               return errors;
             }}
-            onSubmit={(values) => {
-              dispatch(registerCabang(values));
+            onSubmit={(values, { setSubmitting }) => {
+              setSubmitting(true)
+              dispatch(registerCabang(values, setSubmitting));
             }}
           >
-            {({ isValid, errors }) => (
+            {({ isValid, errors, isSubmitting }) => (
               <Form id="form">
                 <TextInput
                   name="location"
@@ -105,13 +107,15 @@ const NewCabang = () => {
                       Kembali
                     </Button>
                   </Link>
-                  <Button
+                  <LoadingButton 
                     variant="contained"
                     type="submit"
                     disabled={!isValid}
+                    loadingPosition="start"
+                    loading={isSubmitting}
                   >
                     Buat
-                  </Button>
+                  </LoadingButton >
                 </div>
               </Form>
             )}

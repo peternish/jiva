@@ -29,13 +29,14 @@ export const getKlinik = () => {
   }
 }
 
-export const registerCabang = ({ location } = {}) => {
+export const registerCabang = ({ location } = {}, setSubmitting) => {
   return async () => {
     try {
       await jivaAPI.cabang.register({ location })
       window.location.assign("/klinik");
       toast('Cabang berhasil dibuat', { type: toast.TYPE.SUCCESS });
     } catch (err) {
+      setSubmitting(false)
       toast(err.toString(), { type: toast.TYPE.ERROR });
     }
   };
