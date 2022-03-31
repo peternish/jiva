@@ -47,12 +47,13 @@ export const createPengaturanPengguna = ({
   email,
   password,
   fullName,
-} = {}) => {
+} = {}, setSubmitting) => {
   return async (dispatch) => {
     try {
       await jivaAPI.pengaturanPengguna.createPengaturanPengguna({ idCabang, email, password, full_name: fullName });
       window.location.assign(`/klinik/${idKlinik}/${idCabang}/pengaturan-pengguna`);
-    } catch (error) { 
+    } catch (error) {
+      setSubmitting(false) 
       console.log(error);
       if (error.response.data != null){
         toast(error.response.data.email.toString(), { type: toast.TYPE.ERROR });
