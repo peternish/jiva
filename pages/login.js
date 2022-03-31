@@ -80,7 +80,7 @@ const Login = () => {
             }}
             onSubmit={(values, { setSubmitting }) => {
               setSubmitting(true);
-              dispatch(login(values));
+              dispatch(login(values, setSubmitting));
             }}
           >
             {({ isValid, errors, isSubmitting }) => (
