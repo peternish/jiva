@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from .models import Cabang, Klinik, OwnerProfile, LamaranPasien
 from rest_framework.test import APITestCase
 from django.urls import reverse
@@ -93,9 +94,17 @@ class KlinikTestSetUp(APITestCase):
         self.alt_location = "alam baka"
 
         self.pasien_list = reverse("klinik:pasien-list")
+        self.pasien_detail = "klinik:pasien-detail"
 
+        self.json_test = {
+        "name": "Water Bowl",
+        "files": {
+            "one": "1",
+            "two": "2"
+        }
+    }
         for _ in range(10):
-            pas = LamaranPasien(nik=f"420691337{_}", fields="")
+            pas = LamaranPasien(nik=f"420691337{_}", JSONfields={"nama": f"Abdullah{_}"})
             pas.save()
 
 
@@ -237,7 +246,7 @@ class CabangAPITest(KlinikTestSetUp):
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
         self.assertEqual(Cabang.objects.count(), 20)
 
-class lamaranPasienApiTest(KlinikTestSetUp):
+class LamaranPasienApiTest(KlinikTestSetUp):
     def test_get_lamaran_pasien(self):
         self.assertEqual(LamaranPasien.objects.count(), 10)
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
@@ -245,24 +254,26 @@ class lamaranPasienApiTest(KlinikTestSetUp):
         resp = self.client.get(uri)
 
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(resp.data), 10)
-        self.assertNotEqual(len(resp.data), 20)
+        self.assertEqual(len(resp.data), 3)
+        self.assertEqual(resp.data["id"], 1)
+        self.assertEqual(resp.data["nik"], "4206913370")
 
     def test_get_lamaran_pasien_without_auth_fails(self):
-        resp = self.client.get(self.pasien_list)
+        uri = reverse(self.pasien_detail, kwargs={"pk": 1})
+        resp = self.client.get(uri)
         self.assertEqual(resp.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_post_lamaran_pasien(self):
         self.assertEqual(LamaranPasien.objects.count(), 10)
-        data = {"nik": "13371337"}
+        data = {"nik": "13371337", "JSONfields": self.json_test}
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
-        resp = self.client.post(self.pasien_list, data=data)
+        resp = self.client.post(self.pasien_list, data=data, format='json')
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
         self.assertEqual(LamaranPasien.objects.count(), 11)
 
     def test_post_lamaran_pasien_fail(self):
         self.assertEqual(LamaranPasien.objects.count(), 10)
-        data = {}
+        data = {"nama": "astaga"}
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         resp = self.client.post(self.pasien_list, data=data)
         self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
@@ -271,7 +282,7 @@ class lamaranPasienApiTest(KlinikTestSetUp):
     def test_patch_lamaran_pasien(self):
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         uri = reverse(self.pasien_detail, kwargs={"pk": 1})
-        resp = self.client.patch(uri, data={"nik": "13377"})
+        resp = self.client.patch(uri, data={"nik": "13377", "JSONfields": self.json_test }, format='json')
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
 
     def test_patch_lamaran_pasien_fail(self):
@@ -285,7 +296,7 @@ class lamaranPasienApiTest(KlinikTestSetUp):
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         uri = reverse(self.pasien_detail, kwargs={"pk": 1})
         resp = self.client.delete(uri)
-        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
         self.assertEqual(LamaranPasien.objects.count(), 9)
 
     def test_delete_lamaran_pasien_not_found(self):
@@ -293,5 +304,5 @@ class lamaranPasienApiTest(KlinikTestSetUp):
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         uri = reverse(self.pasien_detail, kwargs={"pk": 69})
         resp = self.client.delete(uri)
-        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
         self.assertEqual(LamaranPasien.objects.count(), 10)
