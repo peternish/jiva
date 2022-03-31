@@ -24,8 +24,10 @@ class CabangSerializer(serializers.ModelSerializer):
 class LamaranPasienSerializer(serializers.ModelSerializer):
     class Meta:
         model = LamaranPasien
-        fields = ["id", "nik", "JSONfields"]
+        fields = ["id", "nik", "fields"]
         read_only_fields = ["id", "nik"]
+
+    fields = serializers.ListField(child=serializers.JSONField())
 
 # class JadwalPasienSerializer(serializers.ModelSerializer):
 #     class Meta:

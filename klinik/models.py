@@ -57,12 +57,12 @@ class TenagaMedisProfile(Profile):
 
 class LamaranPasien(models.Model):
     nik = models.CharField(max_length=20)
-    JSONfields = models.JSONField(default=dict)
+    fields = models.JSONField("Fields", default=list)
     def __str__(self) -> str:
         return self.nik
 
 class JadwalPasien(models.Model):
-    date = models.DateField
+    date = models.DateField()
     lamaranPasien = models.OneToOneField(
         LamaranPasien, on_delete=models.CASCADE)
     # jadwalTenagaMedis = models.ForeignKey(
