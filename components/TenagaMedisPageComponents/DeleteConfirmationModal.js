@@ -61,7 +61,7 @@ function DeletionConfirmationModal({ idKlinik, idCabang, tenagaMedis, open, hand
         </Fade>
       </Modal>
     </div>
-  );
+  )
 }
 
 export default DeletionConfirmationModal;
