@@ -90,7 +90,7 @@ const NewCabang = () => {
             }}
             onSubmit={(values, { setSubmitting }) => {
               setSubmitting(true)
-              dispatch(registerCabang(values, setSubmitting));
+              dispatch(registerCabang(setSubmitting, values));
             }}
           >
             {({ isValid, errors, isSubmitting }) => (

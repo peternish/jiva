@@ -29,7 +29,7 @@ export const getKlinik = () => {
   }
 }
 
-export const registerCabang = ({ location } = {}, setSubmitting) => {
+export const registerCabang = (setSubmitting, { location } = {}) => {
   return async () => {
     try {
       await jivaAPI.cabang.register({ location })
