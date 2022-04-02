@@ -3,12 +3,10 @@ import { useRouter } from 'next/router'
 // components
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
+import LoadingButton from "@mui/lab/LoadingButton";
 import Layout from '@components/Layout';
 import { Formik, Form } from "formik";
 import TextInput from "@components/common/TextInput";
-
-// styles
-import layoutStyles from '@styles/Layout.module.css';
 
 // redux
 import { useSelector, useDispatch } from "react-redux";
@@ -31,10 +29,7 @@ function UpdateTenagaMedis() {
 
   return (
     <main>
-      <Layout>
-        <div className={layoutStyles.containerWithSidebar}>
-          <h1>Update Tenaga Medis</h1>
-
+      <Layout title="Update Tenaga Medis">
           {
             tenagaMedis && 
             <Formik
@@ -49,11 +44,12 @@ function UpdateTenagaMedis() {
                 
                 return errors;
               }}
-              onSubmit={(values) => {
-                dispatch(updateTenagaMedisByID({ idKlinik, idCabang, idTenagaMedis: tenagaMedis.account.id, fullName: values.fullName }));
+              onSubmit={(values, { setSubmitting }) => {
+                setSubmitting(true)
+                dispatch(updateTenagaMedisByID({ idKlinik, idCabang, idTenagaMedis: tenagaMedis.account.id, fullName: values.fullName }, setSubmitting));
               }}
             >
-              {({ isValid, errors }) => (
+              {({ isValid, errors, isSubmitting }) => (
                 <Form>
                   <TextInput 
                     name="fullName"
@@ -74,13 +70,19 @@ function UpdateTenagaMedis() {
 
                   <Stack spacing={2} direction="row">
                     <Button href={`/klinik/${idKlinik}/${idCabang}/tenaga-medis/detail/${tenagaMedis.account.id}`} variant="outlined">Batal</Button>
-                    <Button variant="contained" type="submit" disabled={!isValid}>Simpan</Button>
+                    <LoadingButton 
+                      variant="contained" 
+                      type="submit" 
+                      disabled={!isValid}
+                      loading={isSubmitting}
+                    >
+                      Simpan
+                    </LoadingButton>
                   </Stack>
                 </Form>
               )}
             </Formik>
           }
-        </div>
       </Layout>
     </main>
   );

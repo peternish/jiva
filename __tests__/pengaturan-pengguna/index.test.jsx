@@ -87,6 +87,10 @@ describe("Pengaturan Pengguna Main", () => {
     const menus = screen.getAllByTestId("modify-dropdown-menu");
     const menu = menus[0];
 
+    /*kalau ditest klo pake `await act(async () => {` malah error gk tau kenapa 
+    - router.prefetch is not a function
+    - TestingLibraryElementError: Unable to find an element with the text: Konfirmasi Hapus Staf.
+    */
     act(async () => {
       await fireEvent.click(menu);
     });

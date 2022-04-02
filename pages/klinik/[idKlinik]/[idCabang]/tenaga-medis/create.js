@@ -3,14 +3,12 @@ import { useRouter } from 'next/router';
 
 // components
 import Button from '@mui/material/Button';
+import LoadingButton from "@mui/lab/LoadingButton"
 import Layout from '@components/Layout';
 import Stack from '@mui/material/Stack';
 import { Formik, Form } from "formik";
 import TextInput from "@components/common/TextInput";
 import Dropzone from '@components/TenagaMedisPageComponents/Dropzone';
-
-// styles
-import layoutStyles from '@styles/Layout.module.css';
 
 // redux
 import { useDispatch } from "react-redux";
@@ -38,10 +36,7 @@ function CreateTenagaMedis() {
 
   return (
     <main>
-      <Layout>
-        <div className={layoutStyles.containerWithSidebar}>
-          <h1>Tambah Tenaga Medis</h1>
-          
+      <Layout title="Tambah Tenaga Medis">
           <Formik
             initialValues={{ ...fields }}
             validate={(values) => {
@@ -58,11 +53,12 @@ function CreateTenagaMedis() {
               
               return errors;
             }}
-            onSubmit={(values) => {
-              dispatch(createTenagaMedisHelper({ idKlinik, idCabang, ...values, sipFile }));
+            onSubmit={(values, { setSubmitting }) => {
+              setSubmitting(true)
+              dispatch(createTenagaMedisHelper({ idKlinik, idCabang, ...values, sipFile }, setSubmitting));
             }}
           >
-            {({ isValid, errors }) => (
+            {({ isValid, errors, isSubmitting }) => (
               <Form>
                 <TextInput 
                   name="fullName"
@@ -92,12 +88,18 @@ function CreateTenagaMedis() {
 
                 <Stack spacing={2} direction="row">
                   <Button href={`/klinik/${idKlinik}/${idCabang}/tenaga-medis`} variant="outlined">Batal</Button>
-                  <Button variant="contained" type="submit" disabled={!isValid || !sipFile }>Tambah</Button>
+                  <LoadingButton 
+                    variant="contained" 
+                    type="submit" 
+                    disabled={!isValid || !sipFile }
+                    loading={isSubmitting}
+                  >
+                    Tambah
+                  </LoadingButton>
                 </Stack>
               </Form>
             )}
           </Formik>
-        </div>
       </Layout>
     </main>
   );

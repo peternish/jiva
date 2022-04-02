@@ -27,24 +27,26 @@ const getTenagaMedis = ({ idCabang }) => {
     };
 };
 
-const updateTenagaMedisByID = ({ idKlinik, idCabang, idTenagaMedis, fullName }) => {
+const updateTenagaMedisByID = ({ idKlinik, idCabang, idTenagaMedis, fullName }, setSubmitting) => {
     return async (dispatch) => {
         try {
             await jivaAPI.tenagaMedis.updateTenagaMedisByID({ idTenagaMedis, fullName });
             window.location.assign(`/klinik/${idKlinik}/${idCabang}/tenaga-medis`);
         } catch (error) {
+            setSubmitting(false)
             let errorMessage = "Terjadi kesalahan 😥";
             toast(errorMessage, { type: toast.TYPE.ERROR });
         }
     };
 };
 
-const createTenagaMedis = ({ idKlinik, idCabang, email, password, fullName, sipFile }) => {
+const createTenagaMedis = ({ idKlinik, idCabang, email, password, fullName, sipFile }, setSubmitting) => {
     return async (dispatch) => {
         try {
             await jivaAPI.tenagaMedis.createTenagaMedis({ idCabang, email, password, fullName, sipFile });
             window.location.assign(`/klinik/${idKlinik}/${idCabang}/tenaga-medis`);
         } catch (error) {
+            setSubmitting(false)
             let errorMessage = "Terjadi kesalahan 😥";
             if (error?.response?.status === 400 && error?.response?.data) {
                 const message = error.response.data?.account?.email[0];
