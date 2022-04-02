@@ -18,19 +18,18 @@ import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from 'react';
 import { getTenagaMedis } from "@redux/modules/tenagaMedis/thunks";
 
+
 function TenagaMedisTable() {
   const { query, isReady } = useRouter();
+  const dispatch = useDispatch();
+
   useEffect(() => {
     if (!isReady) return;
-  }, [isReady]);
-
-  const dispatch = useDispatch();
-  useEffect(() => {
     const { idCabang } = query;
     dispatch(getTenagaMedis({ idCabang }));
-  }, [dispatch, query]);
-  const { idKlinik, idCabang } = query;
+  }, [isReady, dispatch, query]);
 
+  const { idKlinik, idCabang } = query;
   const { tenagaMedisList } = useSelector(state => state.tenagaMedis);
 
   return (

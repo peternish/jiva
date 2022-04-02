@@ -23,17 +23,15 @@ function DetailTenagaMedis() {
   const handleModalClose = () => setModalOpen(false);
 
   const { query, isReady } = useRouter();
+  const dispatch = useDispatch();
+
   useEffect(() => {
     if (!isReady) return;
-  }, [isReady]);
-
-  const dispatch = useDispatch();
-  useEffect(() => {
     const { id } = query;
     dispatch(getTenagaMedisByID({ idTenagaMedis: id }));
-  }, [dispatch, query]);
-  const { idKlinik, idCabang } = query;
+  }, [isReady, dispatch, query]);
 
+  const { idKlinik, idCabang } = query;
   const { tenagaMedis } = useSelector(state => state.tenagaMedis);
   
   return (
