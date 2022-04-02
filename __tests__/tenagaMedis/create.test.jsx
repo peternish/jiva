@@ -1,11 +1,18 @@
 import { fireEvent, render, screen, act } from "@testing-library/react";
+import '@testing-library/jest-dom';
+import * as nextRouter from 'next/router';
+
+// components
 import CreateTenagaMedis from '@pages/klinik/[idKlinik]/[idCabang]/tenaga-medis/create';
 import Dropzone, { getColor } from '@components/TenagaMedisPageComponents/Dropzone';
+
+// redux
 import { Provider } from "react-redux";
 import { store } from "@redux/store";
-import '@testing-library/jest-dom';
+
+// utils
 import constants from "@utils/constants";
-import * as nextRouter from 'next/router';
+
 
 describe('CreateTenagaMedis', () => {  
   beforeEach(() => {
@@ -15,7 +22,6 @@ describe('CreateTenagaMedis', () => {
       query: { idKlinik: 1, idCabang: 1 },
       isReady: true, 
     }));
-
     render(
       <Provider store={store}>
         <CreateTenagaMedis />
@@ -34,7 +40,6 @@ describe('CreateTenagaMedis', () => {
 
   it('should render', () => {
     const main = screen.getByRole('main');
-
     expect(main).toBeInTheDocument();
   });
 
@@ -43,7 +48,6 @@ describe('CreateTenagaMedis', () => {
     const heading = screen.getByRole('heading', {
       name: /Tambah Tenaga Medis/,
     });
-
     expect(heading).toBeInTheDocument();
   });
 
@@ -52,7 +56,6 @@ describe('CreateTenagaMedis', () => {
     const fullNameField = screen.getByLabelText("Nama Lengkap");
     const emailField = screen.getByLabelText("Email");
     const passwordField = screen.getByLabelText("Password");
-
     expect(fullNameField).toBeInTheDocument();
     expect(emailField).toBeInTheDocument();
     expect(passwordField).toBeInTheDocument();
@@ -63,7 +66,6 @@ describe('CreateTenagaMedis', () => {
     const button = screen.getByRole('link', {
       name: /Batal/,
     });
-
     expect(button).toBeInTheDocument();
   });
 
@@ -72,7 +74,6 @@ describe('CreateTenagaMedis', () => {
     const button = screen.getByRole('button', {
       name: /Tambah/,
     });
-
     expect(button).toBeInTheDocument();
   });
 
@@ -81,17 +82,14 @@ describe('CreateTenagaMedis', () => {
     const fullNameField = screen.getByLabelText("Nama Lengkap");
     const emailField = screen.getByLabelText("Email");
     const passwordField = screen.getByLabelText("Password");
-
     await act(async () => {
       await fireEvent.change(fullNameField, {target: {value: 'dr. Budi Budiman, Sp.A.'}});
       await fireEvent.change(emailField, {target: {value: 'budi.budiman'}});
       await fireEvent.change(passwordField, {target: {value: 'password'}});
-
       expect(fullNameField.value).toBe('dr. Budi Budiman, Sp.A.');
       expect(emailField.value).toBe('budi.budiman');
       expect(passwordField.value).toBe('password');
     });
-
     expect(await screen.getByText("Masukkan email yang valid")).toBeInTheDocument();
     expect(await screen.getByText("Unggah surat izin praktik")).toBeInTheDocument();
   });
@@ -130,6 +128,7 @@ describe("Dropzone", () => {
     expect(setSipFile).toHaveBeenCalledTimes(1);
   });
 
+  
   it("returns correct color", () => {
     expect(getColor({ isDragAccept: true })).toBe("#00e676");
     expect(getColor({ isDragReject: true })).toBe("#ff1744");
