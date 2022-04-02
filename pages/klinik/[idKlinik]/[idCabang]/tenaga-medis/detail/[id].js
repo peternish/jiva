@@ -17,6 +17,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from 'react';
 import { getTenagaMedisByID } from "@redux/modules/tenagaMedis/thunks";
 
+
 function DetailTenagaMedis() {
   const [modalOpen, setModalOpen] = useState(false);
   const handleModalOpen = () => setModalOpen(true);

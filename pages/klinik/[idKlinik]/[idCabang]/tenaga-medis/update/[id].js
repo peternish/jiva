@@ -15,6 +15,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from 'react';
 import { getTenagaMedisByID, updateTenagaMedisByID } from "@redux/modules/tenagaMedis/thunks";
 
+
 function UpdateTenagaMedis() {
   const { query, isReady } = useRouter();
   const dispatch = useDispatch();
