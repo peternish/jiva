@@ -117,7 +117,7 @@ class JadwalTenagaMedisListAPITest(JadwalTenagaMedisTestSetUp):
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
     
 
-class CreateJadwalTenagaMedisAPI(JadwalTenagaMedisTestSetUp):
+class CreateJadwalTenagaMedisAPITest(JadwalTenagaMedisTestSetUp):
     def test_create_jadwal_tenaga_medis(self):
         self.assertEqual(JadwalTenagaMedis.objects.count(), 0)
         data = {
@@ -202,7 +202,7 @@ class CreateJadwalTenagaMedisAPI(JadwalTenagaMedisTestSetUp):
         self.assertEqual(JadwalTenagaMedis.objects.count(), 0)
 
 
-class JadwalTenagaMedisAPI(JadwalTenagaMedisTestSetUp):
+class JadwalTenagaMedisAPITest(JadwalTenagaMedisTestSetUp):
     def test_get_jadwal_tenaga_medis(self):
         jadwal_tenaga_medis = JadwalTenagaMedis.objects.create(
             tenaga_medis=self.tenaga_medis_profile,
