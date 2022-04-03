@@ -63,7 +63,7 @@ const Register = () => {
               dispatch(signup({ ...values, sikFile }));
             }}
           >
-            {({ errors, validateForm, isValid, validateField }) => (
+            {({ errors, validateForm, isValid, validateField, submitForm }) => (
               <Form className="form">
                 {pageNum === 0 ? (
                   <div className="container">
