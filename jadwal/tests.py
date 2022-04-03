@@ -585,9 +585,8 @@ class JadwalPasienAPITestSetup(APITestCase, TestCase):
             )
             jadwal_lain.save()
 
-class JadwalPasienAPITest(JadwalPasienAPITestSetup):
-    
 
+class JadwalPasienAPITest(JadwalPasienAPITestSetup):
     def test_create_jadwal_pasien(self):
         self.assertEqual(JadwalPasien.objects.count(), 11)
         self.assertEqual(JadwalTenagaMedis.objects.count(), 2)

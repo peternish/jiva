@@ -26,6 +26,7 @@ class JadwalTenagaMedis(models.Model):
     def __str__(self) -> str:
         return f"{self.tenaga_medis.account}'s Jadwal"
 
+
 class JadwalPasien(models.Model):
     date = models.DateField()
     lamaranPasien = models.OneToOneField(

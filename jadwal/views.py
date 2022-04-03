@@ -1,6 +1,5 @@
 # django imports
 from django.db import models
-from django.http import QueryDict
 
 # rest imports
 from rest_framework import status
@@ -11,7 +10,7 @@ from rest_framework import serializers
 # model and serializer imports
 from .models import JadwalTenagaMedis, JadwalPasien
 from jadwal.serializers import JadwalTenagaMedisSerializer, JadwalPasienSerializer
-from klinik.models import Klinik, Cabang, LamaranPasien, TenagaMedisProfile
+from klinik.models import Cabang, LamaranPasien, TenagaMedisProfile
 
 # other import
 from urllib.request import Request
@@ -141,6 +140,7 @@ class AvailableJadwalTenagaMedisAPI(APIView):
 
 
 class JadwalPasienListAPI(APIView):
+
     permission_classes = [
         IsStafPermission
     ]
@@ -156,7 +156,9 @@ class JadwalPasienListAPI(APIView):
         serializer = JadwalPasienSerializer(schema, many=True)
         return Response(serializer.data)
 
+
 class CreateJadwalPasienAPI(APIView):
+
     permission_classes = [
         IsStafPermission
     ]
@@ -175,7 +177,9 @@ class CreateJadwalPasienAPI(APIView):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 class JadwalPasienAPI(APIView):
+
     permission_classes = [
         IsStafPermission
     ]
