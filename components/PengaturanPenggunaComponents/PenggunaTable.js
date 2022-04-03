@@ -53,7 +53,7 @@ function PenggunaTable() {
       {
         <TableRow className={tableStyles.row}>
           <TableCell colSpan={3} align='center'>
-            <h2>Belum ada Staf yang terdaftar</h2>
+            Belum ada Staf yang terdaftar
           </TableCell>
         </TableRow>
       }
