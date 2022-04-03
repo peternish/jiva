@@ -15,6 +15,7 @@ from klinik.models import Cabang, Klinik, OwnerProfile, TenagaMedisProfile, Lama
 # other imports
 import os
 import datetime
+import json
 
 
 TEST_USER_PASSWORD = os.getenv("SECRET_KEY")
@@ -26,6 +27,7 @@ class JadwalTenagaMedisTestSetUp(APITestCase, TestCase):
         self.jadwal_tenaga_medis_list_url = "jadwal:jadwal-tenaga-medis-list"
         self.create_jadwal_tenaga_medis_url = "jadwal:create-jadwal-tenaga-medis"
         self.jadwal_tenaga_medis_url = "jadwal:jadwal-tenaga-medis"
+        self.available_jadwal_tenaga_medis_url = "jadwal:available-jadwal-tenaga-medis"
         
         # owner
         self.owner_account = Account.objects.create_user(
@@ -383,6 +385,94 @@ class JadwalTenagaMedisAPITest(JadwalTenagaMedisTestSetUp):
     def test_delete_jadwal_tenaga_medis_not_found(self):
         url = reverse(self.jadwal_tenaga_medis_url, kwargs={ "jadwal_tenaga_medis_id" : 1999 })
         response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+
+class AvailableJadwalTenagaMedisAPITest(JadwalTenagaMedisTestSetUp):
+    def test_get_available_jadwal_tenaga_medis(self):
+        self.client.credentials(HTTP_AUTHORIZATION=None)
+        jadwal_tenaga_medis = JadwalTenagaMedis.objects.create(
+            tenaga_medis=self.tenaga_medis_profile,
+            start_time=datetime.time(8, 0, 0),
+            end_time=datetime.time(10, 0, 0),
+            quota=2,
+            day="tue"
+        )
+        jadwal_tenaga_medis.save()
+        lamaran_pasien = LamaranPasien.objects.create(
+            nik="123", 
+            fields=[
+                {
+                    "nama": "Antonio"
+                }
+            ]
+        )
+        lamaran_pasien.save()
+        jadwal_pasien = JadwalPasien.objects.create(
+            date=datetime.date(2021, 10, 19),
+            lamaranPasien=lamaran_pasien,
+            jadwalTenagaMedis=jadwal_tenaga_medis
+        )
+        jadwal_pasien.save()
+        data = {
+            "date": "19/10/2021"
+        }
+        url = reverse(self.available_jadwal_tenaga_medis_url, kwargs={ "cabang_id" : self.cabang.id })
+        response = self.client.generic(
+            method="GET", 
+            path=url, 
+            data=json.dumps(data), 
+            content_type="application/json"
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+        
+    def test_get_available_jadwal_tenaga_medis_empty(self):
+        self.client.credentials(HTTP_AUTHORIZATION=None)
+        jadwal_tenaga_medis = JadwalTenagaMedis.objects.create(
+            tenaga_medis=self.tenaga_medis_profile,
+            start_time=datetime.time(8, 0, 0),
+            end_time=datetime.time(10, 0, 0),
+            quota=2,
+            day="tue"
+        )
+        jadwal_tenaga_medis.save()
+        for i in range(2):
+            lamaran_pasien = LamaranPasien.objects.create(
+                nik=f"{i+1}",
+                fields=[
+                    {
+                        "nama": "Antonio"
+                    }
+                ]
+            )
+            lamaran_pasien.save()
+            jadwal_pasien = JadwalPasien.objects.create(
+                date=datetime.date(2021, 10, 19),
+                lamaranPasien=lamaran_pasien,
+                jadwalTenagaMedis=jadwal_tenaga_medis
+            )
+            jadwal_pasien.save()
+        data = {
+            "date": "19/10/2021"
+        }
+        url = reverse(self.available_jadwal_tenaga_medis_url, kwargs={ "cabang_id" : self.cabang.id })
+        response = self.client.generic(
+            method="GET", 
+            path=url, 
+            data=json.dumps(data), 
+            content_type="application/json"
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 0)
+
+    def test_get_available_jadwal_tenaga_medis_cabang_not_found(self):
+        self.client.credentials(HTTP_AUTHORIZATION=None)
+        data = {
+            "date" : "19/10/2021"
+        }
+        url = reverse(self.available_jadwal_tenaga_medis_url, kwargs={ "cabang_id" : 1999 })
+        response = self.client.get(url, data=data)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
 
