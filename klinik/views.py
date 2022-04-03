@@ -219,7 +219,7 @@ class LamaranPasienApi(APIView):
 
     def patch(self, request: Request, pk: int):
         lamaran_pasien = get_object(LamaranPasien, pk)
-        serializer = LamaranPasienSerializer(data=request.data)
+        serializer = LamaranPasienSerializer(lamaran_pasien, data=request.data)
         if serializer.is_valid() and lamaran_pasien is not None:
             serializer.save()
             return Response(serializer.data)
