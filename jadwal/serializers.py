@@ -2,8 +2,9 @@
 from rest_framework import serializers
 
 # model and serializer imports
-from .models import JadwalTenagaMedis
+from .models import JadwalTenagaMedis, JadwalPasien
 from account.serializers import TenagaMedisProfileSerializer
+from klinik.serializers import LamaranPasienSerializer
 
 # other imports
 from jadwal.utils import validate_time
@@ -49,3 +50,12 @@ class JadwalTenagaMedisSerializer(serializers.ModelSerializer):
         instance.day = validated_data.get("day", instance.day)
         instance.save()
         return instance
+
+class JadwalPasienSerializer(serializers.ModelSerializer):
+    jadwal_tenaga_medis = JadwalTenagaMedisSerializer(read_only=True)
+    lamaran_pasien = LamaranPasienSerializer(read_only=True)
+
+    class Meta:
+        model = JadwalPasien
+        fields = ["id", "date", "jadwal_tenaga_medis", "lamaran_pasien" ]
+        read_only_fields = ["id", "jadwal_tenaga_medis", "lamaran_pasien" ]

@@ -7,5 +7,6 @@ admin.site.register(TenagaMedisProfile)
 admin.site.register(Klinik)
 admin.site.register(Cabang)
 admin.site.register(Profile)
+admin.site.register(LamaranPasien)
 
 # Register your models here.

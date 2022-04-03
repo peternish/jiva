@@ -15,6 +15,15 @@ jadwal_tenaga_medis_patterns = [
 
 jadwal_tenaga_medis_patterns = format_suffix_patterns(jadwal_tenaga_medis_patterns)
 
+jadwal_pasien_patterns = [
+    path("<int:jadwal_tenaga_medis_pk>/", JadwalPasienListAPI.as_view(), name="jadwal-pasien-list"),
+    path("id/<int:pk>/", JadwalPasienAPI.as_view(), name="jadwal-pasien-detail"),
+    path("create/<int:jadwal_tenaga_medis_pk>/<int:pasien_pk>/", CreateJadwalPasienAPI.as_view(), name="create-jadwal-pasien")
+]
+
+jadwal_pasien_patterns = format_suffix_patterns(jadwal_pasien_patterns)
+
 urlpatterns = [
     path("tenaga-medis/", include(jadwal_tenaga_medis_patterns)),
+    path("pasien/", include(jadwal_pasien_patterns)),
 ]

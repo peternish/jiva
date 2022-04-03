@@ -1,3 +1,4 @@
+from email.policy import default
 from django.db import models
 from account.models import Account
 
@@ -29,14 +30,15 @@ class Klinik(models.Model):
 
 class Cabang(models.Model):
     location = models.CharField(max_length=300)
-    klinik = models.ForeignKey(Klinik, on_delete=models.CASCADE)
+    klinik: Klinik = models.ForeignKey(Klinik, on_delete=models.CASCADE)
 
     def __str__(self) -> str:
         return self.location
 
 
 class StafProfile(Profile):
-    cabang = models.ForeignKey(Cabang, on_delete=models.CASCADE, related_name="staf")
+    cabang = models.ForeignKey(
+        Cabang, on_delete=models.CASCADE, related_name="staf")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -52,3 +54,14 @@ class TenagaMedisProfile(Profile):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.role = "tenaga_medis"
+
+class LamaranPasien(models.Model):
+    nik = models.CharField(max_length=20)
+    fields = models.JSONField("Fields", default=list)
+    def __str__(self) -> str:
+        return self.nik
+
+class DynamicForm(models.Model):
+    cabang = models.ForeignKey(Cabang, on_delete=models.CASCADE)
+    formtype = models.CharField(max_length=100)
+    fields = models.JSONField("Fields", default=list)

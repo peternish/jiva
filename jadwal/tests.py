@@ -8,9 +8,9 @@ from rest_framework.test import APITestCase
 from rest_framework import status
 
 # model imports
-from .models import JadwalTenagaMedis
+from .models import JadwalTenagaMedis, JadwalPasien
 from account.models import Account
-from klinik.models import Cabang, Klinik, OwnerProfile, TenagaMedisProfile
+from klinik.models import Cabang, Klinik, OwnerProfile, TenagaMedisProfile, LamaranPasien
 
 # other imports
 import os
@@ -384,3 +384,183 @@ class JadwalTenagaMedisAPI(JadwalTenagaMedisTestSetUp):
         url = reverse(self.jadwal_tenaga_medis_url, kwargs={ "jadwal_tenaga_medis_id" : 1999 })
         response = self.client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+
+class JadwalPasienAPITestSetup(APITestCase, TestCase):
+    def setUp(self) -> None:
+        # urls
+        self.jadwal_tenaga_medis_list_url = "jadwal:jadwal-tenaga-medis-list"
+        self.create_jadwal_tenaga_medis_url = "jadwal:create-jadwal-tenaga-medis"
+        self.jadwal_tenaga_medis_url = "jadwal:jadwal-tenaga-medis"
+        
+        self.jadwal_pasien_list_url = "jadwal:jadwal-pasien-list"
+        self.create_jadwal_pasien_url = "jadwal:create-jadwal-pasien"
+        self.jadwal_pasien_url = "jadwal:jadwal-pasien-detail"
+        
+        # owner
+        self.owner_account = Account.objects.create_user(
+            email="owner@email.com",
+            full_name="Gordon Matthew Thomas Sumner",
+            password=TEST_USER_PASSWORD
+        )
+        self.owner_profile = OwnerProfile.objects.create(account=self.owner_account)
+        self.owner_profile.save()
+
+        # klinik 
+        sik = SimpleUploadedFile("Surat Izin Klinik.txt", b"Berizin Resmi")
+        self.klinik = Klinik.objects.create(
+            name="Klinik Maju Jaya Makmur", owner=self.owner_profile, sik=sik
+        )
+        self.klinik.save()
+
+        # cabang
+        self.cabang = Cabang.objects.create(
+            klinik=self.klinik, location="Bantar Gebang"
+        )
+        self.cabang.save()
+
+        # tenaga medis
+        self.tenaga_medis_account = Account.objects.create_user(
+            email="tenaga_medis@email.com",
+            full_name="dr. DisRespect",
+            password=TEST_USER_PASSWORD
+        )
+        self.tenaga_medis_profile = TenagaMedisProfile.objects.create(
+            account=self.tenaga_medis_account, cabang=self.cabang, sip="sip"
+        )
+        self.tenaga_medis_profile.save()
+
+        # owner login
+        url = reverse("account:login")
+        resp = self.client.post(
+            url,
+            {
+                "email": self.owner_account.email, 
+                "password": TEST_USER_PASSWORD 
+            },
+            format="json"
+        )
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertTrue("access" in resp.data)
+        self.assertTrue("refresh" in resp.data)
+        self.token = resp.data["access"]
+        self.auth = "Bearer " + self.token
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+
+        # Should have ID 1
+        self.jadwal_tenaga_medis = JadwalTenagaMedis(
+            tenaga_medis=self.tenaga_medis_profile,
+            start_time=datetime.time(1, 0, 0),
+            end_time=datetime.time(2, 0, 0),
+            quota=5,
+            day="mon"
+        )
+        self.jadwal_tenaga_medis.save()
+
+        # Should have ID 2
+        jadwal_tenaga_medis_lain = JadwalTenagaMedis.objects.create(
+            tenaga_medis=self.tenaga_medis_profile,
+            start_time=datetime.time(2, 0, 0),
+            end_time=datetime.time(6, 0, 0),
+            quota=5,
+            day="tue"
+        )
+        jadwal_tenaga_medis_lain.save()
+
+        # Should have ID 1
+        self.pas = LamaranPasien(nik=f"4206913371", fields=[{"nama": f"Abdullah1"}])
+        self.pas.save()
+
+        # Should have ID starting from 2
+        for _ in range(10):
+            lam = LamaranPasien(nik=f"420691337{_+2}", fields=[{"nama": f"Abdullah{_+2}"}])
+            lam.save()
+        
+        # Should have ID 1
+        jadwal_pasien = JadwalPasien.objects.create(
+            date = datetime.date(1987, 4, 20),
+            lamaranPasien = self.pas,
+            jadwalTenagaMedis = self.jadwal_tenaga_medis
+        )
+        jadwal_pasien.save()
+
+        # Should have ID starting from 2
+        for _ in range(10):
+            date = datetime.datetime(2000, 4, 20)
+            date += datetime.timedelta(days=(7*_))
+            jadwal_lain = JadwalPasien(
+            date = date,
+            lamaranPasien = LamaranPasien.objects.get(id = _+2),
+            jadwalTenagaMedis = jadwal_tenaga_medis_lain
+            )
+            jadwal_lain.save()
+
+class JadwalPasienAPITest(JadwalPasienAPITestSetup):
+    
+
+    def test_create_jadwal_pasien(self):
+        self.assertEqual(JadwalPasien.objects.count(), 11)
+        self.assertEqual(JadwalTenagaMedis.objects.count(), 2)
+        self.assertEqual(LamaranPasien.objects.count(), 11)
+        data = {
+            "date" : datetime.date(1666, 4, 20)
+        }
+
+        lam = LamaranPasien(nik=f"123456678", fields=[{"nama": "Ahmed"}])
+        lam.save()
+        self.assertEqual(LamaranPasien.objects.count(), 12)
+
+        url = reverse(self.create_jadwal_pasien_url, kwargs={"jadwal_tenaga_medis_pk": 2, 
+        "pasien_pk": LamaranPasien.objects.count()})
+        resp = self.client.post(url, data=data)
+        jadwal_pasien = JadwalPasien.objects.last()
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(jadwal_pasien.date, datetime.date(1666, 4, 20))
+        self.assertEqual(jadwal_pasien.jadwalTenagaMedis.id, 2)
+        self.assertEqual(jadwal_pasien.lamaranPasien.id, 12)
+        self.assertEqual(JadwalPasien.objects.count(), 12)
+
+    def test_create_jadwal_pasien_fail(self):
+        self.assertEqual(JadwalPasien.objects.count(), 11)
+        data = {
+            # all missing fields
+        }
+        url = reverse(self.create_jadwal_pasien_url, kwargs={"jadwal_tenaga_medis_pk": 2, 
+        "pasien_pk": 2})
+        resp = self.client.post(url, data=data)
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(JadwalPasien.objects.count(), 11)
+
+    def test_get_jadwal_pasien(self):
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        uri = reverse(self.jadwal_pasien_url, kwargs={"pk": 1})
+        resp = self.client.get(uri)
+
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(resp.data), 2) #id dan date, foreignKey gk keitung di data
+        self.assertEqual(resp.data["id"], 1)
+        self.assertEqual(resp.data["date"], datetime.date(1987, 4, 20).strftime('%Y-%m-%d'))
+
+    def test_get_jadwal_pasien_list(self):
+        self.assertEqual(JadwalPasien.objects.count(), 11)
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        uri = reverse(self.jadwal_pasien_list_url, kwargs={"jadwal_tenaga_medis_pk": 2})
+        resp = self.client.get(uri)
+
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(resp.data), 10) #sebanyak iterasi line 488
+
+    def test_patch_jadwal_pasien(self):
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        uri = reverse(self.jadwal_pasien_url, kwargs={"pk": 1})
+        self.assertEqual(JadwalPasien.objects.get(id = 1).lamaranPasien.id, 1)
+        resp = self.client.patch(uri, data={"date" : datetime.date(2021, 4, 20)})
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+
+    def test_delete_jadwal_pasien(self):
+        self.assertEqual(JadwalPasien.objects.count(), 11)
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        uri = reverse(self.jadwal_pasien_url, kwargs={"pk": 1})
+        resp = self.client.delete(uri)
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(JadwalPasien.objects.count(), 10)
