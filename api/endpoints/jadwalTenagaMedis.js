@@ -19,6 +19,7 @@ const jadwalTenagaMedisEndpoints = {
       "quota": quota,
       "day": day
     }
+    console.log(data, "API")
     return axios.post(`${BASE_URL}/jadwal/tenaga-medis/create/${idTenagaMedis}/`, data)
   }
 };
