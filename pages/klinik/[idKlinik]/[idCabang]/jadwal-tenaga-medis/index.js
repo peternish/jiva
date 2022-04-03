@@ -63,14 +63,9 @@ const Jadwal = (props) => {
         "sun": 7,
       }
 
-      const [myEvents, setEvents] = useState([
-        {
-          id: -1,
-          title: "Testing",
-          start: new Date('April 1, 2022 12:30:00'),
-          end: new Date('April 1, 2022 13:30:00'),
-        }
-      ]);
+      const [myEvents, setEvents] = useState([{}]);
+
+      const tenagaMedisDict = {};
 
       let currentId = 0;
 
@@ -84,6 +79,9 @@ const Jadwal = (props) => {
             const end_time = jadwalTenagaMedis.end_time;
             const day = jadwalTenagaMedis.day;
             const quota = jadwalTenagaMedis.quota;
+            const id_tenaga_medis = jadwalTenagaMedis.tenaga_medis.account.id
+
+            tenagaMedisDict[id_tenaga_medis] = title;
   
             // console.log(typeof day, "tipe hari")
             // console.log(dayDict)
@@ -114,7 +112,7 @@ const Jadwal = (props) => {
             currentId = currentId + 1;
             const id = currentId;
   
-            setEvents((prev) => [...prev, { id, start, end, title, quota }])
+            setEvents((prev) => [...prev, { id, start, end, title, quota, id_tenaga_medis }])
           })
         }
       }
@@ -170,11 +168,21 @@ const Jadwal = (props) => {
               quota: currentEvent ? currentEvent.quota : undefined}}
             onSubmit = {async (values) => {
                 var start = new Date(values.jadwal_hari + " " + values.start)
+                var startdb = new Date(values.jadwal_hari + " " + values.start)
                 var end = new Date(values.jadwal_hari + " " + values.end)
+                var enddb = new Date(values.jadwal_hari + " " + values.end)
                 var title = values.jadwal_title
                 var quota = values.quota
                 currentId = currentId + 1
                 var id = currentId
+
+                startdb.setHours(startdb.getHours() - Math.abs(currentDate.getTimezoneOffset())/60)
+                console.log(start, "oldstart")
+                console.log(startdb, 'newstart')
+
+                enddb.setHours(enddb.getHours() - Math.abs(currentDate.getTimezoneOffset())/60)
+                console.log(end, "oldend")
+                console.log(enddb, "newend")
                 if(title) {
                   setEvents((prev) => [...prev, { id, start, end, title, quota }])
                   //dispatch(createJadwalTenagaMedis({  }))
