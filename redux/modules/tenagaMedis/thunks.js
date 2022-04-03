@@ -9,7 +9,8 @@ const getTenagaMedisByID = ({ idTenagaMedis }) => {
             const { data } = await jivaAPI.tenagaMedis.getTenagaMedisByID({ idTenagaMedis });
             await dispatch(setTenagaMedis(data));
         } catch (error) {
-            console.log(error);
+            let errorMessage = "Terjadi kesalahan 😥";
+            toast(errorMessage, { type: toast.TYPE.ERROR });
         }
     };
 };
@@ -20,7 +21,8 @@ const getTenagaMedis = ({ idCabang }) => {
             const { data } = await jivaAPI.tenagaMedis.getTenagaMedis({ idCabang });
             await dispatch(setTenagaMedisList(data));
         } catch (error) {
-            console.log(error);
+            let errorMessage = "Terjadi kesalahan 😥";
+            toast(errorMessage, { type: toast.TYPE.ERROR });
         }
     };
 };
@@ -32,7 +34,8 @@ const updateTenagaMedisByID = ({ idKlinik, idCabang, idTenagaMedis, fullName }, 
             window.location.assign(`/klinik/${idKlinik}/${idCabang}/tenaga-medis`);
         } catch (error) {
             setSubmitting(false)
-            console.log(error);
+            let errorMessage = "Terjadi kesalahan 😥";
+            toast(errorMessage, { type: toast.TYPE.ERROR });
         }
     };
 };
@@ -60,7 +63,8 @@ const deleteTenagaMedisByID = ({ idKlinik, idCabang, idTenagaMedis }) => {
             await jivaAPI.tenagaMedis.deleteTenagaMedisByID({ idTenagaMedis });
             window.location.assign(`/klinik/${idKlinik}/${idCabang}/tenaga-medis`);
         } catch {
-            console.log(error);
+            let errorMessage = "Terjadi kesalahan 😥";
+            toast(errorMessage, { type: toast.TYPE.ERROR });
         }
     };
 };

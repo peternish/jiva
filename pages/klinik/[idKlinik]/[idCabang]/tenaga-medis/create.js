@@ -15,14 +15,17 @@ import { useDispatch } from "react-redux";
 import { createTenagaMedis as createTenagaMedisHelper } from "@redux/modules/tenagaMedis/thunks";
 import { useEffect } from 'react';
 
+
 function CreateTenagaMedis() {
   const dispatch = useDispatch();
   const [sipFile, setSipFile] = useState(null);
 
   const { query, isReady } = useRouter();
+
   useEffect(() => {
     if (!isReady) return;
   }, [isReady]);
+  
   const { idKlinik, idCabang } = query;
 
   const fields = {

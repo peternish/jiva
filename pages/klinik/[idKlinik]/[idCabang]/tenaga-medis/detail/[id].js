@@ -14,25 +14,24 @@ import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { getTenagaMedisByID } from "@redux/modules/tenagaMedis/thunks";
 
+
 function DetailTenagaMedis() {
   const [modalOpen, setModalOpen] = useState(false);
   const handleModalOpen = () => setModalOpen(true);
   const handleModalClose = () => setModalOpen(false);
 
   const { query, isReady } = useRouter();
+  const dispatch = useDispatch();
+
   useEffect(() => {
     if (!isReady) return;
-  }, [isReady]);
-
-  const dispatch = useDispatch();
-  useEffect(() => {
     const { id } = query;
     dispatch(getTenagaMedisByID({ idTenagaMedis: id }));
-  }, [dispatch, query]);
+  }, [isReady, dispatch, query]);
+
   const { idKlinik, idCabang } = query;
-
-  const { tenagaMedis } = useSelector((state) => state.tenagaMedis);
-
+  const { tenagaMedis } = useSelector(state => state.tenagaMedis);
+  
   return (
     <main>
       <Layout title="Detil Informasi Tenaga Medis">
