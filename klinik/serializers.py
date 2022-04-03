@@ -23,9 +23,15 @@ class CabangSerializer(serializers.ModelSerializer):
 
 
 class DynamicFormSerializer(serializers.ModelSerializer):
+    klinik = serializers.SerializerMethodField(read_only=True)
+
     class Meta:
         model = DynamicForm
-        fields = ["id", "cabang_id", "formtype", "fields"]
+        fields = ["id", "cabang_id", "formtype", "fields", "klinik"]
         read_only_fields = ["id", "cabang_id"]
 
     fields = serializers.ListField(child=serializers.JSONField())
+
+    def get_klinik(self, obj):
+        klinik = obj.cabang.klinik
+        return { "name": klinik.name }

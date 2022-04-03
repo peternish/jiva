@@ -152,6 +152,14 @@ class DynamicFormListApi(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class DynamicFormPublicApi(APIView):
+    def get(self, request: Request, pk: int) -> Response:
+        schema: DynamicForm = get_object(DynamicForm, pk)
+
+        if schema is not None:
+            serializer = DynamicFormSerializer(schema)
+            return Response(data=serializer.data)
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
 class DynamicFormDetailApi(APIView):
 
@@ -166,17 +174,6 @@ class DynamicFormDetailApi(APIView):
         klinik: Klinik = Klinik.objects.get(owner=owner)
 
         return cabang.pk == schema.cabang.pk and cabang.klinik.pk == klinik.pk
-
-    def get(self, request: Request, cabang_pk: int, pk: int, format=None) -> Response:
-        cabang: Cabang = get_object(Cabang, cabang_pk)
-        schema: DynamicForm = get_object(DynamicForm, pk)
-
-        if cabang is None or schema is None:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-        if self._is_legally_owned(request, cabang, schema):
-            serializer = DynamicFormSerializer(schema)
-            return Response(data=serializer.data)
-        return Response(status=status.HTTP_401_UNAUTHORIZED)
 
     def patch(self, request: Request, cabang_pk: int, pk: int, format=None):
         schema: DynamicForm = get_object(DynamicForm, pk)

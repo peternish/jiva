@@ -279,6 +279,7 @@ class FormAPITest(APITestCase):
 
         self.urls_dform = "klinik:dform-list"
         self.urls_dform_detail = "klinik:dform-detail"
+        self.urls_dform_public = "klinik:dform-public"
 
         return super().setUp()
 
@@ -303,10 +304,9 @@ class FormAPITest(APITestCase):
     def test_get_form_schema_from_cabang_by_id(self):
         schema_list = list(DynamicForm.objects.all())
         schema = secrets.choice(schema_list)
-        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         uri = reverse(
-            self.urls_dform_detail,
-            kwargs={"cabang_pk": self.cabang.id, "pk": schema.pk},
+            self.urls_dform_public,
+            kwargs={"pk": schema.pk},
         )
         resp = self.client.get(uri)
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
@@ -316,23 +316,13 @@ class FormAPITest(APITestCase):
         self.assertEqual(resp.data["fields"], schema.fields)
 
     def test_get_form_schema_from_cabang_by_id_but_id_not_found(self):
-        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         uri = reverse(
-            self.urls_dform_detail, kwargs={
-                "cabang_pk": self.cabang.id, "pk": 9999}
+            self.urls_dform_public, kwargs={
+                "pk": 9999
+            }
         )
         resp = self.client.get(uri)
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
-
-    def test_get_form_schema_from_cabang_by_id_but_unauthorized(self):
-        schema_list = list(DynamicForm.objects.all())
-        schema = secrets.choice(schema_list)
-        uri = reverse(
-            self.urls_dform_detail,
-            kwargs={"cabang_pk": self.cabang.id, "pk": schema.pk},
-        )
-        resp = self.client.get(uri)
-        self.assertEqual(resp.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_post_form_schema_to_cabang(self):
         self.assertEqual(len(DynamicForm.objects.all()), 3)
