@@ -289,6 +289,8 @@ class LamaranPasienApiTest(KlinikTestSetUp):
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         resp = self.client.post(self.pasien_list, data=data)
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(resp.data["nik"], "13371337")
+        self.assertEqual(resp.data["fields"], self.json_test)
         self.assertEqual(LamaranPasien.objects.count(), 11)
 
     def test_post_lamaran_pasien_fail(self):
@@ -304,6 +306,8 @@ class LamaranPasienApiTest(KlinikTestSetUp):
         uri = reverse(self.pasien_detail, kwargs={"pk": 1})
         resp = self.client.patch(uri, data={"fields": self.json_test})
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(resp.data["id"], 1)
+        self.assertEqual(resp.data["fields"], self.json_test)
 
     def test_patch_lamaran_pasien_fail(self):
         self.client.credentials(HTTP_AUTHORIZATION=self.auth3)
