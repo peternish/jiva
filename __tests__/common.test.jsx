@@ -6,6 +6,7 @@ import { render, screen, act, fireEvent } from "@testing-library/react";
 import { Formik } from "formik";
 import PageHeader from "@components/Layout/PageHeader";
 import * as nextRouter from 'next/router';
+import URLPreview from "@components/common/URLPreview";
 
 describe("<TextInput/>", () => {
   it("renders a input", () => {
@@ -27,26 +28,22 @@ describe("<TextInput/>", () => {
 
 describe("<FormBuilder/>", () => {
   beforeEach(() => {
-    render(<FormBuilder />);
+    render(<FormBuilder onSave={() => {}} />);
   });
 
   it("renders the input options", () => {
-    expect(screen.getByText("Save")).toBeInTheDocument();
-    expect(screen.getByText("Clear")).toBeInTheDocument();
+    expect(screen.getByText("Simpan")).toBeInTheDocument();
+    expect(screen.getByText("Reset")).toBeInTheDocument();
     expect(screen.getByText("Pratinjau")).toBeInTheDocument();
   });
 
-  it("renders the copy button url button ", () => {
-    expect(screen.getByTestId("ContentCopyIcon")).toBeInTheDocument();
-  });
-
   it("ensure the clear button works", async () => {
-    const clearButton = screen.getByText("Clear");
+    const clearButton = screen.getByText("Reset");
     expect(() => fireEvent.click(clearButton)).not.toThrowError();
   });
 
   it("ensure the save button works", async () => {
-    const saveButton = screen.getByText("Save");
+    const saveButton = screen.getByText("Simpan");
     expect(() => fireEvent.click(saveButton)).not.toThrowError();
   });
 });
@@ -139,4 +136,18 @@ describe("<PageHeader/>", () => {
     
     expect(backButton).toBeInTheDocument()
   })
+})
+
+describe("<URLPreview/>", () => {
+  beforeEach(() => {
+    render(<URLPreview URL={"testURl"} />);
+  });
+
+  it("renders the text box", () => {
+    expect(screen.getByTestId("URLPreview")).toBeInTheDocument();
+  })
+
+  it("renders the copy button url button ", () => {
+    expect(screen.getByTestId("ContentCopyIcon")).toBeInTheDocument();
+  });
 })
