@@ -11,6 +11,7 @@ jadwal_tenaga_medis_patterns = [
     path("<int:cabang_id>/", JadwalTenagaMedisListAPI.as_view(), name="jadwal-tenaga-medis-list"),
     path("create/<int:tenaga_medis_id>/", CreateJadwalTenagaMedisAPI.as_view(), name="create-jadwal-tenaga-medis"),
     path("id/<int:jadwal_tenaga_medis_id>/", JadwalTenagaMedisAPI.as_view(), name="jadwal-tenaga-medis"),
+    path("available/<int:cabang_id>/", AvailableJadwalTenagaMedisAPI.as_view(), name="available-jadwal-tenaga-medis"),
 ]
 
 jadwal_tenaga_medis_patterns = format_suffix_patterns(jadwal_tenaga_medis_patterns)

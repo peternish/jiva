@@ -41,3 +41,12 @@ def time_range_will_overlap(current_jadwals: QuerySet, new_time: tuple):
         if (time_start < new_time_end) and (time_end > new_time_start):
             return True
     return False
+
+def filter_available_jadwal(jadwal_tenaga_medis_query: QuerySet, date: datetime.datetime):
+    res = []
+    for jadwalTenagaMedis in jadwal_tenaga_medis_query:
+        quota = jadwalTenagaMedis.quota
+        booked = jadwalTenagaMedis.jadwal_pasien.filter(date=date).count()
+        if booked < quota:
+            res.append(jadwalTenagaMedis)
+    return res

@@ -31,6 +31,6 @@ class JadwalPasien(models.Model):
     lamaranPasien = models.OneToOneField(
         LamaranPasien, on_delete=models.CASCADE)
     jadwalTenagaMedis = models.ForeignKey(
-        JadwalTenagaMedis, on_delete=models.CASCADE)
+        JadwalTenagaMedis, on_delete=models.CASCADE, related_name="jadwal_pasien")
     def __str__(self) -> str:
         return f"Jadwal pasien dengan NIK:{self.lamaranPasien.nik}"
