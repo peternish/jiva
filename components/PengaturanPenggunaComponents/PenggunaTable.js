@@ -30,6 +30,36 @@ function PenggunaTable() {
 
   const { penggunaTable } = useSelector(state => state.pengaturanPengguna);
 
+  let tableView = <TableBody>
+    {
+      penggunaTable && penggunaTable.map((pengaturanPengguna) => (
+        <TableRow key={pengaturanPengguna.account.id} className={tableStyles.row}>
+          <TableCell>
+          {pengaturanPengguna.account.full_name}
+          </TableCell>
+          <TableCell>
+            {pengaturanPengguna.account.email}
+          </TableCell>
+          <TableCell>
+            <ModifyDropdownMenu pengaturanPengguna={pengaturanPengguna}/>
+          </TableCell>
+        </TableRow>
+      ))
+    }
+  </TableBody>
+
+  if (penggunaTable && penggunaTable.length == 0) {
+    tableView = <TableBody>
+      {
+        <TableRow className={tableStyles.row}>
+          <TableCell colSpan={3} align='center'>
+            Belum ada Staf yang terdaftar
+          </TableCell>
+        </TableRow>
+      }
+    </TableBody>
+  }
+
   return (
     <TableContainer className={tableStyles.container}>
       <Table>
@@ -41,23 +71,8 @@ function PenggunaTable() {
           </TableRow>
         </TableHead>
 
-        <TableBody>
-          {
-            penggunaTable && penggunaTable.map((pengaturanPengguna) => (
-              <TableRow key={pengaturanPengguna.account.id} className={tableStyles.row}>
-                <TableCell>
-                {pengaturanPengguna.account.full_name}
-                </TableCell>
-                <TableCell>
-                  {pengaturanPengguna.account.email}
-                </TableCell>
-                <TableCell>
-                  <ModifyDropdownMenu pengaturanPengguna={pengaturanPengguna}/>
-                </TableCell>
-              </TableRow>
-            ))
-          }
-        </TableBody>
+        {tableView}
+
       </Table>
     </TableContainer>
   );
