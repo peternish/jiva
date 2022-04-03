@@ -211,23 +211,23 @@ class LamaranPasienApi(APIView):
 
     def get(self, request: Request, pk: int):
         try:
-            lamaranPasien = get_object(LamaranPasien, pk)
-            serializer = LamaranPasienSerializer(lamaranPasien)
+            lamaran_pasien = get_object(LamaranPasien, pk)
+            serializer = LamaranPasienSerializer(lamaran_pasien)
             return Response(data=serializer.data, status=status.HTTP_200_OK)
         except LamaranPasien.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
     def patch(self, request: Request, pk: int):
-        lamaranPasien = get_object(LamaranPasien, pk)
+        lamaran_pasien = get_object(LamaranPasien, pk)
         serializer = LamaranPasienSerializer(data=request.data)
-        if serializer.is_valid() and lamaranPasien is not None:
+        if serializer.is_valid() and lamaran_pasien is not None:
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request: Request, pk: int):
-        lamaranPasien = get_object(LamaranPasien, pk)
-        if lamaranPasien is None:
+        lamaran_pasien = get_object(LamaranPasien, pk)
+        if lamaran_pasien is None:
             return Response(status=status.HTTP_404_NOT_FOUND)
-        lamaranPasien.delete()
+        lamaran_pasien.delete()
         return Response(status=status.HTTP_200_OK)
