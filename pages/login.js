@@ -4,7 +4,7 @@ import styled from "styled-components";
 import Card from "@mui/material/Card";
 import { Formik, Form } from "formik";
 import TextInput from "@components/common/TextInput";
-import Button from "@mui/material/Button";
+import LoadingButton from "@mui/lab/LoadingButton";
 
 // redux
 import { useDispatch } from "react-redux";
@@ -78,11 +78,12 @@ const Login = () => {
               if (!values.password) errors.password = "Password wajib diisi";
               return errors;
             }}
-            onSubmit={(values) => {
-              dispatch(login(values));
+            onSubmit={(values, { setSubmitting }) => {
+              setSubmitting(true);
+              dispatch(login(values, setSubmitting));
             }}
           >
-            {({ isValid, errors }) => (
+            {({ isValid, errors, isSubmitting }) => (
               <Form id="form">
                 <TextInput
                   name="email"
@@ -98,9 +99,14 @@ const Login = () => {
                   placeholder="password"
                   error={errors.password}
                 />
-                <Button variant="contained" type="submit" disabled={!isValid}>
+                <LoadingButton
+                  variant="contained"
+                  type="submit"
+                  disabled={!isValid}
+                  loading={isSubmitting}
+                >
                   Masuk
-                </Button>
+                </LoadingButton>
               </Form>
             )}
           </Formik>

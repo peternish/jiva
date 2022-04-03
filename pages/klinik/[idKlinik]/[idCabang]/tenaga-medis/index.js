@@ -9,11 +9,14 @@ import Box from "@mui/material/Box";
 // redux
 import { useEffect } from 'react';
 
+
 function DashboardTenagaMedis() {
   const { query, isReady } = useRouter();
+
   useEffect(() => {
     if (!isReady) return;
   }, [isReady]);
+  
   const { idKlinik, idCabang } = query;
 
   return (

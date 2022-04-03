@@ -17,7 +17,7 @@ export const signup = ({
   fullName,
   clinicName,
   sikFile,
-} = {}) => {
+} = {}, setSubmitting) => {
   return async (dispatch) => {
     try {
       await jivaAPI.auth.signup({ email, password, full_name: fullName });
@@ -26,6 +26,7 @@ export const signup = ({
       toast("Klinik berhasil dibuat", { type: toast.TYPE.SUCCESS });
       location.assign("/klinik");
     } catch (error) {
+      setSubmitting(false)
       let errorMessage = "Terjadi kesalahan 😥";
       if (error?.response?.status === 400 && error?.response?.data) {
         errorMessage = getStringOrFirstArrayValue(
@@ -38,7 +39,7 @@ export const signup = ({
   };
 };
 
-export const login = ({ email, password } = {}) => {
+export const login = ({ email, password } = {}, setSubmitting) => {
   return async (dispatch, _getState) => {
     try {
       await dispatch(getTokens({ email, password }));
@@ -52,6 +53,7 @@ export const login = ({ email, password } = {}) => {
         location.assign("/klinik");
       }
     } catch (error) {
+      setSubmitting(false)
       let errorMessage = "Terjadi kesalahan 😥";
       if (error?.response?.status === 401 && error?.response?.data) {
         const { detail } = error.response.data;
