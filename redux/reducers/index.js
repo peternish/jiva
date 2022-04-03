@@ -7,6 +7,7 @@ import authReducer from "../modules/auth";
 import klinikReducer from "../modules/klinik";
 import pengaturanPenggunaReducer from "../modules/pengaturanPengguna";
 import tenagaMedisReducer from "../modules/tenagaMedis";
+import jadwalTenagaMedisReducers from "../modules/jadwalTenagaMedis";
 
 const authPersistConfig = {
   key: "auth",
@@ -19,6 +20,7 @@ export const rootReducer = combineReducers({
   klinik: klinikReducer,
   pengaturanPengguna: pengaturanPenggunaReducer,
   tenagaMedis: tenagaMedisReducer,
+  jadwalTenagaMedis: jadwalTenagaMedisReducers,
 });
 
 export default rootReducer;
