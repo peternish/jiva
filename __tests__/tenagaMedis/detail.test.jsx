@@ -1,10 +1,15 @@
 import { render, screen } from '@testing-library/react';
+import '@testing-library/jest-dom';
+import * as nextRouter from 'next/router';
+
+// components
 import DetailTenagaMedis from '@pages/klinik/[idKlinik]/[idCabang]/tenaga-medis/detail/[id]';
+
+// redux
 import { Provider } from "react-redux";
 import { store } from "@redux/store";
-import '@testing-library/jest-dom';
 import { setTenagaMedis } from "@redux/modules/tenagaMedis";
-import * as nextRouter from 'next/router';
+
 
 describe('DetailTenagaMedis', () => {
   beforeEach( async () => {
@@ -17,14 +22,12 @@ describe('DetailTenagaMedis', () => {
         }
       }
     ));
-
     nextRouter.useRouter = jest.fn();
     nextRouter.useRouter.mockImplementation(() => ({ 
       route: '/klinik/1/1/tenaga-medis/detail/1', 
       query: { idKlinik: 1, idCabang: 1, id: 1 },
       isReady: true, 
     }));
-
     render(
       <Provider store={store}>
         <DetailTenagaMedis />
@@ -35,7 +38,6 @@ describe('DetailTenagaMedis', () => {
 
   it('should render', () => {
     const main = screen.getByRole('main');
-
     expect(main).toBeInTheDocument();
   });
 
@@ -44,14 +46,12 @@ describe('DetailTenagaMedis', () => {
     const heading = screen.getByRole('heading', {
       name: /Detil Informasi Tenaga Medis/,
     });
-
     expect(heading).toBeInTheDocument();
   });
 
 
   it('should have data fields', () => {
     const fields = screen.getAllByRole('textbox');
-
     fields.forEach((field) => {
       expect(field).toBeInTheDocument();
     });
@@ -62,7 +62,6 @@ describe('DetailTenagaMedis', () => {
     const button = screen.getByRole('button', {
       name: /Hapus/,
     });
-
     expect(button).toBeInTheDocument();
   });
 
@@ -71,7 +70,6 @@ describe('DetailTenagaMedis', () => {
     const button = screen.getByRole('link', {
       name: /Ubah/,
     });
-
     expect(button).toBeInTheDocument();
   });
 });

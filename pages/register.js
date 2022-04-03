@@ -4,6 +4,7 @@ import { useState } from "react";
 import Card from "@mui/material/Card";
 import { Formik, Form } from "formik";
 import Button from "@mui/material/Button";
+import LoadingButton from "@mui/lab/LoadingButton";
 import TextInput from "@components/common/TextInput";
 import CSS from "@components/RegisterPageComponents/CSS";
 import Dropzone from "@components/RegisterPageComponents/Dropzone.js";
@@ -40,7 +41,7 @@ const Register = () => {
   };
 
   return (
-    <Layout navType="topbar">
+    <Layout navType="topbar" title="Daftar Pemilik Klinik">
       <CSS>
         <Card id="register-card">
           <Formik
@@ -59,11 +60,12 @@ const Register = () => {
                 errors.clinicName = "Nama klinik wajib diisi";
               return errors;
             }}
-            onSubmit={(values) => {
-              dispatch(signup({ ...values, sikFile }));
+            onSubmit={(values, { setSubmitting }) => {
+              setSubmitting(true);
+              dispatch(signup({ ...values, sikFile }, setSubmitting));
             }}
           >
-            {({ errors, validateForm, isValid, validateField }) => (
+            {({ errors, validateForm, isValid, isSubmitting }) => (
               <Form className="form">
                 {pageNum === 0 ? (
                   <div className="container">
@@ -136,13 +138,14 @@ const Register = () => {
                       <Button variant="outlined" onClick={prevPage}>
                         Kembali
                       </Button>
-                      <Button
+                      <LoadingButton
                         variant="contained"
                         type="submit"
                         disabled={!isValid || !sikFile}
+                        loading={isSubmitting}
                       >
                         Daftar
-                      </Button>
+                      </LoadingButton>
                     </div>
                   </div>
                 ) : null}

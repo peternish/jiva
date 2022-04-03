@@ -9,7 +9,8 @@ const getTenagaMedisByID = ({ idTenagaMedis }) => {
             const { data } = await jivaAPI.tenagaMedis.getTenagaMedisByID({ idTenagaMedis });
             await dispatch(setTenagaMedis(data));
         } catch (error) {
-            console.log(error);
+            let errorMessage = "Terjadi kesalahan 😥";
+            toast(errorMessage, { type: toast.TYPE.ERROR });
         }
     };
 };
@@ -20,28 +21,32 @@ const getTenagaMedis = ({ idCabang }) => {
             const { data } = await jivaAPI.tenagaMedis.getTenagaMedis({ idCabang });
             await dispatch(setTenagaMedisList(data));
         } catch (error) {
-            console.log(error);
+            let errorMessage = "Terjadi kesalahan 😥";
+            toast(errorMessage, { type: toast.TYPE.ERROR });
         }
     };
 };
 
-const updateTenagaMedisByID = ({ idKlinik, idCabang, idTenagaMedis, fullName }) => {
+const updateTenagaMedisByID = ({ idKlinik, idCabang, idTenagaMedis, fullName }, setSubmitting) => {
     return async (dispatch) => {
         try {
             await jivaAPI.tenagaMedis.updateTenagaMedisByID({ idTenagaMedis, fullName });
             window.location.assign(`/klinik/${idKlinik}/${idCabang}/tenaga-medis`);
         } catch (error) {
-            console.log(error);
+            setSubmitting(false)
+            let errorMessage = "Terjadi kesalahan 😥";
+            toast(errorMessage, { type: toast.TYPE.ERROR });
         }
     };
 };
 
-const createTenagaMedis = ({ idKlinik, idCabang, email, password, fullName, sipFile }) => {
+const createTenagaMedis = ({ idKlinik, idCabang, email, password, fullName, sipFile }, setSubmitting) => {
     return async (dispatch) => {
         try {
             await jivaAPI.tenagaMedis.createTenagaMedis({ idCabang, email, password, fullName, sipFile });
             window.location.assign(`/klinik/${idKlinik}/${idCabang}/tenaga-medis`);
         } catch (error) {
+            setSubmitting(false)
             let errorMessage = "Terjadi kesalahan 😥";
             if (error?.response?.status === 400 && error?.response?.data) {
                 const message = error.response.data?.account?.email[0];
@@ -58,7 +63,8 @@ const deleteTenagaMedisByID = ({ idKlinik, idCabang, idTenagaMedis }) => {
             await jivaAPI.tenagaMedis.deleteTenagaMedisByID({ idTenagaMedis });
             window.location.assign(`/klinik/${idKlinik}/${idCabang}/tenaga-medis`);
         } catch {
-            console.log(error);
+            let errorMessage = "Terjadi kesalahan 😥";
+            toast(errorMessage, { type: toast.TYPE.ERROR });
         }
     };
 };
