@@ -7,11 +7,12 @@ import IconButton from '@mui/material/IconButton';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DeleteConfirmationModal from "@components/TenagaMedisPageComponents/DeleteConfirmationModal";
 
+
 function ModifyDropdownMenu({ idKlinik, idCabang, tenagaMedis }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
-
   const [modalOpen, setModalOpen] = useState(false);
+
   const handleModalClose = () => {
     setAnchorEl(null);
     setModalOpen(false);
