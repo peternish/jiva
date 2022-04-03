@@ -61,15 +61,6 @@ class LamaranPasien(models.Model):
     def __str__(self) -> str:
         return self.nik
 
-class JadwalPasien(models.Model):
-    date = models.DateField()
-    lamaranPasien = models.OneToOneField(
-        LamaranPasien, on_delete=models.CASCADE)
-    # jadwalTenagaMedis = models.ForeignKey(
-    #     JadwalTenagaMedis, on_delete=models.CASCADE)
-    def __str__(self) -> str:
-        return f"Jadwal pasien dengan NIK:{self.lamaranPasien.nik}"
-
 class DynamicForm(models.Model):
     cabang = models.ForeignKey(Cabang, on_delete=models.CASCADE)
     formtype = models.CharField(max_length=100)

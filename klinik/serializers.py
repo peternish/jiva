@@ -29,10 +29,6 @@ class LamaranPasienSerializer(serializers.ModelSerializer):
 
     fields = serializers.ListField(child=serializers.JSONField())
 
-# class JadwalPasienSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = JadwalPas
-
 class DynamicFormSerializer(serializers.ModelSerializer):
     class Meta:
         model = DynamicForm
