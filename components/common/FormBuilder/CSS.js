@@ -20,19 +20,6 @@ const CSS = styled.div`
     button {
         min-width: 11em
     }
-
-    .preview-url {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        column-gap: 1em;
-        border: 1px solid rgba(0, 0, 0, 0.23);
-        border-radius: 4px;
-        padding: 0.5em 1em;
-        margin-top: 1em;
-        min-width: 30%;
-        max-width: fit-content;
-    }
 `;
 
 export default CSS;

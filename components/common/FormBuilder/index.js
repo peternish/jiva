@@ -1,8 +1,6 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import Button from "@mui/material/Button";
 import CSS from "./CSS";
-import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-import Tooltip from "@mui/material/Tooltip";
 
 const loadPackages = () => {
   const $ = require("jquery");
@@ -21,10 +19,7 @@ const options = {
   disableFields: ["button", "hidden"],
 };
 
-const FormBuilder = () => {
-  const [schema, setSchema] = useState([]);
-  const [previewURL, setPreviewURL] = useState("http://jiva.com/pendaftaran/klinik/1234");
-  const [tooltipTitle, setTooltipTitle] = useState("Copy URL");
+const FormBuilder = ({ schema, onSave, children }) => {
 
   const fb = useRef();
   useEffect(() => {
@@ -33,50 +28,36 @@ const FormBuilder = () => {
 
   useEffect(() => {
     $(fb.current).empty();
-    $(fb.current).formBuilder({ ...options, formData: schema });
+    $(fb.current).formBuilder({ ...options, formData: schema?.fields || [] });
   }, [schema]);
 
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(previewURL);
-    setTooltipTitle("URL Copied!");
-  };
-
   const saveSchema = () => {
-    setSchema($(fb.current).formBuilder("getData"));
-
-    // this outputs the schema, save this in state
-    console.log($(fb.current).formBuilder("getData"));
+    const updatedFields = $(fb.current).formBuilder("getData");
+    const updatedSchema = {
+      ...schema,
+      fields: updatedFields,
+    };
+    onSave(updatedSchema);
   };
 
-  const clearSchema = () => {
-    setSchema([]);
+  const resetSchema = () => {
+    $(fb.current).empty();
+    $(fb.current).formBuilder({ ...options, formData: schema?.fields || [] });
   };
 
   return (
     <CSS>
       <div id="fb-editor" ref={fb} />
 
-      <span className="preview-url">
-        {previewURL}
-        <Tooltip
-          title={tooltipTitle}
-          onClose={() => setTooltipTitle("Copy URL")}
-        >
-          <ContentCopyIcon onClick={copyToClipboard} cursor="pointer" />
-        </Tooltip>
-      </span>
+      {children}
 
       <div className="buttons-fb">
         <div>
           <Button variant="outlined">Pratinjau</Button>
         </div>
         <div>
-          <Button variant="outlined" onClick={clearSchema}>
-            Clear
-          </Button>
-          <Button variant="contained" onClick={saveSchema}>
-            Save
-          </Button>
+          <Button variant="outlined" onClick={resetSchema}> Reset </Button>
+          <Button variant="contained" onClick={saveSchema}> Simpan </Button>
         </div>
       </div>
     </CSS>
