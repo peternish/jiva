@@ -21,11 +21,11 @@ const DyanmicFormEndpoints = {
   createSchema: ({ idCabang, formType, formFields }) => {
     const payload = {
       cabang: idCabang,
-      formType: formType,
+      formtype: formType,
       fields: formFields,
     }
 
-    return axios.post(`${BASE_URL}/account/tenaga-medis/${idCabang}/`, payload)
+    return axios.post(`${BASE_URL}/klinik/cabang/${idCabang}/dform/`, payload)
   },
 
   deleteSchemaByID: ({ idSchema }) => {
