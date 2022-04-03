@@ -1,9 +1,12 @@
 import "@testing-library/jest-dom";
-import { render, screen, fireEvent } from "@testing-library/react";
 import TextInput from "@components/common/TextInput";
+import FormBuilder from "@components/common/FormBuilder";
+import FormRender from "@components/common/FormRender";
+import { render, screen, act, fireEvent } from "@testing-library/react";
 import { Formik } from "formik";
 import PageHeader from "@components/Layout/PageHeader";
 import * as nextRouter from 'next/router';
+import URLPreview from "@components/common/URLPreview";
 
 describe("<TextInput/>", () => {
   it("renders a input", () => {
@@ -23,6 +26,96 @@ describe("<TextInput/>", () => {
   });
 });
 
+describe("<FormBuilder/>", () => {
+  beforeEach(() => {
+    render(<FormBuilder onSave={() => {}} />);
+  });
+
+  it("renders the input options", () => {
+    expect(screen.getByText("Simpan")).toBeInTheDocument();
+    expect(screen.getByText("Reset")).toBeInTheDocument();
+    expect(screen.getByText("Pratinjau")).toBeInTheDocument();
+  });
+
+  it("ensure the clear button works", async () => {
+    const clearButton = screen.getByText("Reset");
+    expect(() => fireEvent.click(clearButton)).not.toThrowError();
+  });
+
+  it("ensure the save button works", async () => {
+    const saveButton = screen.getByText("Simpan");
+    expect(() => fireEvent.click(saveButton)).not.toThrowError();
+  });
+});
+
+describe("<FormRender/>", () => {
+  it("renders the buttons", () => {
+    render(<FormRender schema={[]} submit={() => {}} />);
+    expect(screen.getByText("Submit")).toBeInTheDocument();
+  });
+
+  it("ensure the save button doesn't throw an error", async () => {
+    render(<FormRender schema={[]} submit={() => {}} />);
+    const submitButton = screen.getByText("Submit");
+    expect(() => fireEvent.click(submitButton)).not.toThrowError();
+  });
+
+  it("renders input with schema", async () => {
+    render(
+      <FormRender
+        submit={() => {}}
+        schema={[
+          {
+            type: "text",
+            required: true,
+            label: "Field 1",
+            className: "form-control",
+            name: "text-1648102772033-0",
+            access: false,
+            subtype: "text",
+          },
+        ]}
+      />
+    );
+    expect(screen.getByText("Field 1")).toBeInTheDocument();
+  });
+
+  it("shows required form", async () => {
+    render(
+      <FormRender
+        submit={() => {}}
+        schema={[
+          {
+            type: "text",
+            required: true,
+            label: "Field 1",
+            className: "form-control",
+            name: "text-1648102772033-0",
+            access: false,
+            subtype: "text",
+          },
+        ]}
+      />
+    );
+
+    const submitButton = screen.getByText("Submit");
+
+    await act(async () => {
+      await fireEvent.click(submitButton);
+    });
+    // expect the required warning is shown
+    expect(
+      screen.getByText("text-1648102772033-0 is required")
+    ).toBeInTheDocument();
+  });
+
+  it("doesn't render input because schema is empty", async () => {
+    render(<FormRender schema={[]} submit={() => {}} />);
+
+    // negative: ensure field is no longer rendered
+    expect(screen.queryByRole("input")).not.toBeInTheDocument();
+  });
+});
 describe("<PageHeader/>", () => {
   beforeEach(() => {
     nextRouter.useRouter = jest.fn();
@@ -43,4 +136,18 @@ describe("<PageHeader/>", () => {
     
     expect(backButton).toBeInTheDocument()
   })
+})
+
+describe("<URLPreview/>", () => {
+  beforeEach(() => {
+    render(<URLPreview URL={"testURl"} />);
+  });
+
+  it("renders the text box", () => {
+    expect(screen.getByTestId("URLPreview")).toBeInTheDocument();
+  })
+
+  it("renders the copy button url button ", () => {
+    expect(screen.getByTestId("ContentCopyIcon")).toBeInTheDocument();
+  });
 })
