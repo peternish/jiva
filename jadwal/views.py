@@ -180,7 +180,7 @@ class JadwalPasienAPI(APIView):
 
     def patch(self, request: Request, pk: int):
         jadwalPasien = get_object(JadwalPasien, pk)
-        serializer = JadwalPasienSerializer(data=request.data)
+        serializer = JadwalPasienSerializer(jadwalPasien, data=request.data)
         if serializer.is_valid() and jadwalPasien is not None:
             serializer.save()
             return Response(serializer.data)

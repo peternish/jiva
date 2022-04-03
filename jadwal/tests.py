@@ -1,4 +1,5 @@
 # django imports
+from asyncio.windows_events import NULL
 from django.test import TestCase
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse
@@ -553,6 +554,7 @@ class JadwalPasienAPITest(JadwalPasienAPITestSetup):
     def test_patch_jadwal_pasien(self):
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         uri = reverse(self.jadwal_pasien_url, kwargs={"pk": 1})
+        self.assertNotEqual(JadwalPasien.objects.get(id = 1).lamaranPasien.id, NULL)
         resp = self.client.patch(uri, data={"date" : datetime.date(2021, 4, 20)})
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
 
