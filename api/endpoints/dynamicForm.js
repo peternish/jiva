@@ -3,7 +3,7 @@ import { axiosInstance as axios } from "@api/http";
 
 const BASE_URL = constants?.API_BASE_URL
 
-const DyanmicFormEndpoints = {
+const dynamicForm = {
   getSchema: ({ idCabang }) => {
     return axios.get(`${BASE_URL}/klinik/cabang/${idCabang}/dform/`)
   },
@@ -33,4 +33,4 @@ const DyanmicFormEndpoints = {
   },
 }
 
-export default DyanmicFormEndpoints;
+export default dynamicForm;
