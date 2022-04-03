@@ -4,6 +4,8 @@ import FormRender from "@components/common/FormRender";
 import TextInput from "@components/common/TextInput";
 import Layout from "@components/DynamicForm/Layout";
 import Card from "@mui/material/Card";
+import axios from "axios"
+import constants from "@api/constants"
 
 const CSS = styled.div`
   height: 100%;
@@ -112,12 +114,18 @@ export async function getServerSideProps({ params, res }) {
   //     "day": "mon"
   //   }
   // ]
-  const jadwalTenagaMedis = await getJadwalTenagaMedisList({ idCabang: idCabang })
-  const jadwalByDoctor = jadwalTenagaMedis.reduce((r, a) => {
-    r[a.tenaga_medis.account.id] = r[a.tenaga_medis.account.id] || []
-    r[a.tenaga_medis.account.id].push(a)
-    return r
-  }, Object.create(null))
+
+  try {
+    const jadwalTenagaMedis = await axios.get(`${constants?.API_BASE_URL}/klinik/cabang/${idCabang}/dform/`)
+    // const jadwalTenagaMedis = await getJadwalTenagaMedisList({ idCabang: idCabang })
+    const jadwalByDoctor = jadwalTenagaMedis.reduce((r, a) => {
+      r[a.tenaga_medis.account.id] = r[a.tenaga_medis.account.id] || []
+      r[a.tenaga_medis.account.id].push(a)
+      return r
+    }, Object.create(null))
+  } catch (error) {
+    console.log(error)
+  }
 
 
   // return {
