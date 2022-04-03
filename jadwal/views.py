@@ -1,5 +1,6 @@
 # django imports
 from django.db import models
+from django.http import QueryDict
 
 # rest imports
 from rest_framework import status
@@ -8,9 +9,9 @@ from rest_framework.views import APIView
 from rest_framework import serializers
 
 # model and serializer imports
-from .models import JadwalTenagaMedis
-from jadwal.serializers import JadwalTenagaMedisSerializer
-from klinik.models import Cabang, TenagaMedisProfile
+from .models import JadwalTenagaMedis, JadwalPasien
+from jadwal.serializers import JadwalTenagaMedisSerializer, JadwalPasienSerializer
+from klinik.models import Klinik, Cabang, LamaranPasien, TenagaMedisProfile
 
 # other import
 from urllib.request import Request
@@ -115,3 +116,79 @@ class JadwalTenagaMedisAPI(APIView):
             { "success": "delete success" }, 
             status=status.HTTP_200_OK
         )
+
+class JadwalPasienListAPI(APIView):
+    permission_classes = [
+        IsStafPermission
+    ]
+
+    def get(self, request: Request, jadwal_tenaga_medis_pk: int):
+        jadwal_tenaga_medis: JadwalTenagaMedis = get_object(JadwalTenagaMedis, jadwal_tenaga_medis_pk)
+        
+        if jadwal_tenaga_medis is None:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        
+        # profile: TenagaMedisProfile = TenagaMedisProfile.objects.get(account__email=request.user)
+        # if jadwal_tenaga_medis.tenaga_medis.pk != profile.pk:
+        #     return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+        # cabang_id = jadwal_tenaga_medis.tenaga_medis.cabang.id
+        # cabang = get_object(Cabang, pk=cabang_id)
+        # if cabang is None:
+        #     return Response( status=status.HTTP_404_NOT_FOUND )
+        # tenaga_medis_profiles = TenagaMedisProfile.objects.filter(cabang=cabang)
+        # jadwal_query = []
+        # for tenaga_medis in tenaga_medis_profiles:
+        #     jadwal_query += JadwalTenagaMedis.objects.filter(tenaga_medis=tenaga_medis)
+
+        schema = JadwalPasien.objects.all()
+        schema = schema.filter(jadwalTenagaMedis=jadwal_tenaga_medis)
+        serializer = JadwalPasienSerializer(schema, many=True)
+        return Response(serializer.data)
+
+class CreateJadwalPasienAPI(APIView):
+    permission_classes = [
+        IsStafPermission
+    ]
+
+    def post(self, request: Request, jadwal_tenaga_medis_pk: int, pasien_pk: int):
+        jadwal_tenaga_medis: JadwalTenagaMedis = get_object(JadwalTenagaMedis, jadwal_tenaga_medis_pk)
+        lamaran_pasien: LamaranPasien = get_object(LamaranPasien, pasien_pk)
+        
+        if jadwal_tenaga_medis is None and lamaran_pasien is None:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        serializer = JadwalPasienSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(jadwalTenagaMedis = jadwal_tenaga_medis, lamaranPasien = lamaran_pasien)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class JadwalPasienAPI(APIView):
+    permission_classes = [
+        IsStafPermission
+    ]
+
+    def get(self, request: Request, pk: int):
+        try:
+            jadwalPasien = get_object(JadwalPasien, pk)
+            serializer = JadwalPasienSerializer(jadwalPasien)
+            return Response(data=serializer.data, status=status.HTTP_200_OK)
+        except JadwalPasien.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+    def patch(self, request: Request, pk: int):
+        jadwalPasien = get_object(JadwalPasien, pk)
+        serializer = JadwalPasienSerializer(data=request.data)
+        if serializer.is_valid() and jadwalPasien is not None:
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request: Request, pk: int):
+        jadwalPasien = get_object(LamaranPasien, pk)
+        if jadwalPasien is None:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        jadwalPasien.delete()
+        return Response(status=status.HTTP_200_OK)
