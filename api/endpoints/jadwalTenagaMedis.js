@@ -1,5 +1,6 @@
 import constants from "@api/constants";
 import { axiosInstance as axios } from "@api/http";
+import axiosClean from "axios";
 
 const BASE_URL = constants?.API_BASE_URL;
 

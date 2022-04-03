@@ -98,12 +98,15 @@ describe("<FormRender/>", () => {
             subtype: "text",
           },
         ]}
+        isSubmitting={false}
+        isValid={true}
       />
     );
 
     const submitButton = screen.getByText("Simpan");
 
     await act(async () => {
+      await fireEvent.click(submitButton);
       await fireEvent.click(submitButton);
     });
     // expect the required warning is shown

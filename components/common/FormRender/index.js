@@ -1,7 +1,7 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import constants from "@utils/constants";
-import Button from "@mui/material/Button";
+import LoadingButton from "@mui/lab/LoadingButton";
 
 const FormCSS = styled.div`
 display: flex;
@@ -58,8 +58,10 @@ width: 100%;
 `;
 
 const excludedFields = ["header", "paragraph"];
-const FormRender = ({ schema, submit }) => {
+const FormRender = ({ schema, submit, isSubmitting, isValid }) => {
   const fr = useRef();
+
+  const [isError, setIsError] = useState(false)
 
   useEffect(() => {
     const $ = require("jquery");
@@ -124,13 +126,20 @@ const FormRender = ({ schema, submit }) => {
           $("[data-custom-required='true']").each(function () {
             if (!values[$(this).attr("name")]) {
               $(this).after(`<small class="error-message">${$(this).attr("name")} is required</small>`);
+              setIsError(true)
             }
           });
           submit(payload);
         }}
       >
         <div id="fb-render" ref={fr}></div>
-        <Button variant="contained" type="submit">Simpan</Button>
+        <LoadingButton
+          variant="contained"
+          type="submit"
+          loading={isSubmitting && isValid && !isError}
+          disabled={!isValid || isError}
+        >Simpan
+        </LoadingButton>
       </form>
     </FormCSS>
   );

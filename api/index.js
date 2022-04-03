@@ -13,7 +13,7 @@ const api = {
   pengaturanPengguna,
   tenagaMedis,
   dynamicForm,
-  jadwalTenagaMedis,
+  jadwalTenagaMedis
 };
 
 export default api;
