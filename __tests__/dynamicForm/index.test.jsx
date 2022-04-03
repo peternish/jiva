@@ -1,9 +1,8 @@
 import { Provider } from "react-redux";
 import * as nextRouter from 'next/router';
-import Tambah from '@pages/form/[idKlinik]/[idCabang]/[idForm]/index'
+import RegistrationForm from '@pages/form/[idKlinik]/[idCabang]/[idForm]/index'
 import { fireEvent, render, screen, act } from "@testing-library/react";
 import { store } from "@redux/store";
-import jivaAPI from "@api/index"
 import '@testing-library/jest-dom'
 
 describe("Dynamic Form", () => {
@@ -14,40 +13,32 @@ describe("Dynamic Form", () => {
       isReady: true,
     }));
 
-    jivaAPI.dynamicForm = jest.fn();
-    jivaAPI.dynamicForm.mockImplementation(({ cabang_id, form_id }) => ({
-      data: {
-        cabang_id: 1,
-        klinik: {
-          name: "Klinik Example"
-        },
-        formtype: "test",
-        fields: [
-          {
-            type: "text",
-            required: false,
-            label: "Field 1",
-            className: "form-control",
-            name: "text-1648102772033-0",
-            access: false,
-            subtype: "text",
-          },
-          {
-            type: "text",
-            required: true,
-            label: "Field 2",
-            className: "form-control",
-            name: "text-1648102772980-0",
-            access: false,
-            subtype: "text",
-          },
-        ]
-      }
-    }))
+    const fields = [
+      {
+        type: "text",
+        required: false,
+        label: "Field 1",
+        className: "form-control",
+        name: "text-1648102772033-0",
+        access: false,
+        subtype: "text",
+      },
+      {
+        type: "text",
+        required: true,
+        label: "Field 2",
+        className: "form-control",
+        name: "text-1648102772980-0",
+        access: false,
+        subtype: "text",
+      },
+    ]
+
+    const namaKlinik = "Klinik Example"
 
     render(
       <Provider store={store}>
-        <Tambah />
+        <RegistrationForm namaKlinik={namaKlinik} fields={fields} />
       </Provider>
     );
   });
@@ -55,23 +46,23 @@ describe("Dynamic Form", () => {
   it('renders a heading', () => {
 
     const heading = screen.getAllByRole('heading', {
-      name: /Pendaftaran Klinik Example/,
+      name: /.*Pendaftaran Klinik.*/i,
     })[0]
 
     expect(heading).toBeInTheDocument()
   })
 
   it('renders mandatory fields', () => {
-    const NIKField = screen.getByLabelText("NIK");
-    const doctorField = screen.getByLabelText("Jadwal dokter");
+    const NIKField = screen.getByLabelText(/.*NIK.*/i);
+    const doctorField = screen.getByLabelText(/.*Jadwal dokter.*/i);
 
     expect(NIKField).toBeInTheDocument();
     expect(doctorField).toBeInTheDocument();
   });
 
   it('renders data fields', () => {
-    const firstField = screen.getByLabelText("Field 1");
-    const secondField = screen.getByLabelText("Field 2");
+    const firstField = screen.getByLabelText(/.*Field 2.*/i);
+    const secondField = screen.getByLabelText(/.*Field 2.*/i);
 
     expect(firstField).toBeInTheDocument();
     expect(secondField).toBeInTheDocument();
@@ -82,18 +73,5 @@ describe("Dynamic Form", () => {
       name: /Simpan/,
     })[0]
     expect(buttonsubmit).toBeInTheDocument()
-  })
-
-  it("renders form validation errors", async () => {
-    const button = screen.getAllByRole('button', {
-      name: /Simpan/,
-    })[0]
-
-    await act(async () => {
-      await fireEvent.click(button);
-    });
-
-    expect(await screen.getAllByText(/is required/)).toHaveLength(3);
   });
-
 });
