@@ -1,6 +1,6 @@
 import { Provider } from "react-redux";
 import * as nextRouter from 'next/router';
-import Tambah from '@pages/klinik/[idKlinik]/[idCabang]/pengaturan-pengguna/tambah'
+import Tambah from '@pages/form/[idKlinik]/[idCabang]/[idForm]/index'
 import { fireEvent, render, screen, act } from "@testing-library/react";
 import { store } from "@redux/store";
 import jivaAPI from "@api/index"
