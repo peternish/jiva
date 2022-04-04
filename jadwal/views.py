@@ -1,6 +1,5 @@
 # django imports
 from django.db import models
-from django.http import QueryDict
 
 # rest imports
 from rest_framework import status
@@ -11,12 +10,14 @@ from rest_framework import serializers
 # model and serializer imports
 from .models import JadwalTenagaMedis, JadwalPasien
 from jadwal.serializers import JadwalTenagaMedisSerializer, JadwalPasienSerializer
-from klinik.models import Klinik, Cabang, LamaranPasien, TenagaMedisProfile
+from klinik.models import Cabang, LamaranPasien, TenagaMedisProfile
 
 # other import
 from urllib.request import Request
 from jiva_be.utils import IsStafPermission
 import json
+from datetime import datetime
+from .utils import filter_available_jadwal
 
 
 def get_object(klass: models.Model, pk: int):
@@ -117,7 +118,29 @@ class JadwalTenagaMedisAPI(APIView):
             status=status.HTTP_200_OK
         )
 
+
+class AvailableJadwalTenagaMedisAPI(APIView):
+    
+    def get(self, request: Request, cabang_id: int, format=None):
+        cabang = get_object(Cabang, pk=cabang_id)
+        if cabang is None:
+            return Response(
+                { "error": f"no 'cabang' found with id : {cabang_id}" },
+                status=status.HTTP_404_NOT_FOUND,
+            )
+        date = datetime.strptime(request.data["date"], "%d/%m/%Y")
+        day = datetime.strftime(date, "%a").lower()
+        jadwal_tenaga_medis_query = JadwalTenagaMedis.objects.filter(day=day)
+        available_jadwal_list = filter_available_jadwal(
+            jadwal_tenaga_medis_query=jadwal_tenaga_medis_query,
+            date=date
+        )
+        serializer = JadwalTenagaMedisSerializer(available_jadwal_list, many=True)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+
 class JadwalPasienListAPI(APIView):
+
     permission_classes = [
         IsStafPermission
     ]
@@ -133,7 +156,9 @@ class JadwalPasienListAPI(APIView):
         serializer = JadwalPasienSerializer(schema, many=True)
         return Response(serializer.data)
 
+
 class CreateJadwalPasienAPI(APIView):
+
     permission_classes = [
         IsStafPermission
     ]
@@ -152,7 +177,9 @@ class CreateJadwalPasienAPI(APIView):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 class JadwalPasienAPI(APIView):
+
     permission_classes = [
         IsStafPermission
     ]

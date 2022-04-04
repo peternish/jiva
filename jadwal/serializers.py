@@ -51,6 +51,7 @@ class JadwalTenagaMedisSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
+
 class JadwalPasienSerializer(serializers.ModelSerializer):
     jadwal_tenaga_medis = JadwalTenagaMedisSerializer(read_only=True)
     lamaran_pasien = LamaranPasienSerializer(read_only=True)
