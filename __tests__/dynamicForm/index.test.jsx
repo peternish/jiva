@@ -27,59 +27,63 @@ const SAMPLE_SCHEMA = [{
   }
 }]
 
+const SAMPLE_JADWAL = [
+  {
+    "id": 2,
+    "tenaga_medis": {
+      "account": {
+        "id": 2,
+        "full_name": "TM 2",
+        "email": "tm2@klinik99.com",
+        "date_joined": "2022-03-31T12:49:11.378628Z",
+        "last_login": "2022-03-31T12:49:11.378628Z",
+        "role": "tenaga_medis",
+        "cabang": 1,
+        "klinik": 1
+      },
+      "sip": "https://django-surat-izin-klinik-jiva.s3.amazonaws.com/static/HW2204B4.txt"
+    },
+    "start_time": "10:00:00",
+    "end_time": "12:00:00",
+    "quota": 5,
+    "day": "mon"
+  },
+  {
+    "id": 3,
+    "tenaga_medis": {
+      "account": {
+        "id": 3,
+        "full_name": "TM 3",
+        "email": "tm3@klinik99.com",
+        "date_joined": "2022-04-02T10:43:33.797983Z",
+        "last_login": "2022-04-02T10:43:33.797983Z",
+        "role": "tenaga_medis",
+        "cabang": 1,
+        "klinik": 1
+      },
+      "sip": "https://django-surat-izin-klinik-jiva.s3.amazonaws.com/static/HW2204B4.txt"
+    },
+    "start_time": "11:00:00",
+    "end_time": "14:00:00",
+    "quota": 5,
+    "day": "mon"
+  }
+]
+
+const mockRouter = () => {
+  nextRouter.useRouter = jest.fn();
+  nextRouter.useRouter.mockImplementation(() => ({
+    route: '/form/1/1/1',
+    query: { idCabang: 1 },
+    isReady: true,
+  }));
+}
+
 describe("Dynamic Form", () => {
   beforeEach(async () => {
-    nextRouter.useRouter = jest.fn();
-    nextRouter.useRouter.mockImplementation(() => ({
-      route: '/form/1/1/1',
-      query: { idCabang: 1 },
-      isReady: true,
-    }));
+    mockRouter()
 
-    const jadwalRaw = [
-      {
-        "id": 2,
-        "tenaga_medis": {
-          "account": {
-            "id": 2,
-            "full_name": "TM 2",
-            "email": "tm2@klinik99.com",
-            "date_joined": "2022-03-31T12:49:11.378628Z",
-            "last_login": "2022-03-31T12:49:11.378628Z",
-            "role": "tenaga_medis",
-            "cabang": 1,
-            "klinik": 1
-          },
-          "sip": "https://django-surat-izin-klinik-jiva.s3.amazonaws.com/static/HW2204B4.txt"
-        },
-        "start_time": "10:00:00",
-        "end_time": "12:00:00",
-        "quota": 5,
-        "day": "mon"
-      },
-      {
-        "id": 3,
-        "tenaga_medis": {
-          "account": {
-            "id": 3,
-            "full_name": "TM 3",
-            "email": "tm3@klinik99.com",
-            "date_joined": "2022-04-02T10:43:33.797983Z",
-            "last_login": "2022-04-02T10:43:33.797983Z",
-            "role": "tenaga_medis",
-            "cabang": 1,
-            "klinik": 1
-          },
-          "sip": "https://django-surat-izin-klinik-jiva.s3.amazonaws.com/static/HW2204B4.txt"
-        },
-        "start_time": "11:00:00",
-        "end_time": "14:00:00",
-        "quota": 5,
-        "day": "mon"
-      }
-    ]
-
-    await store.dispatch(setJadwalTenagaMedisList(jadwalRaw))
+    await store.dispatch(setJadwalTenagaMedisList(SAMPLE_JADWAL))
     await store.dispatch(setSchemas(SAMPLE_SCHEMA))
 
     render(
@@ -137,57 +141,9 @@ describe("Dynamic Form", () => {
 
 describe("Dynamic Form Submission", () => {
   beforeEach(async () => {
-    nextRouter.useRouter = jest.fn();
-    nextRouter.useRouter.mockImplementation(() => ({
-      route: '/form/1/1/1',
-      query: { idCabang: 1 },
-      isReady: true,
-    }));
+    mockRouter()
 
-    const jadwalRaw = [
-      {
-        "id": 2,
-        "tenaga_medis": {
-          "account": {
-            "id": 2,
-            "full_name": "TM 2",
-            "email": "tm2@klinik99.com",
-            "date_joined": "2022-03-31T12:49:11.378628Z",
-            "last_login": "2022-03-31T12:49:11.378628Z",
-            "role": "tenaga_medis",
-            "cabang": 1,
-            "klinik": 1
-          },
-          "sip": "https://django-surat-izin-klinik-jiva.s3.amazonaws.com/static/HW2204B4.txt"
-        },
-        "start_time": "10:00:00",
-        "end_time": "12:00:00",
-        "quota": 5,
-        "day": "mon"
-      },
-      {
-        "id": 3,
-        "tenaga_medis": {
-          "account": {
-            "id": 3,
-            "full_name": "TM 3",
-            "email": "tm3@klinik99.com",
-            "date_joined": "2022-04-02T10:43:33.797983Z",
-            "last_login": "2022-04-02T10:43:33.797983Z",
-            "role": "tenaga_medis",
-            "cabang": 1,
-            "klinik": 1
-          },
-          "sip": "https://django-surat-izin-klinik-jiva.s3.amazonaws.com/static/HW2204B4.txt"
-        },
-        "start_time": "11:00:00",
-        "end_time": "14:00:00",
-        "quota": 5,
-        "day": "mon"
-      }
-    ]
-
-    await store.dispatch(setJadwalTenagaMedisList(jadwalRaw))
+    await store.dispatch(setJadwalTenagaMedisList(SAMPLE_JADWAL))
     await store.dispatch(setSchemas(SAMPLE_SCHEMA))
 
     render(
@@ -220,12 +176,7 @@ describe("Dynamic Form Submission", () => {
 
 describe("Dynamic Form with no data", () => {
   beforeEach(() => {
-    nextRouter.useRouter = jest.fn();
-    nextRouter.useRouter.mockImplementation(() => ({
-      route: '/form/1/1/1',
-      query: { idCabang: 1 },
-      isReady: true,
-    }));
+    mockRouter()
 
     render(
       <Provider store={store}>
