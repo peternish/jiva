@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import Button from "@mui/material/Button";
 import LoadingButton from "@mui/lab/LoadingButton";
 import CSS from "./CSS";
+import PreviewModal from "@components/common/FormRender/PreviewModal";
 
 const loadPackages = () => {
   const $ = require("jquery");
@@ -21,6 +22,8 @@ const options = {
 };
 
 const FormBuilder = ({ schema, onSave, children }) => {
+  const [modalOpen, setmodalOpen] = useState(false)
+  const [previewSchema, setpreviewSchema] = useState(schema?.fields || [])
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isResetting, setIsResetting] = useState(false)
 
@@ -51,6 +54,11 @@ const FormBuilder = ({ schema, onSave, children }) => {
     setIsResetting(false)
   };
 
+  const handlePreview = () => {
+    setpreviewSchema($(fb.current).formBuilder("getData"))
+    setmodalOpen(true)
+  }
+
   return (
     <CSS>
       <div id="fb-editor" ref={fb} />
@@ -59,7 +67,7 @@ const FormBuilder = ({ schema, onSave, children }) => {
 
       <div className="buttons-fb">
         <div id="left">
-          <Button variant="outlined">Pratinjau</Button>
+          <Button variant="outlined" onClick={handlePreview}>Pratinjau</Button>
         </div>
         <div id="right">
           <LoadingButton 
@@ -78,6 +86,11 @@ const FormBuilder = ({ schema, onSave, children }) => {
           </LoadingButton>
         </div>
       </div>
+      <PreviewModal 
+        schema={previewSchema} 
+        onClose={() => setmodalOpen(false)} 
+        open={modalOpen} 
+      />
     </CSS>
   );
 };

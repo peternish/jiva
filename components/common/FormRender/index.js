@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from "react";
+import Button from "@mui/material/Button";
 
 const excludedFields = ["header", "paragraph"];
 
@@ -6,6 +7,10 @@ const FormRender = ({ schema, submit }) => {
   const fr = useRef();
 
   useEffect(() => {
+    const $ = require("jquery");
+
+    window.jQuery = $;
+    window.$ = $;
     require("formBuilder/dist/form-render.min.js");
   }, []);
 
@@ -22,7 +27,12 @@ const FormRender = ({ schema, submit }) => {
   }, [schema]);
 
   return (
-    <form
+    <form 
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        flexDirection: 'column'
+      }}
       onSubmit={(e) => {
         e.preventDefault();
         const values = {};
@@ -64,8 +74,8 @@ const FormRender = ({ schema, submit }) => {
         submit(payload);
       }}
     >
-      <div id="fb-render" ref={fr}></div>
-      <button type="submit">Submit</button>
+      <div id="fb-render" ref={fr} style={{width: '100%'}}></div>
+      <Button variant="contained" type="submit">Submit</Button>
     </form>
   );
 };

@@ -7,6 +7,7 @@ import { Formik } from "formik";
 import PageHeader from "@components/Layout/PageHeader";
 import * as nextRouter from 'next/router';
 import URLPreview from "@components/common/URLPreview";
+import PreviewModal from "@components/common/FormRender/PreviewModal";
 
 const SAMPLE_FORM_JSON = [
   {
@@ -294,4 +295,24 @@ describe("<URLPreview/>", () => {
   it("renders the copy button url button ", () => {
     expect(screen.getByTestId("ContentCopyIcon")).toBeInTheDocument();
   });
+})
+
+describe("<PreviewModal/>", () => {
+  beforeEach(() => {
+    render(
+      <PreviewModal 
+        schema={[]} 
+        onClose={() => {}}
+        open={true}
+      />)
+  })
+
+  it('renders a modal', () => {
+    expect(screen.getByTestId("PreviewModal")).toBeInTheDocument();
+  })
+
+  it("renders the close modal button", () => {
+    expect(screen.getByTestId("CloseIcon")).toBeInTheDocument();
+  });
+
 })
