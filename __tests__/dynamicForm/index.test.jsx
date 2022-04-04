@@ -1,10 +1,9 @@
 import { Provider } from "react-redux";
 import * as nextRouter from 'next/router';
-import RegistrationForm, { getServerSideProps } from '@pages/form/[idKlinik]/[idCabang]/[idForm]/index'
+import RegistrationForm from '@pages/form/[idKlinik]/[idCabang]/[idForm]/index'
 import { fireEvent, render, screen, act } from "@testing-library/react";
 import { store } from "@redux/store";
 import '@testing-library/jest-dom'
-import { getAllByRole } from '@testing-library/react'
 import { setSchemas } from "@redux/modules/dynamicForm"
 import { setJadwalTenagaMedisList } from "@redux/modules/jadwalTenagaMedis"
 

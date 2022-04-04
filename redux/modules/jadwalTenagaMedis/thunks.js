@@ -1,7 +1,7 @@
 import jivaAPI from "@api/index";
 import { setJadwalTenagaMedisList, setJadwalTenagaMedis } from "@redux/modules/jadwalTenagaMedis";
 import { toast } from "react-toastify";
-import { capitalize } from "@utils/index";
+import constants from "@utils/constants"
 
 const getJadwalTenagaMedisList = ({ idCabang }) => {
     return async (dispatch) => {
@@ -9,7 +9,7 @@ const getJadwalTenagaMedisList = ({ idCabang }) => {
             const { data } = await jivaAPI.jadwalTenagaMedis.getJadwalTenagaMedisList({ idCabang });
             await dispatch(setJadwalTenagaMedisList(data));
         } catch (error) {
-            console.log(error);
+            toast(constants.BASE_ERROR_MESSAGE, { type: toast.TYPE.ERROR });
         }
     };
 };
@@ -17,11 +17,10 @@ const getJadwalTenagaMedisList = ({ idCabang }) => {
 const getJadwalTenagaMedis = ({ idJadwal }) => {
     return async (dispatch) => {
         try {
-            console.log(data);
             const { data } = await jivaAPI.jadwalTenagaMedis.getJadwalTenagaMedis({ idJadwal });
             await dispatch(setJadwalTenagaMedis(data));
         } catch (error) {
-            console.log(error);
+            toast(constants.BASE_ERROR_MESSAGE, { type: toast.TYPE.ERROR });
         }
     };
 };
@@ -29,10 +28,9 @@ const getJadwalTenagaMedis = ({ idJadwal }) => {
 const createJadwalTenagaMedis = ({ idTenagaMedis, startTime, endTime, quota, day }) => {
     return async (dispatch) => {
         try {
-            //console.log(data);
             await jivaAPI.jadwalTenagaMedis.createJadwalTenagaMedis({ idTenagaMedis, startTime, endTime, quota, day });
         } catch(error) {
-            console.log(error);
+            toast(constants.BASE_ERROR_MESSAGE, { type: toast.TYPE.ERROR });
         }
     }
 }

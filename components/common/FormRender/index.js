@@ -67,7 +67,7 @@ const FormRender = ({ schema, submit, isSubmitting, isValid = true }) => {
     const values = {};
     const errs = document.getElementsByClassName("error-message")
     if (errs.length) {
-      Array.from(errs).forEach(e => e.remove())
+      Array.from(errs).forEach(element => element.remove())
     }
   
     // map field values to key, value pairs
@@ -139,8 +139,8 @@ const FormRender = ({ schema, submit, isSubmitting, isValid = true }) => {
     <FormCSS>
       <form
         className="form-container"
-        onSubmit={async (e) => {
-          e.preventDefault();
+        onSubmit={async (event) => {
+          event.preventDefault();
           const { payload, isErrorTemp } = validateForm()
           setIsError(isErrorTemp)
           if (!isErrorTemp && isValid) submit(payload);
