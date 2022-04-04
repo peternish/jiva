@@ -39,7 +39,7 @@ const CSS = styled.div`
     flex-direction: column;
     align-items: center;
     margin: 2em 0;
-    width: 100%;
+    width: 40em;
   }
 
   button {

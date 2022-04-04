@@ -15,7 +15,8 @@ import Jadwal_Tenaga_Medis from "@components/JadwalTenagaMedis/Calender"
 import Form_Calender from "@components/JadwalTenagaMedis/FormCalender";
 import Calender_Container from "@components/JadwalTenagaMedis/CalenderContainer";
 import { useRouter } from 'next/router'
-
+import TextInput from "@components/common/TextInput"
+import LoadingButton from "@mui/lab/LoadingButton"
 
 const Jadwal = (props) => {
     const {query, isReady} = useRouter()
@@ -41,7 +42,7 @@ const Jadwal = (props) => {
     const { tenagaMedisList } = useSelector(state => state.tenagaMedis);
 
     useEffect(() =>  {
-      parseData(jadwalTenagaMedisList);
+      parseData(jadwalTenagaMedisList, -1);
       parseTenagaMedis(tenagaMedisList);
     }, [jadwalTenagaMedisList, tenagaMedisList])
 
@@ -102,7 +103,7 @@ const Jadwal = (props) => {
         }
       }
 
-      const parseData = (jadwalTenagaMedisList) => {
+      const parseData = (jadwalTenagaMedisList, id_filter) => {
         if(jadwalTenagaMedisList) {
           jadwalTenagaMedisList.map((jadwalTenagaMedis) => {
             const title = jadwalTenagaMedis.tenaga_medis.account.full_name;
@@ -130,8 +131,14 @@ const Jadwal = (props) => {
 
             currentId = id;
             setCurrentId(currentId)
-  
-            setEvents((prev) => [...prev, { id, start, end, title, quota, id_tenaga_medis }])
+
+            if(id_filter > -1) {
+              if(id_tenaga_medis === id_filter) {
+                setEvents((prev) => [...prev, { id, start, end, title, quota, id_tenaga_medis }])
+              }
+            } else {
+              setEvents((prev) => [...prev, { id, start, end, title, quota, id_tenaga_medis }])
+            }
           })
         }
       }
@@ -139,6 +146,21 @@ const Jadwal = (props) => {
     const [currentEvent, setCurrentEvent] = useState(undefined)
     
     const currentDate = new Date()
+
+    const updateMyEvents = (value) => {
+      const id = tenagaMedisDict2[value]
+      myEvents = [{}]
+      setEvents(myEvents)
+
+      parseData(jadwalTenagaMedisList, id)
+    }
+
+    const updateAllMyEvents = () => {
+      myEvents = [{}]
+      setEvents(myEvents)
+
+      parseData(jadwalTenagaMedisList, -1)
+    }
 
     const selectEvent = useCallback(
       (event) => {setCurrentEvent(event)
@@ -200,11 +222,12 @@ const Jadwal = (props) => {
       }
     }
     return (
-      <Layout navType = "sidebar">
+      <Layout navType = "sidebar" title="Jadwal Tenaga Medis">
+        <select onChange={(event) => updateMyEvents(event.target.value)} style={{width: '10%'}}>
+          {Object.keys(tenagaMedisDict2).map(key => <option key={key} value={tenagaMedisDict[key]}>{key}</option>)}
+        </select>
+        
         <Calender_Container>
-          <Formik>
-            <Field id="tenaga_medis_filter"></Field>
-          </Formik>
           <Jadwal_Tenaga_Medis>
             <Calendar
             selectable
@@ -213,7 +236,7 @@ const Jadwal = (props) => {
             events={myEvents}
             startAccessor="start"
             endAccessor="end"
-            style={{height : 793, width: 1266, margin: "50px"}}
+            style={{ height : 793, width: 1266 }}
             onSelectEvent={selectEvent}
             />
           </Jadwal_Tenaga_Medis>
@@ -262,20 +285,59 @@ const Jadwal = (props) => {
             }}
             >{({values}) => 
               <Form>
-                <label>Pilih Tenaga Medis</label>
-                <Field id="jadwal_title" name="jadwal_title" placeholder="Tenaga Medis" as="select">
-                  {Object.keys(tenagaMedisDict2).map(key => <option value={tenagaMedisDict[key]}>{key}</option>)}
-                </Field>
-                <label>Pilih Hari</label>
-                <Field id="jadwal_hari" name="jadwal_hari" type="date" placeholder={currentDate}></Field>
-                <label>Pilih Rentang Waktu</label>
-                <Field id="Start" name="start" type="time"></Field>
-                <Field id="End" name="end" type="time"></Field>
-                <label>Quota</label>
-                <Field id="quota" name="quota" type="number"></Field>
-                <button type="submit">Submit</button>
-                <button type="button" onClick={deleteEvent}>Delete</button>
-                <button type="button" onClick={() => updateEvent(values)}>Simpan</button>
+                <TextInput
+                  label="Pilih Tenaga Medis"
+                  id="jadwal_title" 
+                  name="jadwal_title" 
+                  placeholder="Tenaga Medis" 
+                  as="select"
+                >
+                  {Object.keys(tenagaMedisDict2).map(key => <option key={key} value={tenagaMedisDict[key]}>{key}</option>)}
+                </TextInput>
+                <TextInput
+                  label="Pilih Hari"
+                  id="jadwal_hari" name="jadwal_hari" type="date" placeholder={currentDate}
+                />
+                <div id="time-range">
+                  <label>Pilih Rentang Waktu</label>
+                  <div id="inputs">
+                    <Field id="Start" name="start" type="time"></Field>
+                    <Field id="End" name="end" type="time"></Field>
+                  </div>
+                </div>
+                <TextInput
+                  label="Quota"
+                  id="quota" 
+                  name="quota" 
+                  type="number"
+                />
+                <LoadingButton 
+                  variant="contained"
+                  type="submit"
+                >
+                  Simpan
+                </LoadingButton>
+                <LoadingButton
+                  variant="outlined"
+                >
+                  Batal
+                </LoadingButton>
+                <LoadingButton
+                  variant="contained"
+                  type="button" 
+                  onClick={deleteEvent}
+                  style={{ background: "#F44336" }}
+                >
+                  Hapus
+                </LoadingButton>
+                <LoadingButton 
+                  variant="contained"
+                  type="button"
+                  onClick={() => updateEvent(values)}
+                >
+                  Simpan
+                </LoadingButton>
+                <button onClick={console.log(myEvents)}>cek</button>
               </Form>}
             </Formik>
           </Form_Calender>

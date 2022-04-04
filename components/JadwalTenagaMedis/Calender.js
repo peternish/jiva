@@ -4,8 +4,7 @@ const Jadwal_Tenaga_Medis = styled.div`
   height: 100%;
   display: flex;
   align-items: left;
-  width: 100%;
-  margin-left: 1em;
+  overflow: hidden;
 
   .rbc-time-view {
     width: auto;
@@ -18,6 +17,10 @@ const Jadwal_Tenaga_Medis = styled.div`
   .rbc-event {
     background-color: #83D2FF;
     color: black;
+  }
+
+  @media(max-width: 1366px) {
+    width: calc(100vw - 30em);
   }
 `;
 
