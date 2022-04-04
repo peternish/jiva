@@ -8,7 +8,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css"
 import { useState, useCallback, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Formik, Form, Field } from "formik";
-import { getJadwalTenagaMedisList, getJadwalTenagaMedis, createJadwalTenagaMedis, deleteJadwalTenagaMedis, updateJadwalTenagaMedis } from "@redux/modules/jadwalTenagaMedis/thunks";
+import { getJadwalTenagaMedisList, createJadwalTenagaMedis, deleteJadwalTenagaMedis, updateJadwalTenagaMedis } from "@redux/modules/jadwalTenagaMedis/thunks";
 import { getTenagaMedis } from "@redux/modules/tenagaMedis/thunks";
 import Layout from "@components/Layout";
 import Jadwal_Tenaga_Medis from "@components/JadwalTenagaMedis/Calender"
@@ -43,7 +43,7 @@ const Jadwal = (props) => {
     useEffect(() =>  {
       parseData(jadwalTenagaMedisList);
       parseTenagaMedis(tenagaMedisList);
-    },[jadwalTenagaMedisList, tenagaMedisList])
+    }, [jadwalTenagaMedisList, tenagaMedisList])
 
     const locales = {
         'en-US': enUS,
@@ -136,11 +136,6 @@ const Jadwal = (props) => {
         }
       }
 
-      
-    const addEventsFromDB = () => {
-      console.log(myEvents)
-    }
-
     const [currentEvent, setCurrentEvent] = useState(undefined)
     
     const currentDate = new Date()
@@ -207,6 +202,9 @@ const Jadwal = (props) => {
     return (
       <Layout navType = "sidebar">
         <Calender_Container>
+          <Formik>
+            <Field id="tenaga_medis_filter"></Field>
+          </Formik>
           <Jadwal_Tenaga_Medis>
             <Calendar
             selectable
@@ -277,7 +275,6 @@ const Jadwal = (props) => {
                 <Field id="quota" name="quota" type="number"></Field>
                 <button type="submit">Submit</button>
                 <button type="button" onClick={deleteEvent}>Delete</button>
-                <button type="button" onClick={addEventsFromDB}>Cek</button>
                 <button type="button" onClick={() => updateEvent(values)}>Simpan</button>
               </Form>}
             </Formik>
