@@ -16,7 +16,7 @@ const CSS = styled.div`
     margin-bottom: 0.2em;
   }
 
-  input {
+  input, select {
     padding: 1em 0.75em;
     width: 40em;
     box-shadow: ${(props) =>
@@ -42,7 +42,7 @@ const TextInput = ({ label, name, type = "text", placeholder = "", disabled = fa
     <CSS isError={!!error}>
       <label htmlFor={name}>{label}</label>
       <Field type={type} placeholder={placeholder} name={name} id={name} disabled={disabled} as={as}>{children}</Field>
-      {error ? <small className="error-message">{error}</small> : null}
+      <small className="error-message">{error}</small>
     </CSS>
   );
 };

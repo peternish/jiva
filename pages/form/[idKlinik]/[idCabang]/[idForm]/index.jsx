@@ -7,6 +7,8 @@ import Layout from "@components/DynamicForm/Layout";
 import Card from "@mui/material/Card";
 import constants from "@utils/constants"
 import { useRouter } from 'next/router';
+import Link from "next/link"
+import Button from "@mui/material/Button"
 
 // redux
 import { createApplication } from "@redux/modules/klinik/thunks"
@@ -79,83 +81,8 @@ const CSS = styled.div`
   }
 `;
 
-/* istanbul ignore next */
-// export async function getServerSideProps({ params, res }) {
-//   const { idCabang, idForm } = params
-//   const jadwalTenagaMedis = [
-//     {
-//       "id": 2,
-//       "tenaga_medis": {
-//         "account": {
-//           "id": 2,
-//           "full_name": "TM 2",
-//           "email": "tm2@klinik99.com",
-//           "date_joined": "2022-03-31T12:49:11.378628Z",
-//           "last_login": "2022-03-31T12:49:11.378628Z",
-//           "role": "tenaga_medis",
-//           "cabang": 1,
-//           "klinik": 1
-//         },
-//         "sip": "https://django-surat-izin-klinik-jiva.s3.amazonaws.com/static/HW2204B4.txt"
-//       },
-//       "start_time": "10:00:00",
-//       "end_time": "12:00:00",
-//       "quota": 5,
-//       "day": "mon"
-//     },
-//     {
-//       "id": 3,
-//       "tenaga_medis": {
-//         "account": {
-//           "id": 3,
-//           "full_name": "TM 3",
-//           "email": "tm3@klinik99.com",
-//           "date_joined": "2022-04-02T10:43:33.797983Z",
-//           "last_login": "2022-04-02T10:43:33.797983Z",
-//           "role": "tenaga_medis",
-//           "cabang": 1,
-//           "klinik": 1
-//         },
-//         "sip": "https://django-surat-izin-klinik-jiva.s3.amazonaws.com/static/HW2204B4.txt"
-//       },
-//       "start_time": "11:00:00",
-//       "end_time": "14:00:00",
-//       "quota": 5,
-//       "day": "mon"
-//     }
-//   ]
-
-//   let jadwalByDoctor
-//   try {
-//     const jadwalTenagaMedis = await axios.get(`${constants?.API_BASE_URL}/jadwal/tenaga-medis/available/${idCabang}/`, {
-//       date: `${new Date(Date.now()).toLocaleString().split(',')[0]}` // dd/mm/yyyy
-//     })
-//     jadwalByDoctor = jadwalTenagaMedis.reduce((r, a) => {
-//       r[a.tenaga_medis.account.id] = r[a.tenaga_medis.account.id] || []
-//       r[a.tenaga_medis.account.id].push(a)
-//       return r
-//     }, Object.create(null))
-//   } catch (error) {
-//     console.log(error)
-//   }
-
-//   const {
-//     data: { cabang_id, klinik, fields },
-//   } = await axios.get(`${constants?.API_BASE_URL}/klinik/cabang/${idCabang}/dform/${idForm}}/`)
-//   return {
-//     props: {
-//       idKlinik,
-//       idCabang,
-//       fields,
-//       namaKlinik: klinik.name,
-//       jadwal: jadwalByDoctor,
-//     }
-//   }
-// }
-
 const RegistrationForm = () => {
-  const [isSubmitting, setSubmitting] = useState(false);
-  const submitted = false
+  const [submitted, setSubmitted] = useState(false)
   const { query, isReady } = useRouter();
   const dispatch = useDispatch()
 
@@ -167,49 +94,7 @@ const RegistrationForm = () => {
   }, [isReady, query, dispatch]);
 
   const schema = useSelector(state => findSchema(state, constants.FORM_TYPES.PATIENT_APPLICATION))
-  // const { jadwalTenagaMedisList } = useSelector(state => state.jadwalTenagaMedis)
-  const jadwalTenagaMedisList = [
-    {
-      "id": 2,
-      "tenaga_medis": {
-        "account": {
-          "id": 2,
-          "full_name": "TM 2",
-          "email": "tm2@klinik99.com",
-          "date_joined": "2022-03-31T12:49:11.378628Z",
-          "last_login": "2022-03-31T12:49:11.378628Z",
-          "role": "tenaga_medis",
-          "cabang": 1,
-          "klinik": 1
-        },
-        "sip": "https://django-surat-izin-klinik-jiva.s3.amazonaws.com/static/HW2204B4.txt"
-      },
-      "start_time": "10:00:00",
-      "end_time": "12:00:00",
-      "quota": 5,
-      "day": "mon"
-    },
-    {
-      "id": 3,
-      "tenaga_medis": {
-        "account": {
-          "id": 3,
-          "full_name": "TM 3",
-          "email": "tm3@klinik99.com",
-          "date_joined": "2022-04-02T10:43:33.797983Z",
-          "last_login": "2022-04-02T10:43:33.797983Z",
-          "role": "tenaga_medis",
-          "cabang": 1,
-          "klinik": 1
-        },
-        "sip": "https://django-surat-izin-klinik-jiva.s3.amazonaws.com/static/HW2204B4.txt"
-      },
-      "start_time": "11:00:00",
-      "end_time": "14:00:00",
-      "quota": 5,
-      "day": "mon"
-    }
-  ]
+  const { jadwalTenagaMedisList } = useSelector(state => state.jadwalTenagaMedis)
 
   const mandatoryFields = {
     nik: "",
@@ -218,9 +103,7 @@ const RegistrationForm = () => {
     fields: []
   }
 
-  console.log(schema)
-
-  return schema ? (
+  return schema && jadwalTenagaMedisList ? (
     <Layout navType="topbar">
       <CSS>
         <Card id="card">
@@ -232,9 +115,13 @@ const RegistrationForm = () => {
 
           {submitted
             ? (
-              <p data-testid="success_message">Reservasi anda telah tersimpan! Mohon datang tepat waktu!</p>
+              <div>
+                <p data-testid="success_message">Reservasi anda telah tersimpan! Mohon datang tepat waktu!</p>
+                <Button onClick={() => location.assign(location.pathname)}>Daftar lagi</Button>
+              </div>
             ) : (
               <Formik
+              enableReinitialize
                 initialValues={{ ...mandatoryFields }}
                 validate={(values) => {
                   const errors = {}
@@ -243,13 +130,13 @@ const RegistrationForm = () => {
                   if (!values.jadwal) errors.jadwal = "Jadwal wajib dipilih"
                   return errors
                 }}
-                onSubmit={async (values, { setSubmitting }) => {
-                  console.log(values)
+                onSubmit={async (values, { setSubmitting, isSubmitting }) => {
                   setSubmitting(true)
-                  dispatch(createApplication(values))
+                  await dispatch(createApplication(setSubmitting, values))
+                  setSubmitted(!isSubmitting)
                 }}
               >
-                {({ errors, isSubmitting, submitForm, values, isValid, validateForm, setFieldValue }) => (
+                {({ errors, isSubmitting, submitForm, values, isValid, setFieldValue }) => (
                   <>
                     <Form id="form">
                       <TextInput
@@ -272,14 +159,13 @@ const RegistrationForm = () => {
                           <option value={id} key={id}>{full_name}</option>
                         ))}
                       </TextInput>
-                      {/* <label htmlFor={"tenagamedis"}>Jadwal dokter</label>
-                      <Field as="select" id="tenagamedis" data-testid="tenagamedis" name="tenaga_medis">
-                        <option value="" disabled={true} hidden={true}>Pilih tenaga medis</option>
-                        {jadwalTenagaMedisList.map(({ tenaga_medis: { account: { full_name, id } } }) => (
-                          <option value={id} key={id}>{full_name}</option>
-                        ))}
-                      </Field> */}
-                      <Field as="select" data-testid="jadwal" disabled={!values.tenaga_medis} name="jadwal">
+                      <TextInput
+                        as="select"
+                        data-testid="jadwal" 
+                        disabled={!values.tenaga_medis} 
+                        name="jadwal"
+                        error={errors.jadwal}
+                      >
                         <option value="" disabled={true} hidden={true}>Pilih jadwal pertemuan</option>
                         {values.tenaga_medis && (
                           jadwalTenagaMedisList.filter(({ tenaga_medis: { account: { id } } }) => id == values.tenaga_medis).map(({ start_time, end_time, day, id }, idx) => (
@@ -287,7 +173,7 @@ const RegistrationForm = () => {
                               {`${day}: ${start_time} - ${end_time}`}
                             </option>
                           )))}
-                      </Field>
+                      </TextInput>
                     </Form>
                     <FormRender
                       schema={schema.fields}

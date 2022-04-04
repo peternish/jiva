@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import styled from "styled-components";
 import constants from "@utils/constants";
 import LoadingButton from "@mui/lab/LoadingButton";
@@ -63,6 +63,52 @@ const FormRender = ({ schema, submit, isSubmitting, isValid }) => {
 
   const [isError, setIsError] = useState(false)
 
+  const validateForm = useCallback(() => {
+    const values = {};
+    const errs = document.getElementsByClassName("error-message")
+    if (errs.length) {
+      Array.from(errs).forEach(e => e.remove())
+    }
+  
+    // map field values to key, value pairs
+    $("form")
+      .serializeArray()
+      .forEach(({ name, value }) => (values[name] = value));
+  
+    // map fields to payload object
+    const payload = [];
+    schema.forEach(({ type, required, name }) => {
+      const inputValue = {
+        type,
+        required,
+        name,
+        value: values[name],
+      };
+      if (type === "file") {
+        const file = document.querySelector(`[name=${name}]`).files[0];
+        inputValue.value = file;
+      } else if (type === "checkbox-group") {
+        const options = document.getElementsByName(`${name}[]`);
+        const checkedVals = [];
+        options.forEach((el) => {
+          if (el.checked) checkedVals.push(el.value);
+        });
+        inputValue.value = checkedVals.join(",");
+      }
+      if (!excludedFields.includes(type)) {
+        payload.push(inputValue);
+      }
+    });
+    let isError = false
+    $("[data-custom-required='true']").each(function () {
+      if (!values[$(this).attr("name")]) {
+        $(this).after(`<small class="error-message">${$(this).attr("name")} is required</small>`);
+        isError = true
+      }
+    });
+    return { values, payload, isError }
+  }, [schema])
+
   useEffect(() => {
     const $ = require("jquery");
     window.jQuery = $;
@@ -80,7 +126,12 @@ const FormRender = ({ schema, submit, isSubmitting, isValid }) => {
       $(this).attr("data-custom-required", true);
       $(this).removeAttr("required");
     });
-  }, [schema]);
+
+    $("form").on("change", () => {
+      const { isError } = validateForm()
+      setIsError(isError)
+    })
+  }, [schema, validateForm]);
 
   return (
     <FormCSS>
@@ -88,49 +139,9 @@ const FormRender = ({ schema, submit, isSubmitting, isValid }) => {
         className="form-container"
         onSubmit={(e) => {
           e.preventDefault();
-          const values = {};
-          const errs = document.getElementsByClassName("error-message")
-          if (errs.length) {
-            Array.from(errs).forEach(e => e.remove())
-          }
-
-          // map field values to key, value pairs
-          $("form")
-            .serializeArray()
-            .forEach(({ name, value }) => (values[name] = value));
-
-          // map fields to payload object
-          const payload = [];
-          schema.forEach(({ type, required, name }) => {
-            const inputValue = {
-              type,
-              required,
-              name,
-              value: values[name],
-            };
-            if (type === "file") {
-              const file = document.querySelector(`[name=${name}]`).files[0];
-              inputValue.value = file;
-            } else if (type === "checkbox-group") {
-              const options = document.getElementsByName(`${name}[]`);
-              const checkedVals = [];
-              options.forEach((el) => {
-                if (el.checked) checkedVals.push(el.value);
-              });
-              inputValue.value = checkedVals.join(",");
-            }
-            if (!excludedFields.includes(type)) {
-              payload.push(inputValue);
-            }
-          });
-          $("[data-custom-required='true']").each(function () {
-            if (!values[$(this).attr("name")]) {
-              $(this).after(`<small class="error-message">${$(this).attr("name")} is required</small>`);
-              setIsError(true)
-            }
-          });
-          console.log("DEBUG HANIF", {isValid, isError})
-          submit(payload);
+          const { payload, isError } = validateForm()
+          setIsError(isError)
+          if (!isError && isValid) submit(payload);
         }}
       >
         <div id="fb-render" ref={fr}></div>
