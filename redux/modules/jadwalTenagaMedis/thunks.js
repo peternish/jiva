@@ -19,7 +19,7 @@ const getJadwalTenagaMedisList = ({ idCabang }) => {
 const getJadwalTenagaMedis = ({ idJadwal }) => {
     return async (dispatch) => {
         try {
-            console.log(data);
+            //console.log(data);
             const { data } = await jivaAPI.jadwalTenagaMedis.getJadwalTenagaMedis({ idJadwal });
             await dispatch(setJadwalTenagaMedis(data));
         } catch (error) {
@@ -39,6 +39,26 @@ const createJadwalTenagaMedis = ({ idTenagaMedis, startTime, endTime, quota, day
     }
 }
 
+const deleteJadwalTenagaMedis = ({ idJadwal }) => {
+    return async (dispatch) => {
+        try {
+            await jivaAPI.jadwalTenagaMedis.deleteJadwalTenagaMedis({ idJadwal });
+        } catch(error) {
+            console.log(error)
+        }
+    }
+}
+
+const updateJadwalTenagaMedis = ({ idJadwal, startTime, endTime, quota, day }) => {
+    return async (dispatch) => {
+        try {
+            await jivaAPI.jadwalTenagaMedis.updateJadwalTenagaMedis({ idJadwal, startTime, endTime, quota, day });
+        } catch(error) {
+            console.log(error);
+        }
+    }
+}
 
 
-export { getJadwalTenagaMedisList, getJadwalTenagaMedis, createJadwalTenagaMedis };
+
+export { getJadwalTenagaMedisList, getJadwalTenagaMedis, createJadwalTenagaMedis, deleteJadwalTenagaMedis, updateJadwalTenagaMedis };

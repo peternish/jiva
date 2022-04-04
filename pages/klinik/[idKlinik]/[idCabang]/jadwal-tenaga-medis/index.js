@@ -8,7 +8,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css"
 import { useState, useCallback, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Formik, Form, Field } from "formik";
-import { getJadwalTenagaMedisList, getJadwalTenagaMedis, createJadwalTenagaMedis } from "@redux/modules/jadwalTenagaMedis/thunks";
+import { getJadwalTenagaMedisList, getJadwalTenagaMedis, createJadwalTenagaMedis, deleteJadwalTenagaMedis, updateJadwalTenagaMedis } from "@redux/modules/jadwalTenagaMedis/thunks";
 import { getTenagaMedis } from "@redux/modules/tenagaMedis/thunks";
 import Layout from "@components/Layout";
 import Jadwal_Tenaga_Medis from "@components/JadwalTenagaMedis/Calender"
@@ -28,13 +28,10 @@ const Jadwal = (props) => {
         return
       }
       const { idCabang } = query;
-      console.log(query);
       dispatch(getJadwalTenagaMedisList({ idCabang }));
     }, [dispatch, isReady, query]);
-    //const { idKlinik, idCabang } = query;
 
     const { jadwalTenagaMedisList } = useSelector(state => state.jadwalTenagaMedis);
-    console.log(jadwalTenagaMedisList, "jadwalTenagaMedisList")
 
     useEffect(() => {
       if (!isReady) return;
@@ -43,11 +40,9 @@ const Jadwal = (props) => {
     }, [isReady, dispatch, query]);
   
     const { tenagaMedisList } = useSelector(state => state.tenagaMedis);
-    console.log(tenagaMedisList, "List Tenaga Medis")
 
     useEffect(() =>  {
       parseData(jadwalTenagaMedisList);
-      console.log("----------")
       parseTenagaMedis(tenagaMedisList);
     },[jadwalTenagaMedisList, tenagaMedisList])
 
@@ -91,28 +86,19 @@ const Jadwal = (props) => {
 
       const [tenagaMedisDict2, setTenagaMedisDict2] = useState({});
 
-      let currentId = 0;
+      const [currentId, setCurrentId] = useState(0);
 
       const parseTenagaMedis = (tenagaMedisList) => {
-        console.log("Test")
         if(tenagaMedisList) {
           tenagaMedisList.map((tenagaMedis) => {
             const id_tenaga_medis_list = tenagaMedis.account.id;
-            console.log("1")
             const nama_tenaga_medis = tenagaMedis.account.full_name;
-            console.log("2")
 
             tenagaMedisDict[id_tenaga_medis_list] = nama_tenaga_medis
             setTenagaMedisDict(tenagaMedisDict);
 
             tenagaMedisDict2[nama_tenaga_medis] = id_tenaga_medis_list
             setTenagaMedisDict2(tenagaMedisDict2)
-
-            console.log("parseTenagaMedis")
-
-
-            console.log(tenagaMedisDict, "tenagaMedisDict")
-            console.log(tenagaMedisDict2, "tenagaMedisDict2")
           })
         }
       }
@@ -120,48 +106,31 @@ const Jadwal = (props) => {
       const parseData = (jadwalTenagaMedisList) => {
         if(jadwalTenagaMedisList) {
           jadwalTenagaMedisList.map((jadwalTenagaMedis) => {
-            console.log("jadwalTenagaMedisList")
-            //console.log(jadwalTenagaMedis, "For loop")
             const title = jadwalTenagaMedis.tenaga_medis.account.full_name;
-            //console.log(title, "title")
             const start_time = jadwalTenagaMedis.start_time;
             const end_time = jadwalTenagaMedis.end_time;
             const day = jadwalTenagaMedis.day;
             const quota = jadwalTenagaMedis.quota;
             const id_tenaga_medis = jadwalTenagaMedis.tenaga_medis.account.id;
-  
-            // console.log(typeof day, "tipe hari")
-            // console.log(dayDict)
+            const id = jadwalTenagaMedis.id;
   
             const day_int = dayDict[day];
-            console.log(day_int, "day_int")
             const currentDate = new Date();
-            console.log(currentDate, "currentDate")
-            console.log(currentDate.getDay(), "GetDay")
             const day_num = day_int - currentDate.getDay();
-            console.log(day_num, "day_num")
             currentDate.setDate(new Date(currentDate.getDate() + day_num))
-            console.log(currentDate, "parseCurrentDate")
-
-            console.log(start_time.split(":"), "starttime")
   
             const start = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), 
               start_time.split(":")[0], start_time.split(":")[1], start_time.split(":")[2])
-              console.log(start, "old")
 
             start.setHours(start.getHours() + Math.abs(currentDate.getTimezoneOffset())/60)
-              console.log(start, "new")
   
             const end = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), 
               end_time.split(":")[0], end_time.split(":")[1], end_time.split(":")[2])
 
             end.setHours(end.getHours() + Math.abs(currentDate.getTimezoneOffset())/60)
-  
-            console.log(start, "start");
-            console.log(end, "end");
 
-            currentId = currentId + 1;
-            const id = currentId;
+            currentId = id;
+            setCurrentId(currentId)
   
             setEvents((prev) => [...prev, { id, start, end, title, quota, id_tenaga_medis }])
           })
@@ -170,25 +139,12 @@ const Jadwal = (props) => {
 
       
     const addEventsFromDB = () => {
-      //dispatch(createJadwalTenagaMedis())
-      console.log(currentEvent)
+      console.log(myEvents)
     }
 
     const [currentEvent, setCurrentEvent] = useState(undefined)
     
     const currentDate = new Date()
-    console.log(currentDate.getTimezoneOffset(), "time offset")
-    // console.log(new Date(1648572262670), "angka")
-    // console.log(currentDate.getDate(), "getdate")
-    // currentDate.setDate(new Date(currentDate.getDate()-4))
-    // console.log(currentDate, "Tanggal Hari ini")
-    // console.log(currentDate.getDay(), "hari ke")
-    // console.log(currentDate.getTimezoneOffset(), "offset")
-
-
-    //console.log(jadwalTenagaMedisList, "JadwalList")
-
-    // console.log(parseInt(currentDate.toISOString().split("T")[1].substr(0,2)), "isostring")
 
     const selectEvent = useCallback(
       (event) => {setCurrentEvent(event)
@@ -196,10 +152,59 @@ const Jadwal = (props) => {
       [],
     )
 
-    const deleteEvent = useCallback()
-    
-    
-    //console.log(currentDate.toString() + " test")
+    const deleteEvent = () => {
+      const id = currentEvent.id
+
+      for(let i = 0; i < myEvents.length; i++) {
+        if(myEvents[i].id === id) {
+          myEvents.splice(i, 1)
+          setEvents(myEvents)
+        }
+      }
+      const idJadwal = id;
+      dispatch(deleteJadwalTenagaMedis({ idJadwal }))
+    }
+
+    const updateEvent = (values) => {
+      const id = currentEvent.id
+
+      for(let i = 0; i < myEvents.length; i++) {
+        if(myEvents[i].id === id) {
+          myEvents[i].start = new Date(values.jadwal_hari + " " + values.start)
+          myEvents[i].end = new Date(values.jadwal_hari + " " + values.end)
+          myEvents[i].title = values.jadwal_title
+          myEvents[i].quota = values.quota
+          setEvents(myEvents)
+
+          const start = new Date(values.jadwal_hari + " " + values.start)
+          const startdb = new Date(values.jadwal_hari + " " + values.start)
+          const enddb = new Date(values.jadwal_hari + " " + values.end)
+          startdb.setHours(startdb.getHours() - Math.abs(new Date().getTimezoneOffset())/60)
+
+          const startTime = startdb.toISOString().split("T")[1].substr(0,8)
+          const temp = startTime.split(":")
+          startTime = String(parseInt(temp[0]) + Math.abs(new Date().getTimezoneOffset())/60 + ":" + temp[1] + ":" + temp[2])
+
+          enddb.setHours(enddb.getHours() - Math.abs(new Date().getTimezoneOffset())/60)
+
+          const endTime = enddb.toISOString().split("T")[1].substr(0,8)
+          const temp2 = endTime.split(":")
+          endTime = String(parseInt(temp2[0]) + Math.abs(new Date().getTimezoneOffset())/60 + ":" + temp2[1] + ":" + temp2[2])
+
+          const temp_date = values.jadwal_hari
+          temp_date = new Date(temp_date)
+          temp_date = temp_date.getDay()
+          if(startdb.getDate() < start.getDate()) {
+            temp_date = temp_date - 1;
+          }
+          const day = dayDict2[temp_date]
+
+          const idJadwal = id;
+          const quota = myEvents[i].quota;
+          dispatch(updateJadwalTenagaMedis({ idJadwal, startTime, endTime, quota, day }))
+        }
+      }
+    }
     return (
       <Layout navType = "sidebar" title="Jadwal Tenaga Medis">
         <Calender_Container>
@@ -233,44 +238,32 @@ const Jadwal = (props) => {
                 currentId = currentId + 1
                 const id = currentId
                 const idTenagaMedis = tenagaMedisDict2[title]
-                console.log(idTenagaMedis, "ID")
 
                 startdb.setHours(startdb.getHours() - Math.abs(new Date().getTimezoneOffset())/60)
-                 console.log(start, "oldstart")
-                 console.log(startdb, 'newstart')
 
                 const startTime = startdb.toISOString().split("T")[1].substr(0,8)
                 const temp = startTime.split(":")
                 startTime = String(parseInt(temp[0]) + Math.abs(new Date().getTimezoneOffset())/60 + ":" + temp[1] + ":" + temp[2])
-                console.log(startTime, "start_hours")
 
                 enddb.setHours(enddb.getHours() - Math.abs(new Date().getTimezoneOffset())/60)
-                 console.log(end, "oldend")
-                 console.log(enddb, "newend")
-                console.log(title, "title")
 
                 const endTime = enddb.toISOString().split("T")[1].substr(0,8)
                 const temp2 = endTime.split(":")
                 endTime = String(parseInt(temp2[0]) + Math.abs(new Date().getTimezoneOffset())/60 + ":" + temp2[1] + ":" + temp2[2])
-                console.log(endTime, "end_hours")
 
                 const temp_date = values.jadwal_hari
-                console.log(typeof temp_date)
                 temp_date = new Date(temp_date)
-                console.log(typeof temp_date, "--------")
                 temp_date = temp_date.getDay()
-                console.log(temp_date, "temp_date")
                 if(startdb.getDate() < start.getDate()) {
                   temp_date = temp_date - 1;
                 }
                 const day = dayDict2[temp_date]
-                console.log(day, "day")
                 if(title) {
                   setEvents((prev) => [...prev, { id, start, end, title, quota, idTenagaMedis }])
                   dispatch(createJadwalTenagaMedis({ idTenagaMedis, startTime, endTime, quota, day }))
                 }
             }}
-            >
+            >{({values}) => 
               <Form>
                 <TextInput
                   label="Pilih Tenaga Medis"
@@ -318,7 +311,8 @@ const Jadwal = (props) => {
                   Hapus
                 </LoadingButton>
                 <button type="button" onClick={addEventsFromDB}>Cek</button>
-              </Form>
+                <button type="button" onClick={() => updateEvent(values)}>Simpan</button>
+              </Form>}
             </Formik>
           </Form_Calender>
           </Calender_Container>
