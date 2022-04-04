@@ -7,6 +7,171 @@ import { Formik } from "formik";
 import PageHeader from "@components/Layout/PageHeader";
 import * as nextRouter from 'next/router';
 import URLPreview from "@components/common/URLPreview";
+import PreviewModal from "@components/common/FormRender/PreviewModal";
+
+const SAMPLE_FORM_JSON = [
+  {
+    type: "text",
+    required: true,
+    label: "Field 1",
+    className: "form-control",
+    name: "text-1648102772033-0",
+    access: false,
+    subtype: "text",
+  },
+
+  {
+    "type": "autocomplete",
+    "required": false,
+    "label": "Autocomplete",
+    "className": "form-control",
+    "name": "autocomplete-1649043265015-0",
+    "access": false,
+    "requireValidOption": false,
+    "values": [
+      {
+        "label": "Option 1",
+        "value": "option-1",
+        "selected": true
+      },
+      {
+        "label": "Option 2",
+        "value": "option-2",
+        "selected": false
+      },
+      {
+        "label": "Option 3",
+        "value": "option-3",
+        "selected": false
+      }
+    ]
+  },
+  {
+    "type": "checkbox-group",
+    "required": false,
+    "label": "Checkbox Group",
+    "toggle": false,
+    "inline": false,
+    "name": "checkbox-group-1649043265997-0",
+    "access": false,
+    "other": false,
+    "values": [
+      {
+        "label": "Option 1",
+        "value": "option-1",
+        "selected": true
+      }
+    ]
+  },
+  {
+    "type": "date",
+    "required": false,
+    "label": "Date Field",
+    "className": "form-control",
+    "name": "date-1649043266930-0",
+    "access": false
+  },
+  {
+    "type": "file",
+    "required": false,
+    "label": "File Upload",
+    "className": "form-control",
+    "name": "file-1649043267713-0",
+    "access": false,
+    "subtype": "file",
+    "multiple": false
+  },
+  {
+    "type": "header",
+    "subtype": "h1",
+    "label": "Header",
+    "access": false
+  },
+  {
+    "type": "paragraph",
+    "subtype": "p",
+    "label": "Paragraph",
+    "access": false
+  },
+  {
+    "type": "radio-group",
+    "required": false,
+    "label": "Radio Group",
+    "inline": false,
+    "name": "radio-group-1649043271464-0",
+    "access": false,
+    "other": false,
+    "values": [
+      {
+        "label": "Option 1",
+        "value": "option-1",
+        "selected": false
+      },
+      {
+        "label": "Option 2",
+        "value": "option-2",
+        "selected": false
+      },
+      {
+        "label": "Option 3",
+        "value": "option-3",
+        "selected": false
+      }
+    ]
+  },
+  {
+    "type": "select",
+    "required": false,
+    "label": "Select",
+    "className": "form-control",
+    "name": "select-1649043272413-0",
+    "access": false,
+    "multiple": false,
+    "values": [
+      {
+        "label": "Option 1",
+        "value": "option-1",
+        "selected": true
+      },
+      {
+        "label": "Option 2",
+        "value": "option-2",
+        "selected": false
+      },
+      {
+        "label": "Option 3",
+        "value": "option-3",
+        "selected": false
+      }
+    ]
+  },
+  {
+    "type": "text",
+    "required": false,
+    "label": "Text Field",
+    "className": "form-control",
+    "name": "text-1649043273546-0",
+    "access": false,
+    "subtype": "text"
+  },
+  {
+    "type": "textarea",
+    "required": false,
+    "label": "Text Area",
+    "className": "form-control",
+    "name": "textarea-1649043274597-0",
+    "access": false,
+    "subtype": "textarea"
+  },
+  {
+    "type": "number",
+    "required": false,
+    "label": "Number",
+    "className": "form-control",
+    "name": "number-1649043269564-0",
+    "access": false
+  }
+]
 
 describe("<TextInput/>", () => {
   it("renders a input", () => {
@@ -64,17 +229,7 @@ describe("<FormRender/>", () => {
     render(
       <FormRender
         submit={() => {}}
-        schema={[
-          {
-            type: "text",
-            required: true,
-            label: "Field 1",
-            className: "form-control",
-            name: "text-1648102772033-0",
-            access: false,
-            subtype: "text",
-          },
-        ]}
+        schema={SAMPLE_FORM_JSON}
       />
     );
     expect(screen.getByText("Field 1")).toBeInTheDocument();
@@ -84,17 +239,7 @@ describe("<FormRender/>", () => {
     render(
       <FormRender
         submit={() => {}}
-        schema={[
-          {
-            type: "text",
-            required: true,
-            label: "Field 1",
-            className: "form-control",
-            name: "text-1648102772033-0",
-            access: false,
-            subtype: "text",
-          },
-        ]}
+        schema={SAMPLE_FORM_JSON}
       />
     );
 
@@ -150,4 +295,24 @@ describe("<URLPreview/>", () => {
   it("renders the copy button url button ", () => {
     expect(screen.getByTestId("ContentCopyIcon")).toBeInTheDocument();
   });
+})
+
+describe("<PreviewModal/>", () => {
+  beforeEach(() => {
+    render(
+      <PreviewModal 
+        schema={[]} 
+        onClose={() => {}}
+        open={true}
+      />)
+  })
+
+  it('renders a modal', () => {
+    expect(screen.getByTestId("PreviewModal")).toBeInTheDocument();
+  })
+
+  it("renders the close modal button", () => {
+    expect(screen.getByTestId("CloseIcon")).toBeInTheDocument();
+  });
+
 })
