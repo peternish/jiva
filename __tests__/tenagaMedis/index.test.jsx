@@ -10,6 +10,23 @@ import { Provider } from "react-redux";
 import { store } from "@redux/store";
 import { setTenagaMedisList } from "@redux/modules/tenagaMedis";
 
+jest.mock('next/router', () => ({
+  useRouter() {
+    return ({
+      route: '/',
+      pathname: '',
+      query: { idKlinik: 1, idCabang: 1 },
+      asPath: '',
+      push: jest.fn(),
+      events: {
+        on: jest.fn(),
+        off: jest.fn()
+      },
+      beforePopState: jest.fn(() => null),
+      prefetch: jest.fn(() => null)
+    });
+  },
+}));
 
 describe('DashboardTenagaMedis', () => {
   beforeEach( async () => {
@@ -126,7 +143,7 @@ describe('DashboardTenagaMedis', () => {
     it("should show dropdown when kebab menu icon is pressed", async () => {
       const menus = screen.getAllByTestId("modify-dropdown-menu");
       const menu = menus[0];
-      act(async () => {
+      await act(async () => {
         await fireEvent.click(menu);
       });
       expect(await screen.getByText("Ubah")).toBeInTheDocument();

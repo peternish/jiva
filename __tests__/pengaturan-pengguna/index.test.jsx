@@ -6,6 +6,24 @@ import '@testing-library/jest-dom'
 import { setPenggunaTable } from "@redux/modules/pengaturanPengguna";
 import * as nextRouter from 'next/router';
 
+jest.mock('next/router', () => ({
+  useRouter() {
+    return ({
+      route: '/',
+      pathname: '',
+      query: { idKlinik: 1, idCabang: 1 },
+      asPath: '',
+      push: jest.fn(),
+      events: {
+        on: jest.fn(),
+        off: jest.fn()
+      },
+      beforePopState: jest.fn(() => null),
+      prefetch: jest.fn(() => null)
+    });
+  },
+}));
+
 describe('Pengaturan Pengguna Main (empty)', () => {
   beforeEach( async () => {
     await store.dispatch(setPenggunaTable(
@@ -182,11 +200,7 @@ describe("Pengaturan Pengguna Main (exist)", () => {
     const menus = screen.getAllByTestId("modify-dropdown-menu");
     const menu = menus[0];
 
-    /*kalau ditest klo pake `await act(async () => {` malah error gk tau kenapa 
-    - router.prefetch is not a function
-    - TestingLibraryElementError: Unable to find an element with the text: Konfirmasi Hapus Staf.
-    */
-    act(async () => {
+    await act(async () => {
       await fireEvent.click(menu);
     });
 
