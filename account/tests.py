@@ -15,6 +15,7 @@ from .models import Account
 from klinik.models import Cabang, Klinik, OwnerProfile, StafProfile, TenagaMedisProfile
 import os
 
+
 TEST_USER_EMAIL = "test@email.com"
 TEST_USER_PASSWORD = os.getenv("SECRET_KEY")
 TEST_USER_FULL_NAME = "Budi Budiman"
@@ -73,6 +74,9 @@ class ModelTest(TestCase):
 
 
 class IntegrationTest(APITestCase):
+    def setUp(self) -> None:
+        self.url_login = "account:login"
+
     def test_create_account(self):
         """
         Ensure we can create a new account object.
@@ -98,7 +102,7 @@ class IntegrationTest(APITestCase):
             full_name=TEST_USER_FULL_NAME,
         )
 
-        url = reverse("account:login")
+        url = reverse(self.url_login)
         data = {"email": TEST_USER_EMAIL, "password": TEST_USER_PASSWORD}
         response = self.client.post(url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -114,7 +118,7 @@ class IntegrationTest(APITestCase):
         )
 
         login_response = self.client.post(
-            reverse("account:login"),
+            reverse(self.url_login),
             data={"email": TEST_USER_EMAIL, "password": TEST_USER_PASSWORD},
             format="json",
         )
@@ -142,7 +146,7 @@ class IntegrationTest(APITestCase):
             format="json",
         )
 
-        url = reverse("account:login")
+        url = reverse(self.url_login)
         resp1 = self.client.post(
             url,
             {"email": TEST_USER_EMAIL, "password": TEST_USER_PASSWORD},
@@ -184,6 +188,7 @@ class StafTestSetup(APITestCase):
         self.cabang_id = self.cabang.id
 
         # urls
+        self.url_login = "account:login"
         self.url_detail = "account:staf-detail"
         self.url_staf_list = "account:staf-list"
 
@@ -195,8 +200,9 @@ class StafTestSetup(APITestCase):
                 password=self.password,
             )
             StafProfile.objects.create(account=staf_account, cabang=self.cabang)
+        self.full_name_update = "Test Staf Updated"
 
-        url = reverse("account:login")
+        url = reverse(self.url_login)
         resp1 = self.client.post(
             url, {"email": self.owner_email, "password": self.password}, format="json"
         )
@@ -274,19 +280,17 @@ class StafAPITest(StafTestSetup):
         self.client.credentials(HTTP_AUTHORIZATION=self.owner_auth)
         url = reverse(self.url_detail, kwargs={"pk": account_id})
         email_update = "teststafupdated@test.com"
-        full_name_update = "Test Staf Updated"
-        data = {"email": email_update, "full_name": full_name_update}
+        data = {"email": email_update, "full_name": self.full_name_update}
         resp = self.client.patch(url, data)
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         self.assertEqual(resp.data["email"], email_update)
-        self.assertEqual(resp.data["full_name"], "Test Staf Updated")
+        self.assertEqual(resp.data["full_name"], self.full_name_update)
 
     def test_patch_staf_fail_not_found(self):
         self.client.credentials(HTTP_AUTHORIZATION=self.owner_auth)
         url = reverse(self.url_detail, kwargs={"pk": 9999})
         email_update = "teststafupdated@test.com"
-        full_name_update = "Test Staf Updated"
-        data = {"email": email_update, "full_name": full_name_update}
+        data = {"email": email_update, "full_name": self.full_name_update}
         resp = self.client.patch(url, data)
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
 
@@ -334,6 +338,7 @@ class TenagaMedisTestSetup(APITestCase):
         self.cabang_id = self.cabang.id
 
         # urls
+        self.url_login = "account:login"
         self.url_detail = "account:tenaga-medis-detail"
         self.url_list = "account:tenaga-medis-list"
 
@@ -349,8 +354,9 @@ class TenagaMedisTestSetup(APITestCase):
             TenagaMedisProfile.objects.create(
                 account=staf_account, cabang=self.cabang, sip=self.sip
             )
+        self.full_name_update = "Test Staf Updated"
 
-        url = reverse("account:login")
+        url = reverse(self.url_login)
         resp1 = self.client.post(
             url, {"email": self.owner_email, "password": self.password}, format="json"
         )
@@ -404,20 +410,18 @@ class TenagaMedisAPITest(TenagaMedisTestSetup):
         self.client.credentials(HTTP_AUTHORIZATION=self.owner_auth)
         url = reverse(self.url_detail, kwargs={"pk": account_id})
         email_update = "testtenaga_medisupdated@test.com"
-        full_name_update = "Test Staf Updated"
-        data = {"account.email": email_update, "account.full_name": full_name_update}
+        data = {"account.email": email_update, "account.full_name": self.full_name_update}
         resp = self.client.patch(url, data)
         account_data = resp.data["account"]
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         self.assertEqual(account_data["email"], email_update)
-        self.assertEqual(account_data["full_name"], full_name_update)
+        self.assertEqual(account_data["full_name"], self.full_name_update)
 
     def test_patch_tenaga_medis_fail_not_found(self):
         self.client.credentials(HTTP_AUTHORIZATION=self.owner_auth)
         url = reverse(self.url_detail, kwargs={"pk": 9999})
         email_update = "testtenaga_medisupdated@test.com"
-        full_name_update = "Test Staf Updated"
-        data = {"account.email": email_update, "account.full_name": full_name_update}
+        data = {"account.email": email_update, "account.full_name": self.full_name_update}
         resp = self.client.patch(url, data)
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
 

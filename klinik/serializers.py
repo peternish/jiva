@@ -1,6 +1,6 @@
 from dataclasses import fields
 from rest_framework import serializers
-from klinik.models import Klinik, Cabang, DynamicForm
+from klinik.models import Klinik, Cabang, DynamicForm, LamaranPasien
 from django.template.defaultfilters import slugify
 
 
@@ -21,6 +21,13 @@ class CabangSerializer(serializers.ModelSerializer):
         validated_data["location"] = slugify(validated_data["location"])
         return super(CabangSerializer, self).create(validated_data)
 
+class LamaranPasienSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LamaranPasien
+        fields = ["id", "nik", "fields"]
+        read_only_fields = ["id"]
+
+    fields = serializers.ListField(child=serializers.JSONField())
 
 class DynamicFormSerializer(serializers.ModelSerializer):
     klinik = serializers.SerializerMethodField(read_only=True)

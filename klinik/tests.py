@@ -1,4 +1,4 @@
-from klinik.models import Cabang, Klinik, OwnerProfile, DynamicForm
+from klinik.models import Cabang, Klinik, OwnerProfile, DynamicForm, LamaranPasien
 from rest_framework.test import APITestCase
 from django.urls import reverse
 from rest_framework import status
@@ -96,6 +96,34 @@ class KlinikTestSetUp(APITestCase):
         self.auth3 = bearer_factory(self.token3)
 
         self.alt_location = "alam baka"
+
+        self.pasien_list = reverse("klinik:pasien-list")
+        self.pasien_detail = "klinik:pasien-detail"
+
+        self.json_test = [
+            {
+                "name": "John",
+                "example": "example",
+                "tags": [
+                    "esse",
+                    "sunt",
+                    "quis"
+                    ],
+                "friends": [
+                        {
+                        "id": 0,
+                        "name": "Contreras Weeks"
+                        },
+                        {
+                        "id": 1,
+                        "name": "Dawn Lott"
+                        }
+                    ]
+            }
+        ]
+        for _ in range(10):
+            pas = LamaranPasien(nik=f"420691337{_}", fields=[{"nama": f"Abdullah{_}"}])
+            pas.save()
 
 
 class KlinikAPITest(KlinikTestSetUp):
@@ -238,6 +266,70 @@ class CabangAPITest(KlinikTestSetUp):
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
         self.assertEqual(Cabang.objects.count(), 20)
 
+class LamaranPasienApiTest(KlinikTestSetUp):
+    def test_get_lamaran_pasien(self):
+        self.assertEqual(LamaranPasien.objects.count(), 10)
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        uri = reverse(self.pasien_detail, kwargs={"pk": 1})
+        resp = self.client.get(uri)
+
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(resp.data), 3)
+        self.assertEqual(resp.data["id"], 1)
+        self.assertEqual(resp.data["nik"], "4206913370")
+
+    def test_get_lamaran_pasien_without_auth_fails(self):
+        uri = reverse(self.pasien_detail, kwargs={"pk": 1})
+        resp = self.client.get(uri)
+        self.assertEqual(resp.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_post_lamaran_pasien(self):
+        self.assertEqual(LamaranPasien.objects.count(), 10)
+        data = {"nik": "13371337", "fields": self.json_test}
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        resp = self.client.post(self.pasien_list, data=data)
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(resp.data["nik"], "13371337")
+        self.assertEqual(LamaranPasien.objects.count(), 11)
+
+    def test_post_lamaran_pasien_fail(self):
+        self.assertEqual(LamaranPasien.objects.count(), 10)
+        data = {"nama": "astaga"}
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        resp = self.client.post(self.pasien_list, data=data)
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(LamaranPasien.objects.count(), 10)
+
+    def test_patch_lamaran_pasien(self):
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        self.assertEqual(LamaranPasien.objects.count(), 10)
+        uri = reverse(self.pasien_detail, kwargs={"pk": 1})
+        resp = self.client.patch(uri, data={"nik":  "13371337", "fields": self.json_test})
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(resp.data["id"], 1)
+
+    def test_patch_lamaran_pasien_fail(self):
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth3)
+        self.assertEqual(LamaranPasien.objects.count(), 10)
+        uri = reverse(self.pasien_detail, kwargs={"pk": 1})
+        resp = self.client.patch(uri, data={"name": "whatdapatientdoing?"})
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_delete_lamaran_pasien(self):
+        self.assertEqual(LamaranPasien.objects.count(), 10)
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        uri = reverse(self.pasien_detail, kwargs={"pk": 1})
+        resp = self.client.delete(uri)
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(LamaranPasien.objects.count(), 9)
+
+    def test_delete_lamaran_pasien_not_found(self):
+        self.assertEqual(LamaranPasien.objects.count(), 10)
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        uri = reverse(self.pasien_detail, kwargs={"pk": 69})
+        resp = self.client.delete(uri)
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(LamaranPasien.objects.count(), 10)
 
 class FormAPITest(APITestCase):
     def setUp(self) -> None:

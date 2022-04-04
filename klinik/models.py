@@ -1,3 +1,4 @@
+from email.policy import default
 from django.db import models
 from account.models import Account
 
@@ -54,6 +55,11 @@ class TenagaMedisProfile(Profile):
         super().__init__(*args, **kwargs)
         self.role = "tenaga_medis"
 
+class LamaranPasien(models.Model):
+    nik = models.CharField(max_length=20)
+    fields = models.JSONField("Fields", default=list)
+    def __str__(self) -> str:
+        return self.nik
 
 class DynamicForm(models.Model):
     cabang = models.ForeignKey(Cabang, on_delete=models.CASCADE)

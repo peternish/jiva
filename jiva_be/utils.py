@@ -1,4 +1,4 @@
-from rest_framework import permissions
+from rest_framework import permissions, serializers
 
 
 class IsOwnerPermission(permissions.BasePermission):
@@ -27,3 +27,22 @@ class IsTenagaMedisPermission(permissions.BasePermission):
                 request.user.profile.role in allowed_roles or request.user.is_superuser
             )
         return False
+
+class ValidateJSONForm(serializers.ModelSerializer):
+    def validate(self, data):
+        """
+        Validates JSON form
+        """
+        fields = data["fields"]
+        try:
+            for input in fields:
+                type = input["type"]
+                required = input["required"]
+                value = input["value"]
+                if required and not value:
+                    raise serializers.ValidationError("input wajib belum diisi")
+                if (type == "number") and not value.isnumeric():
+                    raise serializers.ValidationError("input salah")
+        except Exception:
+            raise serializers.ValidationError("format fields salah")
+        return data

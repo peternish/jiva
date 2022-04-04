@@ -34,7 +34,15 @@ dform_patterns = [
 cabang_patterns = format_suffix_patterns(cabang_patterns + dform_patterns)
 
 
+pasien_patterns = [
+    path("", views.LamaranPasienApi.as_view(), name="pasien-list"),
+    path("<int:pk>/", views.LamaranPasienApi.as_view(), name="pasien-detail"),
+]
+
+pasien_patterns = format_suffix_patterns(pasien_patterns)
+
 urlpatterns = [
+    path("pasien/", include(pasien_patterns)),
     path("cabang/", include(cabang_patterns)),
     path("", include(klinik_patterns)),
 ]
