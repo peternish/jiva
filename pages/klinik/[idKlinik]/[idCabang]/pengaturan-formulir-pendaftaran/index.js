@@ -25,13 +25,13 @@ const PengaturanFormulirPendaftaran = () => {
     dispatch(updateSchema(newSchema, setSubmitting))
   }
 
-  return (
+  return isReady && query && schema ? (
     <Layout navType="sidebar" title='Pengaturan Formulir Pendaftaran'>
       <FormBuilder schema={schema} onSave={saveSchema}>
-        <URLPreview URL={'https://jiva.com/pendaftaran/1/2'}/>
+        <URLPreview URL={`${process.env.NEXT_PUBLIC_HOST}/form/${query.idKlinik}/${query.idCabang}/${schema.id}`}/>
       </FormBuilder>
     </Layout>
-  );
+  ) : null
 };
 
 export default PengaturanFormulirPendaftaran;
