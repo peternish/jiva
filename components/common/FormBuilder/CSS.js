@@ -11,10 +11,12 @@ const CSS = styled.div`
         padding-top: 2em;
     }
 
-    .buttons-fb div {
-        display: flex;
-        column-gap: 1em;
-        padding-bottom: 2em
+    .buttons-fb {
+        #left, #right {
+            display: flex;
+            column-gap: 1em;
+            padding-bottom: 2em
+        }
     }
 
     button {
