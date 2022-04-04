@@ -234,6 +234,36 @@ const Jadwal = (props) => {
         }
       }
     }
+
+    function getISOtime(timeString) {
+      const timeArr = timeString.split(':')
+      const hour = timeArr[0]
+      const minutes = timeArr[1]
+
+      const time = new Date()
+
+      time.setUTCHours(hour)
+      time.setUTCMinutes(minutes)
+
+      const hourUTC = String(time.getUTCHours()).padStart(2, "0");
+      const minuteUTC = String(time.getUTCMinutes()).padStart(2, "0");
+
+      return `${hourUTC}:${minuteUTC}:00`
+    }
+
+    function getISODate(timeString) {
+      const timeArr = timeString.split(':')
+      const hour = timeArr[0]
+      const minutes = timeArr[1]
+
+      const date = new Date()
+
+      date.setUTCHours(hour)
+      date.setUTCMinutes(minutes)
+
+      return date
+    }
+
     return jadwalTenagaMedisList && tenagaMedisList ? (
       <Layout navType = "sidebar" title="Jadwal Tenaga Medis">
         <Filter_Tenaga_Medis>
@@ -270,37 +300,20 @@ const Jadwal = (props) => {
               jadwal_title: currentEvent ?  currentEvent.title : undefined,
               quota: currentEvent ? currentEvent.quota : undefined}}
             onSubmit = {async (values) => {
-                const start = new Date(values.jadwal_hari + " " + values.start)
-                const startdb = new Date(values.jadwal_hari + " " + values.start)
-                const end = new Date(values.jadwal_hari + " " + values.end)
-                const enddb = new Date(values.jadwal_hari + " " + values.end)
+                const startTime = getISOtime(values.start)
+                const endTime = getISOtime(values.end)
+                const day = values.jadwal_hari
                 const title = values.jadwal_title
                 const quota = values.quota
+
+                const startDate = getISODate(values.start) 
+                const endDate = getISODate(values.end) 
+
                 currentId = currentId + 1
                 const id = currentId
                 const idTenagaMedis = tenagaMedisDict2[title]
-
-                startdb.setHours(startdb.getHours() - Math.abs(new Date().getTimezoneOffset())/60)
-
-                const startTime = startdb.toISOString().split("T")[1].substr(0,8)
-                const temp = startTime.split(":")
-                startTime = String(parseInt(temp[0]) + Math.abs(new Date().getTimezoneOffset())/60 + ":" + temp[1] + ":" + temp[2])
-
-                enddb.setHours(enddb.getHours() - Math.abs(new Date().getTimezoneOffset())/60)
-
-                const endTime = enddb.toISOString().split("T")[1].substr(0,8)
-                const temp2 = endTime.split(":")
-                endTime = String(parseInt(temp2[0]) + Math.abs(new Date().getTimezoneOffset())/60 + ":" + temp2[1] + ":" + temp2[2])
-
-                const temp_date = values.jadwal_hari
-                temp_date = new Date(temp_date)
-                temp_date = temp_date.getDay()
-                if(startdb.getDate() < start.getDate()) {
-                  temp_date = temp_date - 1;
-                }
-                const day = dayDict2[temp_date]
                 if(title) {
-                  setEvents((prev) => [...prev, { id, start, end, title, quota, idTenagaMedis }])
+                  setEvents((prev) => [...prev, { id, startDate, endDate, title, quota, idTenagaMedis }])
                   dispatch(createJadwalTenagaMedis({ idTenagaMedis, startTime, endTime, quota, day }))
                 }
             }}
@@ -316,9 +329,19 @@ const Jadwal = (props) => {
                   {Object.keys(tenagaMedisDict2).map(key => <option key={key} value={tenagaMedisDict[key]}>{key}</option>)}
                 </TextInput>
                 <TextInput
+                  as="select"
                   label="Pilih Hari"
-                  id="jadwal_hari" name="jadwal_hari" type="date" placeholder={currentDate}
-                />
+                  id="jadwal_hari" name="jadwal_hari" type="select"
+                >
+                  <option value="mon">Senin</option>
+                  <option value="tue">Selasa</option>
+                  <option value="wed">Rabu</option>
+                  <option value="thu">Kamis</option>
+                  <option value="fri">Jumat</option>
+                  <option value="sat">Sabtu</option>
+                  <option value="sun">Minggu</option>
+                  
+                </TextInput>
                 <div id="time-range">
                   <label>Pilih Rentang Waktu</label>
                   <div id="inputs">
