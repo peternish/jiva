@@ -1,9 +1,10 @@
 import { Provider } from "react-redux";
 import * as nextRouter from 'next/router';
-import RegistrationForm from '@pages/form/[idKlinik]/[idCabang]/[idForm]/index'
+import RegistrationForm, { getServerSideProps } from '@pages/form/[idKlinik]/[idCabang]/[idForm]/index'
 import { fireEvent, render, screen, act } from "@testing-library/react";
 import { store } from "@redux/store";
 import '@testing-library/jest-dom'
+import { getAllByRole } from '@testing-library/react'
 
 describe("Dynamic Form", () => {
   beforeEach(() => {
@@ -79,11 +80,12 @@ describe("Dynamic Form", () => {
 
     const namaKlinik = "Klinik Example"
 
-    render(
+    const { debug } = render(
       <Provider store={store}>
         <RegistrationForm namaKlinik={namaKlinik} fields={fields} jadwal={jadwal} />
       </Provider>
     );
+    debug()
   });
 
   it('renders a heading', () => {
@@ -117,4 +119,64 @@ describe("Dynamic Form", () => {
     })[0]
     expect(buttonsubmit).toBeInTheDocument()
   });
+
+  it('enables jadwal selection when doctor is selected', async () => {
+    const tenagaMedisSelection = screen.getAllByTestId("tenagamedis")[0]
+    const jadwalSelection = screen.getAllByTestId("jadwal")[0]
+    expect(tenagaMedisSelection).toBeInTheDocument()
+    expect(jadwalSelection).toBeDisabled()
+
+    await act(async () => {
+      fireEvent.click(tenagaMedisSelection)
+      fireEvent.change(tenagaMedisSelection, { target: { value: 2 } })
+      fireEvent.click(jadwalSelection)
+    })
+
+    expect(jadwalSelection.childElementCount).toBeGreaterThan(0)
+  });
+
+  it('able to submit if filled properly', async () => {
+    const tenagaMedisSelection = screen.getAllByTestId("tenagamedis")[0]
+    const jadwalSelection = screen.getAllByTestId("jadwal")[0]
+
+    await act(async () => {
+      fireEvent.click(tenagaMedisSelection)
+      fireEvent.change(tenagaMedisSelection, { target: { value: 2 } })
+      fireEvent.click(jadwalSelection)
+    })
+
+    const buttonsubmit = screen.getAllByRole('button', {
+      name: /Simpan/,
+    })[0]
+
+    await act(async () => {
+      fireEvent.click(buttonsubmit)
+    })
+  });
 });
+
+describe("Dynamic Form with no data", () => {
+  beforeEach(() => {
+    nextRouter.useRouter = jest.fn();
+    nextRouter.useRouter.mockImplementation(() => ({
+      route: '/form/1/1/1',
+      isReady: true,
+    }));
+
+    const fields = []
+    const jadwal = []
+    const namaKlinik = "Klinik Example"
+
+    render(
+      <Provider store={store}>
+        <RegistrationForm namaKlinik={namaKlinik} fields={fields} jadwal={jadwal} />
+      </Provider>
+    );
+  })
+
+  it('has zero available doctor', () => {
+    const tenagaMedisSelection = screen.getAllByTestId("tenagamedis")[0]
+    expect(tenagaMedisSelection.childElementCount).toBe(1)
+    expect(tenagaMedisSelection).toBeInTheDocument()
+  })
+})

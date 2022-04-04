@@ -70,6 +70,7 @@ const CSS = styled.div`
   }
 `;
 
+/* istanbul ignore next */
 export async function getServerSideProps({ params, res }) {
   const { idCabang } = params
   const jadwalTenagaMedis = [
@@ -117,8 +118,6 @@ export async function getServerSideProps({ params, res }) {
 
   let jadwalByDoctor
   try {
-    // const jadwalTenagaMedis = await axios.get(`${constants?.API_BASE_URL}/klinik/cabang/${idCabang}/dform/`)
-    // const jadwalTenagaMedis = await getJadwalTenagaMedisList({ idCabang: idCabang })
     jadwalByDoctor = jadwalTenagaMedis.reduce((r, a) => {
       r[a.tenaga_medis.account.id] = r[a.tenaga_medis.account.id] || []
       r[a.tenaga_medis.account.id].push(a)
@@ -128,7 +127,7 @@ export async function getServerSideProps({ params, res }) {
     console.log(error)
   }
 
-
+  /* istanbul ignore next */
   return {
     props: {
       namaKlinik: "Klinik Example",
@@ -155,21 +154,9 @@ export async function getServerSideProps({ params, res }) {
       ],
     }
   }
-  // const {
-  //   data: { cabang_id, klinik, fields },
-  // } = await jivaAPI.dynamicForm.fetch({ cabang_id, form_id: idForm })
-  // return {
-  //   props: {
-  //     idKlinik,
-  //     idCabang,
-  //     namaKlinik: klinik.name,
-  //     fields
-  //   }
-  // }
 }
 
 const RegistrationForm = ({ namaKlinik, fields, jadwal }) => {
-  console.log(jadwal)
   const [submitted, setSubmitted] = useState(false);
 
   const mandatoryFields = {
@@ -220,13 +207,13 @@ const RegistrationForm = ({ namaKlinik, fields, jadwal }) => {
                         error={errors.nik}
                       />
                       <label htmlFor={"tenagamedis"}>Jadwal dokter</label>
-                      <Field as="select" id="tenagamedis" name="tenaga_medis">
+                      <Field as="select" id="tenagamedis" data-testid="tenagamedis" name="tenaga_medis">
                         <option value="" disabled={true} hidden={true}>Pilih tenaga medis</option>
                         {Object.keys(jadwal).map((e) => (
                           <option value={e} key={e}>{e}</option>
                         ))}
                       </Field>
-                      <Field as="select" disabled={!values.tenaga_medis} name="jadwal">
+                      <Field as="select" data-testid="jadwal" disabled={!values.tenaga_medis} name="jadwal">
                         <option value="" disabled={true} hidden={true}>Pilih jadwal pertemuan</option>
                         {values.tenaga_medis && (
                           jadwal[values.tenaga_medis].map((e, i) => (
@@ -243,7 +230,6 @@ const RegistrationForm = ({ namaKlinik, fields, jadwal }) => {
                       submit={async (e) => {
                         setFieldValue("fields", e);
                         await submitForm(e)
-                        // setSubmitted(true)
                       }}
                       isSubmitting={isSubmitting}
                       isValid={isValid}
@@ -253,8 +239,6 @@ const RegistrationForm = ({ namaKlinik, fields, jadwal }) => {
               </Formik>
             )
           }
-
-
         </Card>
       </CSS>
     </Layout >
