@@ -4,6 +4,27 @@ import { Provider } from "react-redux";
 import { store } from "@redux/store";
 import * as nextRouter from "next/router";
 import PengaturanFormulirPendaftaran from "@pages/klinik/[idKlinik]/[idCabang]/pengaturan-formulir-pendaftaran";
+import { setSchemas } from "@redux/modules/dynamicForm"
+
+const SAMPLE_SCHEMA = [{
+  "id": 1,
+  "cabang_id": 1,
+  "formtype": "pendaftaran_pasien",
+  "fields": [
+      {
+          "name": "text-1649092362528-0",
+          "type": "text",
+          "label": "Field 1",
+          "access": false,
+          "subtype": "text",
+          "required": true,
+          "className": "form-control"
+      }
+  ],
+  "klinik": {
+      "name": "Klinik Staging 1"
+  }
+}]
 
 describe("<PengaturanFormulirPendaftaran/>", () => {
   beforeEach(async () => {
@@ -12,6 +33,8 @@ describe("<PengaturanFormulirPendaftaran/>", () => {
       query: { idKlinik: 1, idCabang: 1 },
       isReady: true,
     }))
+
+    await store.dispatch(setSchemas(SAMPLE_SCHEMA))
 
     render(
       <Provider store={store}>
