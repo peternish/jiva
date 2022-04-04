@@ -43,6 +43,6 @@ class ValidateJSONForm(serializers.ModelSerializer):
                     raise serializers.ValidationError("input wajib belum diisi")
                 if (type == "number") and not value.isnumeric():
                     raise serializers.ValidationError("input salah")
-        except:
+        except Exception:
             raise serializers.ValidationError("format fields salah")
         return data
