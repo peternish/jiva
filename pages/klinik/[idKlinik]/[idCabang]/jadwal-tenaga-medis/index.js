@@ -15,8 +15,8 @@ import Jadwal_Tenaga_Medis from "@components/JadwalTenagaMedis/Calender"
 import Form_Calender from "@components/JadwalTenagaMedis/FormCalender";
 import Calender_Container from "@components/JadwalTenagaMedis/CalenderContainer";
 import { useRouter } from 'next/router'
-
-
+import TextInput from "@components/common/TextInput"
+import LoadingButton from "@mui/lab/LoadingButton"
 
 const Jadwal = (props) => {
     const {query, isReady} = useRouter()
@@ -201,7 +201,7 @@ const Jadwal = (props) => {
     
     //console.log(currentDate.toString() + " test")
     return (
-      <Layout navType = "sidebar">
+      <Layout navType = "sidebar" title="Jadwal Tenaga Medis">
         <Calender_Container>
           <Jadwal_Tenaga_Medis>
             <Calendar
@@ -211,7 +211,7 @@ const Jadwal = (props) => {
             events={myEvents}
             startAccessor="start"
             endAccessor="end"
-            style={{height : 793, width: 1266, margin: "50px"}}
+            style={{ height : 793, width: 1266 }}
             onSelectEvent={selectEvent}
             />
           </Jadwal_Tenaga_Medis>
@@ -272,19 +272,51 @@ const Jadwal = (props) => {
             }}
             >
               <Form>
-                <label>Pilih Tenaga Medis</label>
-                <Field id="jadwal_title" name="jadwal_title" placeholder="Tenaga Medis" as="select">
-                  {Object.keys(tenagaMedisDict2).map(key => <option value={tenagaMedisDict[key]}>{key}</option>)}
-                </Field>
-                <label>Pilih Hari</label>
-                <Field id="jadwal_hari" name="jadwal_hari" type="date" placeholder={currentDate}></Field>
-                <label>Pilih Rentang Waktu</label>
-                <Field id="Start" name="start" type="time"></Field>
-                <Field id="End" name="end" type="time"></Field>
-                <label>Quota</label>
-                <Field id="quota" name="quota" type="number"></Field>
-                <button type="submit">Submit</button>
-                <button type="button" onClick={deleteEvent}>Delete</button>
+                <TextInput
+                  label="Pilih Tenaga Medis"
+                  id="jadwal_title" 
+                  name="jadwal_title" 
+                  placeholder="Tenaga Medis" 
+                  as="select"
+                >
+                  {Object.keys(tenagaMedisDict2).map(key => <option key={key} value={tenagaMedisDict[key]}>{key}</option>)}
+                </TextInput>
+                <TextInput
+                  label="Pilih Hari"
+                  id="jadwal_hari" name="jadwal_hari" type="date" placeholder={currentDate}
+                />
+                <div id="time-range">
+                  <label>Pilih Rentang Waktu</label>
+                  <div id="inputs">
+                    <Field id="Start" name="start" type="time"></Field>
+                    <Field id="End" name="end" type="time"></Field>
+                  </div>
+                </div>
+                <TextInput
+                  label="Quota"
+                  id="quota" 
+                  name="quota" 
+                  type="number"
+                />
+                <LoadingButton 
+                  variant="contained"
+                  type="submit"
+                >
+                  Simpan
+                </LoadingButton>
+                <LoadingButton
+                  variant="outlined"
+                >
+                  Batal
+                </LoadingButton>
+                <LoadingButton
+                  variant="contained"
+                  type="button" 
+                  onClick={deleteEvent}
+                  style={{ background: "#F44336" }}
+                >
+                  Hapus
+                </LoadingButton>
                 <button type="button" onClick={addEventsFromDB}>Cek</button>
               </Form>
             </Formik>

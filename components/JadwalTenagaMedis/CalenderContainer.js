@@ -5,7 +5,6 @@ const Calender_Container = styled.div`
   display: flex;
   align-items: left;
   width: 80%;
-  margin: 50px;
 `;
 
 export default Calender_Container;
