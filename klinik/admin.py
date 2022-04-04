@@ -8,5 +8,6 @@ admin.site.register(Klinik)
 admin.site.register(Cabang)
 admin.site.register(Profile)
 admin.site.register(LamaranPasien)
+admin.site.register(DynamicForm)
 
 # Register your models here.
