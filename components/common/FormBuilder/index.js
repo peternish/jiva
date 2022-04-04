@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import Button from "@mui/material/Button";
+import LoadingButton from "@mui/lab/LoadingButton";
 import CSS from "./CSS";
 import PreviewModal from "@components/common/FormRender/PreviewModal";
 
@@ -23,6 +24,8 @@ const options = {
 const FormBuilder = ({ schema, onSave, children }) => {
   const [modalOpen, setmodalOpen] = useState(false)
   const [previewSchema, setpreviewSchema] = useState(schema?.fields || [])
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isResetting, setIsResetting] = useState(false)
 
   const fb = useRef();
   useEffect(() => {
@@ -34,18 +37,21 @@ const FormBuilder = ({ schema, onSave, children }) => {
     $(fb.current).formBuilder({ ...options, formData: schema?.fields || [] });
   }, [schema]);
 
-  const saveSchema = () => {
+  const saveSchema = async () => {
+    setIsSubmitting(true)
     const updatedFields = $(fb.current).formBuilder("getData");
     const updatedSchema = {
       ...schema,
       fields: updatedFields,
     };
-    onSave(updatedSchema);
+    onSave(updatedSchema, setIsSubmitting);
   };
 
   const resetSchema = () => {
+    setIsResetting(true)
     $(fb.current).empty();
     $(fb.current).formBuilder({ ...options, formData: schema?.fields || [] });
+    setIsResetting(false)
   };
 
   const handlePreview = () => {
@@ -60,12 +66,24 @@ const FormBuilder = ({ schema, onSave, children }) => {
       {children}
 
       <div className="buttons-fb">
-        <div>
+        <div id="left">
           <Button variant="outlined" onClick={handlePreview}>Pratinjau</Button>
         </div>
-        <div>
-          <Button variant="outlined" onClick={resetSchema}> Reset </Button>
-          <Button variant="contained" onClick={saveSchema}> Simpan </Button>
+        <div id="right">
+          <LoadingButton 
+            loading={isResetting} 
+            variant="outlined" 
+            onClick={resetSchema}
+          >
+            Reset
+          </LoadingButton>
+          <LoadingButton
+            loading={isSubmitting}
+            variant="contained" 
+            onClick={saveSchema}
+          >
+            Simpan
+          </LoadingButton>
         </div>
       </div>
       <PreviewModal 
