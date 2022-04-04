@@ -8,7 +8,6 @@ const dynamicForm = createSlice({
   reducers: {
     setSchemas(state, { payload }) {
       state.schemas = payload;
-      console.log(state, state.schemas)
       return state;
     }
   },

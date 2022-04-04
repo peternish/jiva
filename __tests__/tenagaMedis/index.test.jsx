@@ -10,7 +10,6 @@ import { Provider } from "react-redux";
 import { store } from "@redux/store";
 import { setTenagaMedisList } from "@redux/modules/tenagaMedis";
 
-
 describe('DashboardTenagaMedis', () => {
   beforeEach( async () => {
     nextRouter.useRouter = jest.fn();
