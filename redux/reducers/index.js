@@ -8,6 +8,7 @@ import klinikReducer from "../modules/klinik";
 import pengaturanPenggunaReducer from "../modules/pengaturanPengguna";
 import tenagaMedisReducer from "../modules/tenagaMedis";
 import dynamicFormReducer from "../modules/dynamicForm";
+import jadwalTenagaMedisReducers from "../modules/jadwalTenagaMedis";
 
 const authPersistConfig = {
   key: "auth",
@@ -20,7 +21,8 @@ export const rootReducer = combineReducers({
   klinik: klinikReducer,
   pengaturanPengguna: pengaturanPenggunaReducer,
   tenagaMedis: tenagaMedisReducer,
-  dynamicForm: dynamicFormReducer
+  dynamicForm: dynamicFormReducer,
+  jadwalTenagaMedis: jadwalTenagaMedisReducers,
 });
 
 export default rootReducer;

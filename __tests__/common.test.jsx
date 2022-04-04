@@ -193,7 +193,7 @@ describe("<TextInput/>", () => {
 
 describe("<FormBuilder/>", () => {
   beforeEach(() => {
-    render(<FormBuilder onSave={() => {}} />);
+    render(<FormBuilder onSave={() => { }} />);
   });
 
   it("renders the input options", () => {
@@ -215,20 +215,20 @@ describe("<FormBuilder/>", () => {
 
 describe("<FormRender/>", () => {
   it("renders the buttons", () => {
-    render(<FormRender schema={[]} submit={() => {}} />);
-    expect(screen.getByText("Submit")).toBeInTheDocument();
+    render(<FormRender schema={[]} submit={() => { }} />);
+    expect(screen.getByText("Simpan")).toBeInTheDocument();
   });
 
   it("ensure the save button doesn't throw an error", async () => {
-    render(<FormRender schema={[]} submit={() => {}} />);
-    const submitButton = screen.getByText("Submit");
+    render(<FormRender schema={[]} submit={() => { }} />);
+    const submitButton = screen.getByText("Simpan");
     expect(() => fireEvent.click(submitButton)).not.toThrowError();
   });
 
   it("renders input with schema", async () => {
     render(
       <FormRender
-        submit={() => {}}
+        submit={() => { }}
         schema={SAMPLE_FORM_JSON}
       />
     );
@@ -238,14 +238,15 @@ describe("<FormRender/>", () => {
   it("shows required form", async () => {
     render(
       <FormRender
-        submit={() => {}}
+        submit={() => { }}
         schema={SAMPLE_FORM_JSON}
       />
     );
 
-    const submitButton = screen.getByText("Submit");
+    const submitButton = screen.getByText("Simpan");
 
     await act(async () => {
+      await fireEvent.click(submitButton);
       await fireEvent.click(submitButton);
     });
     // expect the required warning is shown
@@ -255,7 +256,7 @@ describe("<FormRender/>", () => {
   });
 
   it("doesn't render input because schema is empty", async () => {
-    render(<FormRender schema={[]} submit={() => {}} />);
+    render(<FormRender schema={[]} submit={() => { }} />);
 
     // negative: ensure field is no longer rendered
     expect(screen.queryByRole("input")).not.toBeInTheDocument();
@@ -264,8 +265,8 @@ describe("<FormRender/>", () => {
 describe("<PageHeader/>", () => {
   beforeEach(() => {
     nextRouter.useRouter = jest.fn();
-    nextRouter.useRouter.mockImplementation(() => ({ 
-      back: () => {},
+    nextRouter.useRouter.mockImplementation(() => ({
+      back: () => { },
     }));
 
     render(<PageHeader>Title</PageHeader>)
@@ -278,7 +279,7 @@ describe("<PageHeader/>", () => {
   it("renders a clickable back button", () => {
     const backButton = screen.getByTestId('ArrowBackIcon')
     fireEvent.click(backButton)
-    
+
     expect(backButton).toBeInTheDocument()
   })
 })
@@ -300,9 +301,9 @@ describe("<URLPreview/>", () => {
 describe("<PreviewModal/>", () => {
   beforeEach(() => {
     render(
-      <PreviewModal 
-        schema={[]} 
-        onClose={() => {}}
+      <PreviewModal
+        schema={[]}
+        onClose={() => { }}
         open={true}
       />)
   })
