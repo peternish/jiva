@@ -5,6 +5,7 @@ import pengaturanPengguna from "./endpoints/pengaturanPengguna";
 import tenagaMedis from "./endpoints/tenagaMedis";
 import dynamicForm from "./endpoints/dynamicForm";
 import jadwalTenagaMedis from "./endpoints/jadwalTenagaMedis";
+import patientApplication from "./endpoints/patientApplication";
 
 const api = {
   auth,
@@ -13,7 +14,8 @@ const api = {
   pengaturanPengguna,
   tenagaMedis,
   dynamicForm,
-  jadwalTenagaMedis
+  jadwalTenagaMedis,
+  patientApplication
 };
 
 export default api;

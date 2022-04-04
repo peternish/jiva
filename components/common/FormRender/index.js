@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import styled from "styled-components";
 import constants from "@utils/constants";
 import LoadingButton from "@mui/lab/LoadingButton";
@@ -58,10 +58,58 @@ width: 100%;
 `;
 
 const excludedFields = ["header", "paragraph"];
-const FormRender = ({ schema, submit, isSubmitting, isValid }) => {
+const FormRender = ({ schema, submit, isSubmitting, isValid = true }) => {
   const fr = useRef();
 
   const [isError, setIsError] = useState(false)
+
+  const validateForm = () => {
+    const values = {};
+    const errs = document.getElementsByClassName("error-message")
+    if (errs.length) {
+      Array.from(errs).forEach(e => e.remove())
+    }
+  
+    // map field values to key, value pairs
+    $("form")
+      .serializeArray()
+      .forEach(({ name, value }) => (values[name] = value));
+  
+    // map fields to payload object
+    const payload = [];
+    schema.forEach(({ type, required, name }) => {
+      const inputValue = {
+        type,
+        required,
+        name,
+        value: values[name],
+      };
+      if (type === "file") {
+        const file = document.querySelector(`[name=${name}]`).files[0];
+        inputValue.value = file;
+      } else if (type === "checkbox-group") {
+        const options = document.getElementsByName(`${name}[]`);
+        const checkedVals = [];
+        options.forEach((el) => {
+          if (el.checked) checkedVals.push(el.value);
+        });
+        inputValue.value = checkedVals.join(",");
+      }
+      if (!excludedFields.includes(type)) {
+        payload.push(inputValue);
+      }
+    });
+    let isErrorTemp = false
+    $("[data-custom-required='true']").each(function () {
+      if (!values[$(this).attr("name")]) {
+        $(this).after(`<small class="error-message">${$(this).attr("name")} is required</small>`);
+        isErrorTemp = true
+      }
+    });
+    return { values, payload, isErrorTemp }
+  }
+
+  const validateFormCallback = useCallback(validateForm, [schema])
 
   useEffect(() => {
     const $ = require("jquery");
@@ -80,56 +128,22 @@ const FormRender = ({ schema, submit, isSubmitting, isValid }) => {
       $(this).attr("data-custom-required", true);
       $(this).removeAttr("required");
     });
-  }, [schema]);
+
+    $("form").on("change", () => {
+      const { isError } = validateFormCallback()
+      setIsError(isError)
+    })
+  }, [schema, validateFormCallback]);
 
   return (
     <FormCSS>
       <form
         className="form-container"
-        onSubmit={(e) => {
+        onSubmit={async (e) => {
           e.preventDefault();
-          const values = {};
-          const errs = document.getElementsByClassName("error-message")
-          if (errs.length) {
-            Array.from(errs).forEach(e => e.remove())
-          }
-
-          // map field values to key, value pairs
-          $("form")
-            .serializeArray()
-            .forEach(({ name, value }) => (values[name] = value));
-
-          // map fields to payload object
-          const payload = [];
-          schema.forEach(({ type, required, name }) => {
-            const inputValue = {
-              type,
-              required,
-              name,
-              value: values[name],
-            };
-            if (type === "file") {
-              const file = document.querySelector(`[name=${name}]`).files[0];
-              inputValue.value = file;
-            } else if (type === "checkbox-group") {
-              const options = document.getElementsByName(`${name}[]`);
-              const checkedVals = [];
-              options.forEach((el) => {
-                if (el.checked) checkedVals.push(el.value);
-              });
-              inputValue.value = checkedVals.join(",");
-            }
-            if (!excludedFields.includes(type)) {
-              payload.push(inputValue);
-            }
-          });
-          $("[data-custom-required='true']").each(function () {
-            if (!values[$(this).attr("name")]) {
-              $(this).after(`<small class="error-message">${$(this).attr("name")} is required</small>`);
-              setIsError(true)
-            }
-          });
-          submit(payload);
+          const { payload, isErrorTemp } = validateForm()
+          setIsError(isErrorTemp)
+          if (!isErrorTemp && isValid) submit(payload);
         }}
       >
         <div id="fb-render" ref={fr}></div>

@@ -6,9 +6,7 @@ import { capitalize } from "@utils/index";
 const getJadwalTenagaMedisList = ({ idCabang }) => {
     return async (dispatch) => {
         try {
-            //console.log(idCabang, "idcabang");
             const { data } = await jivaAPI.jadwalTenagaMedis.getJadwalTenagaMedisList({ idCabang });
-            //console.log(data);
             await dispatch(setJadwalTenagaMedisList(data));
         } catch (error) {
             console.log(error);

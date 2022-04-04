@@ -1,18 +1,28 @@
-import axios from "axios"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import styled from "styled-components";
 import { Formik, Form, Field } from "formik";
 import FormRender from "@components/common/FormRender";
 import TextInput from "@components/common/TextInput";
-import Layout from "@components/DynamicForm/Layout";
 import Card from "@mui/material/Card";
-import constants from "@api/constants"
+import constants from "@utils/constants"
+import { useRouter } from 'next/router';
+import Link from "next/link"
+import Button from "@mui/material/Button"
+
+// redux
+import { createApplication } from "@redux/modules/klinik/thunks"
+import { getSchemas } from "@redux/modules/dynamicForm/thunks"
+import { getJadwalTenagaMedisList } from "@redux/modules/jadwalTenagaMedis/thunks"
+import { findSchema } from "@redux/modules/dynamicForm/selectors"
+import { useDispatch, useSelector } from "react-redux"
 
 const CSS = styled.div`
-  height: 100%;
+  height: max-content;
+  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
+  background: #E4EAEE;
 
   input {
     width: 100% !important;
@@ -24,7 +34,7 @@ const CSS = styled.div`
   }
 
   #title {
-    font-size: 3em;
+    font-size: 1.875em;
   }
 
   #card {
@@ -32,11 +42,10 @@ const CSS = styled.div`
     flex-direction: column;
     align-items: center;
     padding: 3em;
-    width: max-content;
+    width: 45.75em;
     box-sizing: border-box;
     height: max-content;
-    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.15);
-    border-radius: 0.5em;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   }
 
   #form {
@@ -44,7 +53,9 @@ const CSS = styled.div`
     flex-direction: column;
     align-items: center;
     margin: 2em 0;
-    width: 100%;
+    &, * {
+      width: 100%;
+    }
   }
 
   button {
@@ -70,94 +81,20 @@ const CSS = styled.div`
   }
 `;
 
-/* istanbul ignore next */
-export async function getServerSideProps({ params, res }) {
-  const { idCabang } = params
-  const jadwalTenagaMedis = [
-    {
-      "id": 2,
-      "tenaga_medis": {
-        "account": {
-          "id": 2,
-          "full_name": "TM 2",
-          "email": "tm2@klinik99.com",
-          "date_joined": "2022-03-31T12:49:11.378628Z",
-          "last_login": "2022-03-31T12:49:11.378628Z",
-          "role": "tenaga_medis",
-          "cabang": 1,
-          "klinik": 1
-        },
-        "sip": "https://django-surat-izin-klinik-jiva.s3.amazonaws.com/static/HW2204B4.txt"
-      },
-      "start_time": "10:00:00",
-      "end_time": "12:00:00",
-      "quota": 5,
-      "day": "mon"
-    },
-    {
-      "id": 3,
-      "tenaga_medis": {
-        "account": {
-          "id": 3,
-          "full_name": "TM 3",
-          "email": "tm3@klinik99.com",
-          "date_joined": "2022-04-02T10:43:33.797983Z",
-          "last_login": "2022-04-02T10:43:33.797983Z",
-          "role": "tenaga_medis",
-          "cabang": 1,
-          "klinik": 1
-        },
-        "sip": "https://django-surat-izin-klinik-jiva.s3.amazonaws.com/static/HW2204B4.txt"
-      },
-      "start_time": "11:00:00",
-      "end_time": "14:00:00",
-      "quota": 5,
-      "day": "mon"
-    }
-  ]
+const RegistrationForm = () => {
+  const [submitted, setSubmitted] = useState(false)
+  const { query, isReady } = useRouter();
+  const dispatch = useDispatch()
 
-  let jadwalByDoctor
-  try {
-    jadwalByDoctor = jadwalTenagaMedis.reduce((r, a) => {
-      r[a.tenaga_medis.account.id] = r[a.tenaga_medis.account.id] || []
-      r[a.tenaga_medis.account.id].push(a)
-      return r
-    }, Object.create(null))
-  } catch (error) {
-    console.log(error)
-  }
+  useEffect(() => {
+    if (!isReady) return;
+    const { idCabang } = query;
+    dispatch(getSchemas({ idCabang }));
+    dispatch(getJadwalTenagaMedisList({ idCabang }))
+  }, [isReady, query, dispatch]);
 
-  /* istanbul ignore next */
-  return {
-    props: {
-      namaKlinik: "Klinik Example",
-      jadwal: jadwalByDoctor,
-      fields: [
-        {
-          type: "text",
-          required: false,
-          label: "Field 1",
-          className: "form-control",
-          name: "text-1648102772033-0",
-          access: false,
-          subtype: "text",
-        },
-        {
-          type: "text",
-          required: true,
-          label: "Field 2",
-          className: "form-control",
-          name: "text-1648102772980-0",
-          access: false,
-          subtype: "text",
-        },
-      ],
-    }
-  }
-}
-
-const RegistrationForm = ({ namaKlinik, fields, jadwal }) => {
-  const [submitted, setSubmitted] = useState(false);
+  const schema = useSelector(state => findSchema(state, constants.FORM_TYPES.PATIENT_APPLICATION))
+  const { jadwalTenagaMedisList } = useSelector(state => state.jadwalTenagaMedis)
 
   const mandatoryFields = {
     nik: "",
@@ -166,82 +103,95 @@ const RegistrationForm = ({ namaKlinik, fields, jadwal }) => {
     fields: []
   }
 
-  return (
-    <Layout navType="topbar">
-      <CSS>
-        <Card id="card">
-          <h1 id="title">
-            Pendaftaran
-            {' '}
-            {namaKlinik}
-          </h1>
+  return schema && jadwalTenagaMedisList ? (
+    <CSS>
+      <Card id="card">
+        <h1 id="title">
+          Pendaftaran
+          {' '}
+          {schema.klinik.name}
+        </h1>
 
-          {submitted
-            ? (
+        {submitted
+          ? (
+            <div>
               <p data-testid="success_message">Reservasi anda telah tersimpan! Mohon datang tepat waktu!</p>
-            ) : (
-              <Formik
-                initialValues={{ ...mandatoryFields }}
-                validate={(values) => {
-                  const errors = {}
-                  if (!values.nik) errors.email = "NIK wajib diisi"
-                  if (!values.tenaga_medis) errors.tenaga_medis = "Tenaga medis wajib dipilih"
-                  if (!values.jadwal) errors.jadwal = "Jadwal wajib dipilih"
-                  return errors
-                }}
-                onSubmit={(values, { setSubmitting }) => {
-                  console.log(values)
-                  setSubmitting(true)
-                  setSubmitted(true)
-                }}
-              >
-                {({ errors, isSubmitting, submitForm, values, setSubmitting, isValid, validateForm, setFieldValue }) => (
-                  <>
-                    <Form>
-                      <TextInput
-                        name="nik"
-                        type="text"
-                        label="NIK"
-                        placeholder="1234567890"
-                        error={errors.nik}
-                      />
-                      <label htmlFor={"tenagamedis"}>Jadwal dokter</label>
-                      <Field as="select" id="tenagamedis" data-testid="tenagamedis" name="tenaga_medis">
-                        <option value="" disabled={true} hidden={true}>Pilih tenaga medis</option>
-                        {Object.keys(jadwal).map((e) => (
-                          <option value={e} key={e}>{e}</option>
-                        ))}
-                      </Field>
-                      <Field as="select" data-testid="jadwal" disabled={!values.tenaga_medis} name="jadwal">
-                        <option value="" disabled={true} hidden={true}>Pilih jadwal pertemuan</option>
-                        {values.tenaga_medis && (
-                          jadwal[values.tenaga_medis].map((e, i) => (
-                            <option value={e.day + " " + e.start_time} key={e.id}>
-                              {e.day}
-                              {" "}
-                              {e.start_time}
-                            </option>
-                          )))}
-                      </Field>
-                    </Form>
-                    <FormRender
-                      schema={fields}
-                      submit={async (e) => {
-                        setFieldValue("fields", e);
-                        await submitForm(e)
-                      }}
-                      isSubmitting={isSubmitting}
-                      isValid={isValid}
+              <Button onClick={() => location.assign(location.pathname)}>Daftar lagi</Button>
+            </div>
+          ) : (
+            <Formik
+            enableReinitialize
+              initialValues={{ ...mandatoryFields }}
+              validate={(values) => {
+                const errors = {}
+                if (!values.nik) errors.nik= "NIK wajib diisi"
+                if (!values.tenaga_medis) errors.tenaga_medis = "Tenaga medis wajib dipilih"
+                if (!values.jadwal) errors.jadwal = "Jadwal wajib dipilih"
+                return errors
+              }}
+              onSubmit={async (values, { setSubmitting, isSubmitting }) => {
+                setSubmitting(true)
+                await dispatch(createApplication(setSubmitting, values))
+                setSubmitted(!isSubmitting)
+              }}
+            >
+              {({ errors, isSubmitting, submitForm, values, isValid, setFieldValue }) => (
+                <>
+                  <Form id="form">
+                    <TextInput
+                      name="nik"
+                      type="text"
+                      label="NIK"
+                      placeholder="1234567890"
+                      error={errors.nik}
                     />
-                  </>
-                )}
-              </Formik>
-            )
-          }
-        </Card>
-      </CSS>
-    </Layout >
-  );
+                    <TextInput
+                      label="Pilih Tenaga Medis"
+                      as="select" 
+                      id="tenagamedis" 
+                      data-testid="tenagamedis" 
+                      name="tenaga_medis"
+                      error={errors.tenaga_medis}
+                    >
+                      <option value="" disabled={true} hidden={true}>Pilih tenaga medis</option>
+                      {jadwalTenagaMedisList.map(({ tenaga_medis: { account: { full_name, id } } }) => (
+                        <option value={id} key={id}>{full_name}</option>
+                      ))}
+                    </TextInput>
+                    <TextInput
+                      as="select"
+                      data-testid="jadwal" 
+                      disabled={!values.tenaga_medis} 
+                      name="jadwal"
+                      label="Pilih Jadwal"
+                      error={errors.jadwal}
+                    >
+                      <option value="" disabled={true} hidden={true}>Pilih jadwal pertemuan</option>
+                      {values.tenaga_medis && (
+                        jadwalTenagaMedisList.filter(({ tenaga_medis: { account: { id } } }) => id == values.tenaga_medis).map(({ start_time, end_time, day, id }, idx) => (
+                          <option value={id} key={idx}>
+                            {`${day}: ${start_time} - ${end_time}`}
+                          </option>
+                        )))}
+                    </TextInput>
+                  </Form>
+                  <FormRender
+                    schema={schema.fields}
+                    submit={async (e) => {
+                      setFieldValue("fields", e);
+                      await submitForm()
+                    }}
+                    isSubmitting={isSubmitting}
+                    isValid={isValid}
+                  />
+                </>
+              )}
+            </Formik>
+          )
+        }
+      </Card>
+    </CSS>
+  ) : null
 };
 
 export default RegistrationForm;
