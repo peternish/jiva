@@ -129,6 +129,7 @@ const FormRender = ({ schema, submit, isSubmitting, isValid }) => {
               setIsError(true)
             }
           });
+          console.log("DEBUG HANIF", {isValid, isError})
           submit(payload);
         }}
       >

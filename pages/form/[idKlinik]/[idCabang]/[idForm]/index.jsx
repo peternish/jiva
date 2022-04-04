@@ -220,7 +220,7 @@ const RegistrationForm = () => {
 
   console.log(schema)
 
-  return (
+  return schema ? (
     <Layout navType="topbar">
       <CSS>
         <Card id="card">
@@ -238,12 +238,13 @@ const RegistrationForm = () => {
                 initialValues={{ ...mandatoryFields }}
                 validate={(values) => {
                   const errors = {}
-                  if (!values.nik) errors.email = "NIK wajib diisi"
+                  if (!values.nik) errors.nik= "NIK wajib diisi"
                   if (!values.tenaga_medis) errors.tenaga_medis = "Tenaga medis wajib dipilih"
                   if (!values.jadwal) errors.jadwal = "Jadwal wajib dipilih"
                   return errors
                 }}
                 onSubmit={async (values, { setSubmitting }) => {
+                  console.log(values)
                   setSubmitting(true)
                   dispatch(createApplication(values))
                 }}
@@ -258,13 +259,26 @@ const RegistrationForm = () => {
                         placeholder="1234567890"
                         error={errors.nik}
                       />
-                      <label htmlFor={"tenagamedis"}>Jadwal dokter</label>
+                      <TextInput
+                        label="Jadwal dokter"
+                        as="select" 
+                        id="tenagamedis" 
+                        data-testid="tenagamedis" 
+                        name="tenaga_medis"
+                        error={errors.tenaga_medis}
+                      >
+                        <option value="" disabled={true} hidden={true}>Pilih tenaga medis</option>
+                        {jadwalTenagaMedisList.map(({ tenaga_medis: { account: { full_name, id } } }) => (
+                          <option value={id} key={id}>{full_name}</option>
+                        ))}
+                      </TextInput>
+                      {/* <label htmlFor={"tenagamedis"}>Jadwal dokter</label>
                       <Field as="select" id="tenagamedis" data-testid="tenagamedis" name="tenaga_medis">
                         <option value="" disabled={true} hidden={true}>Pilih tenaga medis</option>
                         {jadwalTenagaMedisList.map(({ tenaga_medis: { account: { full_name, id } } }) => (
                           <option value={id} key={id}>{full_name}</option>
                         ))}
-                      </Field>
+                      </Field> */}
                       <Field as="select" data-testid="jadwal" disabled={!values.tenaga_medis} name="jadwal">
                         <option value="" disabled={true} hidden={true}>Pilih jadwal pertemuan</option>
                         {values.tenaga_medis && (
@@ -279,7 +293,7 @@ const RegistrationForm = () => {
                       schema={schema.fields}
                       submit={async (e) => {
                         setFieldValue("fields", e);
-                        await submitForm(e)
+                        await submitForm()
                       }}
                       isSubmitting={isSubmitting}
                       isValid={isValid}
@@ -292,7 +306,7 @@ const RegistrationForm = () => {
         </Card>
       </CSS>
     </Layout >
-  );
+  ) : null
 };
 
 export default RegistrationForm;

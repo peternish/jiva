@@ -37,11 +37,11 @@ const CSS = styled.div`
   }
 `;
 
-const TextInput = ({ label, name, type = "text", placeholder = "", disabled = false, error }) => {
+const TextInput = ({ label, name, type = "text", placeholder = "", disabled = false, error, as="", children }) => {
   return (
     <CSS isError={!!error}>
       <label htmlFor={name}>{label}</label>
-      <Field type={type} placeholder={placeholder} name={name} id={name} disabled={disabled}/>
+      <Field type={type} placeholder={placeholder} name={name} id={name} disabled={disabled} as={as}>{children}</Field>
       {error ? <small className="error-message">{error}</small> : null}
     </CSS>
   );
