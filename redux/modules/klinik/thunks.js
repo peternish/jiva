@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 
 // actions
 import { setCabangList, setKlinik } from "@redux/modules/klinik";
+import constants from "@utils/constants"
 
 export const getCabang = () => {
   return async (dispatch) => {
@@ -41,3 +42,16 @@ export const registerCabang = (setSubmitting, { location } = {}) => {
     }
   };
 };
+
+export const createApplication = (setSubmitting, { nik, fields }={}) => {
+  return async () => {
+    try {
+      await jivaAPI.patientApplication.createApplication({ nik, fields })
+      toast("Pendaftaran Anda Sudah Terkirim", { type: toast.TYPE.SUCCESS });
+      setSubmitting(false)
+    } catch(error) {
+      setSubmitting(false)
+      toast(constants.BASE_ERROR_MESSAGE, { type: toast.TYPE.ERROR });
+    }
+  }
+}
