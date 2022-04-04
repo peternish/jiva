@@ -31,6 +31,7 @@ const updateSchema = (payload, setSubmitting) => {
             const updatedSchemas = schemas.map((schema) => (schema.id === updatedSchema.id ? updatedSchema : schema))
             await dispatch(setSchemas(updatedSchemas))
             toast("Perubahan berhasil disimpan", { type: toast.TYPE.SUCCESS });
+            setSubmitting(false)
         } catch (error) {
             toast(constants.BASE_ERROR_MESSAGE, { type: toast.TYPE.ERROR });
             setSubmitting(false)

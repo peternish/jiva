@@ -45,7 +45,6 @@ const FormBuilder = ({ schema, onSave, children }) => {
       fields: updatedFields,
     };
     onSave(updatedSchema, setIsSubmitting);
-    setIsSubmitting(false)
   };
 
   const resetSchema = () => {
