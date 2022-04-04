@@ -11,7 +11,8 @@ const getJadwalTenagaMedisList = ({ idCabang }) => {
             //console.log(data);
             await dispatch(setJadwalTenagaMedisList(data));
         } catch (error) {
-            console.log(error);
+            console.log(error)
+            toast("Terjadi kesalahan 😥", { type: toast.TYPE.ERROR });
         }
     };
 };
@@ -24,6 +25,7 @@ const getJadwalTenagaMedis = ({ idJadwal }) => {
             await dispatch(setJadwalTenagaMedis(data));
         } catch (error) {
             console.log(error);
+            toast("Terjadi kesalahan 😥", { type: toast.TYPE.ERROR });
         }
     };
 };
@@ -35,6 +37,7 @@ const createJadwalTenagaMedis = ({ idTenagaMedis, startTime, endTime, quota, day
             await jivaAPI.jadwalTenagaMedis.createJadwalTenagaMedis({ idTenagaMedis, startTime, endTime, quota, day });
         } catch(error) {
             console.log(error);
+            toast("Terjadi kesalahan 😥", { type: toast.TYPE.ERROR });
         }
     }
 }
@@ -46,6 +49,7 @@ const deleteJadwalTenagaMedis = ({ idJadwal, idCabang }) => {
             dispatch(getJadwalTenagaMedisList({ idCabang }))
         } catch(error) {
             console.log(error)
+            toast("Terjadi kesalahan 😥", { type: toast.TYPE.ERROR });
         }
     }
 }
@@ -56,6 +60,7 @@ const updateJadwalTenagaMedis = ({ idJadwal, startTime, endTime, quota, day }) =
             await jivaAPI.jadwalTenagaMedis.updateJadwalTenagaMedis({ idJadwal, startTime, endTime, quota, day });
         } catch(error) {
             console.log(error);
+            toast("Terjadi kesalahan 😥", { type: toast.TYPE.ERROR });
         }
     }
 }
