@@ -72,7 +72,7 @@ const CSS = styled.div`
 
 /* istanbul ignore next */
 export async function getServerSideProps({ params, res }) {
-  const { idCabang } = params
+  const { idCabang, idForm } = params
   const jadwalTenagaMedis = [
     {
       "id": 2,
@@ -118,6 +118,9 @@ export async function getServerSideProps({ params, res }) {
 
   let jadwalByDoctor
   try {
+    const jadwalTenagaMedis = await axios.get(`${constants?.API_BASE_URL}/jadwal/tenaga-medis/available/${idCabang}/`, {
+      date: `${new Date(Date.now()).toLocaleString().split(',')[0]}` // dd/mm/yyyy
+    })
     jadwalByDoctor = jadwalTenagaMedis.reduce((r, a) => {
       r[a.tenaga_medis.account.id] = r[a.tenaga_medis.account.id] || []
       r[a.tenaga_medis.account.id].push(a)
@@ -127,31 +130,16 @@ export async function getServerSideProps({ params, res }) {
     console.log(error)
   }
 
-  /* istanbul ignore next */
+  const {
+    data: { cabang_id, klinik, fields },
+  } = await axios.get(`${constants?.API_BASE_URL}/klinik/cabang/${idCabang}/dform/${idForm}}/`)
   return {
     props: {
-      namaKlinik: "Klinik Example",
+      idKlinik,
+      idCabang,
+      fields,
+      namaKlinik: klinik.name,
       jadwal: jadwalByDoctor,
-      fields: [
-        {
-          type: "text",
-          required: false,
-          label: "Field 1",
-          className: "form-control",
-          name: "text-1648102772033-0",
-          access: false,
-          subtype: "text",
-        },
-        {
-          type: "text",
-          required: true,
-          label: "Field 2",
-          className: "form-control",
-          name: "text-1648102772980-0",
-          access: false,
-          subtype: "text",
-        },
-      ],
     }
   }
 }
@@ -189,15 +177,16 @@ const RegistrationForm = ({ namaKlinik, fields, jadwal }) => {
                   if (!values.jadwal) errors.jadwal = "Jadwal wajib dipilih"
                   return errors
                 }}
-                onSubmit={(values, { setSubmitting }) => {
+                onSubmit={async (values, { setSubmitting }) => {
                   console.log(values)
                   setSubmitting(true)
+                  await axios.post(`${constants?.API_BASE_URL}/klinik/pasien/`, {})
                   setSubmitted(true)
                 }}
               >
-                {({ errors, isSubmitting, submitForm, values, setSubmitting, isValid, validateForm, setFieldValue }) => (
+                {({ errors, isSubmitting, submitForm, values, isValid, validateForm, setFieldValue }) => (
                   <>
-                    <Form>
+                    <Form id="form">
                       <TextInput
                         name="nik"
                         type="text"
