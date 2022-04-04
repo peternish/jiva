@@ -22,7 +22,7 @@ const getSchemas = ({ idCabang }) => {
     };
 };
 
-const updateSchema = (payload) => {
+const updateSchema = (payload, setSubmitting) => {
     return async (dispatch, getState) => {
         try {
             const { data : updatedSchema } = await jivaAPI.dynamicForm.updateSchema(payload)
@@ -32,6 +32,7 @@ const updateSchema = (payload) => {
             await dispatch(setSchemas(updatedSchemas))
             toast("Perubahan berhasil disimpan", { type: toast.TYPE.SUCCESS });
         } catch (error) {
+            setSubmitting(false)
             console.log(error);
         }
     };
