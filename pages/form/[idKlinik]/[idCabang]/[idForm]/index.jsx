@@ -1,12 +1,19 @@
-import axios from "axios"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import styled from "styled-components";
 import { Formik, Form, Field } from "formik";
 import FormRender from "@components/common/FormRender";
 import TextInput from "@components/common/TextInput";
 import Layout from "@components/DynamicForm/Layout";
 import Card from "@mui/material/Card";
-import constants from "@api/constants"
+import constants from "@utils/constants"
+import { useRouter } from 'next/router';
+
+// redux
+import { createApplication } from "@redux/modules/klinik/thunks"
+import { getSchemas } from "@redux/modules/dynamicForm/thunks"
+import { getJadwalTenagaMedisList } from "@redux/modules/jadwalTenagaMedis/thunks"
+import { findSchema } from "@redux/modules/dynamicForm/selectors"
+import { useDispatch, useSelector } from "react-redux"
 
 const CSS = styled.div`
   height: 100%;
@@ -44,7 +51,9 @@ const CSS = styled.div`
     flex-direction: column;
     align-items: center;
     margin: 2em 0;
-    width: 100%;
+    &, * {
+      width: 100%;
+    }
   }
 
   button {
@@ -71,9 +80,95 @@ const CSS = styled.div`
 `;
 
 /* istanbul ignore next */
-export async function getServerSideProps({ params, res }) {
-  const { idCabang, idForm } = params
-  const jadwalTenagaMedis = [
+// export async function getServerSideProps({ params, res }) {
+//   const { idCabang, idForm } = params
+//   const jadwalTenagaMedis = [
+//     {
+//       "id": 2,
+//       "tenaga_medis": {
+//         "account": {
+//           "id": 2,
+//           "full_name": "TM 2",
+//           "email": "tm2@klinik99.com",
+//           "date_joined": "2022-03-31T12:49:11.378628Z",
+//           "last_login": "2022-03-31T12:49:11.378628Z",
+//           "role": "tenaga_medis",
+//           "cabang": 1,
+//           "klinik": 1
+//         },
+//         "sip": "https://django-surat-izin-klinik-jiva.s3.amazonaws.com/static/HW2204B4.txt"
+//       },
+//       "start_time": "10:00:00",
+//       "end_time": "12:00:00",
+//       "quota": 5,
+//       "day": "mon"
+//     },
+//     {
+//       "id": 3,
+//       "tenaga_medis": {
+//         "account": {
+//           "id": 3,
+//           "full_name": "TM 3",
+//           "email": "tm3@klinik99.com",
+//           "date_joined": "2022-04-02T10:43:33.797983Z",
+//           "last_login": "2022-04-02T10:43:33.797983Z",
+//           "role": "tenaga_medis",
+//           "cabang": 1,
+//           "klinik": 1
+//         },
+//         "sip": "https://django-surat-izin-klinik-jiva.s3.amazonaws.com/static/HW2204B4.txt"
+//       },
+//       "start_time": "11:00:00",
+//       "end_time": "14:00:00",
+//       "quota": 5,
+//       "day": "mon"
+//     }
+//   ]
+
+//   let jadwalByDoctor
+//   try {
+//     const jadwalTenagaMedis = await axios.get(`${constants?.API_BASE_URL}/jadwal/tenaga-medis/available/${idCabang}/`, {
+//       date: `${new Date(Date.now()).toLocaleString().split(',')[0]}` // dd/mm/yyyy
+//     })
+//     jadwalByDoctor = jadwalTenagaMedis.reduce((r, a) => {
+//       r[a.tenaga_medis.account.id] = r[a.tenaga_medis.account.id] || []
+//       r[a.tenaga_medis.account.id].push(a)
+//       return r
+//     }, Object.create(null))
+//   } catch (error) {
+//     console.log(error)
+//   }
+
+//   const {
+//     data: { cabang_id, klinik, fields },
+//   } = await axios.get(`${constants?.API_BASE_URL}/klinik/cabang/${idCabang}/dform/${idForm}}/`)
+//   return {
+//     props: {
+//       idKlinik,
+//       idCabang,
+//       fields,
+//       namaKlinik: klinik.name,
+//       jadwal: jadwalByDoctor,
+//     }
+//   }
+// }
+
+const RegistrationForm = () => {
+  const [isSubmitting, setSubmitting] = useState(false);
+  const submitted = false
+  const { query, isReady } = useRouter();
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    if (!isReady) return;
+    const { idCabang } = query;
+    dispatch(getSchemas({ idCabang }));
+    dispatch(getJadwalTenagaMedisList({ idCabang }))
+  }, [isReady, query, dispatch]);
+
+  const schema = useSelector(state => findSchema(state, constants.FORM_TYPES.PATIENT_APPLICATION))
+  // const { jadwalTenagaMedisList } = useSelector(state => state.jadwalTenagaMedis)
+  const jadwalTenagaMedisList = [
     {
       "id": 2,
       "tenaga_medis": {
@@ -116,43 +211,14 @@ export async function getServerSideProps({ params, res }) {
     }
   ]
 
-  let jadwalByDoctor
-  try {
-    const jadwalTenagaMedis = await axios.get(`${constants?.API_BASE_URL}/jadwal/tenaga-medis/available/${idCabang}/`, {
-      date: `${new Date(Date.now()).toLocaleString().split(',')[0]}` // dd/mm/yyyy
-    })
-    jadwalByDoctor = jadwalTenagaMedis.reduce((r, a) => {
-      r[a.tenaga_medis.account.id] = r[a.tenaga_medis.account.id] || []
-      r[a.tenaga_medis.account.id].push(a)
-      return r
-    }, Object.create(null))
-  } catch (error) {
-    console.log(error)
-  }
-
-  const {
-    data: { cabang_id, klinik, fields },
-  } = await axios.get(`${constants?.API_BASE_URL}/klinik/cabang/${idCabang}/dform/${idForm}}/`)
-  return {
-    props: {
-      idKlinik,
-      idCabang,
-      fields,
-      namaKlinik: klinik.name,
-      jadwal: jadwalByDoctor,
-    }
-  }
-}
-
-const RegistrationForm = ({ namaKlinik, fields, jadwal }) => {
-  const [submitted, setSubmitted] = useState(false);
-
   const mandatoryFields = {
     nik: "",
     tenaga_medis: "",
     jadwal: "",
     fields: []
   }
+
+  console.log(schema)
 
   return (
     <Layout navType="topbar">
@@ -161,7 +227,7 @@ const RegistrationForm = ({ namaKlinik, fields, jadwal }) => {
           <h1 id="title">
             Pendaftaran
             {' '}
-            {namaKlinik}
+            {schema.klinik.name}
           </h1>
 
           {submitted
@@ -178,10 +244,8 @@ const RegistrationForm = ({ namaKlinik, fields, jadwal }) => {
                   return errors
                 }}
                 onSubmit={async (values, { setSubmitting }) => {
-                  console.log(values)
                   setSubmitting(true)
-                  await axios.post(`${constants?.API_BASE_URL}/klinik/pasien/`, {})
-                  setSubmitted(true)
+                  dispatch(createApplication(values))
                 }}
               >
                 {({ errors, isSubmitting, submitForm, values, isValid, validateForm, setFieldValue }) => (
@@ -197,24 +261,22 @@ const RegistrationForm = ({ namaKlinik, fields, jadwal }) => {
                       <label htmlFor={"tenagamedis"}>Jadwal dokter</label>
                       <Field as="select" id="tenagamedis" data-testid="tenagamedis" name="tenaga_medis">
                         <option value="" disabled={true} hidden={true}>Pilih tenaga medis</option>
-                        {Object.keys(jadwal).map((e) => (
-                          <option value={e} key={e}>{e}</option>
+                        {jadwalTenagaMedisList.map(({ tenaga_medis: { account: { full_name, id } } }) => (
+                          <option value={id} key={id}>{full_name}</option>
                         ))}
                       </Field>
                       <Field as="select" data-testid="jadwal" disabled={!values.tenaga_medis} name="jadwal">
                         <option value="" disabled={true} hidden={true}>Pilih jadwal pertemuan</option>
                         {values.tenaga_medis && (
-                          jadwal[values.tenaga_medis].map((e, i) => (
-                            <option value={e.day + " " + e.start_time} key={e.id}>
-                              {e.day}
-                              {" "}
-                              {e.start_time}
+                          jadwalTenagaMedisList.filter(({ tenaga_medis: { account: { id } } }) => id == values.tenaga_medis).map(({ start_time, end_time, day, id }, idx) => (
+                            <option value={id} key={idx}>
+                              {`${day}: ${start_time} - ${end_time}`}
                             </option>
                           )))}
                       </Field>
                     </Form>
                     <FormRender
-                      schema={fields}
+                      schema={schema.fields}
                       submit={async (e) => {
                         setFieldValue("fields", e);
                         await submitForm(e)
