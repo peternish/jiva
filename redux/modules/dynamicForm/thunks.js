@@ -22,10 +22,10 @@ const getSchemas = ({ idCabang }) => {
     };
 };
 
-const updateSchema = (schema) => {
+const updateSchema = (payload) => {
     return async (dispatch, getState) => {
         try {
-            const { data : updatedSchema } = await jivaAPI.dynamicForm.updateSchema(schema)
+            const { data : updatedSchema } = await jivaAPI.dynamicForm.updateSchema(payload)
             const { schemas } = getState().dynamicForm
             
             const updatedSchemas = schemas.map((schema) => (schema.id === updatedSchema.id ? updatedSchema : schema))

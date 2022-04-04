@@ -21,8 +21,8 @@ const PengaturanFormulirPendaftaran = () => {
 
   const schema = useSelector(state => findSchema(state, constants.FORM_TYPES.PATIENT_APPLICATION))
 
-  const saveSchema = async (schema) => {
-    dispatch(updateSchema(schema))
+  const saveSchema = async (newSchema) => {
+    dispatch(updateSchema(newSchema))
   }
 
   return (
