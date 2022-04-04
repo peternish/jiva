@@ -35,7 +35,7 @@ describe("Dynamic Form", () => {
       },
     ]
 
-    const jadwal = [
+    const jadwalRaw = [
       {
         "id": 2,
         "tenaga_medis": {
@@ -78,14 +78,19 @@ describe("Dynamic Form", () => {
       }
     ]
 
+    const jadwal = jadwalRaw.reduce((r, a) => {
+      r[a.tenaga_medis.account.id] = r[a.tenaga_medis.account.id] || []
+      r[a.tenaga_medis.account.id].push(a)
+      return r
+    }, Object.create(null))
+
     const namaKlinik = "Klinik Example"
 
-    const { debug } = render(
+    render(
       <Provider store={store}>
         <RegistrationForm namaKlinik={namaKlinik} fields={fields} jadwal={jadwal} />
       </Provider>
     );
-    debug()
   });
 
   it('renders a heading', () => {
@@ -134,6 +139,76 @@ describe("Dynamic Form", () => {
 
     expect(jadwalSelection.childElementCount).toBeGreaterThan(0)
   });
+});
+
+
+describe("Dynamic Form Submission", () => {
+  beforeEach(() => {
+    nextRouter.useRouter = jest.fn();
+    nextRouter.useRouter.mockImplementation(() => ({
+      route: '/form/1/1/1',
+      isReady: true,
+    }));
+
+    const fields = []
+
+    const jadwalRaw = [
+      {
+        "id": 2,
+        "tenaga_medis": {
+          "account": {
+            "id": 2,
+            "full_name": "TM 2",
+            "email": "tm2@klinik99.com",
+            "date_joined": "2022-03-31T12:49:11.378628Z",
+            "last_login": "2022-03-31T12:49:11.378628Z",
+            "role": "tenaga_medis",
+            "cabang": 1,
+            "klinik": 1
+          },
+          "sip": "https://django-surat-izin-klinik-jiva.s3.amazonaws.com/static/HW2204B4.txt"
+        },
+        "start_time": "10:00:00",
+        "end_time": "12:00:00",
+        "quota": 5,
+        "day": "mon"
+      },
+      {
+        "id": 3,
+        "tenaga_medis": {
+          "account": {
+            "id": 3,
+            "full_name": "TM 3",
+            "email": "tm3@klinik99.com",
+            "date_joined": "2022-04-02T10:43:33.797983Z",
+            "last_login": "2022-04-02T10:43:33.797983Z",
+            "role": "tenaga_medis",
+            "cabang": 1,
+            "klinik": 1
+          },
+          "sip": "https://django-surat-izin-klinik-jiva.s3.amazonaws.com/static/HW2204B4.txt"
+        },
+        "start_time": "11:00:00",
+        "end_time": "14:00:00",
+        "quota": 5,
+        "day": "mon"
+      }
+    ]
+
+    const jadwal = jadwalRaw.reduce((r, a) => {
+      r[a.tenaga_medis.account.id] = r[a.tenaga_medis.account.id] || []
+      r[a.tenaga_medis.account.id].push(a)
+      return r
+    }, Object.create(null))
+
+    const namaKlinik = "Klinik Example"
+
+    render(
+      <Provider store={store}>
+        <RegistrationForm namaKlinik={namaKlinik} fields={fields} jadwal={jadwal} />
+      </Provider>
+    );
+  });
 
   it('able to submit if filled properly', async () => {
     const tenagaMedisSelection = screen.getAllByTestId("tenagamedis")[0]
@@ -143,6 +218,7 @@ describe("Dynamic Form", () => {
       fireEvent.click(tenagaMedisSelection)
       fireEvent.change(tenagaMedisSelection, { target: { value: 2 } })
       fireEvent.click(jadwalSelection)
+      fireEvent.change(jadwalSelection, { target: { value: "mon 11:00:00" } })
     })
 
     const buttonsubmit = screen.getAllByRole('button', {

@@ -178,9 +178,8 @@ const RegistrationForm = ({ namaKlinik, fields, jadwal }) => {
 
           {submitted
             ? (
-              <p>Reservasi anda telah tersimpan! Mohon datang tepat waktu!</p>
-            )
-            : (
+              <p data-testid="success_message">Reservasi anda telah tersimpan! Mohon datang tepat waktu!</p>
+            ) : (
               <Formik
                 initialValues={{ ...mandatoryFields }}
                 validate={(values) => {
