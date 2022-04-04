@@ -27,6 +27,9 @@ class Klinik(models.Model):
     owner = models.OneToOneField(OwnerProfile, on_delete=models.CASCADE)
     sik = models.FileField()
 
+    def __str__(self):
+        return self.name
+
 
 class Cabang(models.Model):
     location = models.CharField(max_length=300)
@@ -62,6 +65,13 @@ class LamaranPasien(models.Model):
         return self.nik
 
 class DynamicForm(models.Model):
+    formtypes = [
+        "pendaftaran_pasien"
+    ]
+
     cabang = models.ForeignKey(Cabang, on_delete=models.CASCADE)
     formtype = models.CharField(max_length=100)
     fields = models.JSONField("Fields", default=list)
+
+    def __str__(self):
+        return f"{self.cabang.klinik}:{self.cabang}:{self.formtype}"
