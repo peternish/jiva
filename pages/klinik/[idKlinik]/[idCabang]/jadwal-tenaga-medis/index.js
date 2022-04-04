@@ -17,6 +17,7 @@ import Calender_Container from "@components/JadwalTenagaMedis/CalenderContainer"
 import { useRouter } from 'next/router'
 import TextInput from "@components/common/TextInput"
 import LoadingButton from "@mui/lab/LoadingButton"
+import Filter_Tenaga_Medis from "@components/JadwalTenagaMedis/Filter";
 
 const Jadwal = (props) => {
     const {query, isReady} = useRouter()
@@ -178,7 +179,15 @@ const Jadwal = (props) => {
         }
       }
       const idJadwal = id;
-      dispatch(deleteJadwalTenagaMedis({ idJadwal }))
+      dispatch(deleteJadwalTenagaMedis({ idJadwal, idCabang:query.idCabang  }))
+
+      batalEvent()
+
+      parseData(jadwalTenagaMedisList, -1)
+    }
+
+    const batalEvent = () => {
+      setCurrentEvent(undefined)
     }
 
     const updateEvent = (values) => {
@@ -218,15 +227,27 @@ const Jadwal = (props) => {
           const idJadwal = id;
           const quota = myEvents[i].quota;
           dispatch(updateJadwalTenagaMedis({ idJadwal, startTime, endTime, quota, day }))
+
+          batalEvent()
+
+          parseData(jadwalTenagaMedisList, -1)
         }
       }
     }
-    return (
+    return jadwalTenagaMedisList && tenagaMedisList ? (
       <Layout navType = "sidebar" title="Jadwal Tenaga Medis">
-        <select onChange={(event) => updateMyEvents(event.target.value)} style={{width: '10%'}}>
-          {Object.keys(tenagaMedisDict2).map(key => <option key={key} value={tenagaMedisDict[key]}>{key}</option>)}
-        </select>
-        
+        <Filter_Tenaga_Medis>
+          <select onChange={(event) => updateMyEvents(event.target.value)} style={{width: '10%'}}>
+            {Object.keys(tenagaMedisDict2).map(key => <option key={key} value={tenagaMedisDict[key]}>{key}</option>)}
+          </select>
+          <LoadingButton
+          onClick={updateAllMyEvents}
+          variant="outlined"
+          type="button"
+          >
+            Tampilkan Semua Jadwal
+          </LoadingButton>
+        </Filter_Tenaga_Medis>
         <Calender_Container>
           <Jadwal_Tenaga_Medis>
             <Calendar
@@ -311,40 +332,52 @@ const Jadwal = (props) => {
                   name="quota" 
                   type="number"
                 />
+                {currentEvent === undefined ? 
                 <LoadingButton 
+                variant="contained"
+                type="submit"
+                id="input_button"
+                >
+                  Simpan
+                </LoadingButton> 
+                : <div id="update_inputs">
+                  <div id="top">
+                  <LoadingButton 
                   variant="contained"
-                  type="submit"
+                  type="button"
+                  id="input_button"
+                  onClick={() => updateEvent(values)}
                 >
                   Simpan
                 </LoadingButton>
+                
                 <LoadingButton
                   variant="outlined"
+                  id="input_button"
+                  onClick={batalEvent}
                 >
                   Batal
                 </LoadingButton>
+                  </div>
+                
+
                 <LoadingButton
                   variant="contained"
+                  id="hapus"
                   type="button" 
                   onClick={deleteEvent}
                   style={{ background: "#F44336" }}
                 >
                   Hapus
                 </LoadingButton>
-                <LoadingButton 
-                  variant="contained"
-                  type="button"
-                  onClick={() => updateEvent(values)}
-                >
-                  Simpan
-                </LoadingButton>
-                <button onClick={console.log(myEvents)}>cek</button>
+                </div>}
               </Form>}
             </Formik>
           </Form_Calender>
           </Calender_Container>
   </Layout>
-    )
+    ): null
   
-}
+} 
 
 export default Jadwal;

@@ -39,10 +39,11 @@ const createJadwalTenagaMedis = ({ idTenagaMedis, startTime, endTime, quota, day
     }
 }
 
-const deleteJadwalTenagaMedis = ({ idJadwal }) => {
+const deleteJadwalTenagaMedis = ({ idJadwal, idCabang }) => {
     return async (dispatch) => {
         try {
             await jivaAPI.jadwalTenagaMedis.deleteJadwalTenagaMedis({ idJadwal });
+            dispatch(getJadwalTenagaMedisList({ idCabang }))
         } catch(error) {
             console.log(error)
         }

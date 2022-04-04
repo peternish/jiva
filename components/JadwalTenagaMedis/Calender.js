@@ -22,6 +22,10 @@ const Jadwal_Tenaga_Medis = styled.div`
   @media(max-width: 1366px) {
     width: calc(100vw - 30em);
   }
+
+  .rbc-toolbar {
+    display: none;
+  }
 `;
 
 export default Jadwal_Tenaga_Medis;

@@ -15,8 +15,9 @@ const Form_Calender = styled.div`
     display: flex;
     flex-direction: column;
     gap: 0.5em;
-    min-height: 100%;
-    height: max-content;
+    min-height: max-content;
+    height: 100%;
+    box-sizing: border-box;
   }
 
   #time-range {
@@ -45,6 +46,19 @@ const Form_Calender = styled.div`
       }
     }
   }
+  #update_inputs {
+    height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+
+      #top {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5em
+      }
+
+    }
 `;
 
 export default Form_Calender;
