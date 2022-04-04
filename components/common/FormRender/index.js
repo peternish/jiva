@@ -58,12 +58,12 @@ width: 100%;
 `;
 
 const excludedFields = ["header", "paragraph"];
-const FormRender = ({ schema, submit, isSubmitting, isValid }) => {
+const FormRender = ({ schema, submit, isSubmitting, isValid = true }) => {
   const fr = useRef();
 
   const [isError, setIsError] = useState(false)
 
-  const validateForm = useCallback(() => {
+  const validateForm = () => {
     const values = {};
     const errs = document.getElementsByClassName("error-message")
     if (errs.length) {
@@ -99,15 +99,17 @@ const FormRender = ({ schema, submit, isSubmitting, isValid }) => {
         payload.push(inputValue);
       }
     });
-    let isError = false
+    let isErrorTemp = false
     $("[data-custom-required='true']").each(function () {
       if (!values[$(this).attr("name")]) {
         $(this).after(`<small class="error-message">${$(this).attr("name")} is required</small>`);
-        isError = true
+        isErrorTemp = true
       }
     });
-    return { values, payload, isError }
-  }, [schema])
+    return { values, payload, isErrorTemp }
+  }
+
+  const validateFormCallback = useCallback(validateForm, [schema])
 
   useEffect(() => {
     const $ = require("jquery");
@@ -128,20 +130,20 @@ const FormRender = ({ schema, submit, isSubmitting, isValid }) => {
     });
 
     $("form").on("change", () => {
-      const { isError } = validateForm()
+      const { isError } = validateFormCallback()
       setIsError(isError)
     })
-  }, [schema, validateForm]);
+  }, [schema, validateFormCallback]);
 
   return (
     <FormCSS>
       <form
         className="form-container"
-        onSubmit={(e) => {
+        onSubmit={async (e) => {
           e.preventDefault();
-          const { payload, isError } = validateForm()
-          setIsError(isError)
-          if (!isError && isValid) submit(payload);
+          const { payload, isErrorTemp } = validateForm()
+          setIsError(isErrorTemp)
+          if (!isErrorTemp && isValid) submit(payload);
         }}
       >
         <div id="fb-render" ref={fr}></div>

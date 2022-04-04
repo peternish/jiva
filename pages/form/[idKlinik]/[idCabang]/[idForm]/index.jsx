@@ -146,7 +146,7 @@ const RegistrationForm = () => {
                       error={errors.nik}
                     />
                     <TextInput
-                      label="Jadwal dokter"
+                      label="Pilih Tenaga Medis"
                       as="select" 
                       id="tenagamedis" 
                       data-testid="tenagamedis" 
@@ -163,6 +163,7 @@ const RegistrationForm = () => {
                       data-testid="jadwal" 
                       disabled={!values.tenaga_medis} 
                       name="jadwal"
+                      label="Pilih Jadwal"
                       error={errors.jadwal}
                     >
                       <option value="" disabled={true} hidden={true}>Pilih jadwal pertemuan</option>
