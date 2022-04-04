@@ -1,6 +1,7 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Button from "@mui/material/Button";
 import CSS from "./CSS";
+import PreviewModal from "@components/common/FormRender/PreviewModal";
 
 const loadPackages = () => {
   const $ = require("jquery");
@@ -20,6 +21,8 @@ const options = {
 };
 
 const FormBuilder = ({ schema, onSave, children }) => {
+  const [modalOpen, setmodalOpen] = useState(false)
+  const [previewSchema, setpreviewSchema] = useState(schema?.fields || [])
 
   const fb = useRef();
   useEffect(() => {
@@ -45,6 +48,11 @@ const FormBuilder = ({ schema, onSave, children }) => {
     $(fb.current).formBuilder({ ...options, formData: schema?.fields || [] });
   };
 
+  const handlePreview = () => {
+    setpreviewSchema($(fb.current).formBuilder("getData"))
+    setmodalOpen(true)
+  }
+
   return (
     <CSS>
       <div id="fb-editor" ref={fb} />
@@ -53,13 +61,18 @@ const FormBuilder = ({ schema, onSave, children }) => {
 
       <div className="buttons-fb">
         <div>
-          <Button variant="outlined">Pratinjau</Button>
+          <Button variant="outlined" onClick={handlePreview}>Pratinjau</Button>
         </div>
         <div>
           <Button variant="outlined" onClick={resetSchema}> Reset </Button>
           <Button variant="contained" onClick={saveSchema}> Simpan </Button>
         </div>
       </div>
+      <PreviewModal 
+        schema={previewSchema} 
+        onClose={() => setmodalOpen(false)} 
+        open={modalOpen} 
+      />
     </CSS>
   );
 };
