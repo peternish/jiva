@@ -19,7 +19,6 @@ const SAMPLE_FORM_JSON = [
     access: false,
     subtype: "text",
   },
-
   {
     "type": "autocomplete",
     "required": false,
@@ -238,7 +237,7 @@ describe("<FormRender/>", () => {
   it("shows required form", async () => {
     render(
       <FormRender
-        submit={() => { }}
+        submit={() => {}}
         schema={SAMPLE_FORM_JSON}
       />
     );
@@ -246,7 +245,6 @@ describe("<FormRender/>", () => {
     const submitButton = screen.getByText("Simpan");
 
     await act(async () => {
-      await fireEvent.click(submitButton);
       await fireEvent.click(submitButton);
     });
     // expect the required warning is shown

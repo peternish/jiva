@@ -5,35 +5,37 @@ import { fireEvent, render, screen, act } from "@testing-library/react";
 import { store } from "@redux/store";
 import '@testing-library/jest-dom'
 import { getAllByRole } from '@testing-library/react'
+import { setSchemas } from "@redux/modules/dynamicForm"
+import { setJadwalTenagaMedisList } from "@redux/modules/jadwalTenagaMedis"
+
+const SAMPLE_SCHEMA = [{
+  "id": 1,
+  "cabang_id": 1,
+  "formtype": "pendaftaran_pasien",
+  "fields": [
+      {
+          "name": "text-1649092362528-0",
+          "type": "text",
+          "label": "Field 1",
+          "access": false,
+          "subtype": "text",
+          "required": true,
+          "className": "form-control"
+      }
+  ],
+  "klinik": {
+      "name": "Klinik Staging 1"
+  }
+}]
 
 describe("Dynamic Form", () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     nextRouter.useRouter = jest.fn();
     nextRouter.useRouter.mockImplementation(() => ({
       route: '/form/1/1/1',
+      query: { idCabang: 1 },
       isReady: true,
     }));
-
-    const fields = [
-      {
-        type: "text",
-        required: false,
-        label: "Field 1",
-        className: "form-control",
-        name: "text-1648102772033-0",
-        access: false,
-        subtype: "text",
-      },
-      {
-        type: "text",
-        required: true,
-        label: "Field 2",
-        className: "form-control",
-        name: "text-1648102772980-0",
-        access: false,
-        subtype: "text",
-      },
-    ]
 
     const jadwalRaw = [
       {
@@ -78,17 +80,12 @@ describe("Dynamic Form", () => {
       }
     ]
 
-    const jadwal = jadwalRaw.reduce((r, a) => {
-      r[a.tenaga_medis.account.id] = r[a.tenaga_medis.account.id] || []
-      r[a.tenaga_medis.account.id].push(a)
-      return r
-    }, Object.create(null))
-
-    const namaKlinik = "Klinik Example"
+    await store.dispatch(setJadwalTenagaMedisList(jadwalRaw))
+    await store.dispatch(setSchemas(SAMPLE_SCHEMA))
 
     render(
       <Provider store={store}>
-        <RegistrationForm namaKlinik={namaKlinik} fields={fields} jadwal={jadwal} />
+        <RegistrationForm />
       </Provider>
     );
   });
@@ -104,18 +101,16 @@ describe("Dynamic Form", () => {
 
   it('renders mandatory fields', () => {
     const NIKField = screen.getByLabelText(/.*NIK.*/i);
-    const doctorField = screen.getByLabelText(/.*Jadwal dokter.*/i);
+    const doctorField = screen.getByLabelText(/.*Pilih Jadwal.*/i);
 
     expect(NIKField).toBeInTheDocument();
     expect(doctorField).toBeInTheDocument();
   });
 
   it('renders data fields', () => {
-    const firstField = screen.getByLabelText(/.*Field 2.*/i);
-    const secondField = screen.getByLabelText(/.*Field 2.*/i);
+    const firstField = screen.getByLabelText(/.*Field 1.*/i);
 
     expect(firstField).toBeInTheDocument();
-    expect(secondField).toBeInTheDocument();
   });
 
   it('renders submit button', () => {
@@ -126,31 +121,29 @@ describe("Dynamic Form", () => {
   });
 
   it('enables jadwal selection when doctor is selected', async () => {
-    const tenagaMedisSelection = screen.getAllByTestId("tenagamedis")[0]
-    const jadwalSelection = screen.getAllByTestId("jadwal")[0]
+    const tenagaMedisSelection = screen.getByLabelText(/Pilih Tenaga Medis/i)
+    const jadwalSelection = screen.getByLabelText(/Pilih Jadwal/i)
     expect(tenagaMedisSelection).toBeInTheDocument()
     expect(jadwalSelection).toBeDisabled()
 
     await act(async () => {
-      fireEvent.click(tenagaMedisSelection)
       fireEvent.change(tenagaMedisSelection, { target: { value: 2 } })
       fireEvent.click(jadwalSelection)
     })
 
-    expect(jadwalSelection.childElementCount).toBeGreaterThan(0)
+    expect(jadwalSelection).not.toBeDisabled()
   });
 });
 
 
 describe("Dynamic Form Submission", () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     nextRouter.useRouter = jest.fn();
     nextRouter.useRouter.mockImplementation(() => ({
       route: '/form/1/1/1',
+      query: { idCabang: 1 },
       isReady: true,
     }));
-
-    const fields = []
 
     const jadwalRaw = [
       {
@@ -195,29 +188,24 @@ describe("Dynamic Form Submission", () => {
       }
     ]
 
-    const jadwal = jadwalRaw.reduce((r, a) => {
-      r[a.tenaga_medis.account.id] = r[a.tenaga_medis.account.id] || []
-      r[a.tenaga_medis.account.id].push(a)
-      return r
-    }, Object.create(null))
-
-    const namaKlinik = "Klinik Example"
+    await store.dispatch(setJadwalTenagaMedisList(jadwalRaw))
+    await store.dispatch(setSchemas(SAMPLE_SCHEMA))
 
     render(
       <Provider store={store}>
-        <RegistrationForm namaKlinik={namaKlinik} fields={fields} jadwal={jadwal} />
+        <RegistrationForm />
       </Provider>
     );
   });
 
   it('able to submit if filled properly', async () => {
-    const tenagaMedisSelection = screen.getAllByTestId("tenagamedis")[0]
-    const jadwalSelection = screen.getAllByTestId("jadwal")[0]
+    const nikField = screen.getByLabelText(/NIK/i)
+    const tenagaMedisField = screen.getByLabelText(/Pilih Tenaga Medis/i)
+    const jadwalSelection = screen.getByLabelText(/Pilih Jadwal/i)
 
     await act(async () => {
-      fireEvent.click(tenagaMedisSelection)
-      fireEvent.change(tenagaMedisSelection, { target: { value: 2 } })
-      fireEvent.click(jadwalSelection)
+      fireEvent.change(nikField, { target: { value: 2 } })
+      fireEvent.change(tenagaMedisField, { target: { value: 2 } })
       fireEvent.change(jadwalSelection, { target: { value: "mon 11:00:00" } })
     })
 
@@ -236,23 +224,19 @@ describe("Dynamic Form with no data", () => {
     nextRouter.useRouter = jest.fn();
     nextRouter.useRouter.mockImplementation(() => ({
       route: '/form/1/1/1',
+      query: { idCabang: 1 },
       isReady: true,
     }));
 
-    const fields = []
-    const jadwal = []
-    const namaKlinik = "Klinik Example"
-
     render(
       <Provider store={store}>
-        <RegistrationForm namaKlinik={namaKlinik} fields={fields} jadwal={jadwal} />
+        <RegistrationForm />
       </Provider>
     );
   })
 
-  it('has zero available doctor', () => {
-    const tenagaMedisSelection = screen.getAllByTestId("tenagamedis")[0]
-    expect(tenagaMedisSelection.childElementCount).toBe(1)
-    expect(tenagaMedisSelection).toBeInTheDocument()
+  it('has zero available doctor', async () => {
+    const tenagaMedisSelection = await screen.queryAllByTestId("tenagamedis")
+    expect(tenagaMedisSelection.length).toBe(0)
   })
 })
