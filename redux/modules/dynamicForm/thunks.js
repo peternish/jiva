@@ -17,7 +17,7 @@ const getSchemas = ({ idCabang }) => {
             }
             await dispatch(setSchemas(data));
         } catch (error) {
-            console.log(error);
+            toast(constants.BASE_ERROR_MESSAGE, { type: toast.TYPE.ERROR });
         }
     };
 };
@@ -32,7 +32,7 @@ const updateSchema = (payload) => {
             await dispatch(setSchemas(updatedSchemas))
             toast("Perubahan berhasil disimpan", { type: toast.TYPE.SUCCESS });
         } catch (error) {
-            console.log(error);
+            toast(constants.BASE_ERROR_MESSAGE, { type: toast.TYPE.ERROR });
         }
     };
 };
@@ -57,7 +57,7 @@ const deleteSchemaByID = ({ idSchema }) => {
         try {
             await jivaAPI.dynamicForm.deleteSchemaByID({ idSchema })
         } catch (error) {
-            console.log(error);
+            toast(constants.BASE_ERROR_MESSAGE, { type: toast.TYPE.ERROR });
         }
     };
 };
@@ -75,7 +75,7 @@ async function initSchemas(idCabang) {
         })
         return schemas
     } catch (error) {
-        console.log(error)
+        toast(constants.BASE_ERROR_MESSAGE, { type: toast.TYPE.ERROR });
     }
 }
 
