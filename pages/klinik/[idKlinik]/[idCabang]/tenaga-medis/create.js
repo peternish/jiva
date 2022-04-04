@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 
 // components
 import Button from '@mui/material/Button';
+import LoadingButton from "@mui/lab/LoadingButton"
 import Layout from '@components/Layout';
 import Stack from '@mui/material/Stack';
 import { Formik, Form } from "formik";
@@ -14,14 +15,17 @@ import { useDispatch } from "react-redux";
 import { createTenagaMedis as createTenagaMedisHelper } from "@redux/modules/tenagaMedis/thunks";
 import { useEffect } from 'react';
 
+
 function CreateTenagaMedis() {
   const dispatch = useDispatch();
   const [sipFile, setSipFile] = useState(null);
 
   const { query, isReady } = useRouter();
+
   useEffect(() => {
     if (!isReady) return;
   }, [isReady]);
+  
   const { idKlinik, idCabang } = query;
 
   const fields = {
@@ -49,11 +53,12 @@ function CreateTenagaMedis() {
               
               return errors;
             }}
-            onSubmit={(values) => {
-              dispatch(createTenagaMedisHelper({ idKlinik, idCabang, ...values, sipFile }));
+            onSubmit={(values, { setSubmitting }) => {
+              setSubmitting(true)
+              dispatch(createTenagaMedisHelper({ idKlinik, idCabang, ...values, sipFile }, setSubmitting));
             }}
           >
-            {({ isValid, errors }) => (
+            {({ isValid, errors, isSubmitting }) => (
               <Form>
                 <TextInput 
                   name="fullName"
@@ -83,7 +88,14 @@ function CreateTenagaMedis() {
 
                 <Stack spacing={2} direction="row">
                   <Button href={`/klinik/${idKlinik}/${idCabang}/tenaga-medis`} variant="outlined">Batal</Button>
-                  <Button variant="contained" type="submit" disabled={!isValid || !sipFile }>Tambah</Button>
+                  <LoadingButton 
+                    variant="contained" 
+                    type="submit" 
+                    disabled={!isValid || !sipFile }
+                    loading={isSubmitting}
+                  >
+                    Tambah
+                  </LoadingButton>
                 </Stack>
               </Form>
             )}

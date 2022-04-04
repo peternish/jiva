@@ -11,6 +11,7 @@ import Stack from '@mui/material/Stack';
 import { useDispatch } from "react-redux";
 import { deleteTenagaMedisByID } from "@redux/modules/tenagaMedis/thunks";
 
+
 const style = {
   position: 'absolute',
   top: '50%',
@@ -21,6 +22,7 @@ const style = {
   borderRadius: '5px',
   padding: '2em 3em',
 };
+
 
 function DeletionConfirmationModal({ idKlinik, idCabang, tenagaMedis, open, handleClose }) {
   const dispatch = useDispatch();
@@ -61,7 +63,7 @@ function DeletionConfirmationModal({ idKlinik, idCabang, tenagaMedis, open, hand
         </Fade>
       </Modal>
     </div>
-  );
+  )
 }
 
 export default DeletionConfirmationModal;

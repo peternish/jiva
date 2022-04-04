@@ -1,6 +1,7 @@
 // component imports
 import { Formik, Form } from "formik"
 import Button from "@mui/material/Button"
+import LoadingButton from "@mui/lab/LoadingButton"
 import TextInput from "components/common/TextInput"
 import Layout from "@components/Layout";
 import Box from '@mui/material/Box'
@@ -42,16 +43,17 @@ const Tambah = () => {
                   });
                   return errors;
                 }}
-                onSubmit={(values) => {
+                onSubmit={(values, { setSubmitting }) => {
+                  setSubmitting(true)
                   try {
                     console.log(values);
-                    dispatch(createPengaturanPengguna({ idKlinik, idCabang, ...values }))
+                    dispatch(createPengaturanPengguna({ idKlinik, idCabang, ...values }, setSubmitting))
                   } catch (err) {
                     console.log(err);
                   }
                 }}
               >
-                {({ isValid, errors }) => (
+                {({ isValid, errors, isSubmitting }) => (
                 <Form>
                   <TextInput
                     name="email"
@@ -76,7 +78,14 @@ const Tambah = () => {
                   />
                   <Stack spacing={2} direction="row">
                     <Button variant="outlined" href={`/klinik/${idKlinik}/${idCabang}/pengaturan-pengguna/`}>Batal</Button>
-                    <Button variant="contained" type="submit" disabled={!isValid}>Simpan</Button>
+                    <LoadingButton 
+                      variant="contained" 
+                      type="submit" 
+                      disabled={!isValid}
+                      loading={isSubmitting}
+                    >
+                      Simpan
+                    </LoadingButton>
                   </Stack>
                 </Form>
                 )}

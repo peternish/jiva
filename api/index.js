@@ -3,6 +3,7 @@ import klinik from "./endpoints/klinik";
 import cabang from "./endpoints/cabang";
 import pengaturanPengguna from "./endpoints/pengaturanPengguna";
 import tenagaMedis from "./endpoints/tenagaMedis";
+import jadwalTenagaMedis from "./endpoints/jadwalTenagaMedis";
 
 const api = {
   auth,
@@ -10,6 +11,7 @@ const api = {
   cabang,
   pengaturanPengguna,
   tenagaMedis,
+  jadwalTenagaMedis
 };
 
 export default api;

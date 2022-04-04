@@ -64,27 +64,4 @@ describe("Pengaturan Pengguna Tambah", () => {
 
     expect(await screen.getAllByText("Input ini wajib diisi")).toHaveLength(3);
   });
-
-  // it("submits when 'Simpan' is pressed", async () => {
-  //   const emailField = screen.getByLabelText("Email");
-  //   const passwordField = screen.getByLabelText("Password");
-  //   const fullNameField = screen.getByLabelText("Full Name");
-
-  //   const button = screen.getAllByRole('button', {
-  //     name: /Simpan/,
-  //   })[0]
-
-  //   await act(async () => {
-  //     await fireEvent.change(emailField, {target: {value: 'hesotam@maile.com'}});
-  //     await fireEvent.change(passwordField, {target: {value: 'password123'}});
-  //     await fireEvent.change(fullNameField, {target: {value: 'Admin'}});
-
-  //     await fireEvent.click(button);
-  //   });
-
-  //   expect(await screen.getByLabelText("Email")).toHaveValue('hesotam@maile.com');
-  //   expect(await screen.getByLabelText("Password")).toHaveValue('password123');
-  //   expect(await screen.getByLabelText("Full Name")).toHaveValue('Admin');
-  // });
-
 });
