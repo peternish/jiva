@@ -150,7 +150,7 @@ const Jadwal = (props) => {
       useEffect(() =>  {
         parseData(jadwalTenagaMedisList, -1, 0);
         parseTenagaMedis(tenagaMedisList);
-      }, [parseData, parseTenagaMedis, jadwalTenagaMedisList, tenagaMedisList])
+      }, [jadwalTenagaMedisList, tenagaMedisList])
 
     const [currentEvent, setCurrentEvent] = useState(undefined)
     
