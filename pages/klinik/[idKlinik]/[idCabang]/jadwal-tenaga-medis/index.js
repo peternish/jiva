@@ -56,16 +56,6 @@ const Jadwal = (props) => {
         locales,
       })
 
-      const dayDict = {
-        "mon": 1,
-        "tue": 2,
-        "wed": 3,
-        "thu": 4,
-        "fri": 5,
-        "sat": 6,
-        "sun": 7,
-      }
-
       let [myEvents, setEvents] = useState([{}]);
 
       const [tenagaMedisDict, setTenagaMedisDict] = useState({});
@@ -74,7 +64,7 @@ const Jadwal = (props) => {
 
       const [currentId, setCurrentId] = useState(0);
 
-      const parseTenagaMedis = (tenagaMedisList) => {
+      const parseTenagaMedis = useCallback((tenagaMedisList) => {
         if(tenagaMedisList) {
           tenagaMedisList.map((tenagaMedis) => {
             const id_tenaga_medis_list = tenagaMedis.account.id;
@@ -87,9 +77,9 @@ const Jadwal = (props) => {
             setTenagaMedisDict2(tenagaMedisDict2)
           })
         }
-      }
+      }, [tenagaMedisDict, tenagaMedisDict2])
 
-      const parseData = (jadwalTenagaMedisList, id_filter, force_filter) => {
+      const parseData = useCallback((jadwalTenagaMedisList, id_filter, force_filter) => {
         let tempId = 0;
         if(force_filter === 1) {
           tempId = 0
@@ -105,6 +95,16 @@ const Jadwal = (props) => {
             const quota = jadwalTenagaMedis.quota;
             const id_tenaga_medis = jadwalTenagaMedis.tenaga_medis.account.id;
             const id = jadwalTenagaMedis.id;
+
+            const dayDict = {
+              "mon": 1,
+              "tue": 2,
+              "wed": 3,
+              "thu": 4,
+              "fri": 5,
+              "sat": 6,
+              "sun": 7,
+            }
   
             const day_int = dayDict[day];
             const currentDate = new Date();
@@ -129,12 +129,12 @@ const Jadwal = (props) => {
             }
           })
         }
-      }
+      }, [currentId])
 
       useEffect(() =>  {
         parseData(jadwalTenagaMedisList, -1, 0);
         parseTenagaMedis(tenagaMedisList);
-      }, [jadwalTenagaMedisList, tenagaMedisList])
+      }, [jadwalTenagaMedisList, tenagaMedisList, parseData, parseTenagaMedis])
 
     const [currentEvent, setCurrentEvent] = useState(undefined)
 
