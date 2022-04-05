@@ -133,11 +133,6 @@ describe('JadwalTenagaMedis', () => {
               });
 
               expect(await screen.getAllByText('TM 3').length === 3)
-
-              const updateEventButton = screen.getAllByText('Simpan')[0];
-              await act(async () => {
-                await fireEvent.click(updateEventButton);
-              });
           });
 
           it('should deleteEvent', async () => {
