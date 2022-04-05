@@ -43,7 +43,7 @@ const Jadwal = (props) => {
     const { tenagaMedisList } = useSelector(state => state.tenagaMedis);
 
     useEffect(() =>  {
-      parseData(jadwalTenagaMedisList, -1);
+      parseData(jadwalTenagaMedisList, -1, 0);
       parseTenagaMedis(tenagaMedisList);
     }, [jadwalTenagaMedisList, tenagaMedisList])
 
@@ -81,7 +81,7 @@ const Jadwal = (props) => {
         7: "sun",
       }
 
-      const [myEvents, setEvents] = useState([{}]);
+      let [myEvents, setEvents] = useState([{}]);
 
       const [tenagaMedisDict, setTenagaMedisDict] = useState({});
 
@@ -104,9 +104,18 @@ const Jadwal = (props) => {
         }
       }
 
-      const parseData = (jadwalTenagaMedisList, id_filter) => {
-        if(jadwalTenagaMedisList) {
+      const parseData = (jadwalTenagaMedisList, id_filter, force_filter) => {
+        let tempId = 0;
+        if(force_filter === 1) {
+          tempId = 0
+          //console.log("")
+        } else {
+          tempId = currentId
+        }
+        //console.log(currentId)
+        if(jadwalTenagaMedisList && tempId === 0) {
           jadwalTenagaMedisList.map((jadwalTenagaMedis) => {
+            //console.log("Here")
             const title = jadwalTenagaMedis.tenaga_medis.account.full_name;
             const start_time = jadwalTenagaMedis.start_time;
             const end_time = jadwalTenagaMedis.end_time;
@@ -123,15 +132,14 @@ const Jadwal = (props) => {
             const start = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), 
               start_time.split(":")[0], start_time.split(":")[1], start_time.split(":")[2])
 
-            start.setHours(start.getHours() + Math.abs(currentDate.getTimezoneOffset())/60)
+            //start.setHours(start.getHours() + Math.abs(currentDate.getTimezoneOffset())/60)
   
             const end = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), 
               end_time.split(":")[0], end_time.split(":")[1], end_time.split(":")[2])
 
-            end.setHours(end.getHours() + Math.abs(currentDate.getTimezoneOffset())/60)
+            //end.setHours(end.getHours() + Math.abs(currentDate.getTimezoneOffset())/60)
 
-            currentId = id;
-            setCurrentId(currentId)
+            setCurrentId(id)
 
             if(id_filter > -1) {
               if(id_tenaga_medis === id_filter) {
@@ -153,19 +161,21 @@ const Jadwal = (props) => {
       myEvents = [{}]
       setEvents(myEvents)
 
-      parseData(jadwalTenagaMedisList, id)
+      parseData(jadwalTenagaMedisList, id, 1)
     }
 
     const updateAllMyEvents = () => {
-      myEvents = [{}]
+      myEvents = []
       setEvents(myEvents)
 
-      parseData(jadwalTenagaMedisList, -1)
+      parseData(jadwalTenagaMedisList, -1, 1)
     }
 
     const selectEvent = useCallback(
       (event) => {setCurrentEvent(event)
-      console.log(event.start.toISOString().split("T")[1].substr(0, 5), event, "fullEvent")},
+       ,console.log(event, "event")
+      },
+      //console.log(event.start.toISOString().split("T")[1].substr(0, 5), event, "fullEvent")},
       [],
     )
 
@@ -183,7 +193,7 @@ const Jadwal = (props) => {
 
       batalEvent()
 
-      parseData(jadwalTenagaMedisList, -1)
+      location.assign(location.pathname)
     }
 
     const batalEvent = () => {
@@ -195,42 +205,33 @@ const Jadwal = (props) => {
 
       for(let i = 0; i < myEvents.length; i++) {
         if(myEvents[i].id === id) {
-          myEvents[i].start = new Date(values.jadwal_hari + " " + values.start)
-          myEvents[i].end = new Date(values.jadwal_hari + " " + values.end)
-          myEvents[i].title = values.jadwal_title
-          myEvents[i].quota = values.quota
+          console.log(values, "values")
+          console.log(currentEvent, "currentEvent")
+          const startTime = getISOtime(values.start)
+          const endTime = getISOtime(values.end)
+          const day = values.jadwal_hari
+          const title = values.jadwal_title
+          const quota = values.quota
+          const idJadwal = id
+
+          console.log(day, "day")
+
+          const startDate = getISODate(values.start) 
+          const endDate = getISODate(values.end) 
+
+          myEvents[i].start = startDate
+          myEvents[i].end = endDate
+          myEvents[i].title = title
+          myEvents[i].quota = quota
           setEvents(myEvents)
 
-          const start = new Date(values.jadwal_hari + " " + values.start)
-          const startdb = new Date(values.jadwal_hari + " " + values.start)
-          const enddb = new Date(values.jadwal_hari + " " + values.end)
-          startdb.setHours(startdb.getHours() - Math.abs(new Date().getTimezoneOffset())/60)
+          console.log(myEvents[i])
 
-          const startTime = startdb.toISOString().split("T")[1].substr(0,8)
-          const temp = startTime.split(":")
-          startTime = String(parseInt(temp[0]) + Math.abs(new Date().getTimezoneOffset())/60 + ":" + temp[1] + ":" + temp[2])
-
-          enddb.setHours(enddb.getHours() - Math.abs(new Date().getTimezoneOffset())/60)
-
-          const endTime = enddb.toISOString().split("T")[1].substr(0,8)
-          const temp2 = endTime.split(":")
-          endTime = String(parseInt(temp2[0]) + Math.abs(new Date().getTimezoneOffset())/60 + ":" + temp2[1] + ":" + temp2[2])
-
-          const temp_date = values.jadwal_hari
-          temp_date = new Date(temp_date)
-          temp_date = temp_date.getDay()
-          if(startdb.getDate() < start.getDate()) {
-            temp_date = temp_date - 1;
-          }
-          const day = dayDict2[temp_date]
-
-          const idJadwal = id;
-          const quota = myEvents[i].quota;
           dispatch(updateJadwalTenagaMedis({ idJadwal, startTime, endTime, quota, day }))
 
           batalEvent()
 
-          parseData(jadwalTenagaMedisList, -1)
+          location.assign(location.pathname)
         }
       }
     }
@@ -292,11 +293,11 @@ const Jadwal = (props) => {
             />
           </Jadwal_Tenaga_Medis>
           <Form_Calender>
-            <Formik enableReinitialize
+            <Formik enableReinitialize="true"
             initialValues={
               {start: currentEvent ? currentEvent.start?.toISOString().split("T")[1].substr(0, 5) : undefined, 
-              end: currentEvent ? currentEvent.end?.toISOString().split("T")[1].substr(0, 5) : undefined, 
-              jadwal_hari: currentEvent ? currentEvent.start?.toISOString().split('T')[0] : undefined, 
+              end: currentEvent ? currentEvent.end?.toISOString().split("T")[1].substr(0, 5) : undefined,
+              jadwal_hari: "mon",
               jadwal_title: currentEvent ?  currentEvent.title : undefined,
               quota: currentEvent ? currentEvent.quota : undefined}}
             onSubmit = {async (values) => {
@@ -315,6 +316,7 @@ const Jadwal = (props) => {
                 if(title) {
                   setEvents((prev) => [...prev, { id, startDate, endDate, title, quota, idTenagaMedis }])
                   dispatch(createJadwalTenagaMedis({ idTenagaMedis, startTime, endTime, quota, day }))
+                  location.assign(location.pathname)
                 }
             }}
             >{({values}) => 
@@ -325,13 +327,15 @@ const Jadwal = (props) => {
                   name="jadwal_title" 
                   placeholder="Tenaga Medis" 
                   as="select"
+                  data-testid="selectTenaga"                  
                 >
-                  {Object.keys(tenagaMedisDict2).map(key => <option key={key} value={tenagaMedisDict[key]}>{key}</option>)}
+                  {Object.keys(tenagaMedisDict2).map(key => <option key={key} value={tenagaMedisDict[key] } data-testid="select-option">{key}</option>)}
                 </TextInput>
                 <TextInput
                   as="select"
                   label="Pilih Hari"
                   id="jadwal_hari" name="jadwal_hari" type="select"
+                  data-testid="jadwal-hari-select"
                 >
                   <option value="mon">Senin</option>
                   <option value="tue">Selasa</option>
@@ -345,8 +349,8 @@ const Jadwal = (props) => {
                 <div id="time-range">
                   <label>Pilih Rentang Waktu</label>
                   <div id="inputs">
-                    <Field id="Start" name="start" type="time"></Field>
-                    <Field id="End" name="end" type="time"></Field>
+                    <Field id="Start" name="start" type="time" data-testid="start"></Field>
+                    <Field id="End" name="end" type="time" data-testid="end"></Field>
                   </div>
                 </div>
                 <TextInput
@@ -354,12 +358,14 @@ const Jadwal = (props) => {
                   id="quota" 
                   name="quota" 
                   type="number"
+                  data-testid="quota"
                 />
                 {currentEvent === undefined ? 
                 <LoadingButton 
                 variant="contained"
                 type="submit"
                 id="input_button"
+                data-testid="create"
                 >
                   Simpan
                 </LoadingButton> 
@@ -369,6 +375,7 @@ const Jadwal = (props) => {
                   variant="contained"
                   type="button"
                   id="input_button"
+                  data-testid="update"
                   onClick={() => updateEvent(values)}
                 >
                   Simpan
@@ -377,6 +384,7 @@ const Jadwal = (props) => {
                 <LoadingButton
                   variant="outlined"
                   id="input_button"
+                  data-testid="batal"
                   onClick={batalEvent}
                 >
                   Batal
@@ -388,6 +396,7 @@ const Jadwal = (props) => {
                   variant="contained"
                   id="hapus"
                   type="button" 
+                  data-testid="delete"
                   onClick={deleteEvent}
                   style={{ background: "#F44336" }}
                 >
