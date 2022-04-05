@@ -12,7 +12,6 @@ export const getPengaturanPenggunaByID = ({ idPengaturanPengguna }) => {
         { idPengaturanPengguna });
       await dispatch(setPengaturanPengguna(data));
     } catch (error) {
-      console.log(error)
       toast("Terjadi kesalahan 😥", { type: toast.TYPE.ERROR });
     }
   };
@@ -35,7 +34,6 @@ export const deletePengaturanPengguna = ({ idPengaturanPengguna }) => {
       await jivaAPI.pengaturanPengguna.deletePengaturanPengguna(
         { idPengaturanPengguna });
     } catch (error) {
-      console.log(error)
       toast("Terjadi kesalahan 😥", { type: toast.TYPE.ERROR });
     }
   };
@@ -54,7 +52,6 @@ export const createPengaturanPengguna = ({
       window.location.assign(`/klinik/${idKlinik}/${idCabang}/pengaturan-pengguna`);
     } catch (error) {
       setSubmitting(false) 
-      console.log(error);
       if (error.response.data != null){
         toast(error.response.data.email.toString(), { type: toast.TYPE.ERROR });
       } else if (error?.response?.status === 400 && error?.response?.data) {

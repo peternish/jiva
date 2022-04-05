@@ -45,12 +45,7 @@ const Tambah = () => {
                 }}
                 onSubmit={(values, { setSubmitting }) => {
                   setSubmitting(true)
-                  try {
-                    console.log(values);
-                    dispatch(createPengaturanPengguna({ idKlinik, idCabang, ...values }, setSubmitting))
-                  } catch (err) {
-                    console.log(err);
-                  }
+                  dispatch(createPengaturanPengguna({ idKlinik, idCabang, ...values }, setSubmitting))
                 }}
               >
                 {({ isValid, errors, isSubmitting }) => (

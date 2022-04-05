@@ -29,7 +29,7 @@ export default function Sidebar() {
 
     const navItems = [
         {divider : 'Pasien'},
-        {title : 'Pengaturan Formulir Pendaftaran', icon: <AppRegistrationIcon/>, link: '#'},
+        {title : 'Pengaturan Formulir Pendaftaran', icon: <AppRegistrationIcon/>, link: `/klinik/${idKlinik}/${idCabang}/pengaturan-formulir-pendaftaran`},
         {title : 'List Pendaftaran', icon: <FormatListBulletedIcon/>, link: '#'},
 
         {divider : 'Klinik'},
