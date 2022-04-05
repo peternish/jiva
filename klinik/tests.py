@@ -125,6 +125,27 @@ class KlinikTestSetUp(APITestCase):
             pas = LamaranPasien(nik=f"420691337{_}", fields=[{"nama": f"Abdullah{_}"}])
             pas.save()
 
+class KlinikModelTest(KlinikTestSetUp):
+    def setUp(self):
+        super().setUp()
+        self.cabang = self.klinik.cabang_set.first()
+    
+    def test_profile_str(self):
+        self.assertEquals(f"{self.owner.account.email}'s Profile", str(self.owner))
+    
+    def test_klinik_str(self):
+        self.assertEquals(self.klinik.name, str(self.klinik))
+    
+    def test_cabang_str(self):
+        self.assertEquals(self.cabang .location, str(self.cabang ))
+
+    def test_lamaran_pasien_str(self):
+        lamaran = LamaranPasien(nik="1234")
+        self.assertEquals(lamaran.nik, str(lamaran))
+
+    def test_dynamicform_str(self):
+        dynamicform = DynamicForm(cabang=self.cabang, formtype="example")
+        self.assertEquals(f"{self.cabang.klinik}:{self.cabang}:example", str(dynamicform))
 
 class KlinikAPITest(KlinikTestSetUp):
     def test_get_klinik(self):
@@ -356,6 +377,9 @@ class FormAPITest(APITestCase):
                 formtype=f"example{i}",
             )
             self.dform.save()
+        
+        for formtype in DynamicForm.formtypes:
+            DynamicForm.objects.get(formtype=formtype).delete()
 
         url = reverse("account:login")
         resp = self.client.post(
