@@ -42,11 +42,6 @@ const Jadwal = (props) => {
   
     const { tenagaMedisList } = useSelector(state => state.tenagaMedis);
 
-    useEffect(() =>  {
-      parseData(jadwalTenagaMedisList, -1, 0);
-      parseTenagaMedis(tenagaMedisList);
-    }, [jadwalTenagaMedisList, tenagaMedisList])
-
     const locales = {
         'en-US': enUS,
       }
@@ -152,6 +147,11 @@ const Jadwal = (props) => {
         }
       }
 
+      useEffect(() =>  {
+        parseData(jadwalTenagaMedisList, -1, 0);
+        parseTenagaMedis(tenagaMedisList);
+      }, [parseData, parseTenagaMedis, jadwalTenagaMedisList, tenagaMedisList])
+
     const [currentEvent, setCurrentEvent] = useState(undefined)
     
     const currentDate = new Date()
@@ -205,16 +205,12 @@ const Jadwal = (props) => {
 
       for(let i = 0; i < myEvents.length; i++) {
         if(myEvents[i].id === id) {
-          console.log(values, "values")
-          console.log(currentEvent, "currentEvent")
           const startTime = getISOtime(values.start)
           const endTime = getISOtime(values.end)
           const day = values.jadwal_hari
           const title = values.jadwal_title
           const quota = values.quota
           const idJadwal = id
-
-          console.log(day, "day")
 
           const startDate = getISODate(values.start) 
           const endDate = getISODate(values.end) 
@@ -224,8 +220,6 @@ const Jadwal = (props) => {
           myEvents[i].title = title
           myEvents[i].quota = quota
           setEvents(myEvents)
-
-          console.log(myEvents[i])
 
           dispatch(updateJadwalTenagaMedis({ idJadwal, startTime, endTime, quota, day }))
 
@@ -293,7 +287,7 @@ const Jadwal = (props) => {
             />
           </Jadwal_Tenaga_Medis>
           <Form_Calender>
-            <Formik enableReinitialize="true"
+            <Formik enableReinitialize
             initialValues={
               {start: currentEvent ? currentEvent.start?.toISOString().split("T")[1].substr(0, 5) : undefined, 
               end: currentEvent ? currentEvent.end?.toISOString().split("T")[1].substr(0, 5) : undefined,

@@ -128,16 +128,16 @@ describe('JadwalTenagaMedis', () => {
 
           it('should updateEvents', async () => {
               const event = screen.getAllByText('TM 3')[1];
-              act(async () => {
+              await act(async () => {
                 await fireEvent.click(event);
               });
 
               expect(await screen.getAllByText('TM 3').length === 3)
 
-            //   const updateEventButton = screen.getAllByText('Simpan')[0];
-            //   act(async () => {
-            //     await fireEvent.click(updateEventButton);
-            //   });
+              const updateEventButton = screen.getAllByText('Simpan')[0];
+              await act(async () => {
+                await fireEvent.click(updateEventButton);
+              });
           });
 
           it('should deleteEvent', async () => {
