@@ -66,16 +66,6 @@ const Jadwal = (props) => {
         "sun": 7,
       }
 
-      const dayDict2 = {
-        1: "mon",
-        2: "tue",
-        3: "wed",
-        4: "thu",
-        5: "fri",
-        6: "sat",
-        7: "sun",
-      }
-
       let [myEvents, setEvents] = useState([{}]);
 
       const [tenagaMedisDict, setTenagaMedisDict] = useState({});
@@ -103,14 +93,11 @@ const Jadwal = (props) => {
         let tempId = 0;
         if(force_filter === 1) {
           tempId = 0
-          //console.log("")
         } else {
           tempId = currentId
         }
-        //console.log(currentId)
         if(jadwalTenagaMedisList && tempId === 0) {
           jadwalTenagaMedisList.map((jadwalTenagaMedis) => {
-            //console.log("Here")
             const title = jadwalTenagaMedis.tenaga_medis.account.full_name;
             const start_time = jadwalTenagaMedis.start_time;
             const end_time = jadwalTenagaMedis.end_time;
@@ -127,12 +114,9 @@ const Jadwal = (props) => {
             const start = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), 
               start_time.split(":")[0], start_time.split(":")[1], start_time.split(":")[2])
 
-            //start.setHours(start.getHours() + Math.abs(currentDate.getTimezoneOffset())/60)
   
             const end = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), 
               end_time.split(":")[0], end_time.split(":")[1], end_time.split(":")[2])
-
-            //end.setHours(end.getHours() + Math.abs(currentDate.getTimezoneOffset())/60)
 
             setCurrentId(id)
 
@@ -153,8 +137,6 @@ const Jadwal = (props) => {
       }, [jadwalTenagaMedisList, tenagaMedisList])
 
     const [currentEvent, setCurrentEvent] = useState(undefined)
-    
-    const currentDate = new Date()
 
     const updateMyEvents = (value) => {
       const id = tenagaMedisDict2[value]
@@ -172,10 +154,9 @@ const Jadwal = (props) => {
     }
 
     const selectEvent = useCallback(
-      (event) => {setCurrentEvent(event)
-       ,console.log(event, "event")
+      (event) => {
+        setCurrentEvent(event)
       },
-      //console.log(event.start.toISOString().split("T")[1].substr(0, 5), event, "fullEvent")},
       [],
     )
 

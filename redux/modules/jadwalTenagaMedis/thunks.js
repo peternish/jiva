@@ -41,7 +41,6 @@ const deleteJadwalTenagaMedis = ({ idJadwal, idCabang }) => {
             await jivaAPI.jadwalTenagaMedis.deleteJadwalTenagaMedis({ idJadwal });
             dispatch(getJadwalTenagaMedisList({ idCabang }))
         } catch(error) {
-            console.log(error)
             toast(constants.BASE_ERROR_MESSAGE, { type: toast.TYPE.ERROR });
         }
     }
@@ -52,7 +51,6 @@ const updateJadwalTenagaMedis = ({ idJadwal, startTime, endTime, quota, day }) =
         try {
             await jivaAPI.jadwalTenagaMedis.updateJadwalTenagaMedis({ idJadwal, startTime, endTime, quota, day });
         } catch(error) {
-            console.log(error);
             toast(constants.BASE_ERROR_MESSAGE, { type: toast.TYPE.ERROR });
         }
     }
