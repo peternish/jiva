@@ -37,7 +37,7 @@ export default function Sidebar() {
         {title : 'Pengaturan Staf', icon: <GroupIcon/>, link: `/klinik/${idKlinik}/${idCabang}/pengaturan-pengguna`},
         
         {divider : 'Tenaga Medis'},
-        {title : 'Pengaturan Jadwal Praktik', icon: <TodayIcon/>, link: '#'},
+        {title : 'Pengaturan Jadwal Praktik', icon: <TodayIcon/>, link: `/klinik/${idKlinik}/${idCabang}/jadwal-tenaga-medis`},
         {title : 'Pengaturan Tenaga Medis', icon: <GroupIcon/>, link: `/klinik/${idKlinik}/${idCabang}/tenaga-medis`},
         
         {divider : 'Rekaman Medis'},

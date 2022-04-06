@@ -10,6 +10,7 @@ const CSS = styled.div`
   display: flex;
   flex-direction: column;
   margin-bottom: 1em;
+  width: 100%;
 
   label {
     font-weight: bold;
@@ -18,11 +19,18 @@ const CSS = styled.div`
 
   input, select {
     padding: 1em 0.75em;
-    width: 40em;
     box-shadow: ${(props) =>
       props.isError ? `0px 0px 2px ${constants.COLORS.ERROR}` : "none"};
     border: 1px solid
-      ${(props) => (props.isError ? constants.COLORS.ERROR : "grey")};
+      ${(props) => (props.isError ? constants.COLORS.ERROR : "rgba(0, 0, 0, 0.23)")};
+    
+    background: #FFFFFF;
+    box-sizing: border-box;
+    border-radius: 4px;
+
+    &, * {
+      font-family: "Roboto";
+    }
   }
 
   .error-message {
