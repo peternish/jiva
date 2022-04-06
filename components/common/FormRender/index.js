@@ -130,8 +130,8 @@ const FormRender = ({ schema, submit, isSubmitting, isValid = true }) => {
     });
 
     $("form").on("change", () => {
-      const { isError } = validateFormCallback()
-      setIsError(isError)
+      const { isError: isErrorTemp } = validateFormCallback()
+      setIsError(isErrorTemp)
     })
   }, [schema, validateFormCallback]);
 
