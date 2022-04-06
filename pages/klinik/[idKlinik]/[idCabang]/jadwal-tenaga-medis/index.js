@@ -64,7 +64,7 @@ const Jadwal = (props) => {
 
       const [currentId, setCurrentId] = useState(0);
 
-      const parseTenagaMedis = useCallback((tenagaMedisList) => {
+      const parseTenagaMedis = useCallback(() => {
         if(tenagaMedisList) {
           tenagaMedisList.map((tenagaMedis) => {
             const id_tenaga_medis_list = tenagaMedis.account.id;
@@ -77,9 +77,9 @@ const Jadwal = (props) => {
             setTenagaMedisDict2(tenagaMedisDict2)
           })
         }
-      }, [tenagaMedisDict, tenagaMedisDict2])
+      }, [tenagaMedisDict, tenagaMedisDict2, tenagaMedisList])
 
-      const parseData = useCallback((jadwalTenagaMedisList, id_filter, force_filter) => {
+      const parseData = useCallback((id_filter, force_filter) => {
         let tempId = 0;
         if(force_filter === 1) {
           tempId = 0
@@ -129,7 +129,7 @@ const Jadwal = (props) => {
             }
           })
         }
-      }, [currentId])
+      }, [currentId, jadwalTenagaMedisList])
 
       useEffect(() =>  {
         parseData(jadwalTenagaMedisList, -1, 0);
@@ -143,14 +143,14 @@ const Jadwal = (props) => {
       myEvents = [{}]
       setEvents(myEvents)
 
-      parseData(jadwalTenagaMedisList, id, 1)
+      parseData(id, 1)
     }
 
     const updateAllMyEvents = () => {
       myEvents = []
       setEvents(myEvents)
 
-      parseData(jadwalTenagaMedisList, -1, 1)
+      parseData(-1, 1)
     }
 
     const selectEvent = useCallback(

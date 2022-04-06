@@ -6,7 +6,7 @@ import Jadwal from '@pages/klinik/[idKlinik]/[idCabang]/jadwal-tenaga-medis';
 
 import { Provider } from "react-redux";
 import { store } from "@redux/store";
-import { setJadwalTenagaMedis, setJadwalTenagaMedisList } from '@redux/modules/jadwalTenagaMedis';
+import { setJadwalTenagaMedisList } from '@redux/modules/jadwalTenagaMedis';
 import { setTenagaMedisList } from '@redux/modules/tenagaMedis';
 
 describe('JadwalTenagaMedis', () => {
