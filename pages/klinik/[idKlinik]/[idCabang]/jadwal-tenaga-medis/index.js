@@ -296,6 +296,7 @@ const Jadwal = (props) => {
             }}
             >{({values}) => 
               <Form>
+                {currentEvent === undefined ? <h2>Tambah Jadwal</h2> : <h2>Ubah Jadwal</h2>}
                 <TextInput
                   label="Pilih Tenaga Medis"
                   id="jadwal_title" 
@@ -319,7 +320,6 @@ const Jadwal = (props) => {
                   <option value="fri">Jumat</option>
                   <option value="sat">Sabtu</option>
                   <option value="sun">Minggu</option>
-                  
                 </TextInput>
                 <div id="time-range">
                   <label>Pilih Rentang Waktu</label>
@@ -365,8 +365,6 @@ const Jadwal = (props) => {
                   Batal
                 </LoadingButton>
                   </div>
-                
-
                 <LoadingButton
                   variant="contained"
                   id="hapus"
@@ -384,7 +382,6 @@ const Jadwal = (props) => {
           </Calender_Container>
   </Layout>
     ): null
-  
 } 
 
 export default Jadwal;
