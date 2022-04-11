@@ -8,6 +8,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { getSchemas, updateSchema } from "@redux/modules/dynamicForm/thunks";
 import { findSchema } from "@redux/modules/dynamicForm/selectors";
 import constants from "@utils/constants";
+import TextInput from "@components/common/TextInput"
+import { Formik, Form } from "formik"
+import Divider from '@mui/material/Divider';
+import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
+import InfoIcon from '@mui/icons-material/Info';
 
 const PengaturanFormulirPendaftaran = () => {
   const { query, isReady } = useRouter();
@@ -26,7 +31,32 @@ const PengaturanFormulirPendaftaran = () => {
   }
 
   return isReady && query && schema ? (
-    <Layout navType="sidebar" title='Pengaturan Formulir Pendaftaran'>
+    <Layout 
+      navType="sidebar" 
+      title='Pengaturan Formulir Pendaftaran' 
+      TitleComponent={() => (
+        <Tooltip title="Pada halaman ini Anda dapat mengatur jenis input yang akan ditampilkan pada formulir pendaftaran pasien.">
+          <InfoIcon color="info"/>
+        </Tooltip>
+      )}>
+      <h4>Input Wajib</h4>
+      <small>Input ini bersifat wajib dan akan selalu tampil pada formulir pendaftaran pasien</small>
+      <Formik>
+        {() => <Form style={{ marginTop: "1em" }}>
+          <TextInput label="NIK" placeholder="NIK" disabled={true}/>
+          <TextInput label="Pilih Tenaga Medis" as="select" disabled={true}>
+            <option value="">Pilih Tenaga Medis</option>
+          </TextInput>
+          <TextInput label="Pilih Jadwal" as="select" disabled={true}>
+            <option value="">Pilih Jadwal</option>
+          </TextInput>
+        </Form>}
+      </Formik>
+      <Divider sx={{ margin: "1em 0" }}/>
+      <h4>Input Tambahan</h4>
+      <small style={{ marginBottom: "1em" }}>
+        Anda dapat menambahkan input baru pada bagian di bawah ini sesuai yang diperlukan
+      </small>
       <FormBuilder schema={schema} onSave={saveSchema}>
         <URLPreview URL={`${process.env.NEXT_PUBLIC_HOST}/form/${query.idKlinik}/${query.idCabang}/${schema.id}`}/>
       </FormBuilder>
