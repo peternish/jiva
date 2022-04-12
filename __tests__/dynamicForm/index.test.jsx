@@ -155,6 +155,7 @@ describe("Dynamic Form Submission", () => {
   });
 
   it('able to submit if filled properly', async () => {
+    jest.setTimeout(10000)
     const nikField = screen.getByLabelText("NIK")
     const tenagaMedisField = screen.getByLabelText("Pilih Tenaga Medis")
     const jadwalSelection = screen.getByLabelText("Pilih Jadwal")
