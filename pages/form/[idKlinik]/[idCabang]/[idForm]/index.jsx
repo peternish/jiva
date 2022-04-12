@@ -105,10 +105,11 @@ const RegistrationForm = () => {
   return schema && jadwalTenagaMedisList ? (
     <CSS>
       <Card id="card">
-        <h1 id="title">
-          Pendaftaran
-          {' '}
+        <h4>
           {schema.klinik.name}
+        </h4>
+        <h1 id="title">
+          Formulir Pendaftaran Pertemuan Dokter
         </h1>
 
         {submitted
