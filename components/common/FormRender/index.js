@@ -114,7 +114,7 @@ const FormRender = ({ schema, submit, isSubmitting, isValid = true }) => {
     $("[data-custom-required='true']").each(function () {
       if (!values[$(this).attr("name")]) {
         $(this).attr("data-custom-error", "true")
-        $(this).after(`<small class="error-message">${$(this).attr("name")} is required</small>`);
+        $(this).after(`<small class="error-message">${$(this).attr("name")} wajib diisi</small>`);
         isErrorTemp = true
       }
     });
