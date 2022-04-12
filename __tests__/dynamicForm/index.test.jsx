@@ -177,6 +177,7 @@ describe("Dynamic Form Submission", () => {
     await act(async () => {
       await fireEvent.click(buttonsubmit)
     })
+    jest.setTimeout(5000)
   });
 });
 
