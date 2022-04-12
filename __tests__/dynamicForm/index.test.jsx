@@ -146,30 +146,35 @@ describe("Dynamic Form Submission", () => {
     await store.dispatch(setJadwalTenagaMedisList(SAMPLE_JADWAL))
     await store.dispatch(setSchemas(SAMPLE_SCHEMA))
 
-    render(
+    const { debug } = render(
       <Provider store={store}>
         <RegistrationForm />
       </Provider>
     );
+    debug()
   });
 
   it('able to submit if filled properly', async () => {
     const nikField = screen.getByLabelText("NIK")
     const tenagaMedisField = screen.getByLabelText("Pilih Tenaga Medis")
     const jadwalSelection = screen.getByLabelText("Pilih Jadwal")
+    const firstField = screen.getByLabelText("Field 1*");
 
     await act(async () => {
-      fireEvent.change(nikField, { target: { value: 2 } })
-      fireEvent.change(tenagaMedisField, { target: { value: 2 } })
-      fireEvent.change(jadwalSelection, { target: { value: "mon 11:00:00" } })
+      await fireEvent.change(nikField, { target: { value: "2" } })
+      await fireEvent.change(tenagaMedisField, { target: { value: "2" } })
+      await fireEvent.change(jadwalSelection, { target: { value: "2" } })
+      await fireEvent.change(firstField, { target: { value: "text" } })
     })
 
     const buttonsubmit = screen.getAllByRole('button', {
       name: "Simpan",
     })[0]
 
+    expect(buttonsubmit).not.toHaveAttribute("disabled")
+
     await act(async () => {
-      fireEvent.click(buttonsubmit)
+      await fireEvent.click(buttonsubmit)
     })
   });
 });

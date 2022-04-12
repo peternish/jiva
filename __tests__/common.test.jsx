@@ -249,7 +249,7 @@ describe("<FormRender/>", () => {
     });
     // expect the required warning is shown
     expect(
-      screen.getByText("text-1648102772033-0 is required")
+      screen.getByText("text-1648102772033-0 wajib diisi")
     ).toBeInTheDocument();
   });
 
