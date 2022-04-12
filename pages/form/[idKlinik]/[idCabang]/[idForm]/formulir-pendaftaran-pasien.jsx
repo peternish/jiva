@@ -34,6 +34,7 @@ const CSS = styled.div`
 
   #title {
     font-size: 1.875em;
+    text-align: center;
   }
 
   #card {
@@ -80,7 +81,7 @@ const CSS = styled.div`
   }
 `;
 
-const RegistrationForm = () => {
+const RegistrationForm = ({ isPreview, previewSchema }) => {
   const [submitted, setSubmitted] = useState(false)
   const { query, isReady } = useRouter();
   const dispatch = useDispatch()
@@ -88,11 +89,12 @@ const RegistrationForm = () => {
   useEffect(() => {
     if (!isReady) return;
     const { idCabang } = query;
-    dispatch(getSchemas({ idCabang }));
+    if (!isPreview) dispatch(getSchemas({ idCabang }));
     dispatch(getJadwalTenagaMedisList({ idCabang }))
-  }, [isReady, query, dispatch]);
+  }, [isReady, query, dispatch, isPreview]);
 
-  const schema = useSelector(state => findSchema(state, constants.FORM_TYPES.PATIENT_APPLICATION))
+  let schema = useSelector(state => findSchema(state, constants.FORM_TYPES.PATIENT_APPLICATION))
+  if (isPreview) schema = previewSchema
   const { jadwalTenagaMedisList } = useSelector(state => state.jadwalTenagaMedis)
 
   const mandatoryFields = {
@@ -179,10 +181,12 @@ const RegistrationForm = () => {
                     schema={schema.fields}
                     submit={async (e) => {
                       setFieldValue("fields", e);
-                      await submitForm()
+                      if (!isPreview) {
+                        await submitForm()
+                      }
                     }}
                     isSubmitting={isSubmitting}
-                    isValid={isValid}
+                    isValid={!isPreview ? isValid : true}
                   />
                 </>
               )}
@@ -191,7 +195,7 @@ const RegistrationForm = () => {
         }
       </Card>
     </CSS>
-  ) : null
+  ) : "Loading Form..."
 };
 
 export default RegistrationForm;

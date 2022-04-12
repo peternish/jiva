@@ -4,7 +4,7 @@ import Box from "@mui/material/Box";
 import FormRender from "@components/common/FormRender";
 import CloseIcon from '@mui/icons-material/Close';
 
-export default function PreviewModal({ schema, open, onClose }) {
+export default function PreviewModal({ schema, open, onClose, children }) {
 
   const modalStyle = {
     position: 'absolute',
@@ -30,7 +30,7 @@ export default function PreviewModal({ schema, open, onClose }) {
     <Modal open={open} onClose={onClose} data-testid="PreviewModal">
       <Box sx={modalStyle}>
         <CloseIcon onClick={onClose} cursor="pointer" sx={iconStyle}/>
-        <FormRender schema={schema} submit={() => {}}></FormRender>
+        {children}
       </Box>
     </Modal>
   )

@@ -13,6 +13,7 @@ import { Formik, Form } from "formik"
 import Divider from '@mui/material/Divider';
 import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 import InfoIcon from '@mui/icons-material/Info';
+import FormulirPendaftaranPasien from "@pages/form/[idKlinik]/[idCabang]/[idForm]/formulir-pendaftaran-pasien"
 
 const PengaturanFormulirPendaftaran = () => {
   const { query, isReady } = useRouter();
@@ -57,8 +58,8 @@ const PengaturanFormulirPendaftaran = () => {
       <small style={{ marginBottom: "1em" }}>
         Anda dapat menambahkan input baru pada bagian di bawah ini sesuai yang diperlukan
       </small>
-      <FormBuilder schema={schema} onSave={saveSchema}>
-        <URLPreview URL={`${process.env.NEXT_PUBLIC_HOST}/form/${query.idKlinik}/${query.idCabang}/${schema.id}`}/>
+      <FormBuilder schema={schema} onSave={saveSchema} PreviewComponent={() => <FormulirPendaftaranPasien isPreview previewSchema={schema}/>}>
+        <URLPreview URL={`${process.env.NEXT_PUBLIC_HOST}/form/${query.idKlinik}/${query.idCabang}/${schema.id}/formulir-pendaftaran-pasien`}/>
       </FormBuilder>
     </Layout>
   ) : null
