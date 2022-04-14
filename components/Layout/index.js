@@ -20,7 +20,7 @@ const LayoutStyle = styled.div`
   overflow-x: hidden;
 `;
 
-const Layout = ({ children, navType = "sidebar", title }) => {
+const Layout = ({ children, navType = "sidebar", title, TitleComponent }) => {
   const classStyle =
     navType === "sidebar" ? styles.sidebarContainer : styles.topbarContainer;
   return (
@@ -32,7 +32,7 @@ const Layout = ({ children, navType = "sidebar", title }) => {
           sidebar: (
             <>
               <Sidebar />
-              <PageHeader>{title || "Title"}</PageHeader>
+              <PageHeader>{title || "Title"} {TitleComponent ? <TitleComponent/> : null}</PageHeader>
             </>
           ),
           topbar: (
