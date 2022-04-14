@@ -51,6 +51,9 @@ class RekamMedisAPITest(APITestCase):
         self.token = resp.data["access"]
         self.auth = "Bearer " + self.token
 
+        self.uri = "ehr:rekam-medis"
+        self.uri_detil = "ehr:detil-rekam-medis"
+
         return super().setUp()
 
     def test_get_all_rekaman_medis_from_nik(self):
