@@ -79,6 +79,8 @@ const mockRouter = () => {
   }));
 }
 
+jest.setTimeout(10000)
+
 describe("Dynamic Form", () => {
   beforeEach(async () => {
     mockRouter()
@@ -155,7 +157,6 @@ describe("Dynamic Form Submission", () => {
   });
 
   it('able to submit if filled properly', async () => {
-    jest.setTimeout(10000)
     const nikField = screen.getByLabelText("NIK")
     const tenagaMedisField = screen.getByLabelText("Pilih Tenaga Medis")
     const jadwalSelection = screen.getByLabelText("Pilih Jadwal")
@@ -177,7 +178,6 @@ describe("Dynamic Form Submission", () => {
     await act(async () => {
       await fireEvent.click(buttonsubmit)
     })
-    jest.setTimeout(5000)
   });
 });
 
