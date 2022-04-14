@@ -81,7 +81,7 @@ const CSS = styled.div`
   }
 `;
 
-const RegistrationForm = ({ isPreview, previewSchema }) => {
+const FormulirPendaftaranPasien = ({ isPreview, previewSchema }) => {
   const [submitted, setSubmitted] = useState(false)
   const { query, isReady } = useRouter();
   const dispatch = useDispatch()
@@ -198,4 +198,4 @@ const RegistrationForm = ({ isPreview, previewSchema }) => {
   ) : "Loading Form..."
 };
 
-export default RegistrationForm;
+export default FormulirPendaftaranPasien;

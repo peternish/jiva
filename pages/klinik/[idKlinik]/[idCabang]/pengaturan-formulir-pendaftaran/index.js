@@ -11,7 +11,7 @@ import constants from "@utils/constants";
 import TextInput from "@components/common/TextInput"
 import { Formik, Form } from "formik"
 import Divider from '@mui/material/Divider';
-import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
+import Tooltip from '@mui/material/Tooltip';
 import InfoIcon from '@mui/icons-material/Info';
 import FormulirPendaftaranPasien from "@pages/form/[idKlinik]/[idCabang]/[idForm]/formulir-pendaftaran-pasien"
 

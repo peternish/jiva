@@ -148,12 +148,11 @@ describe("Dynamic Form Submission", () => {
     await store.dispatch(setJadwalTenagaMedisList(SAMPLE_JADWAL))
     await store.dispatch(setSchemas(SAMPLE_SCHEMA))
 
-    const { debug } = render(
+    render(
       <Provider store={store}>
         <RegistrationForm />
       </Provider>
     );
-    debug()
   });
 
   it('able to submit if filled properly', async () => {
