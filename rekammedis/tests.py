@@ -9,9 +9,19 @@ import os
 import secrets
 
 
+def aws_credentials():
+    """Mocked AWS Credentials for moto."""
+    os.environ['AWS_ACCESS_KEY_ID'] = 'testing'
+    os.environ['AWS_SECRET_ACCESS_KEY'] = 'testing'
+    os.environ['AWS_SECURITY_TOKEN'] = 'testing'
+    os.environ['AWS_SESSION_TOKEN'] = 'testing'
+
+
 class RekamMedisAPITest(APITestCase):
 
     def setUp(self) -> None:
+        aws_credentials()
+
         self.email = "test2@example.com"
         self.account = Account.objects.create_user(
             email=self.email,
@@ -29,15 +39,18 @@ class RekamMedisAPITest(APITestCase):
             password=os.getenv("SECRET_KEY"),
         )
 
-        self.medic = TenagaMedisProfile(account=self.account)
-        self.medic.save()
-
         sample_file = b"this is a file example"
-        mock_file = SimpleUploadedFile("sip_example.pdf", sample_file)
+        mock_file = SimpleUploadedFile("sip_example.txt", sample_file)
+
         self.klinik = Klinik(name="klinik", owner=self.owner, sik=mock_file)
         self.klinik.save()
+
         self.cabang = Cabang(location=secrets.token_hex(), klinik=self.klinik)
         self.cabang.save()
+
+        self.medic = TenagaMedisProfile(
+            account=self.account, sip=mock_file, cabang=self.cabang)
+        self.medic.save()
 
         url = reverse("account:login")
         resp = self.client.post(
