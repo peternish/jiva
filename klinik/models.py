@@ -66,7 +66,8 @@ class LamaranPasien(models.Model):
 
 class DynamicForm(models.Model):
     formtypes = [
-        "pendaftaran_pasien"
+        "pendaftaran_pasien",
+        "rekaman_medis"
     ]
 
     cabang = models.ForeignKey(Cabang, on_delete=models.CASCADE)
