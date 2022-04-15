@@ -8,8 +8,9 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 import os
 import secrets
 
+
 class RekamMedisAPITest(APITestCase):
-    def aws_credentials():
+    def aws_credentials() -> None:
         """Mocked AWS Credentials for moto."""
         os.environ['AWS_ACCESS_KEY_ID'] = 'testing'
         os.environ['AWS_SECRET_ACCESS_KEY'] = 'testing'
@@ -64,6 +65,28 @@ class RekamMedisAPITest(APITestCase):
         self.uri = "ehr:rekam-medis"
         self.uri_detil = "ehr:detil-rekam-medis"
 
+        self.nik = "0123456789012345"
+        self.fields = [
+            {
+                "type": "text",
+                "required": False,
+                "label": "Field 1",
+                "className": "form-control",
+                "name": "text-1648102772033-0",
+                "access": False,
+                "subtype": "text",
+            },
+            {
+                "type": "text",
+                "required": True,
+                "label": "Field 2",
+                "className": "form-control",
+                "name": "text-1648102772980-0",
+                "access": False,
+                "subtype": "text",
+            },
+        ]
+
         return super().setUp()
 
     def test_get_all_rekaman_medis_from_nik(self):
@@ -85,7 +108,16 @@ class RekamMedisAPITest(APITestCase):
         pass
 
     def test_post_rekaman_medis(self):
-        pass
+        self.assertEqual(Pasien.objects.count(), 0)
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        uri = reverse(self.uri, kwargs={"nik": self.nik})
+        data = {
+            "fields": self.fields,
+        }
+        resp = self.client.post(uri, data=data)
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Pasien.objects.count(), 1)
+        self.assertEqual(RekamanMedis.objects.count(), 1)
 
     def test_post_rekaman_medis_but_unauthorized(self):
         pass
