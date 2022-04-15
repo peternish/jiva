@@ -41,7 +41,7 @@ export default function Sidebar() {
         {title : 'Pengaturan Tenaga Medis', icon: <GroupIcon/>, link: `/klinik/${idKlinik}/${idCabang}/tenaga-medis`},
         
         {divider : 'Rekaman Medis'},
-        {title : 'Pengaturan Formulir Rekaman Medis', icon: <ConstructionIcon/>, link: '#'},
+        {title : 'Pengaturan Formulir Rekaman Medis', icon: <ConstructionIcon/>, link: `/klinik/${idKlinik}/${idCabang}/pengaturan-formulir-rekaman-medis`},
         {title : 'Rekaman Medis', icon: <AssignmentIcon/>, link: '#'},
     ]
 
