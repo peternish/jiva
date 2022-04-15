@@ -12,9 +12,6 @@ const getSchemas = ({ idCabang }) => {
     return async (dispatch) => {
         try {
             let { data } = await jivaAPI.dynamicForm.getSchema({ idCabang });
-            if (!isSchemasInitiated(data)) {
-                data = await initSchemas(idCabang)
-            }
             await dispatch(setSchemas(data));
         } catch (error) {
             toast(constants.BASE_ERROR_MESSAGE, { type: toast.TYPE.ERROR });
@@ -63,26 +60,5 @@ const deleteSchemaByID = ({ idSchema }) => {
         }
     };
 };
-
-async function initSchemas(idCabang) {
-    try {
-        const schemas = []
-        formTypes.forEach( async (formType) => {
-            const { data } = await jivaAPI.dynamicForm.createSchema({ 
-                idCabang: idCabang, 
-                formType: formType, 
-                formFields: [] 
-            })
-            schemas.push(data)
-        })
-        return schemas
-    } catch (error) {
-        toast(constants.BASE_ERROR_MESSAGE, { type: toast.TYPE.ERROR });
-    }
-}
-
-function isSchemasInitiated(schemas) {
-    return formTypes.every(formtype => schemas.map(schema => schema.formtype).includes(formtype));
-}
 
 export { getSchemas, updateSchema, createSchema, deleteSchemaByID }
