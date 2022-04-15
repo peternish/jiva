@@ -130,7 +130,14 @@ class RekamMedisAPITest(APITestCase):
         self.assertEqual(Pasien.objects.count(), 0)
 
     def test_post_rekaman_medis_missing_schema_fields(self):
-        pass
+        self.assertEqual(Pasien.objects.count(), 0)
+        uri = reverse(self.uri, kwargs={"nik": self.nik})
+        data = {
+            "definitely_not_fields": self.fields,
+        }
+        resp = self.client.post(uri, data=data)
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(Pasien.objects.count(), 0)
 
     def test_put_rekaman_medis(self):
         pass
