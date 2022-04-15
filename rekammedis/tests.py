@@ -120,7 +120,14 @@ class RekamMedisAPITest(APITestCase):
         self.assertEqual(RekamanMedis.objects.count(), 1)
 
     def test_post_rekaman_medis_but_unauthorized(self):
-        pass
+        self.assertEqual(Pasien.objects.count(), 0)
+        uri = reverse(self.uri, kwargs={"nik": self.nik})
+        data = {
+            "fields": self.fields,
+        }
+        resp = self.client.post(uri, data=data)
+        self.assertEqual(resp.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(Pasien.objects.count(), 0)
 
     def test_post_rekaman_medis_missing_schema_fields(self):
         pass
