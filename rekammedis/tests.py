@@ -167,19 +167,15 @@ class RekamMedisAPITest(EHRTestCase):
         pass
 
     def test_post_rekaman_medis(self):
-        self.assertEqual(Pasien.objects.count(), 0)
+        self.assertEqual(RekamanMedis.objects.count(), 0)
         uri = reverse(self.uri)
         data = {
             "fields": self.fields,
-            "patient": {
-                "nik": self.nik,
-                "full_name": self.nik,
-            },
+            "patient": self.nik_test,
         }
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
-        resp = self.client.post(uri, data=data, format="json")
+        resp = self.client.post(uri, data=data)
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(Pasien.objects.count(), 1)
         self.assertEqual(RekamanMedis.objects.count(), 1)
 
     def test_post_rekaman_medis_but_unauthorized(self):

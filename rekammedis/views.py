@@ -1,5 +1,6 @@
 from rekammedis.models import Pasien, RekamanMedis
-from rekammedis.serializers import PasienSerializer
+from rekammedis.serializers import PasienSerializer, RekamanMedisSerializer
+from klinik.models import TenagaMedisProfile
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.request import Request
@@ -43,19 +44,7 @@ class RekamMedisApi(APIView):
     ]
 
     def post(self, request: Request, format=None) -> Response:
-        from pprint import pprint
-        pprint(request.data)
-        author = TenagaMedisProfile.objects.get(
-            account__email=request.user)
-        if author is None:
-            return Response(status=status.HTTP_403_FORBIDDEN)
-        serializer = RekamanMedisPostSerializer(data=request.data)
-        nik = request.data.get("patient")
-        pasien = Pasien.objects.get_or_create(nik=nik)
-        if serializer.is_valid():
-            serializer.save(author=author, pasien=pasien)
-            return Response(status=status.HTTP_201_CREATED)
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        pass
 
 
 class RekamMedisDetilApi(APIView):
