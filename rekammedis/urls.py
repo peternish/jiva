@@ -4,6 +4,9 @@ from rekammedis import views
 app_name = "ehr"
 
 urlpatterns = [
-    path("<str:nik>/", views.RekamMedisApi.as_view(), name="rekam-medis"),
-    path("<int:id>/", views.RekamMedisDetilApi.as_view(), name="detil-rekam-medis")
+    path("/", views.RekamMedisApi.as_view(), name="rekam-medis"),
+    path("pasien/", views.PasienApi.as_view(), name="pasien"),
+    path("pasien/<str:nik>/", views.PasienDetailApi.as_view(), name="pasien-detail"),
+    path("rekaman/<int:id>/", views.RekamMedisDetilApi.as_view(),
+         name="detil-rekam-medis")
 ]

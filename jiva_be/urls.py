@@ -21,4 +21,5 @@ urlpatterns = [
     path("account/", include("account.urls", namespace="account")),
     path("klinik/", include("klinik.urls", namespace="klinik")),
     path("jadwal/", include("jadwal.urls", namespace="jadwal")),
+    path("ehr/", include("rekammedis.urls", namespace="ehr")),
 ]
