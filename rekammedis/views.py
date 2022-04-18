@@ -1,11 +1,8 @@
-from urllib.request import Request
-
-from yaml import serialize
-from rekammedis import serializers
 from rekammedis.models import Pasien, RekamanMedis
 from rekammedis.serializers import PasienSerializer
 from rest_framework import status
 from rest_framework.views import APIView
+from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 

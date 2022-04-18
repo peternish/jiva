@@ -1,9 +1,5 @@
-from dataclasses import fields
-from imp import source_from_cache
 from rest_framework import serializers
-from yaml import serialize
 from rekammedis.models import Pasien, RekamanMedis
-from django.template.defaultfilters import slugify
 
 
 class PasienSerializer(serializers.ModelSerializer):

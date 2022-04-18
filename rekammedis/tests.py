@@ -110,6 +110,19 @@ class PasienAPITest(EHRTestCase):
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         self.assertEqual(Pasien.objects.count(), 1)
 
+    def test_get_patient_with_nik_but_unauthorized(self):
+        self.assertEqual(Pasien.objects.count(), 1)
+        uri = reverse(self.uri_pasien_detail, kwargs={"nik": self.nik_test})
+        resp = self.client.get(uri)
+        self.assertEqual(resp.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_get_patient_with_nik_but_not_found(self):
+        self.assertEqual(Pasien.objects.count(), 1)
+        uri = reverse(self.uri_pasien_detail, kwargs={"nik": "12121"})
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        resp = self.client.get(uri)
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+
     def test_post_patient(self):
         self.assertEqual(Pasien.objects.count(), 1)
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
@@ -121,6 +134,17 @@ class PasienAPITest(EHRTestCase):
         resp = self.client.post(uri, data=data)
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Pasien.objects.count(), 2)
+
+    def test_post_patient_but_unauthorized(self):
+        self.assertEqual(Pasien.objects.count(), 1)
+        uri = reverse(self.uri_pasien)
+        data = {
+            "nik": self.nik,
+            "full_name": self.patient_name
+        }
+        resp = self.client.post(uri, data=data)
+        self.assertEqual(resp.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(Pasien.objects.count(), 1)
 
 
 class RekamMedisAPITest(EHRTestCase):
