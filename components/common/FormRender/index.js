@@ -21,12 +21,19 @@ width: 100%;
 
   .form-control {
     padding: 1em 0.75em;
-    width: 100%;
-    border-radius: 0;
-    box-shadow: ${(props) =>
-    props.isError ? `0px 0px 2px ${constants.COLORS.ERROR}` : "none"};
-    border: 1px solid
-      ${(props) => (props.isError ? constants.COLORS.ERROR : "grey")};
+    background: #FFFFFF;
+    box-sizing: border-box;
+    border-radius: 4px;
+    border: 1px solid rgba(0, 0, 0, 0.23);
+
+    &, * {
+      font-family: "Roboto";
+    }
+  }
+
+  .form-control[data-custom-error='true'] {
+    box-shadow: 0px 0px 2px ${constants.COLORS.ERROR};
+    border: 1px solid ${constants.COLORS.ERROR}
   }
 
   input[type='file'] {
@@ -40,7 +47,7 @@ width: 100%;
 
   .formbuilder-checkbox, .formbuilder-radio {
     input {
-      width: min-content;
+      width: min-content !important;
     }
 
     label {
@@ -66,6 +73,10 @@ const FormRender = ({ schema, submit, isSubmitting, isValid = true }) => {
   const validateForm = () => {
     const values = {};
     const errs = document.getElementsByClassName("error-message")
+    const inputErrors = $("[data-custom-error='true']")
+    inputErrors.each(function () {
+      $(this).attr("data-custom-error", "false")
+    })
     if (errs.length) {
       Array.from(errs).forEach(element => element.remove())
     }
@@ -102,7 +113,8 @@ const FormRender = ({ schema, submit, isSubmitting, isValid = true }) => {
     let isErrorTemp = false
     $("[data-custom-required='true']").each(function () {
       if (!values[$(this).attr("name")]) {
-        $(this).after(`<small class="error-message">${$(this).attr("name")} is required</small>`);
+        $(this).attr("data-custom-error", "true")
+        $(this).after(`<small class="error-message">${$(this).attr("name")} wajib diisi</small>`);
         isErrorTemp = true
       }
     });

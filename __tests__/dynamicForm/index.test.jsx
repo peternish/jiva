@@ -1,6 +1,6 @@
 import { Provider } from "react-redux";
 import * as nextRouter from 'next/router';
-import RegistrationForm from '@pages/form/[idKlinik]/[idCabang]/[idForm]/index'
+import RegistrationForm from '@pages/form/[idKlinik]/[idCabang]/[idForm]/formulir-pendaftaran-pasien'
 import { fireEvent, render, screen, act } from "@testing-library/react";
 import { store } from "@redux/store";
 import '@testing-library/jest-dom'
@@ -73,11 +73,13 @@ const SAMPLE_JADWAL = [
 const mockRouter = () => {
   nextRouter.useRouter = jest.fn();
   nextRouter.useRouter.mockImplementation(() => ({
-    route: '/form/1/1/1',
+    route: '/form/1/1/1/formulir-pendaftaran-pasien',
     query: { idCabang: 1 },
     isReady: true,
   }));
 }
+
+jest.setTimeout(10000)
 
 describe("Dynamic Form", () => {
   beforeEach(async () => {
@@ -96,36 +98,36 @@ describe("Dynamic Form", () => {
   it('renders a heading', () => {
 
     const heading = screen.getAllByRole('heading', {
-      name: /.*Pendaftaran Klinik.*/i,
+      name: "Formulir Pendaftaran Pertemuan Dokter",
     })[0]
 
     expect(heading).toBeInTheDocument()
   })
 
   it('renders mandatory fields', () => {
-    const NIKField = screen.getByLabelText(/.*NIK.*/i);
-    const doctorField = screen.getByLabelText(/.*Pilih Jadwal.*/i);
+    const NIKField = screen.getByLabelText("NIK");
+    const doctorField = screen.getByLabelText("Pilih Jadwal");
 
     expect(NIKField).toBeInTheDocument();
     expect(doctorField).toBeInTheDocument();
   });
 
   it('renders data fields', () => {
-    const firstField = screen.getByLabelText(/.*Field 1.*/i);
+    const firstField = screen.getByLabelText("Field 1*");
 
     expect(firstField).toBeInTheDocument();
   });
 
   it('renders submit button', () => {
     const buttonsubmit = screen.getAllByRole('button', {
-      name: /Simpan/,
+      name: "Simpan",
     })[0]
     expect(buttonsubmit).toBeInTheDocument()
   });
 
   it('enables jadwal selection when doctor is selected', async () => {
-    const tenagaMedisSelection = screen.getByLabelText(/Pilih Tenaga Medis/i)
-    const jadwalSelection = screen.getByLabelText(/Pilih Jadwal/i)
+    const tenagaMedisSelection = screen.getByLabelText("Pilih Tenaga Medis")
+    const jadwalSelection = screen.getByLabelText("Pilih Jadwal")
     expect(tenagaMedisSelection).toBeInTheDocument()
     expect(jadwalSelection).toBeDisabled()
 
@@ -154,22 +156,26 @@ describe("Dynamic Form Submission", () => {
   });
 
   it('able to submit if filled properly', async () => {
-    const nikField = screen.getByLabelText(/NIK/i)
-    const tenagaMedisField = screen.getByLabelText(/Pilih Tenaga Medis/i)
-    const jadwalSelection = screen.getByLabelText(/Pilih Jadwal/i)
+    const nikField = screen.getByLabelText("NIK")
+    const tenagaMedisField = screen.getByLabelText("Pilih Tenaga Medis")
+    const jadwalSelection = screen.getByLabelText("Pilih Jadwal")
+    const firstField = screen.getByLabelText("Field 1*");
 
     await act(async () => {
-      fireEvent.change(nikField, { target: { value: 2 } })
-      fireEvent.change(tenagaMedisField, { target: { value: 2 } })
-      fireEvent.change(jadwalSelection, { target: { value: "mon 11:00:00" } })
+      await fireEvent.change(nikField, { target: { value: "2" } })
+      await fireEvent.change(tenagaMedisField, { target: { value: "2" } })
+      await fireEvent.change(jadwalSelection, { target: { value: "2" } })
+      await fireEvent.change(firstField, { target: { value: "text" } })
     })
 
     const buttonsubmit = screen.getAllByRole('button', {
-      name: /Simpan/,
+      name: "Simpan",
     })[0]
 
+    expect(buttonsubmit).not.toHaveAttribute("disabled")
+
     await act(async () => {
-      fireEvent.click(buttonsubmit)
+      await fireEvent.click(buttonsubmit)
     })
   });
 });

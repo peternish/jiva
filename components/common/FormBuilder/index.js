@@ -21,7 +21,7 @@ const options = {
   disableFields: ["button", "hidden"],
 };
 
-const FormBuilder = ({ schema, onSave, children }) => {
+const FormBuilder = ({ schema, onSave, children, PreviewComponent }) => {
   const [modalOpen, setmodalOpen] = useState(false)
   const [previewSchema, setpreviewSchema] = useState(schema?.fields || [])
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -90,7 +90,9 @@ const FormBuilder = ({ schema, onSave, children }) => {
         schema={previewSchema} 
         onClose={() => setmodalOpen(false)} 
         open={modalOpen} 
-      />
+      >
+        {PreviewComponent ? <PreviewComponent/> : null}
+      </PreviewModal>
     </CSS>
   );
 };
