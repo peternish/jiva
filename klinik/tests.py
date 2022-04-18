@@ -1,4 +1,6 @@
-from klinik.models import Cabang, Klinik, OwnerProfile, DynamicForm, LamaranPasien
+from klinik.models import Cabang, Klinik, OwnerProfile, DynamicForm, LamaranPasien, TenagaMedisProfile
+from account.models import Account
+from jadwal.models import JadwalTenagaMedis, JadwalPasien
 from rest_framework.test import APITestCase
 from django.urls import reverse
 from rest_framework import status
@@ -6,10 +8,13 @@ from account.models import Account
 from django.core.files.uploadedfile import SimpleUploadedFile
 import secrets
 import os
+import datetime
 
 
 def bearer_factory(token):
     return "Bearer " + token
+
+TEST_USER_PASSWORD = os.getenv("SECRET_KEY")
 
 
 class KlinikTestSetUp(APITestCase):
@@ -121,9 +126,81 @@ class KlinikTestSetUp(APITestCase):
                     ]
             }
         ]
-        for _ in range(10):
-            pas = LamaranPasien(nik=f"420691337{_}", fields=[{"nama": f"Abdullah{_}"}])
-            pas.save()
+
+        # for _ in range(10):
+        #     pas = LamaranPasien(nik=f"420691337{_}", fields=[{"nama": f"Abdullah{_}"}])
+        #     pas.save()
+
+        # Should have ID 1
+        self.pas = LamaranPasien(nik=f"4206913370", fields=[{"nama": f"Abdullah0"}])
+        self.pas.save()
+
+        # Should have ID starting from 2
+        for _ in range(9):
+            lam = LamaranPasien(nik=f"420691337{_+1}", fields=[{"nama": f"Abdullah{_+1}"}])
+            lam.save()
+            # print(f"There's {LamaranPasien.objects.last().id}")
+
+        # cabang
+        self.cabang = Cabang.objects.create(
+            klinik=self.klinik, location="Bantar Gebang"
+        )
+        self.cabang.save()
+
+
+        # tenaga medis
+        self.tenaga_medis_account = Account.objects.create_user(
+            email="tenaga_medis@email.com",
+            full_name="dr. DisRespect",
+            password=TEST_USER_PASSWORD
+        )
+
+        self.tenaga_medis_profile = TenagaMedisProfile.objects.create(
+            account=self.tenaga_medis_account, cabang=self.cabang, sip="sip"
+        )
+        self.tenaga_medis_profile.save()
+
+        # Should have ID 1
+        self.jadwal_tenaga_medis = JadwalTenagaMedis(
+            tenaga_medis=self.tenaga_medis_profile,
+            start_time=datetime.time(1, 0, 0),
+            end_time=datetime.time(2, 0, 0),
+            quota=5,
+            day="mon"
+        )
+        self.jadwal_tenaga_medis.save()
+
+        # Should have ID 2
+        jadwal_tenaga_medis_lain = JadwalTenagaMedis.objects.create(
+            tenaga_medis=self.tenaga_medis_profile,
+            start_time=datetime.time(2, 0, 0),
+            end_time=datetime.time(6, 0, 0),
+            quota=5,
+            day="tue"
+        )
+        jadwal_tenaga_medis_lain.save()
+        
+        # Should have ID 1
+        jadwal_pasien = JadwalPasien.objects.create(
+            date = datetime.date(1987, 4, 20),
+            lamaranPasien = self.pas,
+            jadwalTenagaMedis = self.jadwal_tenaga_medis
+        )
+        jadwal_pasien.save()
+        
+
+        # Should have ID starting from 2
+        for _ in range(9):
+            date = datetime.datetime(2000, 4, 20)
+            date += datetime.timedelta(days=(7*_))
+            jadwal_lain = JadwalPasien(
+            date = date,
+            lamaranPasien = LamaranPasien.objects.get(id = _+2),
+            jadwalTenagaMedis = jadwal_tenaga_medis_lain
+            )
+            jadwal_lain.save()
+
+        self.pasien_compound = reverse("klinik:pasien-compound")
 
 
 class KlinikAPITest(KlinikTestSetUp):
@@ -329,6 +406,30 @@ class LamaranPasienApiTest(KlinikTestSetUp):
         uri = reverse(self.pasien_detail, kwargs={"pk": 69})
         resp = self.client.delete(uri)
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(LamaranPasien.objects.count(), 10)
+        
+
+class LamaranPasienCompoundApiTest(KlinikTestSetUp):
+    def test_post_lamaran_pasien_compound(self):
+        self.assertEqual(LamaranPasien.objects.count(), 10)
+        self.assertEqual(JadwalPasien.objects.count(), 10)
+
+        data = {"nik": "13371337", "fields": self.json_test, "date": datetime.date(2000, 4, 20),
+         "jadwal_tenaga_medis_pk": self.jadwal_tenaga_medis.pk}
+         
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        resp = self.client.post(self.pasien_compound, data=data)
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+        # self.assertEqual(resp.data["nik"], "13371337")
+        self.assertEqual(LamaranPasien.objects.count(), 11)
+        self.assertEqual(JadwalPasien.objects.count(), 11)
+
+    def test_post_lamaran_pasien_compound_fail(self):
+        self.assertEqual(LamaranPasien.objects.count(), 10)
+        data = {"nama": "astaga"}
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        resp = self.client.post(self.pasien_compound, data=data)
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(LamaranPasien.objects.count(), 10)
 
 class FormAPITest(APITestCase):
