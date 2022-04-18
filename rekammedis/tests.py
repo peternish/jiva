@@ -9,7 +9,7 @@ import os
 import secrets
 
 
-class RekamMedisAPITest(APITestCase):
+class EHRTestCase(APITestCase):
     def aws_credentials() -> None:
         """Mocked AWS Credentials for moto."""
         os.environ['AWS_ACCESS_KEY_ID'] = 'testing'
@@ -18,7 +18,6 @@ class RekamMedisAPITest(APITestCase):
         os.environ['AWS_SESSION_TOKEN'] = 'testing'
 
     def setUp(self) -> None:
-
         self.email = "test2@example.com"
         self.account = Account.objects.create_user(
             email=self.email,
@@ -89,6 +88,16 @@ class RekamMedisAPITest(APITestCase):
 
         return super().setUp()
 
+
+class PasienAPITest(EHRTestCase):
+    def test_get_patient_with_nik(self):
+        pass
+
+    def test_post_patient(self):
+        pass
+
+
+class RekamMedisAPITest(EHRTestCase):
     def test_get_all_rekaman_medis_from_nik(self):
         pass
 
