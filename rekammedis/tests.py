@@ -167,13 +167,43 @@ class RekamMedisAPITest(EHRTestCase):
         pass
 
     def test_post_rekaman_medis(self):
-        pass
+        self.assertEqual(Pasien.objects.count(), 0)
+        uri = reverse(self.uri)
+        data = {
+            "fields": self.fields,
+            "patient": {
+                "nik": self.nik,
+                "full_name": self.nik,
+            },
+        }
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        resp = self.client.post(uri, data=data, format="json")
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Pasien.objects.count(), 1)
+        self.assertEqual(RekamanMedis.objects.count(), 1)
 
     def test_post_rekaman_medis_but_unauthorized(self):
-        pass
+        self.assertEqual(Pasien.objects.count(), 0)
+        uri = reverse(self.uri)
+        data = {
+            "fields": self.fields,
+            "patient": self.nik,
+        }
+        resp = self.client.post(uri, data=data)
+        self.assertEqual(resp.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(Pasien.objects.count(), 0)
 
     def test_post_rekaman_medis_missing_schema_fields(self):
-        pass
+        self.assertEqual(Pasien.objects.count(), 0)
+        uri = reverse(self.uri)
+        data = {
+            "definitely_not_fields": self.fields,
+            "patient": self.nik,
+        }
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        resp = self.client.post(uri, data=data)
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(Pasien.objects.count(), 0)
 
     def test_put_rekaman_medis(self):
         pass
