@@ -1,10 +1,12 @@
-from django.urls import path, include
-from rest_framework.urlpatterns import format_suffix_patterns
+from django.urls import path
 from rekammedis import views
 
 app_name = "ehr"
 
 urlpatterns = [
-    # path("<str:nik>/", views_todo, name="rekam-medis")
-    # path("<int:id>/", views_detail_todo, name="detil-rekam-medis")
+    path("/", views.RekamMedisApi.as_view(), name="rekam-medis"),
+    path("pasien/", views.PasienApi.as_view(), name="pasien"),
+    path("pasien/<str:nik>/", views.PasienDetailApi.as_view(), name="pasien-detail"),
+    path("rekaman/<int:id>/", views.RekamMedisDetilApi.as_view(),
+         name="detil-rekam-medis")
 ]

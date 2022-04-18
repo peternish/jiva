@@ -14,6 +14,13 @@ def bearer_factory(token):
 
 
 class KlinikTestSetUp(APITestCase):
+    def aws_credentials():
+        """Mocked AWS Credentials for moto."""
+        os.environ['AWS_ACCESS_KEY_ID'] = 'testing'
+        os.environ['AWS_SECRET_ACCESS_KEY'] = 'testing'
+        os.environ['AWS_SECURITY_TOKEN'] = 'testing'
+        os.environ['AWS_SESSION_TOKEN'] = 'testing'
+
     def setUp(self):
         self.url_klinik_list = reverse("klinik:klinik-list")
         self.file_content = b"these are the file contents!"
@@ -149,6 +156,13 @@ class KlinikModelTest(KlinikTestSetUp):
         self.assertEquals(f"{self.cabang.klinik}:{self.cabang}:example", str(dynamicform))
 
 class KlinikAPITest(KlinikTestSetUp):
+    def aws_credentials():
+        """Mocked AWS Credentials for moto."""
+        os.environ['AWS_ACCESS_KEY_ID'] = 'testing'
+        os.environ['AWS_SECRET_ACCESS_KEY'] = 'testing'
+        os.environ['AWS_SECURITY_TOKEN'] = 'testing'
+        os.environ['AWS_SESSION_TOKEN'] = 'testing'
+
     def test_get_klinik(self):
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         resp = self.client.get(self.url_klinik_list)
@@ -205,6 +219,13 @@ class KlinikAPITest(KlinikTestSetUp):
 
 
 class CabangAPITest(KlinikTestSetUp):
+    def aws_credentials():
+        """Mocked AWS Credentials for moto."""
+        os.environ['AWS_ACCESS_KEY_ID'] = 'testing'
+        os.environ['AWS_SECRET_ACCESS_KEY'] = 'testing'
+        os.environ['AWS_SECURITY_TOKEN'] = 'testing'
+        os.environ['AWS_SESSION_TOKEN'] = 'testing'
+
     def test_get_cabang_list_from_klinik(self):
         self.assertEqual(Cabang.objects.count(), 20)
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
@@ -289,6 +310,13 @@ class CabangAPITest(KlinikTestSetUp):
         self.assertEqual(Cabang.objects.count(), 20)
 
 class LamaranPasienApiTest(KlinikTestSetUp):
+    def aws_credentials():
+        """Mocked AWS Credentials for moto."""
+        os.environ['AWS_ACCESS_KEY_ID'] = 'testing'
+        os.environ['AWS_SECRET_ACCESS_KEY'] = 'testing'
+        os.environ['AWS_SECURITY_TOKEN'] = 'testing'
+        os.environ['AWS_SESSION_TOKEN'] = 'testing'
+
     def test_get_lamaran_pasien(self):
         self.assertEqual(LamaranPasien.objects.count(), 10)
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
@@ -354,6 +382,13 @@ class LamaranPasienApiTest(KlinikTestSetUp):
         self.assertEqual(LamaranPasien.objects.count(), 10)
 
 class FormAPITest(APITestCase):
+    def aws_credentials():
+        """Mocked AWS Credentials for moto."""
+        os.environ['AWS_ACCESS_KEY_ID'] = 'testing'
+        os.environ['AWS_SECRET_ACCESS_KEY'] = 'testing'
+        os.environ['AWS_SECURITY_TOKEN'] = 'testing'
+        os.environ['AWS_SESSION_TOKEN'] = 'testing'
+        
     def setUp(self) -> None:
         self.email = "test@example.com"
         self.account = Account.objects.create_user(
