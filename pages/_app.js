@@ -16,7 +16,6 @@ function MyApp({ Component, pageProps }) {
     const isLoggedIn = isLoggedInSelector(store.getState())
   const publicRoutes = [ /^\/login$/, /^\/$/, /^\/register$/, /^\/form.*$/ ]
     const isPublicRoute = publicRoutes.some(rx => rx.test(location.pathname))
-    console.log(location.pathname)
     if (!isPublicRoute && !isLoggedIn) {
       location.assign("/login")
     }
