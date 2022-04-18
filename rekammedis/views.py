@@ -34,8 +34,7 @@ class PasienDetailApi(APIView):
         try:
             pasien = Pasien.objects.get(nik=nik)
             serializer = PasienSerializer(pasien)
-            if serializer.is_valid():
-                return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         except Pasien.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
