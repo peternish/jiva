@@ -55,7 +55,7 @@ SonarScanner:
       -Dsonar.login=$SONARQUBE_TOKEN
       -Dsonar.qualitygate.wait=true
       -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
-      -Dsonar.coverage.exclusions=**/.scannerwork/**,**/api/**,**/public/**,**/redux/**,**/styles/**,**/utils/**,**/__tests__/**
+      -Dsonar.coverage.exclusions=**/.scannerwork/**,**/api/**,**/public/**,**/redux/**,**/styles/**,**/utils/**,**/__tests__/**,**/_.*\.js
 
 DeployStaging:
   stage: deploy
