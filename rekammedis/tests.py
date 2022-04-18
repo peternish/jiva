@@ -115,7 +115,7 @@ class PasienAPITest(EHRTestCase):
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         uri = reverse(self.uri_pasien)
         data = {
-            "nik": self.fields,
+            "nik": self.nik,
             "full_name": self.patient_name
         }
         resp = self.client.post(uri, data=data)

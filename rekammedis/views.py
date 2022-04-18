@@ -1,6 +1,7 @@
 from urllib.request import Request
 
 from yaml import serialize
+from rekammedis import serializers
 from rekammedis.models import Pasien, RekamanMedis
 from rekammedis.serializers import PasienSerializer
 from rest_framework import status
@@ -15,13 +16,13 @@ class PasienApi(APIView):
         IsAuthenticated,
     ]
 
-    def get(self, request: Request, format=None):
+    def post(self, request: Request, format=None):
         from pprint import pprint
         pprint(request.data)
-        nik = request.data["nik"]
-        pasien = Pasien.objects.get(nik=nik)
-        serializer = PasienSerializer(pasien)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        serializer = PasienSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=status.HTTP_201_CREATED)
 
 
 class PasienDetailApi(APIView):
