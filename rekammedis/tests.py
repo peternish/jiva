@@ -210,9 +210,17 @@ class RekamMedisAPITest(EHRTestCase):
 
     def test_put_rekaman_medis(self):
         self.assertEqual(RekamanMedis.objects.count(), 1)
-        uri = reverse(self.uri)
+        uri = reverse(self.uri_detil, kwargs={"id": self.ehr.id})
         data = {
-            "fields": [{}],
+            "fields": [{
+                "type": "text",
+                "required": False,
+                "label": "Field",
+                "className": "form-control",
+                "name": "text-1648102772033-0",
+                "access": False,
+                "subtype": "text",
+            }],
         }
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         resp = self.client.put(uri, data=data)
@@ -221,7 +229,7 @@ class RekamMedisAPITest(EHRTestCase):
 
     def test_put_rekaman_medis_but_unauthorized(self):
         self.assertEqual(RekamanMedis.objects.count(), 1)
-        uri = reverse(self.uri)
+        uri = reverse(self.uri_detil, kwargs={"id": self.ehr.id})
         data = {
             "fields": [{}],
         }
