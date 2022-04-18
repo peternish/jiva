@@ -165,7 +165,13 @@ class RekamMedisAPITest(EHRTestCase):
         pass
 
     def test_get_rekaman_medis_from_id(self):
-        pass
+        uri = reverse(self.uri_detil, kwargs={"id": self.ehr.id})
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        resp = self.client.get(uri)
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(resp.data["fields"], self.fields)
+        self.assertEqual(resp.data["author"], self.medic)
+        self.assertEqual(resp.data["patient"], self.patient)
 
     def test_get_rekaman_medis_from_id_but_not_found(self):
         pass
