@@ -44,7 +44,20 @@ class RekamMedisApi(APIView):
     ]
 
     def post(self, request: Request, format=None) -> Response:
-        pass
+        serializer = RekamanMedisSerializer(data=request.data)
+        nik = request.data.get("patient")
+        try:
+            author = TenagaMedisProfile.objects.get(
+                account__email=request.user)
+            patient = Pasien.objects.get(nik=nik)
+            if serializer.is_valid():
+                serializer.save(author=author, patient=patient)
+                return Response(status=status.HTTP_201_CREATED)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        except Pasien.DoesNotExist:
+            return Response("Pasien not found", status=status.HTTP_404_NOT_FOUND)
+        except TenagaMedisProfile.DoesNotExist:
+            return Response("Tenaga Medis not found", status=status.HTTP_404_NOT_FOUND)
 
 
 class RekamMedisDetilApi(APIView):
