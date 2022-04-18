@@ -239,7 +239,7 @@ class RekamMedisAPITest(EHRTestCase):
 
     def test_delete_rekaman_medis_from_id_but_not_found(self):
         self.assertEqual(RekamanMedis.objects.count(), 1)
-        uri = reverse(self.uri_detil, kwargs={"pk": 9999})
+        uri = reverse(self.uri_detil, kwargs={"id": 9999})
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         resp = self.client.delete(uri)
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
@@ -247,7 +247,7 @@ class RekamMedisAPITest(EHRTestCase):
 
     def test_delete_rekaman_medis_from_id_but_unauthorized(self):
         self.assertEqual(RekamanMedis.objects.count(), 1)
-        uri = reverse(self.uri_detil, kwargs={"pk": self.ehr.pk})
+        uri = reverse(self.uri_detil, kwargs={"id": self.ehr.id})
         resp = self.client.delete(uri)
         self.assertEqual(resp.status_code, status.HTTP_401_UNAUTHORIZED)
         self.assertEqual(RekamanMedis.objects.count(), 1)
