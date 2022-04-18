@@ -167,13 +167,39 @@ class RekamMedisAPITest(EHRTestCase):
         pass
 
     def test_post_rekaman_medis(self):
-        pass
+        self.assertEqual(RekamanMedis.objects.count(), 0)
+        uri = reverse(self.uri)
+        data = {
+            "fields": self.fields,
+            "patient": self.nik_test,
+        }
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        resp = self.client.post(uri, data=data)
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(RekamanMedis.objects.count(), 1)
 
     def test_post_rekaman_medis_but_unauthorized(self):
-        pass
+        self.assertEqual(RekamanMedis.objects.count(), 0)
+        uri = reverse(self.uri)
+        data = {
+            "fields": self.fields,
+            "patient": self.nik,
+        }
+        resp = self.client.post(uri, data=data)
+        self.assertEqual(resp.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(RekamanMedis.objects.count(), 0)
 
     def test_post_rekaman_medis_missing_schema_fields(self):
-        pass
+        self.assertEqual(RekamanMedis.objects.count(), 0)
+        uri = reverse(self.uri)
+        data = {
+            "definitely_not_fields": self.fields,
+            "patient": self.nik_test,
+        }
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        resp = self.client.post(uri, data=data)
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(RekamanMedis.objects.count(), 0)
 
     def test_put_rekaman_medis(self):
         pass
