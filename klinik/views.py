@@ -1,4 +1,5 @@
 from functools import partial
+from klinik.utils import send_confirmation_email
 from rest_framework.permissions import IsAuthenticated
 from urllib.request import Request
 from .serializers import DynamicFormSerializer, KlinikSerializer, CabangSerializer, LamaranPasienSerializer
@@ -9,6 +10,7 @@ from rest_framework.views import APIView
 from rest_framework.request import Request
 from rest_framework.views import APIView
 from django.db import models
+from multiprocessing import Process
 
 
 def get_object(klass: models.Model, pk: int):
@@ -203,6 +205,7 @@ class LamaranPasienApi(APIView):
         serializer = LamaranPasienSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
+            Process(target=send_confirmation_email, args=(serializer.data["fields"],)).start()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
