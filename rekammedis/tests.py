@@ -156,7 +156,11 @@ class PasienAPITest(EHRTestCase):
 
 class RekamMedisAPITest(EHRTestCase):
     def test_get_all_rekaman_medis_from_nik(self):
-        pass
+        uri = reverse(self.uri_detil, kwargs={"id": self.ehr.id})
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        resp = self.client.get(uri)
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(resp.data), 1)
 
     def test_get_all_rekaman_medis_from_nik_but_nik_not_found(self):
         pass
