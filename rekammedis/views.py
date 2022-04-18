@@ -17,12 +17,11 @@ class PasienApi(APIView):
     ]
 
     def post(self, request: Request, format=None):
-        from pprint import pprint
-        pprint(request.data)
         serializer = PasienSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(status=status.HTTP_201_CREATED)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 class PasienDetailApi(APIView):
@@ -32,9 +31,13 @@ class PasienDetailApi(APIView):
     ]
 
     def get(self, request: Request, nik: str, format=None):
-        pasien = Pasien.objects.get(nik=nik)
-        serializer = PasienSerializer(pasien)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        try:
+            pasien = Pasien.objects.get(nik=nik)
+            serializer = PasienSerializer(pasien)
+            if serializer.is_valid():
+                return Response(serializer.data, status=status.HTTP_200_OK)
+        except Pasien.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 class RekamMedisApi(APIView):
