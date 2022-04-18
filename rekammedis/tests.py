@@ -63,8 +63,12 @@ class EHRTestCase(APITestCase):
 
         self.uri = "ehr:rekam-medis"
         self.uri_detil = "ehr:detil-rekam-medis"
+        self.uri_pasien = "ehr:pasien"
 
         self.nik = "0123456789012345"
+        self.patient_name = "Bambang Hendi"
+        self.nik_test = "0000000000001"
+        self.patient_name_test = "Agus Mayoko"
         self.fields = [
             {
                 "type": "text",
@@ -86,15 +90,39 @@ class EHRTestCase(APITestCase):
             },
         ]
 
+        self.patient = Pasien(
+            nik=self.nik_test,
+            full_name=self.patient_name_test,
+        )
+        self.patient.save()
+
         return super().setUp()
 
 
 class PasienAPITest(EHRTestCase):
     def test_get_patient_with_nik(self):
-        pass
+        self.assertEqual(Pasien.objects.count(), 1)
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        uri = reverse(self.uri_pasien)
+        data = {
+            "nik": self.nik_test,
+        }
+        resp = self.client.get(uri, data=data)
+        self.assertEqual(resp.data["full_name"], self.patient_name_test)
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(Pasien.objects.count(), 1)
 
     def test_post_patient(self):
-        pass
+        self.assertEqual(Pasien.objects.count(), 1)
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        uri = reverse(self.uri_pasien)
+        data = {
+            "nik": self.fields,
+            "full_name": self.patient_name
+        }
+        resp = self.client.post(uri, data=data)
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Pasien.objects.count(), 2)
 
 
 class RekamMedisAPITest(EHRTestCase):
