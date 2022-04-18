@@ -1,5 +1,6 @@
 from klinik.models import Cabang, Klinik, OwnerProfile, DynamicForm, LamaranPasien
 from rest_framework.test import APITestCase
+from django.test import TestCase
 from django.urls import reverse
 from rest_framework import status
 from account.models import Account
@@ -596,3 +597,20 @@ class FormAPITest(APITestCase):
         resp = self.client.delete(uri)
         self.assertEqual(resp.status_code, status.HTTP_401_UNAUTHORIZED)
         self.assertEqual(DynamicForm.objects.count(), 3)
+
+class SignalsTest(TestCase):
+    def setUp(self):
+        self.account = Account.objects.create_user(email="email@email.com", full_name="full_name")
+        self.account.save()
+        self.owner = OwnerProfile(account=self.account)
+        self.owner.save()
+        self.klinik = Klinik(owner=self.owner, name="klinik", sik=SimpleUploadedFile("test.txt", b"content"))
+        self.klinik.save()
+    
+    def test_dynamicform_does_not_exist(self):
+        self.assertEquals(DynamicForm.objects.filter(cabang__klinik=self.klinik).count(), 0)
+    
+    def test_if_all_dynamicforms_are_initiated(self):
+        cabang = Cabang(klinik=self.klinik, location="location")
+        cabang.save()
+        self.assertEquals(DynamicForm.objects.filter(cabang__klinik=self.klinik).count(), len(DynamicForm.formtypes))
