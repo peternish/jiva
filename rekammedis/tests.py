@@ -220,7 +220,14 @@ class RekamMedisAPITest(EHRTestCase):
         self.assertEqual(RekamanMedis.objects.count(), 1)
 
     def test_put_rekaman_medis_but_unauthorized(self):
-        pass
+        self.assertEqual(RekamanMedis.objects.count(), 1)
+        uri = reverse(self.uri)
+        data = {
+            "fields": [{}],
+        }
+        resp = self.client.put(uri, data=data)
+        self.assertEqual(resp.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(RekamanMedis.objects.count(), 1)
 
     def test_delete_rekaman_medis_from_id(self):
         pass
