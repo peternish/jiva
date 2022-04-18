@@ -183,7 +183,7 @@ class RekamMedisAPITest(EHRTestCase):
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         resp = self.client.post(uri, data=data)
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(RekamanMedis.objects.count(), 1)
+        self.assertEqual(RekamanMedis.objects.count(), 2)
 
     def test_post_rekaman_medis_but_unauthorized(self):
         self.assertEqual(RekamanMedis.objects.count(), 1)
