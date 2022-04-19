@@ -66,6 +66,14 @@ class RekamMedisDetilApi(APIView):
         IsAuthenticated,
     ]
 
+    def delete(self, request: Request, id: int, format=None):
+        try:
+            ehr = RekamanMedis.objects.get(id=id)
+            ehr.delete()
+            return Response(status=status.HTTP_200_OK)
+        except RekamanMedis.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
     def put(self, request: Request, id: int, format=None):
         try:
             ehr = RekamanMedis.objects.get(id=id)
