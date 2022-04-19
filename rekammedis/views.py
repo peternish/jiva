@@ -59,8 +59,7 @@ class RekamMedisApi(APIView):
         serializer = RekamanMedisSerializer(data=request.data)
         nik = request.data.get("patient")
         try:
-            author = TenagaMedisProfile.objects.get(
-                account__email=request.user)
+            author = TenagaMedisProfile.objects.get(account__email=request.user)
             patient = Pasien.objects.get(nik=nik)
             if serializer.is_valid():
                 serializer.save(author=author, patient=patient)
@@ -89,8 +88,7 @@ class RekamMedisDetilApi(APIView):
     def put(self, request: Request, id: int, format=None):
         try:
             ehr = RekamanMedis.objects.get(id=id)
-            serializer = RekamanMedisSerializer(
-                ehr, data=request.data, partial=True)
+            serializer = RekamanMedisSerializer(ehr, data=request.data, partial=True)
             if serializer.is_valid():
                 serializer.save()
                 return Response(status=status.HTTP_201_CREATED)

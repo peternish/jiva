@@ -10,12 +10,12 @@ import secrets
 
 
 class EHRTestCase(APITestCase):
-    def aws_credentials() -> None:
+    def aws_credentials(self) -> None:
         """Mocked AWS Credentials for moto."""
-        os.environ['AWS_ACCESS_KEY_ID'] = 'testing'
-        os.environ['AWS_SECRET_ACCESS_KEY'] = 'testing'
-        os.environ['AWS_SECURITY_TOKEN'] = 'testing'
-        os.environ['AWS_SESSION_TOKEN'] = 'testing'
+        os.environ["AWS_ACCESS_KEY_ID"] = "testing"
+        os.environ["AWS_SECRET_ACCESS_KEY"] = "testing"
+        os.environ["AWS_SECURITY_TOKEN"] = "testing"
+        os.environ["AWS_SESSION_TOKEN"] = "testing"
 
     def setUp(self) -> None:
         self.email = "test2@example.com"
@@ -46,7 +46,8 @@ class EHRTestCase(APITestCase):
         self.cabang.save()
 
         self.medic = TenagaMedisProfile(
-            account=self.account, sip=mock_file2, cabang=self.cabang)
+            account=self.account, sip=mock_file2, cabang=self.cabang
+        )
         self.medic.save()
 
         url = reverse("account:login")
@@ -135,10 +136,7 @@ class PasienAPITest(EHRTestCase):
         self.assertEqual(Pasien.objects.count(), 1)
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         uri = reverse(self.uri_pasien)
-        data = {
-            "nik": self.nik,
-            "full_name": self.patient_name
-        }
+        data = {"nik": self.nik, "full_name": self.patient_name}
         resp = self.client.post(uri, data=data)
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Pasien.objects.count(), 2)
@@ -146,10 +144,7 @@ class PasienAPITest(EHRTestCase):
     def test_post_patient_but_unauthorized(self):
         self.assertEqual(Pasien.objects.count(), 1)
         uri = reverse(self.uri_pasien)
-        data = {
-            "nik": self.nik,
-            "full_name": self.patient_name
-        }
+        data = {"nik": self.nik, "full_name": self.patient_name}
         resp = self.client.post(uri, data=data)
         self.assertEqual(resp.status_code, status.HTTP_401_UNAUTHORIZED)
         self.assertEqual(Pasien.objects.count(), 1)
@@ -233,15 +228,17 @@ class RekamMedisAPITest(EHRTestCase):
         self.assertEqual(RekamanMedis.objects.count(), 1)
         uri = reverse(self.uri_detil, kwargs={"id": self.ehr.id})
         data = {
-            "fields": [{
-                "type": "text",
-                "required": False,
-                "label": "Field",
-                "className": "form-control",
-                "name": "text-1648102772033-0",
-                "access": False,
-                "subtype": "text",
-            }],
+            "fields": [
+                {
+                    "type": "text",
+                    "required": False,
+                    "label": "Field",
+                    "className": "form-control",
+                    "name": "text-1648102772033-0",
+                    "access": False,
+                    "subtype": "text",
+                }
+            ],
         }
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         resp = self.client.put(uri, data=data)

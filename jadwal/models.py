@@ -14,9 +14,7 @@ class JadwalTenagaMedis(models.Model):
     )
 
     tenaga_medis = models.ForeignKey(
-        TenagaMedisProfile, 
-        on_delete=models.CASCADE, 
-        related_name="jadwal_tenaga_medis"
+        TenagaMedisProfile, on_delete=models.CASCADE, related_name="jadwal_tenaga_medis"
     )
     start_time = models.TimeField()
     end_time = models.TimeField()
@@ -29,9 +27,10 @@ class JadwalTenagaMedis(models.Model):
 
 class JadwalPasien(models.Model):
     date = models.DateField()
-    lamaranPasien = models.OneToOneField(
-        LamaranPasien, on_delete=models.CASCADE)
+    lamaranPasien = models.OneToOneField(LamaranPasien, on_delete=models.CASCADE)
     jadwalTenagaMedis = models.ForeignKey(
-        JadwalTenagaMedis, on_delete=models.CASCADE, related_name="jadwal_pasien")
+        JadwalTenagaMedis, on_delete=models.CASCADE, related_name="jadwal_pasien"
+    )
+
     def __str__(self) -> str:
         return f"Jadwal pasien dengan NIK:{self.lamaranPasien.nik}"

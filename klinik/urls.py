@@ -28,7 +28,7 @@ dform_patterns = [
         "<int:cabang_pk>/dform/<int:pk>/",
         views.DynamicFormDetailApi.as_view(),
         name="dform-detail",
-    )
+    ),
 ]
 
 cabang_patterns = format_suffix_patterns(cabang_patterns + dform_patterns)

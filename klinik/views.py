@@ -1,7 +1,12 @@
 from functools import partial
 from rest_framework.permissions import IsAuthenticated
 from urllib.request import Request
-from .serializers import DynamicFormSerializer, KlinikSerializer, CabangSerializer, LamaranPasienSerializer
+from .serializers import (
+    DynamicFormSerializer,
+    KlinikSerializer,
+    CabangSerializer,
+    LamaranPasienSerializer,
+)
 from klinik.models import Cabang, Klinik, OwnerProfile, DynamicForm, LamaranPasien
 from rest_framework import status
 from rest_framework.response import Response
@@ -116,12 +121,12 @@ class CabangDetailApi(APIView):
         cabang.delete()
         return Response(status=status.HTTP_200_OK)
 
+
 class DynamicFormListApi(APIView):
 
     permission_classes = [
         IsAuthenticated,
     ]
-
 
     def get(self, request: Request, cabang_pk: int, format=None) -> Response:
         cabang: Cabang = get_object(Cabang, cabang_pk)
@@ -152,6 +157,7 @@ class DynamicFormListApi(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 class DynamicFormPublicApi(APIView):
     def get(self, request: Request, pk: int) -> Response:
         schema: DynamicForm = get_object(DynamicForm, pk)
@@ -160,6 +166,7 @@ class DynamicFormPublicApi(APIView):
             serializer = DynamicFormSerializer(schema)
             return Response(data=serializer.data)
         return Response(status=status.HTTP_404_NOT_FOUND)
+
 
 class DynamicFormDetailApi(APIView):
 
@@ -193,12 +200,13 @@ class DynamicFormDetailApi(APIView):
         schema.delete()
         return Response(status=status.HTTP_202_ACCEPTED)
 
+
 class LamaranPasienApi(APIView):
-    
+
     permission_classes = [
         IsAuthenticated,
     ]
-    
+
     def post(self, request: Request):
         serializer = LamaranPasienSerializer(data=request.data)
         if serializer.is_valid():

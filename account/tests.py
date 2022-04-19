@@ -410,7 +410,10 @@ class TenagaMedisAPITest(TenagaMedisTestSetup):
         self.client.credentials(HTTP_AUTHORIZATION=self.owner_auth)
         url = reverse(self.url_detail, kwargs={"pk": account_id})
         email_update = "testtenaga_medisupdated@test.com"
-        data = {"account.email": email_update, "account.full_name": self.full_name_update}
+        data = {
+            "account.email": email_update,
+            "account.full_name": self.full_name_update,
+        }
         resp = self.client.patch(url, data)
         account_data = resp.data["account"]
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
@@ -421,7 +424,10 @@ class TenagaMedisAPITest(TenagaMedisTestSetup):
         self.client.credentials(HTTP_AUTHORIZATION=self.owner_auth)
         url = reverse(self.url_detail, kwargs={"pk": 9999})
         email_update = "testtenaga_medisupdated@test.com"
-        data = {"account.email": email_update, "account.full_name": self.full_name_update}
+        data = {
+            "account.email": email_update,
+            "account.full_name": self.full_name_update,
+        }
         resp = self.client.patch(url, data)
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
 

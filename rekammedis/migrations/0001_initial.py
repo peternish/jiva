@@ -9,26 +9,54 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('klinik', '0001_initial'),
+        ("klinik", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Pasien',
+            name="Pasien",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('nik', models.CharField(max_length=20, unique=True)),
-                ('full_name', models.TextField(verbose_name='Nama Lengkap')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("nik", models.CharField(max_length=20, unique=True)),
+                ("full_name", models.TextField(verbose_name="Nama Lengkap")),
             ],
         ),
         migrations.CreateModel(
-            name='RekamanMedis',
+            name="RekamanMedis",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('fields', models.JSONField(default=list, verbose_name='Fields')),
-                ('time_created', models.DateField(auto_now_add=True)),
-                ('author', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='klinik.tenagamedisprofile')),
-                ('patient', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='rekammedis.pasien')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("fields", models.JSONField(default=list, verbose_name="Fields")),
+                ("time_created", models.DateField(auto_now_add=True)),
+                (
+                    "author",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="klinik.tenagamedisprofile",
+                    ),
+                ),
+                (
+                    "patient",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="rekammedis.pasien",
+                    ),
+                ),
             ],
         ),
     ]

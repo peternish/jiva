@@ -14,12 +14,12 @@ def bearer_factory(token):
 
 
 class KlinikTestSetUp(APITestCase):
-    def aws_credentials():
+    def aws_credentials(self):
         """Mocked AWS Credentials for moto."""
-        os.environ['AWS_ACCESS_KEY_ID'] = 'testing'
-        os.environ['AWS_SECRET_ACCESS_KEY'] = 'testing'
-        os.environ['AWS_SECURITY_TOKEN'] = 'testing'
-        os.environ['AWS_SESSION_TOKEN'] = 'testing'
+        os.environ["AWS_ACCESS_KEY_ID"] = "testing"
+        os.environ["AWS_SECRET_ACCESS_KEY"] = "testing"
+        os.environ["AWS_SECURITY_TOKEN"] = "testing"
+        os.environ["AWS_SESSION_TOKEN"] = "testing"
 
     def setUp(self):
         self.url_klinik_list = reverse("klinik:klinik-list")
@@ -67,10 +67,8 @@ class KlinikTestSetUp(APITestCase):
             tmp.save()
 
         # Should have ID 2
-        test_file2 = SimpleUploadedFile(
-            "not_the_best_file_eva.txt", self.file_content)
-        self.klinik2 = Klinik(
-            name="klinik2", owner=self.owner2, sik=test_file2)
+        test_file2 = SimpleUploadedFile("not_the_best_file_eva.txt", self.file_content)
+        self.klinik2 = Klinik(name="klinik2", owner=self.owner2, sik=test_file2)
         self.klinik2.save()
         for _ in range(10):
             tmp = Cabang(location="alam sutra", klinik=self.klinik2)
@@ -112,40 +110,31 @@ class KlinikTestSetUp(APITestCase):
             {
                 "name": "John",
                 "example": "example",
-                "tags": [
-                    "esse",
-                    "sunt",
-                    "quis"
-                    ],
+                "tags": ["esse", "sunt", "quis"],
                 "friends": [
-                        {
-                        "id": 0,
-                        "name": "Contreras Weeks"
-                        },
-                        {
-                        "id": 1,
-                        "name": "Dawn Lott"
-                        }
-                    ]
+                    {"id": 0, "name": "Contreras Weeks"},
+                    {"id": 1, "name": "Dawn Lott"},
+                ],
             }
         ]
         for _ in range(10):
             pas = LamaranPasien(nik=f"420691337{_}", fields=[{"nama": f"Abdullah{_}"}])
             pas.save()
 
+
 class KlinikModelTest(KlinikTestSetUp):
     def setUp(self):
         super().setUp()
         self.cabang = self.klinik.cabang_set.first()
-    
+
     def test_profile_str(self):
         self.assertEquals(f"{self.owner.account.email}'s Profile", str(self.owner))
-    
+
     def test_klinik_str(self):
         self.assertEquals(self.klinik.name, str(self.klinik))
-    
+
     def test_cabang_str(self):
-        self.assertEquals(self.cabang .location, str(self.cabang ))
+        self.assertEquals(self.cabang.location, str(self.cabang))
 
     def test_lamaran_pasien_str(self):
         lamaran = LamaranPasien(nik="1234")
@@ -153,15 +142,18 @@ class KlinikModelTest(KlinikTestSetUp):
 
     def test_dynamicform_str(self):
         dynamicform = DynamicForm(cabang=self.cabang, formtype="example")
-        self.assertEquals(f"{self.cabang.klinik}:{self.cabang}:example", str(dynamicform))
+        self.assertEquals(
+            f"{self.cabang.klinik}:{self.cabang}:example", str(dynamicform)
+        )
+
 
 class KlinikAPITest(KlinikTestSetUp):
-    def aws_credentials():
+    def aws_credentials(self):
         """Mocked AWS Credentials for moto."""
-        os.environ['AWS_ACCESS_KEY_ID'] = 'testing'
-        os.environ['AWS_SECRET_ACCESS_KEY'] = 'testing'
-        os.environ['AWS_SECURITY_TOKEN'] = 'testing'
-        os.environ['AWS_SESSION_TOKEN'] = 'testing'
+        os.environ["AWS_ACCESS_KEY_ID"] = "testing"
+        os.environ["AWS_SECRET_ACCESS_KEY"] = "testing"
+        os.environ["AWS_SECURITY_TOKEN"] = "testing"
+        os.environ["AWS_SESSION_TOKEN"] = "testing"
 
     def test_get_klinik(self):
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
@@ -176,15 +168,13 @@ class KlinikAPITest(KlinikTestSetUp):
     def test_patch_klinik(self):
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         resp = self.client.patch(
-            self.url_klinik_list, data={
-                "name": "apeture", "sik": self.test_file3}
+            self.url_klinik_list, data={"name": "apeture", "sik": self.test_file3}
         )
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
 
     def test_patch_klinik_fail(self):
         self.client.credentials(HTTP_AUTHORIZATION=self.auth3)
-        resp = self.client.patch(self.url_klinik_list,
-                                 data={"name": "klinik3"})
+        resp = self.client.patch(self.url_klinik_list, data={"name": "klinik3"})
         self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_delete_klinik(self):
@@ -219,12 +209,12 @@ class KlinikAPITest(KlinikTestSetUp):
 
 
 class CabangAPITest(KlinikTestSetUp):
-    def aws_credentials():
+    def aws_credentials(self):
         """Mocked AWS Credentials for moto."""
-        os.environ['AWS_ACCESS_KEY_ID'] = 'testing'
-        os.environ['AWS_SECRET_ACCESS_KEY'] = 'testing'
-        os.environ['AWS_SECURITY_TOKEN'] = 'testing'
-        os.environ['AWS_SESSION_TOKEN'] = 'testing'
+        os.environ["AWS_ACCESS_KEY_ID"] = "testing"
+        os.environ["AWS_SECRET_ACCESS_KEY"] = "testing"
+        os.environ["AWS_SECURITY_TOKEN"] = "testing"
+        os.environ["AWS_SESSION_TOKEN"] = "testing"
 
     def test_get_cabang_list_from_klinik(self):
         self.assertEqual(Cabang.objects.count(), 20)
@@ -309,13 +299,14 @@ class CabangAPITest(KlinikTestSetUp):
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
         self.assertEqual(Cabang.objects.count(), 20)
 
+
 class LamaranPasienApiTest(KlinikTestSetUp):
-    def aws_credentials():
+    def aws_credentials(self):
         """Mocked AWS Credentials for moto."""
-        os.environ['AWS_ACCESS_KEY_ID'] = 'testing'
-        os.environ['AWS_SECRET_ACCESS_KEY'] = 'testing'
-        os.environ['AWS_SECURITY_TOKEN'] = 'testing'
-        os.environ['AWS_SESSION_TOKEN'] = 'testing'
+        os.environ["AWS_ACCESS_KEY_ID"] = "testing"
+        os.environ["AWS_SECRET_ACCESS_KEY"] = "testing"
+        os.environ["AWS_SECURITY_TOKEN"] = "testing"
+        os.environ["AWS_SESSION_TOKEN"] = "testing"
 
     def test_get_lamaran_pasien(self):
         self.assertEqual(LamaranPasien.objects.count(), 10)
@@ -354,7 +345,9 @@ class LamaranPasienApiTest(KlinikTestSetUp):
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         self.assertEqual(LamaranPasien.objects.count(), 10)
         uri = reverse(self.pasien_detail, kwargs={"pk": 1})
-        resp = self.client.patch(uri, data={"nik":  "13371337", "fields": self.json_test})
+        resp = self.client.patch(
+            uri, data={"nik": "13371337", "fields": self.json_test}
+        )
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         self.assertEqual(resp.data["id"], 1)
 
@@ -381,14 +374,15 @@ class LamaranPasienApiTest(KlinikTestSetUp):
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
         self.assertEqual(LamaranPasien.objects.count(), 10)
 
+
 class FormAPITest(APITestCase):
-    def aws_credentials():
+    def aws_credentials(self):
         """Mocked AWS Credentials for moto."""
-        os.environ['AWS_ACCESS_KEY_ID'] = 'testing'
-        os.environ['AWS_SECRET_ACCESS_KEY'] = 'testing'
-        os.environ['AWS_SECURITY_TOKEN'] = 'testing'
-        os.environ['AWS_SESSION_TOKEN'] = 'testing'
-        
+        os.environ["AWS_ACCESS_KEY_ID"] = "testing"
+        os.environ["AWS_SECRET_ACCESS_KEY"] = "testing"
+        os.environ["AWS_SECURITY_TOKEN"] = "testing"
+        os.environ["AWS_SESSION_TOKEN"] = "testing"
+
     def setUp(self) -> None:
         self.email = "test@example.com"
         self.account = Account.objects.create_user(
@@ -413,7 +407,7 @@ class FormAPITest(APITestCase):
                 formtype=f"example{i}",
             )
             self.dform.save()
-        
+
         for formtype in DynamicForm.formtypes:
             DynamicForm.objects.get(formtype=formtype).delete()
 
@@ -468,11 +462,7 @@ class FormAPITest(APITestCase):
         self.assertEqual(resp.data["fields"], schema.fields)
 
     def test_get_form_schema_from_cabang_by_id_but_id_not_found(self):
-        uri = reverse(
-            self.urls_dform_public, kwargs={
-                "pk": 9999
-            }
-        )
+        uri = reverse(self.urls_dform_public, kwargs={"pk": 9999})
         resp = self.client.get(uri)
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
 
@@ -614,8 +604,7 @@ class FormAPITest(APITestCase):
         self.assertEqual(len(DynamicForm.objects.all()), 3)
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         uri = reverse(
-            self.urls_dform_detail, kwargs={
-                "cabang_pk": self.cabang.id, "pk": 99999}
+            self.urls_dform_detail, kwargs={"cabang_pk": self.cabang.id, "pk": 99999}
         )
         resp = self.client.delete(uri)
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
@@ -633,19 +622,31 @@ class FormAPITest(APITestCase):
         self.assertEqual(resp.status_code, status.HTTP_401_UNAUTHORIZED)
         self.assertEqual(DynamicForm.objects.count(), 3)
 
+
 class SignalsTest(TestCase):
     def setUp(self):
-        self.account = Account.objects.create_user(email="email@email.com", full_name="full_name")
+        self.account = Account.objects.create_user(
+            email="email@email.com", full_name="full_name"
+        )
         self.account.save()
         self.owner = OwnerProfile(account=self.account)
         self.owner.save()
-        self.klinik = Klinik(owner=self.owner, name="klinik", sik=SimpleUploadedFile("test.txt", b"content"))
+        self.klinik = Klinik(
+            owner=self.owner,
+            name="klinik",
+            sik=SimpleUploadedFile("test.txt", b"content"),
+        )
         self.klinik.save()
-    
+
     def test_dynamicform_does_not_exist(self):
-        self.assertEquals(DynamicForm.objects.filter(cabang__klinik=self.klinik).count(), 0)
-    
+        self.assertEquals(
+            DynamicForm.objects.filter(cabang__klinik=self.klinik).count(), 0
+        )
+
     def test_if_all_dynamicforms_are_initiated(self):
         cabang = Cabang(klinik=self.klinik, location="location")
         cabang.save()
-        self.assertEquals(DynamicForm.objects.filter(cabang__klinik=self.klinik).count(), len(DynamicForm.formtypes))
+        self.assertEquals(
+            DynamicForm.objects.filter(cabang__klinik=self.klinik).count(),
+            len(DynamicForm.formtypes),
+        )
