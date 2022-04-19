@@ -99,6 +99,7 @@ const FormulirPendaftaranPasien = ({ isPreview, previewSchema }) => {
 
   const mandatoryFields = {
     nik: "",
+    email: "",
     tenaga_medis: "",
     jadwal: "",
     fields: []
@@ -127,6 +128,7 @@ const FormulirPendaftaranPasien = ({ isPreview, previewSchema }) => {
               validate={(values) => {
                 const errors = {}
                 if (!values.nik) errors.nik= "NIK wajib diisi"
+                if (!values.email) errors.email= "Email wajib diisi"
                 if (!values.tenaga_medis) errors.tenaga_medis = "Tenaga medis wajib dipilih"
                 if (!values.jadwal) errors.jadwal = "Jadwal wajib dipilih"
                 return errors
@@ -146,6 +148,13 @@ const FormulirPendaftaranPasien = ({ isPreview, previewSchema }) => {
                       label="NIK"
                       placeholder="1234567890"
                       error={errors.nik}
+                    />
+                    <TextInput
+                      name="email"
+                      type="email"
+                      label="Email"
+                      placeholder="alamat@email.com"
+                      error={errors.email}
                     />
                     <TextInput
                       label="Pilih Tenaga Medis"
