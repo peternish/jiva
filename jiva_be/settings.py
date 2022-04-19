@@ -48,7 +48,7 @@ CORS_ALLOWED_ORIGINS = [
 
 # Application definition
 
-APPS = ["klinik", "account", "jadwal"]
+APPS = ["klinik", "account", "jadwal", "rekammedis"]
 
 MODULES = ["rest_framework", "rest_framework_simplejwt", "corsheaders"]
 

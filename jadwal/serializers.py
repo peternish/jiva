@@ -27,21 +27,27 @@ class JadwalTenagaMedisSerializer(serializers.ModelSerializer):
             "id",
             "tenaga_medis",
         ]
-    
+
     def create(self, validated_data):
         validation_errors = {}
-        validation_errors.update(validate_time(tenaga_medis=validated_data["tenaga_medis"], data=validated_data))
+        validation_errors.update(
+            validate_time(
+                tenaga_medis=validated_data["tenaga_medis"], data=validated_data
+            )
+        )
         if validated_data.get("quota") < 0:
-            validation_errors.update({ "quota": "should be a positive number" })
+            validation_errors.update({"quota": "should be a positive number"})
         if validation_errors:
             raise serializers.ValidationError(validation_errors)
         return super(JadwalTenagaMedisSerializer, self).create(validated_data)
 
     def update(self, instance, validated_data):
         validation_errors = {}
-        validation_errors.update(validate_time(current_jadwal=instance, data=validated_data))
+        validation_errors.update(
+            validate_time(current_jadwal=instance, data=validated_data)
+        )
         if validated_data.get("quota", instance.quota) < 0:
-            validation_errors.update({ "quota": "should be a positive number" })
+            validation_errors.update({"quota": "should be a positive number"})
         if validation_errors:
             raise serializers.ValidationError(validation_errors)
         instance.start_time = validated_data.get("start_time", instance.start_time)
@@ -58,5 +64,5 @@ class JadwalPasienSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = JadwalPasien
-        fields = ["id", "date", "jadwal_tenaga_medis", "lamaran_pasien" ]
-        read_only_fields = ["id", "jadwal_tenaga_medis", "lamaran_pasien" ]
+        fields = ["id", "date", "jadwal_tenaga_medis", "lamaran_pasien"]
+        read_only_fields = ["id", "jadwal_tenaga_medis", "lamaran_pasien"]

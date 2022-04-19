@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class JadwalConfig(AppConfig):
+class RekammedisConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
-    name = "jadwal"
+    name = "rekammedis"

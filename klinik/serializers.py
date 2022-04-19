@@ -21,6 +21,7 @@ class CabangSerializer(serializers.ModelSerializer):
         validated_data["location"] = slugify(validated_data["location"])
         return super(CabangSerializer, self).create(validated_data)
 
+
 class LamaranPasienSerializer(serializers.ModelSerializer):
     class Meta:
         model = LamaranPasien
@@ -28,6 +29,7 @@ class LamaranPasienSerializer(serializers.ModelSerializer):
         read_only_fields = ["id"]
 
     fields = serializers.ListField(child=serializers.JSONField())
+
 
 class DynamicFormSerializer(serializers.ModelSerializer):
     klinik = serializers.SerializerMethodField(read_only=True)
@@ -41,4 +43,4 @@ class DynamicFormSerializer(serializers.ModelSerializer):
 
     def get_klinik(self, obj):
         klinik = obj.cabang.klinik
-        return { "name": klinik.name }
+        return {"name": klinik.name}
