@@ -106,9 +106,11 @@ describe("Dynamic Form", () => {
 
   it('renders mandatory fields', () => {
     const NIKField = screen.getByLabelText("NIK");
+    const emailField = screen.getByLabelText("Email");
     const doctorField = screen.getByLabelText("Pilih Jadwal");
 
     expect(NIKField).toBeInTheDocument();
+    expect(emailField).toBeInTheDocument();
     expect(doctorField).toBeInTheDocument();
   });
 
@@ -157,12 +159,14 @@ describe("Dynamic Form Submission", () => {
 
   it('able to submit if filled properly', async () => {
     const nikField = screen.getByLabelText("NIK")
+    const emailField = screen.getByLabelText("Email")
     const tenagaMedisField = screen.getByLabelText("Pilih Tenaga Medis")
     const jadwalSelection = screen.getByLabelText("Pilih Jadwal")
     const firstField = screen.getByLabelText("Field 1*");
 
     await act(async () => {
       await fireEvent.change(nikField, { target: { value: "2" } })
+      await fireEvent.change(emailField, { target: { value: "email@email.com" } })
       await fireEvent.change(tenagaMedisField, { target: { value: "2" } })
       await fireEvent.change(jadwalSelection, { target: { value: "2" } })
       await fireEvent.change(firstField, { target: { value: "text" } })
