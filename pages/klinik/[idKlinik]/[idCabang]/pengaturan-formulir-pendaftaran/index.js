@@ -45,6 +45,7 @@ const PengaturanFormulirPendaftaran = () => {
       <Formik>
         {() => <Form style={{ marginTop: "1em" }}>
           <TextInput label="NIK" placeholder="NIK" disabled={true}/>
+          <TextInput label="Email" placeholder="Email" disabled={true}/>
           <TextInput label="Pilih Tenaga Medis" as="select" disabled={true}>
             <option value="">Pilih Tenaga Medis</option>
           </TextInput>
