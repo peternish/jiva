@@ -62,6 +62,7 @@ class EHRTestCase(APITestCase):
         self.auth = "Bearer " + self.token
 
         self.uri = "ehr:rekam-medis"
+        self.uri_list = "ehr:rekam-medis-list"
         self.uri_detil = "ehr:detil-rekam-medis"
         self.uri_pasien = "ehr:pasien"
         self.uri_pasien_detail = "ehr:pasien-detail"
@@ -98,7 +99,7 @@ class EHRTestCase(APITestCase):
         self.patient.save()
 
         self.ehr = RekamanMedis(
-            fields=[{}],
+            fields=self.fields,
             author=self.medic,
             patient=self.patient,
         )
@@ -156,22 +157,42 @@ class PasienAPITest(EHRTestCase):
 
 class RekamMedisAPITest(EHRTestCase):
     def test_get_all_rekaman_medis_from_nik(self):
-        pass
+        uri = reverse(self.uri_list, kwargs={"nik": self.patient.nik})
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        resp = self.client.get(uri)
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(resp.data), 1)
 
     def test_get_all_rekaman_medis_from_nik_but_nik_not_found(self):
-        pass
+        uri = reverse(self.uri_list, kwargs={"nik": 9999})
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        resp = self.client.get(uri)
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_get_all_rekaman_medis_from_nik_but_unauthorized(self):
-        pass
+        uri = reverse(self.uri_list, kwargs={"nik": self.patient.nik})
+        resp = self.client.get(uri)
+        self.assertEqual(resp.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_get_rekaman_medis_from_id(self):
-        pass
+        uri = reverse(self.uri_detil, kwargs={"id": self.ehr.id})
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        resp = self.client.get(uri)
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(resp.data["fields"], self.fields)
+        self.assertEqual(resp.data["author"], self.medic.id)
+        self.assertEqual(resp.data["patient"], self.patient.id)
 
     def test_get_rekaman_medis_from_id_but_not_found(self):
-        pass
+        uri = reverse(self.uri_detil, kwargs={"id": 9999})
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        resp = self.client.get(uri)
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_get_rekaman_medis_from_id_but_unauthorized(self):
-        pass
+        uri = reverse(self.uri_detil, kwargs={"id": self.ehr.id})
+        resp = self.client.get(uri)
+        self.assertEqual(resp.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_post_rekaman_medis(self):
         self.assertEqual(RekamanMedis.objects.count(), 1)

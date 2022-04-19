@@ -43,6 +43,18 @@ class RekamMedisApi(APIView):
         IsAuthenticated,
     ]
 
+    def get(self, request: Request, nik: str, format=None):
+        try:
+            pasien = Pasien.objects.get(nik=nik)
+            ehr = RekamanMedis.objects.all()
+            ehr = RekamanMedis.objects.filter(patient=pasien.id)
+            serializer = RekamanMedisSerializer(ehr, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Pasien.DoesNotExist:
+            return Response("Pasien not found", status=status.HTTP_404_NOT_FOUND)
+        except TenagaMedisProfile.DoesNotExist:
+            return Response("Tenaga Medis not found", status=status.HTTP_404_NOT_FOUND)
+
     def post(self, request: Request, format=None) -> Response:
         serializer = RekamanMedisSerializer(data=request.data)
         nik = request.data.get("patient")
@@ -83,5 +95,13 @@ class RekamMedisDetilApi(APIView):
                 serializer.save()
                 return Response(status=status.HTTP_201_CREATED)
             return Response(status=status.HTTP_400_BAD_REQUEST)
+        except RekamanMedis.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+    def get(self, request: Request, id: int, format=None):
+        try:
+            ehr = RekamanMedis.objects.get(id=id)
+            serializer = RekamanMedisSerializer(ehr)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         except RekamanMedis.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
