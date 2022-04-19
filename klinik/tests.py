@@ -132,12 +132,12 @@ class KlinikTestSetUp(APITestCase):
         #     pas.save()
 
         # Should have ID 1
-        self.pas = LamaranPasien(nik=f"4206913370", fields=[{"nama": f"Abdullah0"}])
+        self.pas = LamaranPasien(nik=f"4206913370", email="email@email.com", fields=[{"nama": f"Abdullah0"}])
         self.pas.save()
 
         # Should have ID starting from 2
         for _ in range(9):
-            lam = LamaranPasien(nik=f"420691337{_+1}", fields=[{"nama": f"Abdullah{_+1}"}])
+            lam = LamaranPasien(nik=f"420691337{_+1}", email=f"email{_}@email.com", fields=[{"nama": f"Abdullah{_+1}"}])
             lam.save()
             # print(f"There's {LamaranPasien.objects.last().id}")
 
@@ -261,33 +261,33 @@ class KlinikAPITest(KlinikTestSetUp):
 
 class CabangAPITest(KlinikTestSetUp):
     def test_get_cabang_list_from_klinik(self):
-        self.assertEqual(Cabang.objects.count(), 20)
+        self.assertEqual(Cabang.objects.count(), 21)
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         resp = self.client.get(self.url_list, data={"klinik": self.klinik.id})
 
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(resp.data), 10)
-        self.assertNotEqual(len(resp.data), 20)
+        self.assertEqual(len(resp.data), 11)
+        self.assertNotEqual(len(resp.data), 21)
 
     def test_get_cabang_list_from_klinik_without_auth_fails(self):
         resp = self.client.get(self.url_list)
         self.assertEqual(resp.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_post_cabang_list(self):
-        self.assertEqual(Cabang.objects.count(), 20)
+        self.assertEqual(Cabang.objects.count(), 21)
         data = {"location": self.alt_location, "klinik": self.klinik.id}
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         resp = self.client.post(self.url_list, data=data)
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(Cabang.objects.count(), 21)
+        self.assertEqual(Cabang.objects.count(), 22)
 
     def test_post_cabang_fail(self):
-        self.assertEqual(Cabang.objects.count(), 20)
+        self.assertEqual(Cabang.objects.count(), 21)
         data = {}
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         resp = self.client.post(self.url_list, data=data)
         self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(Cabang.objects.count(), 20)
+        self.assertEqual(Cabang.objects.count(), 21)
 
     def test_get_cabang_detail(self):
         cabang_list = list(Cabang.objects.all())
@@ -326,22 +326,22 @@ class CabangAPITest(KlinikTestSetUp):
         self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_delete_cabang_detail(self):
-        self.assertEqual(Cabang.objects.count(), 20)
+        self.assertEqual(Cabang.objects.count(), 21)
         cabang_list = list(Cabang.objects.all())
         cabang = secrets.choice(cabang_list)
         uri = reverse(self.url_detail, kwargs={"pk": cabang.id})
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         resp = self.client.delete(uri)
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
-        self.assertEqual(Cabang.objects.count(), 19)
+        self.assertEqual(Cabang.objects.count(), 20)
 
     def test_delete_cabang_detail_not_found(self):
-        self.assertEqual(Cabang.objects.count(), 20)
+        self.assertEqual(Cabang.objects.count(), 21)
         uri = reverse(self.url_detail, kwargs={"pk": 9999})
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         resp = self.client.delete(uri)
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
-        self.assertEqual(Cabang.objects.count(), 20)
+        self.assertEqual(Cabang.objects.count(), 21)
 
 class LamaranPasienApiTest(KlinikTestSetUp):
     def test_get_lamaran_pasien(self):
@@ -351,7 +351,7 @@ class LamaranPasienApiTest(KlinikTestSetUp):
         resp = self.client.get(uri)
 
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(resp.data), 3)
+        self.assertEqual(len(resp.data), 4)
         self.assertEqual(resp.data["id"], 1)
         self.assertEqual(resp.data["nik"], "4206913370")
 
@@ -362,7 +362,7 @@ class LamaranPasienApiTest(KlinikTestSetUp):
 
     def test_post_lamaran_pasien(self):
         self.assertEqual(LamaranPasien.objects.count(), 10)
-        data = {"nik": "13371337", "fields": self.json_test}
+        data = {"nik": "13371337", "email": "email@email.com", "fields": self.json_test}
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         resp = self.client.post(self.pasien_list, data=data)
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
@@ -381,7 +381,7 @@ class LamaranPasienApiTest(KlinikTestSetUp):
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         self.assertEqual(LamaranPasien.objects.count(), 10)
         uri = reverse(self.pasien_detail, kwargs={"pk": 1})
-        resp = self.client.patch(uri, data={"nik":  "13371337", "fields": self.json_test})
+        resp = self.client.patch(uri, data={"nik":  "13371337", "email": "emaile@email.com", "fields": self.json_test})
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         self.assertEqual(resp.data["id"], 1)
 
@@ -414,7 +414,7 @@ class LamaranPasienCompoundApiTest(KlinikTestSetUp):
         self.assertEqual(LamaranPasien.objects.count(), 10)
         self.assertEqual(JadwalPasien.objects.count(), 10)
 
-        data = {"nik": "13371337", "fields": self.json_test, "date": datetime.date(2000, 4, 20),
+        data = {"nik": "13371337", "fields": self.json_test, "email": "emails@email.com", "date": datetime.date(2000, 4, 20),
          "jadwal_tenaga_medis_pk": self.jadwal_tenaga_medis.pk}
 
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
