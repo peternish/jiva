@@ -57,6 +57,7 @@ class TenagaMedisProfile(Profile):
 
 class LamaranPasien(models.Model):
     nik = models.CharField(max_length=20)
+    email = models.EmailField(max_length=254)
     fields = models.JSONField("Fields", default=list)
     def __str__(self) -> str:
         return self.nik

@@ -1,8 +1,12 @@
 from functools import partial
+from django.http import QueryDict
 from rest_framework.permissions import IsAuthenticated
 from urllib.request import Request
+
+from jadwal.serializers import JadwalPasienSerializer
 from .serializers import DynamicFormSerializer, KlinikSerializer, CabangSerializer, LamaranPasienSerializer
 from klinik.models import Cabang, Klinik, OwnerProfile, DynamicForm, LamaranPasien
+from jadwal.models import JadwalTenagaMedis
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -231,3 +235,40 @@ class LamaranPasienApi(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
         lamaran_pasien.delete()
         return Response(status=status.HTTP_200_OK)
+
+class LamaranPasienCompoundApi(APIView):
+    
+    permission_classes = [
+        IsAuthenticated,
+    ]
+    
+    def post(self, request: Request):
+        lamaran_pasien_data = QueryDict('', mutable=True)
+        jadwal_pasien_data = QueryDict('', mutable=True)
+        jadwal_tenaga_medis_pk = 0
+
+        try:
+            for key, value in request.data.items():
+                if (key == "date"):
+                    jadwal_pasien_data[key] = value
+                if (key == "jadwal_tenaga_medis_pk"):
+                    jadwal_tenaga_medis_pk = value
+                else: 
+                    lamaran_pasien_data[key] = value
+        except:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        lamaran_serializer = LamaranPasienSerializer(data=lamaran_pasien_data)
+        if lamaran_serializer.is_valid() and jadwal_tenaga_medis_pk != 0:
+            lamaran_serializer.save()
+        else:
+            return Response(lamaran_serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
+
+        lamaran_pasien: LamaranPasien = LamaranPasien.objects.last()
+        jadwal_tenaga_medis: JadwalTenagaMedis = get_object(JadwalTenagaMedis, jadwal_tenaga_medis_pk)
+
+        jadwal_serializer = JadwalPasienSerializer(data=jadwal_pasien_data)
+        if jadwal_serializer.is_valid():
+            jadwal_serializer.save(lamaranPasien = lamaran_pasien, jadwalTenagaMedis = jadwal_tenaga_medis)
+            return Response(jadwal_serializer.data, status=status.HTTP_201_CREATED)
+        return Response(jadwal_serializer.errors, status=status.HTTP_400_BAD_REQUEST) and print(jadwal_serializer.errors)
