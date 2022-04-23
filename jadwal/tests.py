@@ -462,7 +462,7 @@ class JadwalPasienAPITestSetup(APITestCase, TestCase):
             tenaga_medis=self.tenaga_medis_profile,
             start_time=datetime.time(2, 0, 0),
             end_time=datetime.time(6, 0, 0),
-            quota=5,
+            quota=10,
             day="tue"
         )
         jadwal_tenaga_medis_lain.save()
@@ -510,13 +510,13 @@ class JadwalPasienAPITest(JadwalPasienAPITestSetup):
         lam.save()
         self.assertEqual(LamaranPasien.objects.count(), 12)
 
-        url = reverse(self.create_jadwal_pasien_url, kwargs={"jadwal_tenaga_medis_pk": 2, 
+        url = reverse(self.create_jadwal_pasien_url, kwargs={"jadwal_tenaga_medis_pk": 1, 
         "pasien_pk": LamaranPasien.objects.count()})
         resp = self.client.post(url, data=data)
         jadwal_pasien = JadwalPasien.objects.last()
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
         self.assertEqual(jadwal_pasien.date, datetime.date(1666, 4, 20))
-        self.assertEqual(jadwal_pasien.jadwalTenagaMedis.id, 2)
+        self.assertEqual(jadwal_pasien.jadwalTenagaMedis.id, 1)
         self.assertEqual(jadwal_pasien.lamaranPasien.id, 12)
         self.assertEqual(JadwalPasien.objects.count(), 12)
 
@@ -525,11 +525,23 @@ class JadwalPasienAPITest(JadwalPasienAPITestSetup):
         data = {
             # all missing fields
         }
+        url = reverse(self.create_jadwal_pasien_url, kwargs={"jadwal_tenaga_medis_pk": 1, 
+        "pasien_pk": 2})
+        resp = self.client.post(url, data=data)
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(JadwalPasien.objects.count(), 11)
+
+    def test_create_jadwal_pasien_fail_quota(self):
+        self.assertEqual(JadwalPasien.objects.count(), 11)
+        data = {
+            "date" : datetime.date(1666, 4, 20)
+        }
         url = reverse(self.create_jadwal_pasien_url, kwargs={"jadwal_tenaga_medis_pk": 2, 
         "pasien_pk": 2})
         resp = self.client.post(url, data=data)
         self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(JadwalPasien.objects.count(), 11)
+
 
     def test_get_jadwal_pasien(self):
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
