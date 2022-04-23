@@ -16,7 +16,7 @@ from klinik.models import Cabang, LamaranPasien, TenagaMedisProfile
 from urllib.request import Request
 from jiva_be.utils import IsStafPermission
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 from .utils import filter_available_jadwal
 
 
@@ -128,14 +128,23 @@ class AvailableJadwalTenagaMedisAPI(APIView):
                 { "error": f"no 'cabang' found with id : {cabang_id}" },
                 status=status.HTTP_404_NOT_FOUND,
             )
-        date = datetime.strptime(request.data["date"], "%d/%m/%Y")
-        day = datetime.strftime(date, "%a").lower()
-        jadwal_tenaga_medis_query = JadwalTenagaMedis.objects.filter(day=day)
+        current_date = datetime.today()
+        current_day = current_date.weekday()
+        start_query_day = current_day + 1 if current_day < 6 else 0
+        query_days = [x[0] for x in JadwalTenagaMedis.DAY_CHOICES][start_query_day:]
+        jadwal_tenaga_medis_query = JadwalTenagaMedis.objects.filter(day__in=query_days)
+        start_date = current_date + timedelta(days=1)
+        end_date = current_date + timedelta(days=7 if current_day == 6 else 6 - current_day)
         available_jadwal_list = filter_available_jadwal(
             jadwal_tenaga_medis_query=jadwal_tenaga_medis_query,
-            date=date
+            start_date=start_date,
+            end_date=end_date
         )
         serializer = JadwalTenagaMedisSerializer(available_jadwal_list, many=True)
+        timedelta_inc = 0
+        for jadwal in serializer.data:
+            jadwal["date"] = (start_date + timedelta(days=timedelta_inc)).date()
+            timedelta_inc += 1
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 

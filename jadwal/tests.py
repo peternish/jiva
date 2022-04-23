@@ -389,14 +389,19 @@ class JadwalTenagaMedisAPITest(JadwalTenagaMedisTestSetUp):
 
 
 class AvailableJadwalTenagaMedisAPITest(JadwalTenagaMedisTestSetUp):
+    def setUp(self):
+        super().setUp()
+        self.sample_date = datetime.datetime.today()
+
     def test_get_available_jadwal_tenaga_medis(self):
         self.client.credentials(HTTP_AUTHORIZATION=None)
+        tomorrow = self.sample_date + datetime.timedelta(days=1)
         jadwal_tenaga_medis = JadwalTenagaMedis.objects.create(
             tenaga_medis=self.tenaga_medis_profile,
             start_time=datetime.time(8, 0, 0),
             end_time=datetime.time(10, 0, 0),
             quota=2,
-            day="tue"
+            day=tomorrow.strftime("%a").lower()
         )
         jadwal_tenaga_medis.save()
         lamaran_pasien = LamaranPasien.objects.create(
@@ -409,19 +414,15 @@ class AvailableJadwalTenagaMedisAPITest(JadwalTenagaMedisTestSetUp):
         )
         lamaran_pasien.save()
         jadwal_pasien = JadwalPasien.objects.create(
-            date=datetime.date(2021, 10, 19),
+            date=tomorrow.date(),
             lamaranPasien=lamaran_pasien,
             jadwalTenagaMedis=jadwal_tenaga_medis
         )
         jadwal_pasien.save()
-        data = {
-            "date": "19/10/2021"
-        }
         url = reverse(self.available_jadwal_tenaga_medis_url, kwargs={ "cabang_id" : self.cabang.id })
         response = self.client.generic(
             method="GET", 
-            path=url, 
-            data=json.dumps(data), 
+            path=url,
             content_type="application/json"
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -434,7 +435,7 @@ class AvailableJadwalTenagaMedisAPITest(JadwalTenagaMedisTestSetUp):
             start_time=datetime.time(8, 0, 0),
             end_time=datetime.time(10, 0, 0),
             quota=2,
-            day="tue"
+            day=self.sample_date.strftime("%a").lower()
         )
         jadwal_tenaga_medis.save()
         for i in range(2):
@@ -448,19 +449,15 @@ class AvailableJadwalTenagaMedisAPITest(JadwalTenagaMedisTestSetUp):
             )
             lamaran_pasien.save()
             jadwal_pasien = JadwalPasien.objects.create(
-                date=datetime.date(2021, 10, 19),
+                date=self.sample_date.date(),
                 lamaranPasien=lamaran_pasien,
                 jadwalTenagaMedis=jadwal_tenaga_medis
             )
             jadwal_pasien.save()
-        data = {
-            "date": "19/10/2021"
-        }
         url = reverse(self.available_jadwal_tenaga_medis_url, kwargs={ "cabang_id" : self.cabang.id })
         response = self.client.generic(
             method="GET", 
-            path=url, 
-            data=json.dumps(data), 
+            path=url,
             content_type="application/json"
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
