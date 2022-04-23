@@ -35,7 +35,9 @@ class JadwalTenagaMedisListAPI(APIView):
         cabang = get_object(Cabang, pk=cabang_id)
         if cabang is None:
             return Response(
-                {"error": f"no 'cabang' found with id : {cabang_id}"},
+                {
+                    "error": f"no 'cabang' found with id : {cabang_id}"
+                },
                 status=status.HTTP_404_NOT_FOUND,
             )
         tenaga_medis_profiles = TenagaMedisProfile.objects.filter(cabang=cabang)
@@ -54,7 +56,9 @@ class CreateJadwalTenagaMedisAPI(APIView):
         tenaga_medis = get_object(TenagaMedisProfile, pk=tenaga_medis_id)
         if tenaga_medis is None:
             return Response(
-                {"error": f"no 'tenaga medis' found with id : {tenaga_medis_id}"},
+                {
+                    "error": f"no 'tenaga medis' found with id : {tenaga_medis_id}"
+                },
                 status=status.HTTP_404_NOT_FOUND,
             )
         serializer = JadwalTenagaMedisSerializer(data=request.data)
@@ -123,7 +127,9 @@ class AvailableJadwalTenagaMedisAPI(APIView):
         cabang = get_object(Cabang, pk=cabang_id)
         if cabang is None:
             return Response(
-                {"error": f"no 'cabang' found with id : {cabang_id}"},
+                {
+                    "error": f"no 'cabang' found with id : {cabang_id}"
+                },
                 status=status.HTTP_404_NOT_FOUND,
             )
         current_date = datetime.today()
@@ -133,13 +139,15 @@ class AvailableJadwalTenagaMedisAPI(APIView):
         tenaga_medis_profiles = TenagaMedisProfile.objects.filter(cabang=cabang)
         jadwal_tenaga_medis_query = []
         for tenaga_medis in tenaga_medis_profiles:
-            jadwal_tenaga_medis_query += JadwalTenagaMedis.objects.filter(tenaga_medis=tenaga_medis, day__in=query_days)
+            jadwal_tenaga_medis_query += JadwalTenagaMedis.objects.filter(
+                tenaga_medis=tenaga_medis, day__in=query_days
+            )
         start_date = current_date + timedelta(days=1)
         end_date = current_date + timedelta(days=7 if current_day == 6 else 6 - current_day)
         available_jadwal_list = filter_available_jadwal(
             jadwal_tenaga_medis_query=jadwal_tenaga_medis_query,
             start_date=start_date,
-            end_date=end_date
+            end_date=end_date,
         )
         serializer = JadwalTenagaMedisSerializer(available_jadwal_list, many=True)
         timedelta_inc = 0
@@ -195,8 +203,11 @@ class CreateJadwalPasienAPI(APIView):
         count = JadwalPasien.objects.filter(jadwalTenagaMedis=jadwal_tenaga_medis).count()
         if count >= jadwal_tenaga_medis.quota:
             return Response(
-                { "error": f"Telah melewati batas kuota JadwalTenagaMedis ({count} >= {jadwal_tenaga_medis.quota})" }
-                , status=status.HTTP_400_BAD_REQUEST)
+                {
+                    "error": f"Telah melewati batas kuota JadwalTenagaMedis ({count} >= {jadwal_tenaga_medis.quota})"
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
         serializer = JadwalPasienSerializer(data=request.data)
         if serializer.is_valid():
@@ -219,7 +230,9 @@ class JadwalPasienAPI(APIView):
             return Response(data=serializer.data, status=status.HTTP_200_OK)
         except JadwalPasien.DoesNotExist:
             return Response(
-                {"error": f"no 'jadwal pasien' found with id : {pk}"},
+                {
+                    "error": f"no 'jadwal pasien' found with id : {pk}"
+                },
                 status=status.HTTP_404_NOT_FOUND,
             )
 
@@ -235,7 +248,9 @@ class JadwalPasienAPI(APIView):
         jadwal_pasien = get_object(LamaranPasien, pk)
         if jadwal_pasien is None:
             return Response(
-                {"error": f"no 'jadwal pasien' found with id : {pk}"},
+                {
+                    "error": f"no 'jadwal pasien' found with id : {pk}"
+                },
                 status=status.HTTP_404_NOT_FOUND,
             )
         jadwal_pasien.delete()
