@@ -463,9 +463,7 @@ class AvailableJadwalTenagaMedisAPITest(JadwalTenagaMedisTestSetUp):
         url = reverse(
             self.available_jadwal_tenaga_medis_url, kwargs={"cabang_id": self.cabang.id}
         )
-        response = self.client.generic(
-            method="GET", path=url, content_type="application/json"
-        )
+        response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)
 
@@ -493,19 +491,16 @@ class AvailableJadwalTenagaMedisAPITest(JadwalTenagaMedisTestSetUp):
         url = reverse(
             self.available_jadwal_tenaga_medis_url, kwargs={"cabang_id": self.cabang.id}
         )
-        response = self.client.generic(
-            method="GET", path=url, content_type="application/json"
-        )
+        response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 0)
 
     def test_get_available_jadwal_tenaga_medis_cabang_not_found(self):
         self.client.credentials(HTTP_AUTHORIZATION=None)
-        data = {"date": "19/10/2021"}
         url = reverse(
             self.available_jadwal_tenaga_medis_url, kwargs={"cabang_id": 1999}
         )
-        response = self.client.get(url, data=data)
+        response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
 
