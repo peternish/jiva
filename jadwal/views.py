@@ -142,9 +142,10 @@ class CreateJadwalPasienAPI(APIView):
         jadwal_tenaga_medis: JadwalTenagaMedis = get_object(JadwalTenagaMedis, jadwal_tenaga_medis_pk)
         lamaran_pasien: LamaranPasien = get_object(LamaranPasien, pasien_pk)
         
-        if jadwal_tenaga_medis is None and lamaran_pasien is None:
+        count = JadwalPasien.objects.filter(jadwalTenagaMedis=jadwal_tenaga_medis).count()
+        if count >= jadwal_tenaga_medis.quota:
             return Response(status=status.HTTP_400_BAD_REQUEST)
-
+        
         serializer = JadwalPasienSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(jadwalTenagaMedis = jadwal_tenaga_medis, lamaranPasien = lamaran_pasien)
