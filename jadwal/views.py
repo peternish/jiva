@@ -219,17 +219,16 @@ class JadwalPasienAPI(APIView):
     permission_classes = [IsStafPermission]
 
     def get(self, request: Request, pk: int):
-        try:
-            jadwal_pasien = get_object(JadwalPasien, pk)
-            serializer = JadwalPasienSerializer(jadwal_pasien)
-            return Response(data=serializer.data, status=status.HTTP_200_OK)
-        except JadwalPasien.DoesNotExist:
+        jadwal_pasien = get_object(JadwalPasien, pk)
+        if jadwal_pasien is None:
             return Response(
                 {
                     "error": f"no 'jadwal pasien' found with id : {pk}"
                 },
                 status=status.HTTP_404_NOT_FOUND,
             )
+        serializer = JadwalPasienSerializer(jadwal_pasien)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     def patch(self, request: Request, pk: int):
         jadwal_pasien = get_object(JadwalPasien, pk)

@@ -692,6 +692,12 @@ class JadwalPasienAPITest(JadwalPasienAPITestSetup):
         self.assertEqual(
             resp.data["date"], datetime.date(1987, 4, 20).strftime("%Y-%m-%d")
         )
+    
+    def test_get_jadwal_pasien_not_found(self):
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        uri = reverse(self.jadwal_pasien_url, kwargs={"pk": 1999})
+        resp = self.client.get(uri)
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_get_jadwal_pasien_list(self):
         self.assertEqual(JadwalPasien.objects.count(), 11)
