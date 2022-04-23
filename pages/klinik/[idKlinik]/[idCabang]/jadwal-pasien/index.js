@@ -10,6 +10,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Formik, Form, Field } from "formik";
 import { getJadwalTenagaMedisList } from "@redux/modules/jadwalTenagaMedis/thunks";
 import { getTenagaMedis } from "@redux/modules/tenagaMedis/thunks";
+import { getJadwalPasienList } from "@redux/modules/jadwalPasien/thunks";
 import Layout from "@components/Layout";
 import Jadwal_Tenaga_Medis from "@components/JadwalTenagaMedis/Calender"
 import Form_Calender from "@components/JadwalTenagaMedis/FormCalender";
@@ -29,17 +30,18 @@ const Jadwal = (props) => {
       }
       const { idCabang } = query;
       dispatch(getJadwalTenagaMedisList({ idCabang }));
+      dispatch(getTenagaMedis({ idCabang }));
+      dispatch(getJadwalPasienList({ idCabang }));
     }, [dispatch, isReady, query]);
 
     const { jadwalTenagaMedisList } = useSelector(state => state.jadwalTenagaMedis);
-
-    useEffect(() => {
-      if (!isReady) return;
-      const { idCabang } = query;
-      dispatch(getTenagaMedis({ idCabang }));
-    }, [isReady, dispatch, query]);
-  
     const { tenagaMedisList } = useSelector(state => state.tenagaMedis);
+    const { jadwalPasienList } = useSelector(state => state.jadwalPasien);
+
+  
+    console.log(jadwalTenagaMedisList)
+    console.log(tenagaMedisList)
+    console.log(jadwalPasienList)
 
     const locales = {
         'en-US': enUS,
@@ -107,7 +109,13 @@ const Jadwal = (props) => {
   
             const day_int = dayDict[day];
             const currentDate = new Date();
-            const day_num = day_int - currentDate.getDay();
+            const day_num = 0;
+            if(currentDate.getDay > 0) {
+              day_num = day_int - currentDate.getDay();
+            } else {
+              day_num = day_int - 7;
+            }
+
             currentDate.setDate(new Date(currentDate.getDate() + day_num))
   
             const start = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), 
@@ -135,8 +143,6 @@ const Jadwal = (props) => {
         parseTenagaMedis(tenagaMedisList);
       }, [jadwalTenagaMedisList, tenagaMedisList, parseData, parseTenagaMedis])
 
-    const [currentEvent, setCurrentEvent] = useState(undefined)
-
     const updateMyEvents = (value) => {
       const id = tenagaMedisDict2[value]
       myEvents = [{}]
@@ -151,6 +157,8 @@ const Jadwal = (props) => {
 
       parseData(-1, 1)
     }
+
+    console.log()
 
     return jadwalTenagaMedisList && tenagaMedisList ? (
       <Layout navType = "sidebar" title="Jadwal Tenaga Medis">

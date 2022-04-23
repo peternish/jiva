@@ -4,9 +4,10 @@ import { axiosInstance as axios } from "@api/http";
 const BASE_URL = constants?.API_BASE_URL;
 
 const jadwalPasien = {
-    getJadwalPasien: ({ idJadwalTenagaMedis }) => {
-        return axios.get(`${BASE_URL}/jadwal/pasien/${idJadwalTenagaMedis}`)
+    getJadwalPasienList: ({ idCabang }) => {
+        console.log("sini");
+        return axios.get(`${BASE_URL}/jadwal/pasien/bycabang/${idCabang}`)
     }
-}
+};
 
 export default jadwalPasien;

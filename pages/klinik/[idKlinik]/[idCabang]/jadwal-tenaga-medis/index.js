@@ -30,16 +30,10 @@ const Jadwal = (props) => {
       }
       const { idCabang } = query;
       dispatch(getJadwalTenagaMedisList({ idCabang }));
+      dispatch(getTenagaMedis({ idCabang }));
     }, [dispatch, isReady, query]);
 
     const { jadwalTenagaMedisList } = useSelector(state => state.jadwalTenagaMedis);
-
-    useEffect(() => {
-      if (!isReady) return;
-      const { idCabang } = query;
-      dispatch(getTenagaMedis({ idCabang }));
-    }, [isReady, dispatch, query]);
-  
     const { tenagaMedisList } = useSelector(state => state.tenagaMedis);
 
     const locales = {
@@ -55,8 +49,6 @@ const Jadwal = (props) => {
         getDay,
         locales,
       })
-
-      const [dataLoaded, setDataLoaded] = useState(false)
 
       let [myEvents, setEvents] = useState([{}]);
 
@@ -110,7 +102,13 @@ const Jadwal = (props) => {
   
             const day_int = dayDict[day];
             const currentDate = new Date();
-            const day_num = day_int - currentDate.getDay();
+            const day_num = 0;
+            if(currentDate.getDay > 0) {
+              day_num = day_int - currentDate.getDay();
+            } else {
+              day_num = day_int - 7;
+            }
+
             currentDate.setDate(new Date(currentDate.getDate() + day_num))
   
             const start = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), 
@@ -127,23 +125,12 @@ const Jadwal = (props) => {
                 setEvents((prev) => [...prev, { id, start, end, title, quota, id_tenaga_medis }])
               }
             } else {
+              console.log("here")
               setEvents((prev) => [...prev, { id, start, end, title, quota, id_tenaga_medis }])
             }
           })
         }
-        if(tenagaMedisList) {
-          tenagaMedisList.map((tenagaMedis) => {
-            const id_tenaga_medis_list = tenagaMedis.account.id;
-            const nama_tenaga_medis = tenagaMedis.account.full_name;
-
-            tenagaMedisDict[id_tenaga_medis_list] = nama_tenaga_medis
-            setTenagaMedisDict(tenagaMedisDict);
-
-            tenagaMedisDict2[nama_tenaga_medis] = id_tenaga_medis_list
-            setTenagaMedisDict2(tenagaMedisDict2)
-          })
-        }
-      }, [currentId, jadwalTenagaMedisList, tenagaMedisDict, tenagaMedisDict2, tenagaMedisList])
+      }, [currentId, jadwalTenagaMedisList])
 
       useEffect(() =>  {
         parseData(jadwalTenagaMedisList, -1, 0);
@@ -253,15 +240,19 @@ const Jadwal = (props) => {
 
       return date
     }
-    console.log(tenagaMedisDict2)
-    console.log(tenagaMedisDict)
-    console.log(tenagaMedisList)
-    return (jadwalTenagaMedisList && tenagaMedisList)? (
+    // console.log(tenagaMedisDict2)
+    // console.log(tenagaMedisDict)
+    // console.log(tenagaMedisList)
+    console.log(jadwalTenagaMedisList)
+
+    console.log("Events", myEvents)
+
+    return (jadwalTenagaMedisList && tenagaMedisList && tenagaMedisDict && tenagaMedisDict2)? (
       <Layout navType = "sidebar" title="Jadwal Tenaga Medis">
         <Filter_Tenaga_Medis>
-          <select onChange={(event) => updateMyEvents(event.target.value)} style={{width: '10%'}}>
-            <option value="" selected="selected" hidden="hidden">Pilih Tenaga Medis</option>
-            {Object.keys(tenagaMedisDict2).map(key => <option key={key} value={tenagaMedisDict[key]}>{key}</option>)}
+          <select defaultValue={""} onChange={(event) => updateMyEvents(event.target.value)} style={{width: '10%'}}>
+            <option value="" hidden="hidden">Pilih Tenaga Medis</option>
+            {Object.keys(tenagaMedisDict2).map(key => <option key={key} value={tenagaMedisDict[key] } data-testid="select-option">{key}</option>)}
           </select>
           <LoadingButton
           onClick={updateAllMyEvents}
@@ -321,9 +312,10 @@ const Jadwal = (props) => {
                   name="jadwal_title" 
                   placeholder="Tenaga Medis" 
                   as="select"
-                  data-testid="selectTenaga"                  
+                  data-testid="selectTenaga"  
+                  defaultValue=""                
                 >
-                  <option value="" selected="selected" hidden="hidden">Pilih Tenaga Medis</option>
+                  <option value="" hidden="hidden">Pilih Tenaga Medis</option>
                   {Object.keys(tenagaMedisDict2).map(key => <option key={key} value={tenagaMedisDict[key] } data-testid="select-option">{key}</option>)}
                 </TextInput>
                 <TextInput

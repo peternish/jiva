@@ -9,6 +9,7 @@ const jadwalTenagaMedis = createSlice({
   reducers: {
     setJadwalTenagaMedisList(state, { payload }) {
       state.jadwalTenagaMedisList = payload;
+      console.log("payload tm", payload)
       return state;
     },
     setJadwalTenagaMedis(state, {payload}) {

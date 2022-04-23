@@ -1,17 +1,18 @@
 import jivaAPI from "@api/index";
 import { setJadwalPasien } from "@redux/modules/jadwalPasien";
 import { toast } from "react-toastify";
-import constants from "@utils/constants"
 
-const getJadwalPasien = ({ idJadwalTenagaMedis }) => {
+const getJadwalPasienList = ({ idCabang }) => {
     return async (dispatch) => {
         try {
-            const { data } = await jivaAPI.jadwalPasien.getJadwalPasien({ idJadwalTenagaMedis });
+            const { data } = await jivaAPI.jadwalPasien.getJadwalPasienList({ idCabang });
+            console.log(data)
+            console.log("Here")
             await dispatch(setJadwalPasien(data));
         } catch (error) {
-            toast(constants.BASE_ERROR_MESSAGE, { type: toast.TYPE.ERROR });
+            toast(error.toString(), { type: toast.TYPE.ERROR });
         }
     };
 };
 
-export { getJadwalPasien }
+export { getJadwalPasienList }

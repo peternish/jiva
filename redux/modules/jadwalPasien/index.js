@@ -8,11 +8,12 @@ const jadwalPasien = createSlice ({
     reducers: {
         setJadwalPasien(state, { payload }) {
             state.jadwalPasien = payload;
+            console.log("state pasien", state.jadwalPasien)
             return state;
         }
-    }
+    },
 });
 
-export const {setJadwalPasien} = jadwalPasien;
+export const { setJadwalPasien } = jadwalPasien.actions;
 
 export default jadwalPasien.reducer;
