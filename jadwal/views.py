@@ -232,8 +232,15 @@ class JadwalPasienAPI(APIView):
 
     def patch(self, request: Request, pk: int):
         jadwal_pasien = get_object(JadwalPasien, pk)
+        if jadwal_pasien is None:
+            return Response(
+                {
+                    "error": f"no 'jadwal pasien' found with id : {pk}"
+                },
+                status=status.HTTP_404_NOT_FOUND,
+            )
         serializer = JadwalPasienSerializer(jadwal_pasien, data=request.data)
-        if serializer.is_valid() and jadwal_pasien is not None:
+        if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -720,6 +720,18 @@ class JadwalPasienAPITest(JadwalPasienAPITestSetup):
         resp = self.client.patch(uri, data={"date": datetime.date(2021, 4, 20)})
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
 
+    def test_patch_jadwal_pasien_not_found(self):
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        uri = reverse(self.jadwal_pasien_url, kwargs={"pk": 1999})
+        resp = self.client.patch(uri, data={"date": datetime.date(2021, 4, 20)})
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+    
+    def test_patch_jadwal_pasien_bad_request(self):
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        uri = reverse(self.jadwal_pasien_url, kwargs={"pk": 1})
+        resp = self.client.patch(uri, data={"date": "not a date"})
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+
     def test_delete_jadwal_pasien(self):
         self.assertEqual(JadwalPasien.objects.count(), 11)
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
