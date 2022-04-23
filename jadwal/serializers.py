@@ -1,4 +1,5 @@
 # rest imports
+from typing_extensions import Required
 from rest_framework import serializers
 
 # model and serializer imports
@@ -59,10 +60,10 @@ class JadwalTenagaMedisSerializer(serializers.ModelSerializer):
 
 
 class JadwalPasienSerializer(serializers.ModelSerializer):
-    jadwal_tenaga_medis = JadwalTenagaMedisSerializer(read_only=True)
-    lamaran_pasien = LamaranPasienSerializer(read_only=True)
+    jadwalTenagaMedis = JadwalTenagaMedisSerializer(read_only=True)
+    lamaranPasien = LamaranPasienSerializer(read_only=True)
 
     class Meta:
         model = JadwalPasien
-        fields = ["id", "date", "jadwal_tenaga_medis", "lamaran_pasien"]
-        read_only_fields = ["id", "jadwal_tenaga_medis", "lamaran_pasien"]
+        fields = ["id", "date", "jadwalTenagaMedis", "lamaranPasien"]
+        read_only_fields = ["id", "jadwalTenagaMedis", "lamaranPasien"]

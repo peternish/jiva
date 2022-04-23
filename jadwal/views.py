@@ -163,6 +163,27 @@ class JadwalPasienListAPI(APIView):
         serializer = JadwalPasienSerializer(schema, many=True)
         return Response(serializer.data)
 
+class JadwalPasienListByCabangAPI(APIView):
+
+    permission_classes = [IsStafPermission]
+
+    def get(self, request: Request, cabang_pk: int):
+        cabang = get_object(Cabang, pk=cabang_pk)
+        if cabang is None:
+            return Response(
+                {"error": f"no 'cabang' found with id : {cabang_pk}"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+        tenaga_medis_profiles = TenagaMedisProfile.objects.filter(cabang=cabang)
+        jadwal_query = []
+        for tenaga_medis in tenaga_medis_profiles:
+            jadwal_query += JadwalTenagaMedis.objects.filter(tenaga_medis=tenaga_medis)
+        pasien_query = []
+        for jadwal_tenaga_medis in jadwal_query:
+            pasien_query += JadwalPasien.objects.filter(jadwalTenagaMedis=jadwal_tenaga_medis)
+        serializer = JadwalPasienSerializer(pasien_query, many=True)
+        return Response(serializer.data)
+
 
 class CreateJadwalPasienAPI(APIView):
 
