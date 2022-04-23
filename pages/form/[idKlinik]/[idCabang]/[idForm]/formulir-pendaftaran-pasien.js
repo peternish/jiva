@@ -135,7 +135,7 @@ const FormulirPendaftaranPasien = ({ isPreview, previewSchema }) => {
               }}
               onSubmit={async (values, { setSubmitting, isSubmitting }) => {
                 setSubmitting(true)
-                await dispatch(createApplication(setSubmitting, values))
+                await dispatch(createApplication(setSubmitting, { ...values, jadwal_tenaga_medis_pk: values.jadwal }))
                 setSubmitted(!isSubmitting)
               }}
             >

@@ -3,11 +3,16 @@ import { setJadwalTenagaMedisList, setJadwalTenagaMedis } from "@redux/modules/j
 import { toast } from "react-toastify";
 import constants from "@utils/constants"
 
-const getJadwalTenagaMedisList = ({ idCabang }) => {
+const getJadwalTenagaMedisList = ({ idCabang, getAvailable = false }) => {
     return async (dispatch) => {
+        let response
         try {
-            const { data } = await jivaAPI.jadwalTenagaMedis.getJadwalTenagaMedisList({ idCabang });
-            await dispatch(setJadwalTenagaMedisList(data));
+            if (getAvailable) {
+                response = await jivaAPI.jadwalTenagaMedis.getAvailableJadwalTenagaMedisList({ idCabang });
+            } else {
+                response = await jivaAPI.jadwalTenagaMedis.getJadwalTenagaMedisList({ idCabang });
+            }
+            await dispatch(setJadwalTenagaMedisList(response.data));
         } catch (error) {
             toast(constants.BASE_ERROR_MESSAGE, { type: toast.TYPE.ERROR });
         }
