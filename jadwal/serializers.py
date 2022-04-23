@@ -1,5 +1,4 @@
 # rest imports
-from typing_extensions import Required
 from rest_framework import serializers
 
 # model and serializer imports
