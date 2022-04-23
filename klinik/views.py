@@ -256,7 +256,7 @@ class LamaranPasienCompoundApi(APIView):
                 else: 
                     lamaran_pasien_data[key] = value
         except:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response({ "error": "request data tidak sesuai" }, status=status.HTTP_400_BAD_REQUEST)
 
         lamaran_serializer = LamaranPasienSerializer(data=lamaran_pasien_data)
         if lamaran_serializer.is_valid() and jadwal_tenaga_medis_pk != 0:
