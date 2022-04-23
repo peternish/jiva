@@ -165,7 +165,6 @@ class JadwalPasienListAPI(APIView):
         jadwal_tenaga_medis: JadwalTenagaMedis = get_object(
             JadwalTenagaMedis, jadwal_tenaga_medis_pk
         )
-
         if jadwal_tenaga_medis is None:
             return Response(
                 {
@@ -176,7 +175,7 @@ class JadwalPasienListAPI(APIView):
         schema = JadwalPasien.objects.all()
         schema = schema.filter(jadwalTenagaMedis=jadwal_tenaga_medis)
         serializer = JadwalPasienSerializer(schema, many=True)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class CreateJadwalPasienAPI(APIView):
@@ -188,7 +187,6 @@ class CreateJadwalPasienAPI(APIView):
             JadwalTenagaMedis, jadwal_tenaga_medis_pk
         )
         lamaran_pasien: LamaranPasien = get_object(LamaranPasien, pasien_pk)
-
         if jadwal_tenaga_medis is None and lamaran_pasien is None:
             return Response(
                 {
@@ -197,9 +195,8 @@ class CreateJadwalPasienAPI(APIView):
                         f"no 'lamaran pasien' found with id : {pasien_pk}",
                     ]
                 },
-                status=status.HTTP_400_BAD_REQUEST,
+                status=status.HTTP_404_NOT_FOUND,
             )
-
         count = JadwalPasien.objects.filter(jadwalTenagaMedis=jadwal_tenaga_medis).count()
         if count >= jadwal_tenaga_medis.quota:
             return Response(
@@ -208,14 +205,12 @@ class CreateJadwalPasienAPI(APIView):
                 },
                 status=status.HTTP_400_BAD_REQUEST,
             )
-
         serializer = JadwalPasienSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(
                 jadwalTenagaMedis=jadwal_tenaga_medis, lamaranPasien=lamaran_pasien
             )
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -241,7 +236,7 @@ class JadwalPasienAPI(APIView):
         serializer = JadwalPasienSerializer(jadwal_pasien, data=request.data)
         if serializer.is_valid() and jadwal_pasien is not None:
             serializer.save()
-            return Response(serializer.data)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request: Request, pk: int):

@@ -666,7 +666,7 @@ class JadwalPasienAPITest(JadwalPasienAPITestSetup):
             kwargs={"jadwal_tenaga_medis_pk": 1999, "pasien_pk": 1999},
         )
         resp = self.client.post(url, data=data)
-        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
         self.assertEqual(JadwalPasien.objects.count(), 11)
 
     def test_create_jadwal_pasien_fail_quota(self):
