@@ -625,11 +625,9 @@ class JadwalPasienAPITest(JadwalPasienAPITestSetup):
         self.assertEqual(JadwalTenagaMedis.objects.count(), 2)
         self.assertEqual(LamaranPasien.objects.count(), 11)
         data = {"date": datetime.date(1666, 4, 20)}
-
         lam = LamaranPasien(nik=f"123456678", fields=[{"nama": "Ahmed"}])
         lam.save()
         self.assertEqual(LamaranPasien.objects.count(), 12)
-
         url = reverse(
             self.create_jadwal_pasien_url,
             kwargs={
@@ -657,6 +655,19 @@ class JadwalPasienAPITest(JadwalPasienAPITestSetup):
         resp = self.client.post(url, data=data)
         self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(JadwalPasien.objects.count(), 11)
+    
+    def test_create_jadwal_pasien_not_found(self):
+        self.assertEqual(JadwalPasien.objects.count(), 11)
+        data = {
+            # all missing fields
+        }
+        url = reverse(
+            self.create_jadwal_pasien_url,
+            kwargs={"jadwal_tenaga_medis_pk": 1999, "pasien_pk": 1999},
+        )
+        resp = self.client.post(url, data=data)
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(JadwalPasien.objects.count(), 11)
 
     def test_create_jadwal_pasien_fail_quota(self):
         self.assertEqual(JadwalPasien.objects.count(), 11)
@@ -673,7 +684,6 @@ class JadwalPasienAPITest(JadwalPasienAPITestSetup):
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         uri = reverse(self.jadwal_pasien_url, kwargs={"pk": 1})
         resp = self.client.get(uri)
-
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         self.assertEqual(
             len(resp.data), 2
@@ -688,9 +698,14 @@ class JadwalPasienAPITest(JadwalPasienAPITestSetup):
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         uri = reverse(self.jadwal_pasien_list_url, kwargs={"jadwal_tenaga_medis_pk": 2})
         resp = self.client.get(uri)
-
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         self.assertEqual(len(resp.data), 10)  # sebanyak iterasi line 488
+
+    def test_get_jadwal_pasien_list_not_found(self):
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        uri = reverse(self.jadwal_pasien_list_url, kwargs={"jadwal_tenaga_medis_pk": 1999})
+        resp = self.client.get(uri)
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_patch_jadwal_pasien(self):
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
@@ -706,3 +721,11 @@ class JadwalPasienAPITest(JadwalPasienAPITestSetup):
         resp = self.client.delete(uri)
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         self.assertEqual(JadwalPasien.objects.count(), 10)
+    
+    def test_delete_jadwal_pasien_not_found(self):
+        self.assertEqual(JadwalPasien.objects.count(), 11)
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        uri = reverse(self.jadwal_pasien_url, kwargs={"pk": 1999})
+        resp = self.client.delete(uri)
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(JadwalPasien.objects.count(), 11)
