@@ -28,6 +28,7 @@ class IsTenagaMedisPermission(permissions.BasePermission):
             )
         return False
 
+
 class ValidateJSONForm(serializers.ModelSerializer):
     def validate(self, data):
         """

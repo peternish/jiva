@@ -20,6 +20,11 @@ dform_patterns = [
         "<int:cabang_pk>/dform/", views.DynamicFormListApi.as_view(), name="dform-list"
     ),
     path(
+        "dform/<int:pk>/",
+        views.DynamicFormPublicApi.as_view(),
+        name="dform-public",
+    ),
+    path(
         "<int:cabang_pk>/dform/<int:pk>/",
         views.DynamicFormDetailApi.as_view(),
         name="dform-detail",

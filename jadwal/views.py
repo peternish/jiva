@@ -29,15 +29,13 @@ def get_object(klass: models.Model, pk: int):
 
 class JadwalTenagaMedisListAPI(APIView):
 
-    permission_classes = [
-        IsStafPermission
-    ]
+    permission_classes = [IsStafPermission]
 
     def get(self, request: Request, cabang_id: int, format=None):
         cabang = get_object(Cabang, pk=cabang_id)
         if cabang is None:
             return Response(
-                { "error": f"no 'cabang' found with id : {cabang_id}" },
+                {"error": f"no 'cabang' found with id : {cabang_id}"},
                 status=status.HTTP_404_NOT_FOUND,
             )
         tenaga_medis_profiles = TenagaMedisProfile.objects.filter(cabang=cabang)
@@ -50,15 +48,13 @@ class JadwalTenagaMedisListAPI(APIView):
 
 class CreateJadwalTenagaMedisAPI(APIView):
 
-    permission_classes = [
-        IsStafPermission
-    ]
+    permission_classes = [IsStafPermission]
 
     def post(self, request: Request, tenaga_medis_id: int, format=None):
         tenaga_medis = get_object(TenagaMedisProfile, pk=tenaga_medis_id)
         if tenaga_medis is None:
             return Response(
-                { "error": f"no 'tenaga medis' found with id : {tenaga_medis_id}" },
+                {"error": f"no 'tenaga medis' found with id : {tenaga_medis_id}"},
                 status=status.HTTP_404_NOT_FOUND,
             )
         serializer = JadwalTenagaMedisSerializer(data=request.data)
@@ -74,15 +70,15 @@ class CreateJadwalTenagaMedisAPI(APIView):
 
 class JadwalTenagaMedisAPI(APIView):
 
-    permission_classes = [
-        IsStafPermission
-    ]
+    permission_classes = [IsStafPermission]
 
     def get(self, request: Request, jadwal_tenaga_medis_id: int, format=None):
         jadwal_tenaga_medis = get_object(JadwalTenagaMedis, pk=jadwal_tenaga_medis_id)
         if jadwal_tenaga_medis is None:
             return Response(
-                { "error": f"no 'jadwal tenaga medis' found with id : {jadwal_tenaga_medis_id}" },
+                {
+                    "error": f"no 'jadwal tenaga medis' found with id : {jadwal_tenaga_medis_id}"
+                },
                 status=status.HTTP_404_NOT_FOUND,
             )
         serializer = JadwalTenagaMedisSerializer(jadwal_tenaga_medis)
@@ -92,10 +88,14 @@ class JadwalTenagaMedisAPI(APIView):
         jadwal_tenaga_medis = get_object(JadwalTenagaMedis, pk=jadwal_tenaga_medis_id)
         if jadwal_tenaga_medis is None:
             return Response(
-                { "error": f"no 'jadwal tenaga medis' found with id : {jadwal_tenaga_medis_id}" },
+                {
+                    "error": f"no 'jadwal tenaga medis' found with id : {jadwal_tenaga_medis_id}"
+                },
                 status=status.HTTP_404_NOT_FOUND,
             )
-        serializer = JadwalTenagaMedisSerializer(instance=jadwal_tenaga_medis, data=request.data, partial=True)
+        serializer = JadwalTenagaMedisSerializer(
+            instance=jadwal_tenaga_medis, data=request.data, partial=True
+        )
         if serializer.is_valid(raise_exception=True):
             try:
                 serializer.save()
@@ -104,28 +104,26 @@ class JadwalTenagaMedisAPI(APIView):
                 errors = json.loads(json.dumps(errors.__dict__["detail"]))
                 return Response(errors, status=status.HTTP_400_BAD_REQUEST)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
     def delete(self, request: Request, jadwal_tenaga_medis_id: int, format=None):
         jadwal_tenaga_medis = get_object(JadwalTenagaMedis, pk=jadwal_tenaga_medis_id)
         if jadwal_tenaga_medis is None:
             return Response(
-                { "error": f"no 'jadwal tenaga medis' found with id : {jadwal_tenaga_medis_id}" },
+                {
+                    "error": f"no 'jadwal tenaga medis' found with id : {jadwal_tenaga_medis_id}"
+                },
                 status=status.HTTP_404_NOT_FOUND,
             )
         jadwal_tenaga_medis.delete()
-        return Response(
-            { "success": "delete success" }, 
-            status=status.HTTP_200_OK
-        )
+        return Response({"success": "delete success"}, status=status.HTTP_200_OK)
 
 
 class AvailableJadwalTenagaMedisAPI(APIView):
-    
     def get(self, request: Request, cabang_id: int, format=None):
         cabang = get_object(Cabang, pk=cabang_id)
         if cabang is None:
             return Response(
-                { "error": f"no 'cabang' found with id : {cabang_id}" },
+                {"error": f"no 'cabang' found with id : {cabang_id}"},
                 status=status.HTTP_404_NOT_FOUND,
             )
         current_date = datetime.today()
@@ -150,13 +148,13 @@ class AvailableJadwalTenagaMedisAPI(APIView):
 
 class JadwalPasienListAPI(APIView):
 
-    permission_classes = [
-        IsStafPermission
-    ]
+    permission_classes = [IsStafPermission]
 
     def get(self, request: Request, jadwal_tenaga_medis_pk: int):
-        jadwal_tenaga_medis: JadwalTenagaMedis = get_object(JadwalTenagaMedis, jadwal_tenaga_medis_pk)
-        
+        jadwal_tenaga_medis: JadwalTenagaMedis = get_object(
+            JadwalTenagaMedis, jadwal_tenaga_medis_pk
+        )
+
         if jadwal_tenaga_medis is None:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -168,23 +166,28 @@ class JadwalPasienListAPI(APIView):
 
 class CreateJadwalPasienAPI(APIView):
 
-    permission_classes = [
-        IsStafPermission
-    ]
+    permission_classes = [IsStafPermission]
 
     def post(self, request: Request, jadwal_tenaga_medis_pk: int, pasien_pk: int):
-        jadwal_tenaga_medis: JadwalTenagaMedis = get_object(JadwalTenagaMedis, jadwal_tenaga_medis_pk)
+        jadwal_tenaga_medis: JadwalTenagaMedis = get_object(
+            JadwalTenagaMedis, jadwal_tenaga_medis_pk
+        )
         lamaran_pasien: LamaranPasien = get_object(LamaranPasien, pasien_pk)
         
+        if jadwal_tenaga_medis is None and lamaran_pasien is None:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
         count = JadwalPasien.objects.filter(jadwalTenagaMedis=jadwal_tenaga_medis).count()
         if count >= jadwal_tenaga_medis.quota:
             return Response(
                 { "error": f"Telah melewati batas kuota JadwalTenagaMedis ({count} >= {jadwal_tenaga_medis.quota})" }
                 , status=status.HTTP_400_BAD_REQUEST)
-        
+
         serializer = JadwalPasienSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(jadwalTenagaMedis = jadwal_tenaga_medis, lamaranPasien = lamaran_pasien)
+            serializer.save(
+                jadwalTenagaMedis=jadwal_tenaga_medis, lamaranPasien=lamaran_pasien
+            )
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -192,9 +195,7 @@ class CreateJadwalPasienAPI(APIView):
 
 class JadwalPasienAPI(APIView):
 
-    permission_classes = [
-        IsStafPermission
-    ]
+    permission_classes = [IsStafPermission]
 
     def get(self, request: Request, pk: int):
         try:

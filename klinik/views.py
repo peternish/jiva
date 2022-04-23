@@ -2,9 +2,14 @@ from functools import partial
 from django.http import QueryDict
 from rest_framework.permissions import IsAuthenticated
 from urllib.request import Request
-
 from jadwal.serializers import JadwalPasienSerializer
-from .serializers import DynamicFormSerializer, KlinikSerializer, CabangSerializer, LamaranPasienSerializer
+from klinik.utils import send_confirmation_email
+from .serializers import (
+    DynamicFormSerializer,
+    KlinikSerializer,
+    CabangSerializer,
+    LamaranPasienSerializer,
+)
 from klinik.models import Cabang, Klinik, OwnerProfile, DynamicForm, LamaranPasien
 from jadwal.models import JadwalTenagaMedis
 from rest_framework import status
@@ -13,6 +18,7 @@ from rest_framework.views import APIView
 from rest_framework.request import Request
 from rest_framework.views import APIView
 from django.db import models
+from multiprocessing import Process
 
 
 def get_object(klass: models.Model, pk: int):
@@ -120,12 +126,12 @@ class CabangDetailApi(APIView):
         cabang.delete()
         return Response(status=status.HTTP_200_OK)
 
+
 class DynamicFormListApi(APIView):
 
     permission_classes = [
         IsAuthenticated,
     ]
-
 
     def get(self, request: Request, cabang_pk: int, format=None) -> Response:
         cabang: Cabang = get_object(Cabang, cabang_pk)
@@ -157,6 +163,16 @@ class DynamicFormListApi(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+class DynamicFormPublicApi(APIView):
+    def get(self, request: Request, pk: int) -> Response:
+        schema: DynamicForm = get_object(DynamicForm, pk)
+
+        if schema is not None:
+            serializer = DynamicFormSerializer(schema)
+            return Response(data=serializer.data)
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+
 class DynamicFormDetailApi(APIView):
 
     permission_classes = [
@@ -170,17 +186,6 @@ class DynamicFormDetailApi(APIView):
         klinik: Klinik = Klinik.objects.get(owner=owner)
 
         return cabang.pk == schema.cabang.pk and cabang.klinik.pk == klinik.pk
-
-    def get(self, request: Request, cabang_pk: int, pk: int, format=None) -> Response:
-        cabang: Cabang = get_object(Cabang, cabang_pk)
-        schema: DynamicForm = get_object(DynamicForm, pk)
-
-        if cabang is None or schema is None:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-        if self._is_legally_owned(request, cabang, schema):
-            serializer = DynamicFormSerializer(schema)
-            return Response(data=serializer.data)
-        return Response(status=status.HTTP_401_UNAUTHORIZED)
 
     def patch(self, request: Request, cabang_pk: int, pk: int, format=None):
         schema: DynamicForm = get_object(DynamicForm, pk)
@@ -200,16 +205,18 @@ class DynamicFormDetailApi(APIView):
         schema.delete()
         return Response(status=status.HTTP_202_ACCEPTED)
 
+
 class LamaranPasienApi(APIView):
-    
+
     permission_classes = [
         IsAuthenticated,
     ]
-    
+
     def post(self, request: Request):
         serializer = LamaranPasienSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
+            Process(target=send_confirmation_email, args=(serializer.data["fields"],)).start()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

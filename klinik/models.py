@@ -27,6 +27,9 @@ class Klinik(models.Model):
     owner = models.OneToOneField(OwnerProfile, on_delete=models.CASCADE)
     sik = models.FileField()
 
+    def __str__(self):
+        return self.name
+
 
 class Cabang(models.Model):
     location = models.CharField(max_length=300)
@@ -37,8 +40,7 @@ class Cabang(models.Model):
 
 
 class StafProfile(Profile):
-    cabang = models.ForeignKey(
-        Cabang, on_delete=models.CASCADE, related_name="staf")
+    cabang = models.ForeignKey(Cabang, on_delete=models.CASCADE, related_name="staf")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -55,14 +57,22 @@ class TenagaMedisProfile(Profile):
         super().__init__(*args, **kwargs)
         self.role = "tenaga_medis"
 
+
 class LamaranPasien(models.Model):
     nik = models.CharField(max_length=20)
     email = models.EmailField(max_length=254)
     fields = models.JSONField("Fields", default=list)
+
     def __str__(self) -> str:
         return self.nik
 
+
 class DynamicForm(models.Model):
+    formtypes = ["pendaftaran_pasien", "rekaman_medis"]
+
     cabang = models.ForeignKey(Cabang, on_delete=models.CASCADE)
     formtype = models.CharField(max_length=100)
     fields = models.JSONField("Fields", default=list)
+
+    def __str__(self):
+        return f"{self.cabang.klinik}:{self.cabang}:{self.formtype}"

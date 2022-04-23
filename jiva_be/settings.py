@@ -48,7 +48,7 @@ CORS_ALLOWED_ORIGINS = [
 
 # Application definition
 
-APPS = ["klinik", "account", "jadwal"]
+APPS = ["klinik", "account", "jadwal", "rekammedis"]
 
 MODULES = ["rest_framework", "rest_framework_simplejwt", "corsheaders"]
 
@@ -183,3 +183,10 @@ SIMPLE_JWT = {
 }
 
 django_heroku.settings(locals(), test_runner=False)
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = getenv("JIVA_CONTACT_EMAIL")
+EMAIL_HOST_PASSWORD = getenv("JIVA_CONTACT_EMAIL_PASSWORD")
