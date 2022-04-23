@@ -144,7 +144,9 @@ class CreateJadwalPasienAPI(APIView):
         
         count = JadwalPasien.objects.filter(jadwalTenagaMedis=jadwal_tenaga_medis).count()
         if count >= jadwal_tenaga_medis.quota:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                { "error": f"Telah melewati batas kuota JadwalTenagaMedis ({count} >= {jadwal_tenaga_medis.quota})" }
+                , status=status.HTTP_400_BAD_REQUEST)
         
         serializer = JadwalPasienSerializer(data=request.data)
         if serializer.is_valid():
