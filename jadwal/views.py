@@ -130,7 +130,10 @@ class AvailableJadwalTenagaMedisAPI(APIView):
         current_day = current_date.weekday()
         start_query_day = current_day + 1 if current_day < 6 else 0
         query_days = [x[0] for x in JadwalTenagaMedis.DAY_CHOICES][start_query_day:]
-        jadwal_tenaga_medis_query = JadwalTenagaMedis.objects.filter(day__in=query_days)
+        tenaga_medis_profiles = TenagaMedisProfile.objects.filter(cabang=cabang)
+        jadwal_tenaga_medis_query = []
+        for tenaga_medis in tenaga_medis_profiles:
+            jadwal_tenaga_medis_query += JadwalTenagaMedis.objects.filter(tenaga_medis=tenaga_medis, day__in=query_days)
         start_date = current_date + timedelta(days=1)
         end_date = current_date + timedelta(days=7 if current_day == 6 else 6 - current_day)
         available_jadwal_list = filter_available_jadwal(
