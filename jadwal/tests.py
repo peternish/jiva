@@ -583,6 +583,12 @@ class JadwalPasienAPITestSetup(APITestCase, TestCase):
             jadwal_lain.save()
 
 
+class JadwalPasienModelTest(JadwalPasienAPITestSetup):
+    def test_jadwal_pasien_str_method(self):
+        jadwal_pasien = JadwalPasien.objects.first()
+        self.assertEqual(str(jadwal_pasien), f"Jadwal pasien dengan NIK:{self.pas.nik}")
+
+
 class JadwalPasienAPITest(JadwalPasienAPITestSetup):
     def test_create_jadwal_pasien(self):
         self.assertEqual(JadwalPasien.objects.count(), 11)
