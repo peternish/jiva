@@ -2,6 +2,11 @@ import styled from "styled-components";
 
 const Filter_Tenaga_Medis = styled.div`
 
+#updateAllMyEvents {
+  margin-top: 1em;
+  width: 100%;
+}
+
 input, select, textarea {
     padding: 1em 0.75em;
     box-shadow: ${(props) =>
