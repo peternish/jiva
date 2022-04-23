@@ -159,8 +159,12 @@ class JadwalPasienListAPI(APIView):
         )
 
         if jadwal_tenaga_medis is None:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-
+            return Response(
+                {
+                    "error": f"no 'jadwal tenaga medis' found with id : {jadwal_tenaga_medis_pk}"
+                },
+                status=status.HTTP_404_NOT_FOUND,
+            )
         schema = JadwalPasien.objects.all()
         schema = schema.filter(jadwalTenagaMedis=jadwal_tenaga_medis)
         serializer = JadwalPasienSerializer(schema, many=True)
@@ -176,9 +180,17 @@ class CreateJadwalPasienAPI(APIView):
             JadwalTenagaMedis, jadwal_tenaga_medis_pk
         )
         lamaran_pasien: LamaranPasien = get_object(LamaranPasien, pasien_pk)
-        
+
         if jadwal_tenaga_medis is None and lamaran_pasien is None:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {
+                    "error": [
+                        f"no 'jadwal tenaga medis' found with id : {jadwal_tenaga_medis_pk}",
+                        f"no 'lamaran pasien' found with id : {pasien_pk}",
+                    ]
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
         count = JadwalPasien.objects.filter(jadwalTenagaMedis=jadwal_tenaga_medis).count()
         if count >= jadwal_tenaga_medis.quota:
@@ -206,7 +218,10 @@ class JadwalPasienAPI(APIView):
             serializer = JadwalPasienSerializer(jadwal_pasien)
             return Response(data=serializer.data, status=status.HTTP_200_OK)
         except JadwalPasien.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"error": f"no 'jadwal pasien' found with id : {pk}"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
 
     def patch(self, request: Request, pk: int):
         jadwal_pasien = get_object(JadwalPasien, pk)
@@ -219,6 +234,9 @@ class JadwalPasienAPI(APIView):
     def delete(self, request: Request, pk: int):
         jadwal_pasien = get_object(LamaranPasien, pk)
         if jadwal_pasien is None:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"error": f"no 'jadwal pasien' found with id : {pk}"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
         jadwal_pasien.delete()
-        return Response(status=status.HTTP_200_OK)
+        return Response({"success": "delete success"}, status=status.HTTP_200_OK)
