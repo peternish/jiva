@@ -1,5 +1,6 @@
 # django imports
 from django.db.models.query import QuerySet
+from django.db.models import Q
 
 # model imports
 from .models import JadwalTenagaMedis
@@ -55,13 +56,11 @@ def time_range_will_overlap(current_jadwals: QuerySet, new_time: tuple):
     return False
 
 
-def filter_available_jadwal(
-    jadwal_tenaga_medis_query: QuerySet, date: datetime.datetime
-):
+def filter_available_jadwal(jadwal_tenaga_medis_query: QuerySet, start_date, end_date):
     res = []
     for jadwal_tenaga_medis in jadwal_tenaga_medis_query:
         quota = jadwal_tenaga_medis.quota
-        booked = jadwal_tenaga_medis.jadwal_pasien.filter(date=date).count()
+        booked = jadwal_tenaga_medis.jadwal_pasien.filter(Q(date__gte=start_date) & Q(date__lte=end_date)).count()
         if booked < quota:
             res.append(jadwal_tenaga_medis)
     return res
