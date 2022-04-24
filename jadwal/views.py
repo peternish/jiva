@@ -150,10 +150,8 @@ class AvailableJadwalTenagaMedisAPI(APIView):
             end_date=end_date,
         )
         serializer = JadwalTenagaMedisSerializer(available_jadwal_list, many=True)
-        timedelta_inc = 0
         for jadwal in serializer.data:
-            jadwal["date"] = (start_date + timedelta(days=timedelta_inc)).date()
-            timedelta_inc += 1
+            jadwal["date"] = (start_date + timedelta(days=query_days.index(jadwal["day"]))).date()
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
