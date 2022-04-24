@@ -44,6 +44,11 @@ jadwal_pasien_patterns = [
         CreateJadwalPasienAPI.as_view(),
         name="create-jadwal-pasien",
     ),
+    path(
+        "bycabang/<int:cabang_pk>",
+        JadwalPasienListByCabangAPI.as_view(),
+        name="jadwal-pasien-list-by-cabang",
+    ),
 ]
 
 jadwal_pasien_patterns = format_suffix_patterns(jadwal_pasien_patterns)
