@@ -184,7 +184,9 @@ class JadwalPasienListByCabangAPI(APIView):
         cabang = get_object(Cabang, pk=cabang_pk)
         if cabang is None:
             return Response(
-                {"error": f"no 'cabang' found with id : {cabang_pk}"},
+                {
+                    "error": f"no 'cabang' found with id : {cabang_pk}"
+                },
                 status=status.HTTP_404_NOT_FOUND,
             )
         tenaga_medis_profiles = TenagaMedisProfile.objects.filter(cabang=cabang)
