@@ -15,6 +15,7 @@ from klinik.models import Cabang, Klinik, OwnerProfile, TenagaMedisProfile, Lama
 # other imports
 import os
 import datetime
+import json
 
 
 TEST_USER_PASSWORD = os.getenv("SECRET_KEY")
@@ -477,20 +478,21 @@ class AvailableJadwalTenagaMedisAPITest(JadwalTenagaMedisTestSetUp):
             day=self.sample_date.strftime("%a").lower(),
         )
         jadwal_tenaga_medis.save()
+        url = reverse(
+            self.available_jadwal_tenaga_medis_url, kwargs={"cabang_id": self.cabang.id}
+        )
+        response = self.client.get(url)
         for i in range(2):
             lamaran_pasien = LamaranPasien.objects.create(
                 nik=f"{i+1}", fields=[{"nama": "Antonio"}]
             )
             lamaran_pasien.save()
             jadwal_pasien = JadwalPasien.objects.create(
-                date=self.sample_date.date(),
+                date=response.data[0]["date"],
                 lamaranPasien=lamaran_pasien,
                 jadwalTenagaMedis=jadwal_tenaga_medis,
             )
             jadwal_pasien.save()
-        url = reverse(
-            self.available_jadwal_tenaga_medis_url, kwargs={"cabang_id": self.cabang.id}
-        )
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 0)
