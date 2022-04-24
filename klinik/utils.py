@@ -34,8 +34,6 @@ def get_fields_attribute_value(fields, attribute_name):
 def compose_email_body(context):
     with open("klinik/templates/mail_template.html") as template_file:
         template = template_file.read()
-        template = template.replace("{{ nik }}", context["nik"])
-        template = template.replace("{{ tanggal }}", context["tanggal"])
-        template = template.replace("{{ jam_kedatangan }}", context["jam_kedatangan"])
-        template = template.replace("{{ dokter }}", context["dokter"])
+        for key, value in context.items():
+            template = template.replace("{{ %s }}" % (key), value)
     return template
