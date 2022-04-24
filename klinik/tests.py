@@ -123,10 +123,6 @@ class KlinikTestSetUp(APITestCase):
             }
         ]
 
-        # for _ in range(10):
-        #     pas = LamaranPasien(nik=f"420691337{_}", fields=[{"nama": f"Abdullah{_}"}])
-        #     pas.save()
-
         # Should have ID 1
         self.pas = LamaranPasien(nik=f"4206913370", email="email@email.com", fields=[{"nama": f"Abdullah0"}])
         self.pas.save()
@@ -403,7 +399,7 @@ class LamaranPasienApiTest(KlinikTestSetUp):
 
     def test_post_lamaran_pasien(self):
         self.assertEqual(LamaranPasien.objects.count(), 10)
-        data = {"nik": "13371337", "email": "email@email.com", "fields": self.json_test}
+        data = {"nik": "13371337", "email": "pasienl@email.com", "fields": self.json_test}
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
         resp = self.client.post(self.pasien_list, data=data)
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
