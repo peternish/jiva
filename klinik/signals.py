@@ -14,5 +14,5 @@ def cabang_creation_handler(sender, instance, created, **kwargs):
             DynamicForm(cabang=cabang, formtype=formtype).save()
 
 @receiver(post_delete, sender=Profile)
-def delete_related_user(sender, instance: Profile, **kwargs):
+def delete_related_account(sender, instance: Profile, **kwargs):
     instance.account.delete()
