@@ -15,7 +15,6 @@ from klinik.models import Cabang, Klinik, OwnerProfile, TenagaMedisProfile, Lama
 # other imports
 import os
 import datetime
-import json
 
 
 TEST_USER_PASSWORD = os.getenv("SECRET_KEY")
@@ -721,6 +720,12 @@ class JadwalPasienAPITest(JadwalPasienAPITestSetup):
         resp = self.client.get(uri)
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         self.assertEqual(len(resp.data), 11) #sebanyak iterasi line 576 + 1 diatasnya
+
+    def test_get_jadwal_pasien_list_by_cabang_not_found(self):
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        uri = reverse(self.jadwal_pasien_list_by_cabang_url, kwargs={"cabang_pk": 1999})
+        resp = self.client.get(uri)
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_patch_jadwal_pasien(self):
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
