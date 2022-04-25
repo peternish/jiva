@@ -5,7 +5,6 @@ const BASE_URL = constants?.API_BASE_URL;
 
 const jadwalPasien = {
     getJadwalPasienList: ({ idCabang }) => {
-        console.log("sini");
         return axios.get(`${BASE_URL}/jadwal/pasien/bycabang/${idCabang}`)
     }
 };

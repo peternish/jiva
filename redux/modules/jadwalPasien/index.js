@@ -8,7 +8,6 @@ const jadwalPasien = createSlice ({
     reducers: {
         setJadwalPasien(state, { payload }) {
             state.jadwalPasien = payload;
-            console.log("state pasien", state.jadwalPasien)
             return state;
         }
     },

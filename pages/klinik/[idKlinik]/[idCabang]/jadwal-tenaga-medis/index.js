@@ -102,8 +102,8 @@ const Jadwal = (props) => {
   
             const day_int = dayDict[day];
             const currentDate = new Date();
-            const day_num = 0;
-            if(currentDate.getDay > 0) {
+            let day_num = 0;
+            if(currentDate.getDay() > 0) {
               day_num = day_int - currentDate.getDay();
             } else {
               day_num = day_int - 7;
@@ -240,12 +240,6 @@ const Jadwal = (props) => {
 
       return date
     }
-    // console.log(tenagaMedisDict2)
-    // console.log(tenagaMedisDict)
-    // console.log(tenagaMedisList)
-    console.log(jadwalTenagaMedisList)
-
-    console.log("Events", myEvents)
 
     return (jadwalTenagaMedisList && tenagaMedisList && tenagaMedisDict && tenagaMedisDict2)? (
       <Layout navType = "sidebar" title="Jadwal Tenaga Medis">

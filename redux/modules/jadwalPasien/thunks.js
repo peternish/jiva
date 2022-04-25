@@ -6,8 +6,6 @@ const getJadwalPasienList = ({ idCabang }) => {
     return async (dispatch) => {
         try {
             const { data } = await jivaAPI.jadwalPasien.getJadwalPasienList({ idCabang });
-            console.log(data)
-            console.log("Here")
             await dispatch(setJadwalPasien(data));
         } catch (error) {
             toast(error.toString(), { type: toast.TYPE.ERROR });

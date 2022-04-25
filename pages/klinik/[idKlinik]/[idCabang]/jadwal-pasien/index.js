@@ -3,6 +3,7 @@ import format from 'date-fns/format'
 import parse from 'date-fns/parse'
 import startOfWeek from 'date-fns/startOfWeek'
 import getDay from "date-fns/getDay";
+import isThisWeek from "date-fns/isThisWeek";
 import enUS from 'date-fns/locale/en-US'
 import "react-big-calendar/lib/css/react-big-calendar.css"
 import { useState, useCallback, useEffect } from "react";
@@ -18,6 +19,7 @@ import Calender_Container from "@components/JadwalTenagaMedis/CalenderContainer"
 import { useRouter } from 'next/router'
 import LoadingButton from "@mui/lab/LoadingButton"
 import Filter_Tenaga_Medis from "@components/JadwalTenagaMedis/Filter";
+import List_Pasien from "@components/JadwalPasien/ListPasien";
 
 const Jadwal = (props) => {
     const {query, isReady} = useRouter()
@@ -36,12 +38,7 @@ const Jadwal = (props) => {
 
     const { jadwalTenagaMedisList } = useSelector(state => state.jadwalTenagaMedis);
     const { tenagaMedisList } = useSelector(state => state.tenagaMedis);
-    const { jadwalPasienList } = useSelector(state => state.jadwalPasien);
-
-  
-    console.log(jadwalTenagaMedisList)
-    console.log(tenagaMedisList)
-    console.log(jadwalPasienList)
+    const { jadwalPasien } = useSelector(state => state.jadwalPasien);
 
     const locales = {
         'en-US': enUS,
@@ -87,7 +84,7 @@ const Jadwal = (props) => {
         } else {
           tempId = currentId
         }
-        if(jadwalTenagaMedisList && tempId === 0) {
+        if(jadwalTenagaMedisList && tempId === 0 && jadwalPasien) {
           jadwalTenagaMedisList.map((jadwalTenagaMedis) => {
             const title = jadwalTenagaMedis.tenaga_medis.account.full_name;
             const start_time = jadwalTenagaMedis.start_time;
@@ -96,6 +93,7 @@ const Jadwal = (props) => {
             const quota = jadwalTenagaMedis.quota;
             const id_tenaga_medis = jadwalTenagaMedis.tenaga_medis.account.id;
             const id = jadwalTenagaMedis.id;
+            const listPasien = []
 
             const dayDict = {
               "mon": 1,
@@ -109,8 +107,8 @@ const Jadwal = (props) => {
   
             const day_int = dayDict[day];
             const currentDate = new Date();
-            const day_num = 0;
-            if(currentDate.getDay > 0) {
+            let day_num = 0;
+            if(currentDate.getDay() > 0) {
               day_num = day_int - currentDate.getDay();
             } else {
               day_num = day_int - 7;
@@ -127,16 +125,25 @@ const Jadwal = (props) => {
 
             setCurrentId(id)
 
+            jadwalPasien.map((pasien) => {
+              const id_jadwal_pasien_TM = pasien.jadwalTenagaMedis.id;
+              if(id_jadwal_pasien_TM == id) {
+                if(isThisWeek(new Date(pasien.date), { weekStartsOn: 1 })) {
+                  listPasien.push(pasien.lamaranPasien.fields[0][0].nama)
+                }
+              }
+            })
+
             if(id_filter > -1) {
               if(id_tenaga_medis === id_filter) {
-                setEvents((prev) => [...prev, { id, start, end, title, quota, id_tenaga_medis }])
+                setEvents((prev) => [...prev, { id, start, end, title, quota, id_tenaga_medis, listPasien }])
               }
             } else {
-              setEvents((prev) => [...prev, { id, start, end, title, quota, id_tenaga_medis }])
+              setEvents((prev) => [...prev, { id, start, end, title, quota, id_tenaga_medis, listPasien }])
             }
           })
         }
-      }, [currentId, jadwalTenagaMedisList])
+      }, [currentId, jadwalTenagaMedisList, jadwalPasien])
 
       useEffect(() =>  {
         parseData(jadwalTenagaMedisList, -1, 0);
@@ -149,6 +156,8 @@ const Jadwal = (props) => {
       setEvents(myEvents)
 
       parseData(id, 1)
+
+      batalEvent()
     }
 
     const updateAllMyEvents = () => {
@@ -156,12 +165,24 @@ const Jadwal = (props) => {
       setEvents(myEvents)
 
       parseData(-1, 1)
+      batalEvent()
     }
 
-    console.log()
+    const [currentEvent, setCurrentEvent] = useState(undefined)
+
+    const selectEvent = useCallback(
+      (event) => {
+        setCurrentEvent(event)
+      },
+      [],
+    )
+
+    const batalEvent = () => {
+      setCurrentEvent(undefined)
+    }
 
     return jadwalTenagaMedisList && tenagaMedisList ? (
-      <Layout navType = "sidebar" title="Jadwal Tenaga Medis">
+      <Layout navType = "sidebar" title="Jadwal Pasien Minggu Ini">
         <Calender_Container>
           <Jadwal_Tenaga_Medis>
             <Calendar
@@ -171,6 +192,7 @@ const Jadwal = (props) => {
             startAccessor="start"
             endAccessor="end"
             style={{ height : 793, width: 1266 }}
+            onSelectEvent={selectEvent}
             />
           </Jadwal_Tenaga_Medis>
           <Form_Calender>
@@ -194,7 +216,34 @@ const Jadwal = (props) => {
                   >
                     Tampilkan Semua Tenaga Medis
                   </LoadingButton> 
+                  {currentEvent === undefined ? <h2></h2> :
+                    <LoadingButton
+                      onClick={batalEvent}
+                      variant="contained"
+                      type="button"
+                      width="100%"
+                      id="updateAllMyEvents"
+                      style={{ background: "#F44336" }}
+                    >
+                      Kembali
+                    </LoadingButton> 
+                  }
+                  {currentEvent === undefined ? <h2></h2> : 
+                  <List_Pasien>
+                    {currentEvent.listPasien.length > 0 ? 
+                    <ul>
+                      <h4 data-testid="DaftarPasien">Daftar Pasien</h4>
+                      {Object.keys(currentEvent.listPasien).map(key => <h4 key={key}>{currentEvent.listPasien[key]}</h4>)}
+                    </ul> : 
+                    <ul>
+                      <h4 data-testid="DaftarPasien">Tidak ada pasien yang terdaftar</h4>
+                    </ul>
+                    }
+                    
+                  </List_Pasien>
+                  }
                 </Filter_Tenaga_Medis>
+                
               </Form>}
             </Formik>
           </Form_Calender>
