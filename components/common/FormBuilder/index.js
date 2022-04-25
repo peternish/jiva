@@ -86,12 +86,11 @@ const FormBuilder = ({ schema, onSave, children, PreviewComponent }) => {
           </LoadingButton>
         </div>
       </div>
-      <PreviewModal 
-        schema={previewSchema} 
+      <PreviewModal
         onClose={() => setmodalOpen(false)} 
         open={modalOpen} 
       >
-        {PreviewComponent ? <PreviewComponent/> : null}
+        {PreviewComponent ? <PreviewComponent previewSchema={{ ...schema, fields: previewSchema }} /> : null}
       </PreviewModal>
     </CSS>
   );

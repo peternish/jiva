@@ -59,7 +59,7 @@ const PengaturanFormulirPendaftaran = () => {
       <small style={{ marginBottom: "1em" }}>
         Anda dapat menambahkan input baru pada bagian di bawah ini sesuai yang diperlukan
       </small>
-      <FormBuilder schema={schema} onSave={saveSchema} PreviewComponent={() => <FormulirPendaftaranPasien isPreview previewSchema={schema}/>}>
+      <FormBuilder schema={schema} onSave={saveSchema} PreviewComponent={(props) => <FormulirPendaftaranPasien isPreview {...props}/>}>
         <URLPreview URL={`${process.env.NEXT_PUBLIC_HOST}/form/${query.idKlinik}/${query.idCabang}/${schema.id}/formulir-pendaftaran-pasien`}/>
       </FormBuilder>
     </Layout>
