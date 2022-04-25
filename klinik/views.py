@@ -1,24 +1,31 @@
-from functools import partial
+# django imports
+from django.db import models
 from django.http import QueryDict
+
+# rest imports
 from rest_framework.permissions import IsAuthenticated
-from urllib.request import Request
-from jadwal.serializers import JadwalPasienSerializer
-from klinik.utils import send_confirmation_email
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework.request import Request
+from rest_framework.views import APIView
+
+# model and serializer imports
+from klinik.models import Cabang, Klinik, OwnerProfile, DynamicForm, LamaranPasien
+from jadwal.models import JadwalTenagaMedis
 from .serializers import (
     DynamicFormSerializer,
     KlinikSerializer,
     CabangSerializer,
     LamaranPasienSerializer,
 )
-from klinik.models import Cabang, Klinik, OwnerProfile, DynamicForm, LamaranPasien
-from jadwal.models import JadwalTenagaMedis
-from rest_framework import status
-from rest_framework.response import Response
-from rest_framework.views import APIView
-from rest_framework.request import Request
-from rest_framework.views import APIView
-from django.db import models
-from multiprocessing import Process
+from jadwal.serializers import JadwalPasienSerializer
+
+# other import
+from urllib.request import Request
+from klinik.utils import send_confirmation_email
+import multiprocessing
+multiprocessing.set_start_method("fork") # Avoids AppRegistryNotReady exception on macOS platforms
 
 
 def get_object(klass: models.Model, pk: int):
@@ -276,7 +283,9 @@ class LamaranPasienCompoundApi(APIView):
         jadwal_serializer = JadwalPasienSerializer(data=jadwal_pasien_data)
         if jadwal_serializer.is_valid():
             jadwal_serializer.save(lamaranPasien = lamaran_pasien, jadwalTenagaMedis = jadwal_tenaga_medis)
-            send_confirmation_email(lamaran_pasien, jadwal_tenaga_medis, request.data["date"])
-            # Process(target=send_confirmation_email, args=(lamaran_pasien, jadwal_tenaga_medis, request.data["date"])).start()
+            multiprocessing.Process(
+                target=send_confirmation_email, 
+                args=(lamaran_pasien, jadwal_tenaga_medis, request.data["date"])
+            ).start()
             return Response(jadwal_serializer.data, status=status.HTTP_201_CREATED)
         return Response(jadwal_serializer.errors, status=status.HTTP_400_BAD_REQUEST) and print(jadwal_serializer.errors)
