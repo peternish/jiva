@@ -437,7 +437,7 @@ class JadwalTenagaMedisAPITest(JadwalTenagaMedisTestSetUp):
 class AvailableJadwalTenagaMedisAPITest(JadwalTenagaMedisTestSetUp):
     def setUp(self):
         super().setUp()
-        self.sample_date = datetime.datetime.today()
+        self.sample_date = datetime.datetime.today() + datetime.timedelta(days=1)
 
     def test_get_available_jadwal_tenaga_medis(self):
         self.client.credentials(HTTP_AUTHORIZATION=None)
