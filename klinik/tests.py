@@ -1,6 +1,7 @@
 from klinik.models import Cabang, Klinik, OwnerProfile, DynamicForm, LamaranPasien, TenagaMedisProfile
 from account.models import Account
 from jadwal.models import JadwalTenagaMedis, JadwalPasien
+from klinik.utils import send_confirmation_email
 from rest_framework.test import APITestCase
 from django.test import TestCase
 from django.urls import reverse
@@ -743,4 +744,66 @@ class SignalsTest(TestCase):
         self.assertEquals(
             DynamicForm.objects.filter(cabang__klinik=self.klinik).count(),
             len(DynamicForm.formtypes),
+        )
+
+
+class ConfirmationEmailTest(TestCase):
+    def setUp(self):
+        # owner
+        self.owner_account = Account.objects.create_user(
+            email="owner@email.com",
+            full_name="Gordon Matthew Thomas Sumner",
+            password=TEST_USER_PASSWORD,
+        )
+        self.owner_profile = OwnerProfile.objects.create(account=self.owner_account)
+
+        # klinik
+        sik = SimpleUploadedFile("Surat Izin Klinik.txt", b"Berizin Resmi")
+        self.klinik = Klinik.objects.create(
+            name="Klinik Maju Jaya Makmur", owner=self.owner_profile, sik=sik
+        )
+
+        # cabang
+        self.cabang = Cabang.objects.create(
+            klinik=self.klinik, location="Bantar Gebang"
+        )
+
+        # tenaga medis
+        self.tenaga_medis_account = Account.objects.create_user(
+            email="tenaga_medis@email.com",
+            full_name="dr. DisRespect",
+            password=TEST_USER_PASSWORD,
+        )
+        self.tenaga_medis_profile = TenagaMedisProfile.objects.create(
+            account=self.tenaga_medis_account, cabang=self.cabang, sip="sip"
+        )
+
+        # jadwal tenaga medis
+        self.jadwal_tenaga_medis = JadwalTenagaMedis.objects.create(
+            tenaga_medis=self.tenaga_medis_profile,
+            start_time=datetime.time(8, 0, 0),
+            end_time=datetime.time(10, 0, 0),
+            quota=5,
+            day="mon",
+        )
+
+        # lamaran pasien
+        self.lamaran_pasien = LamaranPasien.objects.create(
+            nik="123123123",
+            email="user@email.com",
+            fields=[
+                {
+                    "nama": "Abdullah"
+                }
+            ]
+        )
+
+        # date
+        self.date = "2022-4-25"
+    
+    def test_send_confirmation_email(self):
+        send_confirmation_email(
+            lamaran_pasien=self.lamaran_pasien, 
+            jadwal_tenaga_medis=self.jadwal_tenaga_medis, 
+            date=self.date
         )
