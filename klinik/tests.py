@@ -800,7 +800,7 @@ class ConfirmationEmailTest(TestCase):
 
         # date
         self.date = "2022-4-25"
-    
+
     def test_send_confirmation_email(self):
         send_confirmation_email(
             lamaran_pasien=self.lamaran_pasien, 
