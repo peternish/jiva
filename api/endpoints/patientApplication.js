@@ -4,9 +4,12 @@ import { axiosInstance as axios } from "@api/http";
 const BASE_URL = constants?.API_BASE_URL + "/klinik/pasien";
 
 const patientApplication = {
-  createApplication: ({ nik, fields }={}) => axios.post(`${BASE_URL}/`, {
+  createApplication: ({ nik, email, fields, date, jadwal_tenaga_medis_pk }={}) => axios.post(`${BASE_URL}/compound/`, {
     nik,
-    fields
+    email,
+    fields,
+    date,
+    jadwal_tenaga_medis_pk
   })
 };
 
