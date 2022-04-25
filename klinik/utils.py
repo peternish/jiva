@@ -3,17 +3,24 @@ from django.core.mail import send_mail
 from django.utils.html import strip_tags
 from django.conf import settings
 
+# model imports
+from klinik.models import LamaranPasien
+from jadwal.models import JadwalTenagaMedis
 
-def send_confirmation_email(fields):
+# other imports
+from datetime import datetime
+
+
+def send_confirmation_email(lamaran_pasien: LamaranPasien, jadwal_tenaga_medis: JadwalTenagaMedis, date: str):
     context = {
-        "nik" : "123321123321",
-        "tanggal" : "21 April 2022",
-        "jam_kedatangan" : "13:00",
-        "dokter" : "dr. Budi Budiman, Sp.A",
+        "nik" : lamaran_pasien.nik,
+        "hari_tanggal" : indonesian_date(date),
+        "jam_kedatangan" : jadwal_tenaga_medis.start_time.strftime("%H:%M"),
+        "dokter" : jadwal_tenaga_medis.tenaga_medis.account.full_name,
     }
     subject = "Pendaftaran Berhasil"
     from_email = settings.EMAIL_HOST_USER
-    recipient_list = [ get_fields_attribute_value(fields, "email") ]
+    recipient_list = [ lamaran_pasien.email ]
     html_message = compose_email_body(context)
     send_mail(
         subject=subject, 
@@ -24,12 +31,6 @@ def send_confirmation_email(fields):
         html_message=html_message
     )
 
-def get_fields_attribute_value(fields, attribute_name):
-    for field in fields:
-        field_name = field.get("name")
-        if field_name.lower() == attribute_name:
-            return field["value"]
-    return None
 
 def compose_email_body(context):
     with open("klinik/templates/mail_template.html") as template_file:
@@ -37,3 +38,35 @@ def compose_email_body(context):
         for key, value in context.items():
             template = template.replace("{{ %s }}" % (key), value)
     return template
+
+
+def indonesian_date(date: str):
+    day = {
+        "Monday": "Senin",
+        "Tuesday": "Selasa",
+        "Wednesday": "Rabu",
+        "Thursday": "Kamis",
+        "Friday": "Jumat",
+        "Saturday": "Sabtu",
+        "Sunday": "Minggu"
+    }
+    month = {
+        "January": "Januari",
+        "February": "Februari",
+        "March": "Maret",
+        "April": "April",
+        "May": "Mei",
+        "June": "Juni",
+        "July": "Juli",
+        "August": "Agustus",
+        "September": "September",
+        "October": "Oktober",
+        "November": "November",
+        "December": "Desember"
+    }
+    date = datetime.strptime(date, "%Y-%m-%d").strftime("%A, %d %B %Y")
+    for english, indonesian in day.items():
+        date = date.replace(english, indonesian)
+    for english, indonesian in month.items():
+        date = date.replace(english, indonesian)
+    return date

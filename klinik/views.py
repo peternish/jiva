@@ -216,7 +216,6 @@ class LamaranPasienApi(APIView):
         serializer = LamaranPasienSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            Process(target=send_confirmation_email, args=(serializer.data["fields"],)).start()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -277,5 +276,7 @@ class LamaranPasienCompoundApi(APIView):
         jadwal_serializer = JadwalPasienSerializer(data=jadwal_pasien_data)
         if jadwal_serializer.is_valid():
             jadwal_serializer.save(lamaranPasien = lamaran_pasien, jadwalTenagaMedis = jadwal_tenaga_medis)
+            send_confirmation_email(lamaran_pasien, jadwal_tenaga_medis, request.data["date"])
+            # Process(target=send_confirmation_email, args=(lamaran_pasien, jadwal_tenaga_medis, request.data["date"])).start()
             return Response(jadwal_serializer.data, status=status.HTTP_201_CREATED)
         return Response(jadwal_serializer.errors, status=status.HTTP_400_BAD_REQUEST) and print(jadwal_serializer.errors)
