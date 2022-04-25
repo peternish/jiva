@@ -105,10 +105,10 @@ const FormulirPendaftaranPasien = ({ isPreview, previewSchema }) => {
     fields: []
   }
 
-  const getUniqueAccounts = (jadwalTenagaMedisList) => {
+  const getUniqueAccounts = (jadwalTenagaMedisListData) => {
     const set = new Set()
     const uniqueAccounts = []
-    jadwalTenagaMedisList.forEach(obj => {
+    jadwalTenagaMedisListData.forEach(obj => {
       const { tenaga_medis: { account: { id } } } = obj
       if (!set.has(id)) uniqueAccounts.push(obj)
       set.add(id)
