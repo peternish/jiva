@@ -127,13 +127,40 @@ describe('JadwalTenagaMedis', () => {
           });
 
           it('should updateEvents', async () => {
-              const event = screen.getAllByText('TM 3')[1];
-              await act(async () => {
+            const event = screen.getAllByText('TM 3')[1];
+            await act(async () => {
                 await fireEvent.click(event);
-              });
+            });
 
-              expect(await screen.getAllByText('TM 3').length === 3)
-          });
+            expect(await screen.getAllByText('TM 3').length === 3)
+
+            const jadwalHariSelect = screen.getAllByRole('combobox')[2]
+            act(async () => {
+                await fireEvent.change(jadwalHariSelect, {target: {value: "Minggu"}});
+            });
+
+            const startTime = screen.getByTestId("start")
+            act(async () => {
+                await fireEvent.change(startTime, {target: {value: "07:00"}});
+            });
+
+            const endTime = screen.getByTestId("end")
+            act(async () => {
+                await fireEvent.change(endTime, {target: {value: "09:00"}});
+            });
+
+            const quota = screen.getByRole('spinbutton')
+            act(async () => {
+                await fireEvent.change(quota, {target: {value: 10}});
+            });
+
+            const button = screen.getByTestId('update')
+            await act(async () => {
+                await fireEvent.click(button);
+            });
+
+            expect(await screen.getAllByText('TM 3').length === 3)
+        });
 
           it('should deleteEvent', async () => {
             const event = screen.getAllByText('TM 2')[1];

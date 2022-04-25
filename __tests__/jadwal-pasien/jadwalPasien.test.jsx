@@ -10,7 +10,52 @@ import { setJadwalTenagaMedisList } from '@redux/modules/jadwalTenagaMedis';
 import { setTenagaMedisList } from '@redux/modules/tenagaMedis';
 import { setJadwalPasien } from '@redux/modules/jadwalPasien';
 
-describe('JadwalTenagaMedis', () => {
+function des_main_func() {
+    describe('Functions', () => {
+        it('should parseData force_filter', async () => {
+            const button = screen.getByText('Tampilkan Semua Tenaga Medis')
+            act(async () => {
+              await fireEvent.click(button);
+            });
+
+            expect(await screen.getAllByRole('combobox')[0]).toBeInTheDocument();
+        });
+
+
+        it('should filter by tenaga medis', async () => {
+          const tenagaMedisSelect = screen.getAllByRole('combobox')[0]
+          act(async () => {
+              await fireEvent.change(tenagaMedisSelect, {target: {value: "TM 3"}});
+          });
+
+          expect(await screen.getAllByText('TM 3').length === 2)
+        });
+
+        it('should have combobox and option', () => {
+            const combobox = screen.getAllByRole('combobox')[0];
+            const option = screen.getAllByRole('option')[0];
+
+            expect(combobox).toBeInTheDocument();
+            expect(option).toBeInTheDocument();
+        })
+    })
+}
+
+function startRender(route) {
+    nextRouter.useRouter = jest.fn();
+    nextRouter.useRouter.mockImplementation(() => ({ 
+    route: route, 
+    query: { idKlinik: 1, idCabang: 1 },
+    isReady: true, 
+    }));
+    render(
+        <Provider store={store}>
+            <Jadwal />
+        </Provider>
+    );
+}
+
+describe('JadwalPasien', () => {
     beforeEach( async () => {
         await store.dispatch(setJadwalTenagaMedisList([{
             id: 1,
@@ -303,17 +348,7 @@ describe('JadwalTenagaMedis', () => {
             }
         }
     ]))
-        nextRouter.useRouter = jest.fn();
-        nextRouter.useRouter.mockImplementation(() => ({ 
-          route: '/klinik/1/1/jadwal-pasien', 
-          query: { idKlinik: 1, idCabang: 1 },
-          isReady: true, 
-        }));
-        render(
-          <Provider store={store}>
-            <Jadwal />
-          </Provider>
-        );
+        startRender('/klinik/1/1/jadwal-pasien')
       });
 
       afterEach(() => {
@@ -330,37 +365,12 @@ describe('JadwalTenagaMedis', () => {
             });
             expect(heading).toBeInTheDocument();
         });
-
-        it('should have combobox and option', () => {
-            const combobox = screen.getAllByRole('combobox')[0];
-            const option = screen.getAllByRole('option')[0];
-
-            expect(combobox).toBeInTheDocument();
-            expect(option).toBeInTheDocument();
-        })
       });
 
-      describe('Functions', () => {
-          it('should parseData force_filter', async () => {
-              const button = screen.getByText('Tampilkan Semua Tenaga Medis')
-              act(async () => {
-                await fireEvent.click(button);
-              });
+      des_main_func()
 
-              expect(await screen.getAllByRole('combobox')[0]).toBeInTheDocument();
-          });
-
-
-          it('should filter by tenaga medis', async () => {
-            const tenagaMedisSelect = screen.getAllByRole('combobox')[0]
-            act(async () => {
-                await fireEvent.change(tenagaMedisSelect, {target: {value: "TM 3"}});
-            });
-
-            expect(await screen.getAllByText('TM 3').length === 2)
-          });
-
-          it('should select event', () => {
+      describe('Specific Functions', () => {
+        it('should select event', () => {
             const event = screen.getAllByText('TM 3')[0];
             act(async () => {
                 await fireEvent.click(event);
@@ -368,5 +378,5 @@ describe('JadwalTenagaMedis', () => {
             
             expect(screen.getByTestId('DaftarPasien')).toBeInTheDocument()
           })
-      })      
+      })
 })

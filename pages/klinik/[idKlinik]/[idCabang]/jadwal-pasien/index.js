@@ -8,7 +8,7 @@ import enUS from 'date-fns/locale/en-US'
 import "react-big-calendar/lib/css/react-big-calendar.css"
 import { useState, useCallback, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Formik, Form, Field } from "formik";
+import { Formik, Form } from "formik";
 import { getJadwalTenagaMedisList } from "@redux/modules/jadwalTenagaMedis/thunks";
 import { getTenagaMedis } from "@redux/modules/tenagaMedis/thunks";
 import { getJadwalPasienList } from "@redux/modules/jadwalPasien/thunks";
@@ -21,7 +21,7 @@ import LoadingButton from "@mui/lab/LoadingButton"
 import Filter_Tenaga_Medis from "@components/JadwalTenagaMedis/Filter";
 import List_Pasien from "@components/JadwalPasien/ListPasien";
 
-const Jadwal = (props) => {
+const Jadwal = () => {
     const {query, isReady} = useRouter()
 
     const dispatch = useDispatch();
@@ -41,9 +41,9 @@ const Jadwal = (props) => {
     const { jadwalPasien } = useSelector(state => state.jadwalPasien);
 
     const locales = {
-        'en-US': enUS,
-      }
-      
+      'en-US': enUS,
+    }
+
       const localizer = dateFnsLocalizer({
         format,
         parse,
@@ -54,7 +54,7 @@ const Jadwal = (props) => {
         locales,
       })
 
-      let [myEvents, setEvents] = useState([{}]);
+      let [allEvents, setAllEvents] = useState([{}]);
 
       const [tenagaMedisDict, setTenagaMedisDict] = useState({});
 
@@ -104,24 +104,16 @@ const Jadwal = (props) => {
               "sat": 6,
               "sun": 7,
             }
-  
-            const day_int = dayDict[day];
-            const currentDate = new Date();
-            let day_num = 0;
-            if(currentDate.getDay() > 0) {
-              day_num = day_int - currentDate.getDay();
-            } else {
-              day_num = day_int - 7;
-            }
+
+            const currentDate = new Date()
+
+            let day_num = getDayDifference(currentDate, dayDict, day)
 
             currentDate.setDate(new Date(currentDate.getDate() + day_num))
   
-            const start = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), 
-              start_time.split(":")[0], start_time.split(":")[1], start_time.split(":")[2])
+            const start = timeSplitEntry(start_time, currentDate)
 
-  
-            const end = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), 
-              end_time.split(":")[0], end_time.split(":")[1], end_time.split(":")[2])
+            const end = timeSplitEntry(end_time, currentDate)
 
             setCurrentId(id)
 
@@ -136,10 +128,10 @@ const Jadwal = (props) => {
 
             if(id_filter > -1) {
               if(id_tenaga_medis === id_filter) {
-                setEvents((prev) => [...prev, { id, start, end, title, quota, id_tenaga_medis, listPasien }])
+                setAllEvents((prev) => [...prev, { id, start, end, title, quota, id_tenaga_medis, listPasien }])
               }
             } else {
-              setEvents((prev) => [...prev, { id, start, end, title, quota, id_tenaga_medis, listPasien }])
+              setAllEvents((prev) => [...prev, { id, start, end, title, quota, id_tenaga_medis, listPasien }])
             }
           })
         }
@@ -150,10 +142,25 @@ const Jadwal = (props) => {
         parseTenagaMedis(tenagaMedisList);
       }, [jadwalTenagaMedisList, tenagaMedisList, parseData, parseTenagaMedis])
 
+      function timeSplitEntry(time, date) {
+        return(new Date(date.getFullYear(), date.getMonth(), date.getDate(), time.split(":")[0], time.split(":")[1], time.split(":")[2]))
+      }
+
+      function getDayDifference(date, dayDict, day) {
+        const day_int = dayDict[day];
+        let day_num = 0;
+        if(date.getDay() > 0) {
+          day_num = day_int - date.getDay();
+        } else {
+          day_num = day_int - 7;
+        }
+        return day_num
+      }
+
     const updateMyEvents = (value) => {
       const id = tenagaMedisDict2[value]
-      myEvents = [{}]
-      setEvents(myEvents)
+      allEvents = [{}]
+      setAllEvents(allEvents)
 
       parseData(id, 1)
 
@@ -161,8 +168,8 @@ const Jadwal = (props) => {
     }
 
     const updateAllMyEvents = () => {
-      myEvents = []
-      setEvents(myEvents)
+      allEvents = []
+      setAllEvents(allEvents)
 
       parseData(-1, 1)
       batalEvent()
@@ -188,7 +195,7 @@ const Jadwal = (props) => {
             <Calendar
             defaultView={Views.WEEK}
             localizer={localizer}
-            events={myEvents}
+            events={allEvents}
             startAccessor="start"
             endAccessor="end"
             style={{ height : 793, width: 1266 }}
@@ -233,7 +240,7 @@ const Jadwal = (props) => {
                     {currentEvent.listPasien.length > 0 ? 
                     <ul>
                       <h4 data-testid="DaftarPasien">Daftar Pasien</h4>
-                      {Object.keys(currentEvent.listPasien).map(key => <h4 key={key}>{currentEvent.listPasien[key]}</h4>)}
+                      {Object.keys(currentEvent.listPasien).map(key => <p key={key}>- {currentEvent.listPasien[key]}</p>)}
                     </ul> : 
                     <ul>
                       <h4 data-testid="DaftarPasien">Tidak ada pasien yang terdaftar</h4>
@@ -243,7 +250,6 @@ const Jadwal = (props) => {
                   </List_Pasien>
                   }
                 </Filter_Tenaga_Medis>
-                
               </Form>}
             </Formik>
           </Form_Calender>

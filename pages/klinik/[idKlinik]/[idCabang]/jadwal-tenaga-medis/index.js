@@ -125,7 +125,6 @@ const Jadwal = (props) => {
                 setEvents((prev) => [...prev, { id, start, end, title, quota, id_tenaga_medis }])
               }
             } else {
-              console.log("here")
               setEvents((prev) => [...prev, { id, start, end, title, quota, id_tenaga_medis }])
             }
           })
@@ -284,15 +283,9 @@ const Jadwal = (props) => {
                 const title = values.jadwal_title
                 const quota = values.quota
 
-                const startDate = getISODate(values.start) 
-                const endDate = getISODate(values.end) 
-
                 currentId = currentId + 1
-                const id = currentId
                 const idTenagaMedis = tenagaMedisDict2[title]
-                console.log(values)
                 if(title) {
-                  //setEvents((prev) => [...prev, { id, startDate, endDate, title, quota, idTenagaMedis }])
                   dispatch(createJadwalTenagaMedis({ idTenagaMedis, startTime, endTime, quota, day }))
                   location.assign(location.pathname)
                 }
