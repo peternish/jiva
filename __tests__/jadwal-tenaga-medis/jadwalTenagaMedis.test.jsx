@@ -170,7 +170,7 @@ describe('JadwalTenagaMedis', () => {
 
             expect(await screen.getAllByText('TM 2').length === 3)
 
-            const deleteButton = screen.getAllByText('Hapus')[0];
+            const deleteButton = screen.getByTestId('delete');
             act(async () => {
                 await fireEvent.click(deleteButton);
             });

@@ -3,7 +3,7 @@ import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import CloseIcon from '@mui/icons-material/Close';
 
-export default function PreviewModal({ schema, open, onClose, children }) {
+export default function PreviewModal({ open, onClose, children }) {
 
   const modalStyle = {
     position: 'absolute',

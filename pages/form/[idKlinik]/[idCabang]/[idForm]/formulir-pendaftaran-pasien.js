@@ -90,7 +90,7 @@ const FormulirPendaftaranPasien = ({ isPreview, previewSchema }) => {
     if (!isReady) return;
     const { idCabang } = query;
     if (!isPreview) dispatch(getSchemas({ idCabang }));
-    dispatch(getJadwalTenagaMedisList({ idCabang }))
+    dispatch(getJadwalTenagaMedisList({ idCabang, getAvailable: true }))
   }, [isReady, query, dispatch, isPreview]);
 
   let schema = useSelector(state => findSchema(state, constants.FORM_TYPES.PATIENT_APPLICATION))
@@ -99,9 +99,21 @@ const FormulirPendaftaranPasien = ({ isPreview, previewSchema }) => {
 
   const mandatoryFields = {
     nik: "",
+    email: "",
     tenaga_medis: "",
     jadwal: "",
     fields: []
+  }
+
+  const getUniqueAccounts = (jadwalTenagaMedisListData) => {
+    const set = new Set()
+    const uniqueAccounts = []
+    jadwalTenagaMedisListData.forEach(obj => {
+      const { tenaga_medis: { account: { id } } } = obj
+      if (!set.has(id)) uniqueAccounts.push(obj)
+      set.add(id)
+    })
+    return uniqueAccounts
   }
 
   return schema && jadwalTenagaMedisList ? (
@@ -127,13 +139,15 @@ const FormulirPendaftaranPasien = ({ isPreview, previewSchema }) => {
               validate={(values) => {
                 const errors = {}
                 if (!values.nik) errors.nik= "NIK wajib diisi"
+                if (!values.email) errors.email= "Email wajib diisi"
                 if (!values.tenaga_medis) errors.tenaga_medis = "Tenaga medis wajib dipilih"
                 if (!values.jadwal) errors.jadwal = "Jadwal wajib dipilih"
                 return errors
               }}
               onSubmit={async (values, { setSubmitting, isSubmitting }) => {
+                const jadwal = jadwalTenagaMedisList.find(({ id }) => id == values.jadwal)
                 setSubmitting(true)
-                await dispatch(createApplication(setSubmitting, values))
+                await dispatch(createApplication(setSubmitting, { ...values, jadwal_tenaga_medis_pk: values.jadwal, date: jadwal.date }))
                 setSubmitted(!isSubmitting)
               }}
             >
@@ -148,6 +162,13 @@ const FormulirPendaftaranPasien = ({ isPreview, previewSchema }) => {
                       error={errors.nik}
                     />
                     <TextInput
+                      name="email"
+                      type="email"
+                      label="Email"
+                      placeholder="alamat@email.com"
+                      error={errors.email}
+                    />
+                    <TextInput
                       label="Pilih Tenaga Medis"
                       as="select" 
                       id="tenagamedis" 
@@ -156,7 +177,7 @@ const FormulirPendaftaranPasien = ({ isPreview, previewSchema }) => {
                       error={errors.tenaga_medis}
                     >
                       <option value="" disabled={true} hidden={true}>Pilih tenaga medis</option>
-                      {jadwalTenagaMedisList.map(({ tenaga_medis: { account: { full_name, id } } }) => (
+                      {getUniqueAccounts(jadwalTenagaMedisList).map(({ tenaga_medis: { account: { full_name, id } } }) => (
                         <option value={id} key={id}>{full_name}</option>
                       ))}
                     </TextInput>
@@ -170,9 +191,9 @@ const FormulirPendaftaranPasien = ({ isPreview, previewSchema }) => {
                     >
                       <option value="" disabled={true} hidden={true}>Pilih jadwal pertemuan</option>
                       {values.tenaga_medis && (
-                        jadwalTenagaMedisList.filter(({ tenaga_medis: { account: { id } } }) => id == values.tenaga_medis).map(({ start_time, end_time, day, id }, idx) => (
+                        jadwalTenagaMedisList.filter(({ tenaga_medis: { account: { id } } }) => id == values.tenaga_medis).map(({ start_time, end_time, day, id, date }, idx) => (
                           <option value={id} key={idx}>
-                            {`${day}: ${start_time} - ${end_time}`}
+                            {`(${new Date(date).toLocaleDateString()}) ${day}: ${start_time} - ${end_time}`}
                           </option>
                         )))}
                     </TextInput>
