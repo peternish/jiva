@@ -9,6 +9,28 @@ import { store } from "@redux/store";
 import { setJadwalTenagaMedisList } from '@redux/modules/jadwalTenagaMedis';
 import { setTenagaMedisList } from '@redux/modules/tenagaMedis';
 
+function selecting(hari, start, end, jml) {
+    const jadwalHariSelect = screen.getAllByRole('combobox')[2]
+            act(async () => {
+                await fireEvent.change(jadwalHariSelect, {target: {value: hari}});
+            });
+
+            const startTime = screen.getByTestId("start")
+            act(async () => {
+                await fireEvent.change(startTime, {target: {value: start}});
+            });
+
+            const endTime = screen.getByTestId("end")
+            act(async () => {
+                await fireEvent.change(endTime, {target: {value: end}});
+            });
+
+            const quota = screen.getByRole('spinbutton')
+            act(async () => {
+                await fireEvent.change(quota, {target: {value: jml}});
+            });
+}
+
 describe('JadwalTenagaMedis', () => {
     beforeEach( async () => {
         await store.dispatch(setJadwalTenagaMedisList([{
@@ -127,13 +149,22 @@ describe('JadwalTenagaMedis', () => {
           });
 
           it('should updateEvents', async () => {
-              const event = screen.getAllByText('TM 3')[1];
-              await act(async () => {
+            const event = screen.getAllByText('TM 3')[1];
+            await act(async () => {
                 await fireEvent.click(event);
-              });
+            });
 
-              expect(await screen.getAllByText('TM 3').length === 3)
-          });
+            expect(await screen.getAllByText('TM 3').length === 3)
+
+            selecting("Sabtu", "13:00", "15:00", 8)
+
+            const button = screen.getByTestId('update')
+            await act(async () => {
+                await fireEvent.click(button);
+            });
+
+            expect(await screen.getAllByText('TM 3').length === 3)
+        });
 
           it('should deleteEvent', async () => {
             const event = screen.getAllByText('TM 2')[1];
@@ -157,25 +188,7 @@ describe('JadwalTenagaMedis', () => {
                 await fireEvent.change(tenagaMedisSelect, {target: {value: "TM 2"}});
             });
 
-            const jadwalHariSelect = screen.getAllByRole('combobox')[2]
-            act(async () => {
-                await fireEvent.change(jadwalHariSelect, {target: {value: "Minggu"}});
-            });
-
-            const startTime = screen.getByTestId("start")
-            act(async () => {
-                await fireEvent.change(startTime, {target: {value: "07:00"}});
-            });
-
-            const endTime = screen.getByTestId("end")
-            act(async () => {
-                await fireEvent.change(endTime, {target: {value: "09:00"}});
-            });
-
-            const quota = screen.getByRole('spinbutton')
-            act(async () => {
-                await fireEvent.change(quota, {target: {value: 10}});
-            });
+            selecting("Minggu", "07:00", "09:00", 10)
 
             const create = screen.getByTestId("create")
             act(async () => {
@@ -194,6 +207,4 @@ describe('JadwalTenagaMedis', () => {
             expect(await screen.getAllByText('TM 2').length === 3)
           })
       })
-
-      
 })

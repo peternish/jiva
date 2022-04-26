@@ -30,16 +30,10 @@ const Jadwal = (props) => {
       }
       const { idCabang } = query;
       dispatch(getJadwalTenagaMedisList({ idCabang }));
+      dispatch(getTenagaMedis({ idCabang }));
     }, [dispatch, isReady, query]);
 
     const { jadwalTenagaMedisList } = useSelector(state => state.jadwalTenagaMedis);
-
-    useEffect(() => {
-      if (!isReady) return;
-      const { idCabang } = query;
-      dispatch(getTenagaMedis({ idCabang }));
-    }, [isReady, dispatch, query]);
-  
     const { tenagaMedisList } = useSelector(state => state.tenagaMedis);
 
     const locales = {
@@ -108,7 +102,13 @@ const Jadwal = (props) => {
   
             const day_int = dayDict[day];
             const currentDate = new Date();
-            const day_num = day_int - currentDate.getDay();
+            let day_num = 0;
+            if(currentDate.getDay() > 0) {
+              day_num = day_int - currentDate.getDay();
+            } else {
+              day_num = day_int - 7;
+            }
+
             currentDate.setDate(new Date(currentDate.getDate() + day_num))
   
             const start = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), 
@@ -240,11 +240,12 @@ const Jadwal = (props) => {
       return date
     }
 
-    return jadwalTenagaMedisList && tenagaMedisList ? (
+    return (jadwalTenagaMedisList && tenagaMedisList && tenagaMedisDict && tenagaMedisDict2)? (
       <Layout navType = "sidebar" title="Jadwal Tenaga Medis">
         <Filter_Tenaga_Medis>
-          <select onChange={(event) => updateMyEvents(event.target.value)} style={{width: '10%'}}>
-            {Object.keys(tenagaMedisDict2).map(key => <option key={key} value={tenagaMedisDict[key]}>{key}</option>)}
+          <select defaultValue={""} onChange={(event) => updateMyEvents(event.target.value)} style={{width: '10%'}}>
+            <option value="" hidden="hidden">Pilih Tenaga Medis</option>
+            {Object.keys(tenagaMedisDict2).map(key => <option key={key} value={tenagaMedisDict[key] } data-testid="select-option">{key}</option>)}
           </select>
           <LoadingButton
           onClick={updateAllMyEvents}
@@ -282,14 +283,9 @@ const Jadwal = (props) => {
                 const title = values.jadwal_title
                 const quota = values.quota
 
-                const startDate = getISODate(values.start) 
-                const endDate = getISODate(values.end) 
-
                 currentId = currentId + 1
-                const id = currentId
                 const idTenagaMedis = tenagaMedisDict2[title]
                 if(title) {
-                  setEvents((prev) => [...prev, { id, startDate, endDate, title, quota, idTenagaMedis }])
                   dispatch(createJadwalTenagaMedis({ idTenagaMedis, startTime, endTime, quota, day }))
                   location.assign(location.pathname)
                 }
@@ -303,8 +299,10 @@ const Jadwal = (props) => {
                   name="jadwal_title" 
                   placeholder="Tenaga Medis" 
                   as="select"
-                  data-testid="selectTenaga"                  
+                  data-testid="selectTenaga"  
+                  defaultValue=""                
                 >
+                  <option value="" hidden="hidden">Pilih Tenaga Medis</option>
                   {Object.keys(tenagaMedisDict2).map(key => <option key={key} value={tenagaMedisDict[key] } data-testid="select-option">{key}</option>)}
                 </TextInput>
                 <TextInput
