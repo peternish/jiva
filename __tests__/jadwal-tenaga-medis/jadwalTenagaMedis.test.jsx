@@ -136,22 +136,22 @@ describe('JadwalTenagaMedis', () => {
 
             const jadwalHariSelect = screen.getAllByRole('combobox')[2]
             act(async () => {
-                await fireEvent.change(jadwalHariSelect, {target: {value: "Minggu"}});
+                await fireEvent.change(jadwalHariSelect, {target: {value: "Sabtu"}});
             });
 
             const startTime = screen.getByTestId("start")
             act(async () => {
-                await fireEvent.change(startTime, {target: {value: "07:00"}});
+                await fireEvent.change(startTime, {target: {value: "13:00"}});
             });
 
             const endTime = screen.getByTestId("end")
             act(async () => {
-                await fireEvent.change(endTime, {target: {value: "09:00"}});
+                await fireEvent.change(endTime, {target: {value: "15:00"}});
             });
 
             const quota = screen.getByRole('spinbutton')
             act(async () => {
-                await fireEvent.change(quota, {target: {value: 10}});
+                await fireEvent.change(quota, {target: {value: 8}});
             });
 
             const button = screen.getByTestId('update')
