@@ -469,6 +469,16 @@ class LamaranPasienCompoundApiTest(KlinikTestSetUp):
         self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(LamaranPasien.objects.count(), 10)
 
+    def test_post_lamaran_pasien_compound_no_tenaga_medis(self):
+        self.assertEqual(LamaranPasien.objects.count(), 10)
+        data = {"nik": "13371337", "fields": self.json_test, "email": "emails@email.com", "date": datetime.date(2000, 4, 20),
+         "jadwal_tenaga_medis_pk": 9999999999999}
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        resp = self.client.post(self.pasien_compound, data=data)
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(resp.json(), { "error": "Jadwal tenaga medis tidak ditemukan" })
+        self.assertEqual(LamaranPasien.objects.count(), 10)
+
 
 class FormAPITest(APITestCase):
     def aws_credentials(self):
