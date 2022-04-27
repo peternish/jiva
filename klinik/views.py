@@ -212,7 +212,6 @@ class DynamicFormDetailApi(APIView):
         schema.delete()
         return Response(status=status.HTTP_202_ACCEPTED)
 
-
 class LamaranPasienApi(APIView):
 
     permission_classes = [
@@ -279,6 +278,9 @@ class LamaranPasienCompoundApi(APIView):
 
         lamaran_pasien: LamaranPasien = LamaranPasien.objects.last()
         jadwal_tenaga_medis: JadwalTenagaMedis = get_object(JadwalTenagaMedis, jadwal_tenaga_medis_pk)
+        if jadwal_tenaga_medis is None:
+            lamaran_pasien.delete()
+            return Response({ "error": "Jadwal tenaga medis tidak ditemukan" }, status=status.HTTP_400_BAD_REQUEST)
 
         jadwal_serializer = JadwalPasienSerializer(data=jadwal_pasien_data)
         if jadwal_serializer.is_valid():
@@ -288,4 +290,5 @@ class LamaranPasienCompoundApi(APIView):
                 args=(lamaran_pasien, jadwal_tenaga_medis, request.data["date"])
             ).start()
             return Response(jadwal_serializer.data, status=status.HTTP_201_CREATED)
+        lamaran_pasien.delete()
         return Response(jadwal_serializer.errors, status=status.HTTP_400_BAD_REQUEST) and print(jadwal_serializer.errors)
