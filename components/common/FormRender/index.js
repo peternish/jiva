@@ -65,7 +65,7 @@ width: 100%;
 `;
 
 const excludedFields = ["header", "paragraph"];
-const FormRender = ({ schema, submit, isSubmitting, isValid = true }) => {
+const FormRender = ({ schema, submit, isSubmitting, extraButton, isValid = true }) => {
   const fr = useRef();
 
   const [isError, setIsError] = useState(false)
@@ -159,13 +159,16 @@ const FormRender = ({ schema, submit, isSubmitting, isValid = true }) => {
         }}
       >
         <div id="fb-render" ref={fr}></div>
-        <LoadingButton
-          variant="contained"
-          type="submit"
-          loading={isSubmitting && isValid && !isError}
-          disabled={!isValid || isError}
-        >Simpan
-        </LoadingButton>
+        <div style={{display: "flex", gap: "1em", width: "100%"}}>
+          {extraButton && extraButton()}
+          <LoadingButton
+            variant="contained"
+            type="submit"
+            loading={isSubmitting && isValid && !isError}
+            disabled={!isValid || isError}
+          >Simpan
+          </LoadingButton>
+        </div>
       </form>
     </FormCSS>
   );
