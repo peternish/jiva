@@ -20,7 +20,7 @@ const Dashboard = () => {
   return (
     <Layout navType="sidebar" title="Pengaturan Staf">
       <CSS>
-        <Box>
+        <Box sx={{ width : '85%'}}>
           <PenggunaTable />
           <Button
             href={`/klinik/${idKlinik}/${idCabang}/pengaturan-pengguna/tambah`}
