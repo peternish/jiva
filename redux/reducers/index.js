@@ -15,7 +15,7 @@ import rekamanMedisReducers from "../modules/rekamanMedis";
 const authPersistConfig = {
   key: "auth",
   storage,
-  whitelist: ["accessToken", "refreshToken"],
+  whitelist: ["accessToken", "refreshToken", "profile"],
 };
 
 export const rootReducer = combineReducers({
