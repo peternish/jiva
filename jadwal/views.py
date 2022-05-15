@@ -6,6 +6,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import serializers
+from rest_framework.permissions import IsAuthenticated
 
 # model and serializer imports
 from .models import JadwalTenagaMedis, JadwalPasien
@@ -29,7 +30,7 @@ def get_object(klass: models.Model, pk: int):
 
 class JadwalTenagaMedisListAPI(APIView):
 
-    permission_classes = [IsStafPermission]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request: Request, cabang_id: int, format=None):
         cabang = get_object(Cabang, pk=cabang_id)
@@ -178,7 +179,7 @@ class JadwalPasienListAPI(APIView):
 
 class JadwalPasienListByCabangAPI(APIView):
 
-    permission_classes = [IsStafPermission]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request: Request, cabang_pk: int):
         cabang = get_object(Cabang, pk=cabang_pk)

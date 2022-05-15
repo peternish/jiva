@@ -128,7 +128,7 @@ class StafApi(APIView):
 
 
 class TenagaMedisListApi(APIView):
-    permission_classes = [IsStafPermission]
+    permission_classes = [IsAuthenticated]
 
     def post(self, request, cabang_id):
         serializer = TenagaMedisProfileSerializer(data=request.data)
