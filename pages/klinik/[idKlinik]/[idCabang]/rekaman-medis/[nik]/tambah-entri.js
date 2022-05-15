@@ -55,6 +55,10 @@ function TambahEntri() {
                 nik: pasien.nik,
                 fields: []
               }}
+              onSubmit={(values, { setSubmitting }) => {
+                setSubmitting(true)
+                dispatch(tambahEntri(values, setSubmitting))
+              }}
             >
               {({ isValid, isSubmitting, setFieldValue, submitForm }) => (
                 <div>
