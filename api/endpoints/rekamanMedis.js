@@ -3,7 +3,7 @@ import { axiosInstance as axios } from "@api/http";
 
 const BASE_URL = constants?.API_BASE_URL + "/ehr";
 
-const rekamMedisEndpoints = {
+const rekamanMedis = {
   getPasien: (nik) => axios.get(BASE_URL + "/pasien/" + nik + "/"),
   tambahEntri: ({ nik, fields } = {}) =>
     axios.post(BASE_URL + "//", {
@@ -18,4 +18,4 @@ const rekamMedisEndpoints = {
   },
 };
 
-export default rekamMedisEndpoints;
+export default rekamanMedis;

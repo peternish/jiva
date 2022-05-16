@@ -34,10 +34,9 @@ function TambahEntri() {
 
   useEffect(() => {
     if (!isReady) return;
-    const { idCabang, nik } = query;
-    dispatch(getSchemas({ idCabang }));
-    dispatch(getPasien(nik))
-  }, [isReady,query, dispatch]);
+    dispatch(getSchemas({ idCabang: query.idCabang }));
+    dispatch(getPasien(query.nik))
+  }, [isReady, query, dispatch]);
 
   const schema = useSelector(state => findSchema(state, constants.FORM_TYPES.HEALTH_RECORD))
   const pasien = useSelector(state => state.rekamanMedis.pasien)
