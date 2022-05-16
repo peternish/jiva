@@ -9,7 +9,8 @@ import { toast } from "react-toastify";
 import { getStringOrFirstArrayValue, capitalize } from "@utils/index";
 
 // actions
-import { setAccessToken, setRefreshToken } from "@redux/modules/auth";
+import { setAccessToken, setRefreshToken, setProfile } from "@redux/modules/auth";
+import { isLoggedIn as isLoggedInSelector } from "@redux/modules/auth/selectors"
 
 export const signup = ({
   email,
@@ -43,15 +44,9 @@ export const login = ({ email, password } = {}, setSubmitting) => {
   return async (dispatch, _getState) => {
     try {
       await dispatch(getTokens({ email, password }));
-      const {
-        data: { cabang, klinik },
-      } = await jivaAPI.auth.profile()
-
-      if ( cabang != null && klinik != null) {
-        location.assign(`/klinik/${klinik}/${cabang}`);
-      } else {
-        location.assign("/klinik");
-      }
+      const { data } = await jivaAPI.auth.profile()
+      await dispatch(setProfile(data))
+      await dispatch(redirectHandler())
     } catch (error) {
       setSubmitting(false)
       let errorMessage = "Terjadi kesalahan 😥";
@@ -94,3 +89,32 @@ export const logout = () => {
     window.location.assign("/");
   };
 };
+
+export const redirectHandler = () => {
+  return (_, getState) => {
+    const isLoggedIn = isLoggedInSelector(getState())
+    const publicRoutes = [ /^\/login$/, /^\/$/, /^\/register$/, /^\/form.*$/ ]
+    const isPublicRoute = publicRoutes.some(rx => rx.test(location.pathname))
+    if (!isPublicRoute && !isLoggedIn) {
+      location.assign("/login")
+    }
+  
+    if ([/^\/$/, /^\/login$/].some(rx => rx.test(location.pathname)) && isLoggedIn) {
+      const { cabang, klinik, role } = getState().auth.profile
+      
+      switch(role) {
+        case "owner":
+          location.assign("/klinik");
+          break;
+        case "staf":
+          location.assign(`/klinik/${klinik}/${cabang}/tenaga-medis`);
+          break
+        case "tenaga_medis":
+          location.assign(`/klinik/${klinik}/${cabang}/pengaturan-formulir-rekaman-medis`);
+          break
+        default:
+          throw new Error("No role found")
+      }
+    }
+  }
+}
