@@ -107,6 +107,8 @@ export const redirectHandler = () => {
           location.assign("/klinik");
           break;
         case "staf":
+          location.assign(`/klinik/${klinik}/${cabang}/tenaga-medis`);
+          break
         case "tenaga_medis":
           location.assign(`/klinik/${klinik}/${cabang}/pengaturan-formulir-rekaman-medis`);
           break
