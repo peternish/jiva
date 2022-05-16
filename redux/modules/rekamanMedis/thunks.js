@@ -5,7 +5,7 @@ import jivaAPI from "@api/index";
 import { toast } from "react-toastify";
 
 // actions
-import { setPasien } from "@redux/modules/rekamanMedis";
+import { setPasien, setListRekamanMedis } from "@redux/modules/rekamanMedis";
 
 export const getPasien = (nik) => {
   return async (dispatch) => {
@@ -27,6 +27,17 @@ export const tambahEntri = (values, setSubmitting) => {
     } catch (error) {
       toast("Terjadi kesalahan 😥", { type: toast.TYPE.ERROR });
       setSubmitting(false)
+    }
+  }
+}
+
+export const getListRekamanMedis = (nik) => {
+  return async (dispatch) => {
+    try {
+      const { data } = await jivaAPI.rekamanMedis.getListRekamanMedis(nik);
+      dispatch(setListRekamanMedis(data));
+    } catch (error) {
+      toast("Terjadi kesalahan 😥", { type: toast.TYPE.ERROR });
     }
   }
 }
