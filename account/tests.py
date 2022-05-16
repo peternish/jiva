@@ -250,6 +250,12 @@ class StafAPITest(StafTestSetup):
         url = reverse(self.url_staf_list, kwargs={"cabang_id": self.cabang_id})
         resp = self.client.post(url, data=data)
         self.assertEqual(resp.status_code, status.HTTP_401_UNAUTHORIZED)
+    
+    def test_post_staf_fail_400(self):
+        self.client.credentials(HTTP_AUTHORIZATION=self.owner_auth)
+        url = reverse(self.url_staf_list, kwargs={"cabang_id": self.cabang_id})
+        resp = self.client.post(url, data={})
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_get_staf_list(self):
         self.client.credentials(HTTP_AUTHORIZATION=self.owner_auth)
