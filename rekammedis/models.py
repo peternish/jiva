@@ -17,4 +17,4 @@ class RekamanMedis(models.Model):
     patient = models.ForeignKey(Pasien, on_delete=models.CASCADE)
 
     def __str__(self) -> str:
-        return self.patient + " " + self.time_created
+        return str(self.patient) + ": " + str(self.time_created)
