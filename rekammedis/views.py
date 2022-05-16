@@ -14,6 +14,11 @@ class PasienApi(APIView):
         IsAuthenticated,
     ]
 
+    def get(self, request: Request, format=None):
+        pasien = Pasien.objects.all()
+        serializer = PasienSerializer(pasien, many=True)
+        return Response(serializer.data)
+
     def post(self, request: Request, format=None):
         serializer = PasienSerializer(data=request.data)
         if serializer.is_valid():
@@ -52,14 +57,13 @@ class RekamMedisApi(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Pasien.DoesNotExist:
             return Response("Pasien not found", status=status.HTTP_404_NOT_FOUND)
-        except TenagaMedisProfile.DoesNotExist:
-            return Response("Tenaga Medis not found", status=status.HTTP_404_NOT_FOUND)
 
     def post(self, request: Request, format=None) -> Response:
         serializer = RekamanMedisSerializer(data=request.data)
         nik = request.data.get("patient")
         try:
-            author = TenagaMedisProfile.objects.get(account__email=request.user)
+            author = TenagaMedisProfile.objects.get(
+                account__email=request.user)
             patient = Pasien.objects.get(nik=nik)
             if serializer.is_valid():
                 serializer.save(author=author, patient=patient)
@@ -67,8 +71,6 @@ class RekamMedisApi(APIView):
             return Response(status=status.HTTP_400_BAD_REQUEST)
         except Pasien.DoesNotExist:
             return Response("Pasien not found", status=status.HTTP_404_NOT_FOUND)
-        except TenagaMedisProfile.DoesNotExist:
-            return Response("Tenaga Medis not found", status=status.HTTP_404_NOT_FOUND)
 
 
 class RekamMedisDetilApi(APIView):
@@ -88,7 +90,8 @@ class RekamMedisDetilApi(APIView):
     def put(self, request: Request, id: int, format=None):
         try:
             ehr = RekamanMedis.objects.get(id=id)
-            serializer = RekamanMedisSerializer(ehr, data=request.data, partial=True)
+            serializer = RekamanMedisSerializer(
+                ehr, data=request.data, partial=True)
             if serializer.is_valid():
                 serializer.save()
                 return Response(status=status.HTTP_201_CREATED)
