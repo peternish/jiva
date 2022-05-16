@@ -6,69 +6,7 @@ import { store } from "@redux/store";
 import '@testing-library/jest-dom'
 import { setSchemas } from "@redux/modules/dynamicForm"
 import { setJadwalTenagaMedisList } from "@redux/modules/jadwalTenagaMedis"
-
-const SAMPLE_SCHEMA = [{
-  "id": 1,
-  "cabang_id": 1,
-  "formtype": "pendaftaran_pasien",
-  "fields": [
-      {
-          "name": "text-1649092362528-0",
-          "type": "text",
-          "label": "Field 1",
-          "access": false,
-          "subtype": "text",
-          "required": true,
-          "className": "form-control"
-      }
-  ],
-  "klinik": {
-      "name": "Klinik Staging 1"
-  }
-}]
-
-const SAMPLE_JADWAL = [
-  {
-    "id": 2,
-    "tenaga_medis": {
-      "account": {
-        "id": 2,
-        "full_name": "TM 2",
-        "email": "tm2@klinik99.com",
-        "date_joined": "2022-03-31T12:49:11.378628Z",
-        "last_login": "2022-03-31T12:49:11.378628Z",
-        "role": "tenaga_medis",
-        "cabang": 1,
-        "klinik": 1
-      },
-      "sip": "https://django-surat-izin-klinik-jiva.s3.amazonaws.com/static/HW2204B4.txt"
-    },
-    "start_time": "10:00:00",
-    "end_time": "12:00:00",
-    "quota": 5,
-    "day": "mon"
-  },
-  {
-    "id": 3,
-    "tenaga_medis": {
-      "account": {
-        "id": 3,
-        "full_name": "TM 3",
-        "email": "tm3@klinik99.com",
-        "date_joined": "2022-04-02T10:43:33.797983Z",
-        "last_login": "2022-04-02T10:43:33.797983Z",
-        "role": "tenaga_medis",
-        "cabang": 1,
-        "klinik": 1
-      },
-      "sip": "https://django-surat-izin-klinik-jiva.s3.amazonaws.com/static/HW2204B4.txt"
-    },
-    "start_time": "11:00:00",
-    "end_time": "14:00:00",
-    "quota": 5,
-    "day": "mon"
-  }
-]
+import { SAMPLE_SCHEMA, SAMPLE_JADWAL } from "@utils/testUtils/constants"
 
 const mockRouter = () => {
   nextRouter.useRouter = jest.fn();
@@ -79,7 +17,7 @@ const mockRouter = () => {
   }));
 }
 
-jest.setTimeout(10000)
+jest.setTimeout(20000)
 
 describe("Dynamic Form", () => {
   beforeEach(async () => {
@@ -179,7 +117,7 @@ describe("Dynamic Form Submission", () => {
     expect(buttonsubmit).not.toHaveAttribute("disabled")
 
     await act(async () => {
-      await fireEvent.click(buttonsubmit)
+      fireEvent.click(buttonsubmit)
     })
   });
 });
