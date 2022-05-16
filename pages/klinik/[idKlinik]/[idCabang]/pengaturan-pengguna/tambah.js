@@ -32,7 +32,7 @@ const Tambah = () => {
   return (
         <Layout navType="sidebar" title="Tambah Staf">
           <CSS>
-            <Box>
+            <Box sx={{ width : '85%'}}>
               <Formik
                 initialValues={fields}
                 validate={(values) => {

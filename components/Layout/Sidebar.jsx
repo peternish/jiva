@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logout } from "@redux/modules/auth/thunks";
 
 import styles from '@styles/Sidebar.module.css'
@@ -27,22 +27,24 @@ export default function Sidebar() {
     const { idKlinik, idCabang } = query;
     const dispatch = useDispatch()
 
-    const navItems = [
-        {divider : 'Pasien'},
-        {title : 'Pengaturan Formulir Pendaftaran', icon: <AppRegistrationIcon/>, link: `/klinik/${idKlinik}/${idCabang}/pengaturan-formulir-pendaftaran`},
-        {title : 'List Pendaftaran', icon: <FormatListBulletedIcon/>, link: `/klinik/${idKlinik}/${idCabang}/jadwal-pasien`},
+    const { profile } = useSelector(state => state.auth)
 
-        {divider : 'Klinik'},
-        {title : 'Pengaturan Klinik', icon: <SettingsIcon/>, link: '#'},
-        {title : 'Pengaturan Staf', icon: <GroupIcon/>, link: `/klinik/${idKlinik}/${idCabang}/pengaturan-pengguna`},
+    const navItems = [
+        {divider : 'Pasien', roles: ["owner", "staf", "tenaga_medis"]},
+        {title : 'Pengaturan Formulir Pendaftaran', icon: <AppRegistrationIcon/>, link: `/klinik/${idKlinik}/${idCabang}/pengaturan-formulir-pendaftaran`, roles: ["owner", "staf"]},
+        {title : 'List Pendaftaran', icon: <FormatListBulletedIcon/>, link: `/klinik/${idKlinik}/${idCabang}/jadwal-pasien`, roles: ["owner", "staf", "tenaga_medis"]},
+
+        {divider : 'Klinik', roles: ["owner", "staf"]},
+        {title : 'Pengaturan Klinik', icon: <SettingsIcon/>, link: '#', roles: ["owner", "staf"]},
+        {title : 'Pengaturan Staf', icon: <GroupIcon/>, link: `/klinik/${idKlinik}/${idCabang}/pengaturan-pengguna`, roles: ["owner"]},
         
-        {divider : 'Tenaga Medis'},
-        {title : 'Pengaturan Jadwal Praktik', icon: <TodayIcon/>, link: `/klinik/${idKlinik}/${idCabang}/jadwal-tenaga-medis`},
-        {title : 'Pengaturan Tenaga Medis', icon: <GroupIcon/>, link: `/klinik/${idKlinik}/${idCabang}/tenaga-medis`},
+        {divider : 'Tenaga Medis', roles: ["owner", "staf"]},
+        {title : 'Pengaturan Jadwal Praktik', icon: <TodayIcon/>, link: `/klinik/${idKlinik}/${idCabang}/jadwal-tenaga-medis`, roles: ["owner", "staf"]},
+        {title : 'Pengaturan Tenaga Medis', icon: <GroupIcon/>, link: `/klinik/${idKlinik}/${idCabang}/tenaga-medis`, roles: ["owner", "staf"]},
         
-        {divider : 'Rekaman Medis'},
-        {title : 'Pengaturan Formulir Rekaman Medis', icon: <ConstructionIcon/>, link: `/klinik/${idKlinik}/${idCabang}/pengaturan-formulir-rekaman-medis`},
-        {title : 'Rekaman Medis', icon: <AssignmentIcon/>, link: '#'},
+        {divider : 'Rekaman Medis', roles: ["tenaga_medis"]},
+        {title : 'Pengaturan Formulir Rekaman Medis', icon: <ConstructionIcon/>, link: `/klinik/${idKlinik}/${idCabang}/pengaturan-formulir-rekaman-medis`, roles: ["tenaga_medis"]},
+        {title : 'Rekaman Medis', icon: <AssignmentIcon/>, link: '#', roles: ["tenaga_medis"]},
     ]
 
     const [open, setOpen] = useState(false)
@@ -50,14 +52,14 @@ export default function Sidebar() {
         setOpen(!open)
     }
 
-  return (
+  return profile ? (
     <nav className={`${styles.sidebar} ${open ? styles.open : ''}`} data-testid="sidebar">
         <div>
             <div className={styles.sidebarHeader} onClick={toggleSidebar}>
                 {open ? <ChevronLeftIcon/> : <ChevronRightIcon/>}
             </div>
             <div className={styles.navList}>
-                {navItems.map((navItem, index) => (
+                {navItems.map((navItem, index) => navItem.roles.includes(profile.role) ? (
                     navItem.divider 
                         ? 
                         <div key={index}>
@@ -73,7 +75,7 @@ export default function Sidebar() {
                         </div>
                     </a>
                     </Link>
-                ))}
+                ) : null)}
             </div>
         </div>
         <Link href="/login">
@@ -85,5 +87,5 @@ export default function Sidebar() {
             </a>
         </Link>
     </nav>
-  )
+  ) : null
 }

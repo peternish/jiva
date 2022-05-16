@@ -7,6 +7,7 @@ import dynamicForm from "./endpoints/dynamicForm";
 import jadwalTenagaMedis from "./endpoints/jadwalTenagaMedis";
 import patientApplication from "./endpoints/patientApplication";
 import jadwalPasien from "./endpoints/jadwalPasien";
+import rekamanMedis from "./endpoints/rekamanMedis"
 
 const api = {
   auth,
@@ -17,7 +18,8 @@ const api = {
   dynamicForm,
   jadwalTenagaMedis,
   patientApplication,
-  jadwalPasien
+  jadwalPasien,
+  rekamanMedis
 };
 
 export default api;
