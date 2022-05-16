@@ -1,5 +1,5 @@
 import "@testing-library/jest-dom";
-import { fireEvent, render, screen, act } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import TambahEntri from "@pages/klinik/[idKlinik]/[idCabang]/rekaman-medis/[nik]/tambah-entri";
 
 // redux
