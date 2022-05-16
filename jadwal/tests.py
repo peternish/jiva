@@ -130,7 +130,7 @@ class CreateJadwalTenagaMedisAPITest(JadwalTenagaMedisTestSetUp):
         }
         url = reverse(
             self.create_jadwal_tenaga_medis_url,
-            kwargs={"tenaga_medis_id": self.tenaga_medis_profile.id},
+            kwargs={"tenaga_medis_id": self.tenaga_medis_account.id},
         )
         response = self.client.post(url, data=data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -143,7 +143,7 @@ class CreateJadwalTenagaMedisAPITest(JadwalTenagaMedisTestSetUp):
         }
         url = reverse(
             self.create_jadwal_tenaga_medis_url,
-            kwargs={"tenaga_medis_id": self.tenaga_medis_profile.id},
+            kwargs={"tenaga_medis_id": self.tenaga_medis_account.id},
         )
         response = self.client.post(url, data=data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -159,7 +159,7 @@ class CreateJadwalTenagaMedisAPITest(JadwalTenagaMedisTestSetUp):
         }
         url = reverse(
             self.create_jadwal_tenaga_medis_url,
-            kwargs={"tenaga_medis_id": self.tenaga_medis_profile.id},
+            kwargs={"tenaga_medis_id": self.tenaga_medis_account.id},
         )
         response = self.client.post(url, data=data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -183,7 +183,7 @@ class CreateJadwalTenagaMedisAPITest(JadwalTenagaMedisTestSetUp):
         }
         url = reverse(
             self.create_jadwal_tenaga_medis_url,
-            kwargs={"tenaga_medis_id": self.tenaga_medis_profile.id},
+            kwargs={"tenaga_medis_id": self.tenaga_medis_account.id},
         )
         response = self.client.post(url, data=data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -199,7 +199,7 @@ class CreateJadwalTenagaMedisAPITest(JadwalTenagaMedisTestSetUp):
         }
         url = reverse(
             self.create_jadwal_tenaga_medis_url,
-            kwargs={"tenaga_medis_id": self.tenaga_medis_profile.id},
+            kwargs={"tenaga_medis_id": self.tenaga_medis_account.id},
         )
         response = self.client.post(url, data=data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)

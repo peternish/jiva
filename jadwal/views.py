@@ -12,6 +12,7 @@ from rest_framework.permissions import IsAuthenticated
 from .models import JadwalTenagaMedis, JadwalPasien
 from jadwal.serializers import JadwalTenagaMedisSerializer, JadwalPasienSerializer
 from klinik.models import Cabang, LamaranPasien, TenagaMedisProfile
+from account.models import Account
 
 # other import
 from urllib.request import Request
@@ -25,6 +26,12 @@ def get_object(klass: models.Model, pk: int):
     try:
         return klass.objects.get(pk=pk)
     except klass.DoesNotExist:
+        return None
+
+def get_profile(model: models.Model, account: Account):
+    try:
+        return model.objects.get(account=account)
+    except model.DoesNotExist:
         return None
 
 
@@ -54,7 +61,8 @@ class CreateJadwalTenagaMedisAPI(APIView):
     permission_classes = [IsStafPermission]
 
     def post(self, request: Request, tenaga_medis_id: int, format=None):
-        tenaga_medis = get_object(TenagaMedisProfile, pk=tenaga_medis_id)
+        account = get_object(Account, pk=tenaga_medis_id)
+        tenaga_medis = get_profile(TenagaMedisProfile, account=account)
         if tenaga_medis is None:
             return Response(
                 {
