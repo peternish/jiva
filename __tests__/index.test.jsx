@@ -7,6 +7,7 @@ import { store } from "@redux/store";
 import { Provider } from "react-redux";
 import Home from "@pages/index";
 import * as nextRouter from 'next/router';
+import { setProfile } from "@redux/modules/auth";
 
 describe("Layout", () => {
   beforeEach(() => {
@@ -51,29 +52,32 @@ describe("Navbar", () => {
   })
 })
 
-describe('Sidebar', () => {
-  beforeEach(() => {
-    nextRouter.useRouter = jest.fn();
-    nextRouter.useRouter.mockImplementation(() => ({ 
-      route: '/klinik/1/1', 
-      query: { idKlinik: 1, idCabang: 1 },
-      isReady: false, 
-    }));
+const renderSidebar = async (role) => {
+  await store.dispatch(setProfile({ role }))
+  nextRouter.useRouter = jest.fn();
+  nextRouter.useRouter.mockImplementation(() => ({ 
+    route: '/klinik/1/1', 
+    query: { idKlinik: 1, idCabang: 1 },
+    isReady: false, 
+  }));
 
-    render(
-      <Provider store={store}>
-        <Sidebar/>
-      </Provider>
-    )
-  });
-  
-  it('renders a sidebar', () => {
+  render(
+    <Provider store={store}>
+      <Sidebar/>
+    </Provider>
+  )
+}
+
+describe('Sidebar', () => {
+  it('renders a sidebar', async () => {
+    await renderSidebar('owner')
     const sidebar = screen.getByTestId('sidebar')
 
     expect(sidebar).toBeInTheDocument()
   })
 
-  it('toggles the sidebar when the arrow button is clicked', () => {
+  it('toggles the sidebar when the arrow button is clicked', async () => {
+    await renderSidebar('owner')
     const rightArrow = screen.getByTestId('ChevronRightIcon')
     expect(rightArrow).toBeInTheDocument()
     
@@ -87,19 +91,46 @@ describe('Sidebar', () => {
 
   })
 
-  it('renders the navigation links', () => {
-    const navList = [
+  it('renders the navigation links for owner', async () => {
+    const ownerNavList = [
       'Pengaturan Formulir Pendaftaran',
       'List Pendaftaran',
       'Pengaturan Klinik',
       'Pengaturan Staf',
       'Pengaturan Jadwal Praktik',
-      'Pengaturan Formulir Rekaman Medis',
-      'Rekaman Medis',
+      'Logout'
+    ]
+    
+    await renderSidebar('owner')
+    ownerNavList.forEach((navItem) => {
+      expect(screen.getByText(navItem)).toBeInTheDocument
+    })
+  })
+
+  it('renders the navigation links for staf', async () => {
+    const stafNavList = [
+      'Pengaturan Formulir Pendaftaran',
+      'List Pendaftaran',
+      'Pengaturan Klinik',
+      'Pengaturan Jadwal Praktik',
       'Logout'
     ]
 
-    navList.forEach((navItem) => {
+    await renderSidebar('staf')
+    stafNavList.forEach((navItem) => {
+      expect(screen.getByText(navItem)).toBeInTheDocument
+    })
+  })
+
+  it('renders the navigation links for tenaga_medis', async () => {
+    const tenagaMedisNavList = [
+      'List Pendaftaran',
+      'Pengaturan Formulir Rekaman Medis',
+      'Rekaman Medis',
+    ]
+    
+    await renderSidebar('tenaga_medis')
+    tenagaMedisNavList.forEach((navItem) => {
       expect(screen.getByText(navItem)).toBeInTheDocument
     })
   })
