@@ -110,6 +110,15 @@ class EHRTestCase(APITestCase):
 
 
 class PasienAPITest(EHRTestCase):
+    def test_get_all_patient(self):
+        self.assertEqual(Pasien.objects.count(), 1)
+        self.client.credentials(HTTP_AUTHORIZATION=self.auth)
+        uri = reverse(self.uri_pasien)
+        resp = self.client.get(uri)
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(resp.data), Pasien.objects.count())
+        self.assertEqual(Pasien.objects.count(), 1)
+
     def test_get_patient_with_nik(self):
         self.assertEqual(Pasien.objects.count(), 1)
         self.client.credentials(HTTP_AUTHORIZATION=self.auth)
