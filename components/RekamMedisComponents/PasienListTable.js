@@ -27,7 +27,6 @@ function PasienListTable() {
     }, [dispatch]);
 
     const { pasienList } = useSelector(state => state.rekamanMedis);
-    console.log(pasienList)
 
     return (
         <TableContainer className={styles.container}>
