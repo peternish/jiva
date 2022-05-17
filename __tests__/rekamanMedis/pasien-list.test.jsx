@@ -1,4 +1,5 @@
 import "@testing-library/jest-dom";
+import * as nextRouter from 'next/router';
 import { render, screen } from "@testing-library/react";
 import RekamanMedisGlobal from "@pages/rekaman-medis";
 
@@ -12,6 +13,13 @@ import { SAMPLE_PASIEN } from "@utils/testUtils/constants"
 
 describe("<RekamanMedisGlobal/> empty", () => {
     beforeEach(async () => {
+
+        nextRouter.useRouter = jest.fn();
+        nextRouter.useRouter.mockImplementation(() => ({
+            route: '/klinik/1/1',
+            query: { idKlinik: 1, idCabang: 1 },
+            isReady: true,
+        }));
 
         await store.dispatch(setPasienList([SAMPLE_PASIEN]))
 
@@ -27,7 +35,7 @@ describe("<RekamanMedisGlobal/> empty", () => {
     });
 
     it("renders patient data correctly", () => {
-        expect(screen.getByText("sample patient")).toBeInTheDocument();
+        expect(screen.getByText("sample")).toBeInTheDocument();
         expect(screen.getByText("123")).toBeInTheDocument();
     });
 
@@ -36,7 +44,7 @@ describe("<RekamanMedisGlobal/> empty", () => {
     });
 
     it('shows the table are empty', async () => {
-        await store.dispatch(setSchemas([]))
+        await store.dispatch(setPasienList([]))
 
         render(
             <Provider store={store}>
