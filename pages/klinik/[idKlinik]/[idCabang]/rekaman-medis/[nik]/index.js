@@ -27,12 +27,14 @@ function DaftarRekamanMedis() {
 
   return (
     <main>
-      <Layout title={`Daftar Rekaman Medis ${pasien.full_name}`}>
-        <Box sx={{ width : '85%'}}>
-          <RekamanMedisTable />
-          <Button href={`/klinik/${idKlinik}/${idCabang}/rekaman-medis/${nik}/tambah-entri`} variant="contained">Tambah Rekaman Medis</Button>
-        </Box>
-      </Layout>
+      { pasien && 
+        <Layout title={`Daftar Rekaman Medis ${pasien.full_name}`}>
+          <Box sx={{ width : '85%'}}>
+            <RekamanMedisTable />
+            <Button href={`/klinik/${idKlinik}/${idCabang}/rekaman-medis/${nik}/tambah-entri`} variant="contained">Tambah Rekaman Medis</Button>
+          </Box>
+        </Layout>
+      }
     </main>
   );
 }
