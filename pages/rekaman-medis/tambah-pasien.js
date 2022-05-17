@@ -1,6 +1,3 @@
-import { useRouter } from "next/router";
-import { useState } from "react";
-
 // components
 import { Box } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
@@ -9,12 +6,8 @@ import { Formik, Form } from "formik";
 import TextInput from "@components/common/TextInput";
 import { isValid } from '@utils/nikParser'
 
-import DeleteConfirmationModal from "@components/TenagaMedisPageComponents/DeleteConfirmationModal";
-
 // redux
 import { useDispatch } from "react-redux";
-import { useEffect } from "react";
-import { getTenagaMedisByID } from "@redux/modules/tenagaMedis/thunks";
 import { registerPatient } from "@redux/modules/rekamanMedis/thunks";
 
 
