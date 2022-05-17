@@ -10,8 +10,15 @@ import { setPasienList } from "@redux/modules/rekamanMedis";
 // utils
 import { SAMPLE_PASIEN } from "@utils/testUtils/constants"
 
-describe("<RekamanMedisGlobal/> empty", () => {
+describe("<PatientForm/>", () => {
     beforeEach(async () => {
+
+        nextRouter.useRouter = jest.fn();
+        nextRouter.useRouter.mockImplementation(() => ({
+            route: '/klinik/1/1',
+            query: { idKlinik: 1, idCabang: 1 },
+            isReady: true,
+        }));
 
         await store.dispatch(setPasienList([SAMPLE_PASIEN]))
 
