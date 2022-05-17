@@ -52,6 +52,6 @@ describe("<RekamanMedisGlobal/> empty", () => {
             </Provider>
         );
 
-        expect(screen.getByText("Belum ada Pasien yang terdaftar")).toBeInTheDocument()
+        expect(await screen.getAllByText(/Belum ada Pasien yang terdaftar/) > 0)
     })
 });
