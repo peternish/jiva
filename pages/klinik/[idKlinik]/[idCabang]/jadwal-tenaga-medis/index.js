@@ -160,6 +160,27 @@ const Jadwal = (props) => {
       [],
     )
 
+    const createEvent = useCallback(
+      (values) => {
+        const startTime = getISOtime(values.start)
+        const endTime = getISOtime(values.end)
+        const day = values.jadwal_hari
+        const title = values.jadwal_title
+        const quota = values.quota
+  
+        const start = convertIntoProperDate(day, startTime)
+        const end = convertIntoProperDate(day, endTime)
+
+        setCurrentId(currentId + 1)
+        const idTenagaMedis = tenagaMedisDict2[title]
+        if(title) {
+
+          dispatch(createJadwalTenagaMedis({ idTenagaMedis, startTime, endTime, quota, day }))
+          setEvents((prev) => [...prev, { currentId, start, end, title, quota, idTenagaMedis }])
+        }
+      }, [setEvents, currentId, tenagaMedisDict2, dispatch]
+    )
+
     const deleteEvent = () => {
       const id = currentEvent.id
 
@@ -170,11 +191,9 @@ const Jadwal = (props) => {
         }
       }
       const idJadwal = id;
-      dispatch(deleteJadwalTenagaMedis({ idJadwal, idCabang:query.idCabang  }))
+      dispatch(deleteJadwalTenagaMedis({ idJadwal, idCabang:query.idCabang }))
 
       batalEvent()
-
-      location.assign(location.pathname)
     }
 
     const batalEvent = () => {
@@ -193,8 +212,8 @@ const Jadwal = (props) => {
           const quota = values.quota
           const idJadwal = id
 
-          const startDate = getISODate(values.start) 
-          const endDate = getISODate(values.end) 
+          const startDate = convertIntoProperDate(day, startTime) 
+          const endDate = convertIntoProperDate(day, endTime)
 
           myEvents[i].start = startDate
           myEvents[i].end = endDate
@@ -205,10 +224,36 @@ const Jadwal = (props) => {
           dispatch(updateJadwalTenagaMedis({ idJadwal, startTime, endTime, quota, day }))
 
           batalEvent()
-
-          location.assign(location.pathname)
         }
       }
+    }
+
+    function convertIntoProperDate(day, time) {
+      const dayDict = {
+        "mon": 1,
+        "tue": 2,
+        "wed": 3,
+        "thu": 4,
+        "fri": 5,
+        "sat": 6,
+        "sun": 7,
+      }
+
+      const day_int = dayDict[day];
+      const currentDate = new Date();
+      let day_num = 0;
+      if(currentDate.getDay() > 0) {
+        day_num = day_int - currentDate.getDay();
+      } else {
+        day_num = day_int - 7;
+      }
+
+      currentDate.setDate(new Date(currentDate.getDate() + day_num))
+
+      const newTime = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), 
+      time.split(":")[0], time.split(":")[1], time.split(":")[2])
+
+      return newTime
     }
 
     function getISOtime(timeString) {
@@ -225,19 +270,6 @@ const Jadwal = (props) => {
       const minuteUTC = String(time.getUTCMinutes()).padStart(2, "0");
 
       return `${hourUTC}:${minuteUTC}:00`
-    }
-
-    function getISODate(timeString) {
-      const timeArr = timeString.split(':')
-      const hour = timeArr[0]
-      const minutes = timeArr[1]
-
-      const date = new Date()
-
-      date.setUTCHours(hour)
-      date.setUTCMinutes(minutes)
-
-      return date
     }
 
     return (jadwalTenagaMedisList && tenagaMedisList && tenagaMedisDict && tenagaMedisDict2)? (
@@ -276,20 +308,7 @@ const Jadwal = (props) => {
               jadwal_hari: "mon",
               jadwal_title: currentEvent ?  currentEvent.title : undefined,
               quota: currentEvent ? currentEvent.quota : undefined}}
-            onSubmit = {async (values) => {
-                const startTime = getISOtime(values.start)
-                const endTime = getISOtime(values.end)
-                const day = values.jadwal_hari
-                const title = values.jadwal_title
-                const quota = values.quota
-
-                currentId = currentId + 1
-                const idTenagaMedis = tenagaMedisDict2[title]
-                if(title) {
-                  dispatch(createJadwalTenagaMedis({ idTenagaMedis, startTime, endTime, quota, day }))
-                  location.assign(location.pathname)
-                }
-            }}
+            onSubmit = {async (values) => createEvent(values)}
             >{({values}) => 
               <Form>
                 {currentEvent === undefined ? <h2>Tambah Jadwal</h2> : <h2>Ubah Jadwal</h2>}
