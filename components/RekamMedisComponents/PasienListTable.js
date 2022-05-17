@@ -42,12 +42,11 @@ function PasienListTable() {
 
                 <TableBody>
                     {
-                        !pasienList ? (
+                        (!pasienList && pasienList.length == 0) ? (
                             <TableRow className={styles.row}>
                                 <TableCell colSpan={4} align='center'>Belum ada Pasien yang terdaftar</TableCell>
                             </TableRow>
                         ) : pasienList && pasienList.map((pasien) => (
-                            // ): (
                             <TableRow key={0} className={styles.row}>
                                 <TableCell>{pasien.full_name}</TableCell>
                                 <TableCell>{`${getKabKot(pasien.nik)}, ${getDOB(pasien.nik).toLocaleDateString('en-GB')}`}</TableCell>
