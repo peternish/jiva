@@ -42,7 +42,7 @@ function PasienListTable() {
 
                 <TableBody>
                     {
-                        (!pasienList && pasienList.length == 0) ? (
+                        (pasienList && pasienList.length == 0) ? (
                             <TableRow className={styles.row}>
                                 <TableCell colSpan={4} align='center'>Belum ada Pasien yang terdaftar</TableCell>
                             </TableRow>
