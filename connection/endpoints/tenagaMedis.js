@@ -3,7 +3,7 @@ import { axiosInstance as axios } from "@api/http";
 
 const BASE_URL = constants?.API_BASE_URL;
 
-const tenagaMedisEndpoints = {
+const tenagaMedis = {
   getTenagaMedis: ({ idCabang }) => {
     return axios.get(`${BASE_URL}/account/tenaga-medis/${idCabang}/`);
   },
@@ -34,4 +34,4 @@ const tenagaMedisEndpoints = {
   },
 };
 
-export default tenagaMedisEndpoints;
+export default tenagaMedis;
