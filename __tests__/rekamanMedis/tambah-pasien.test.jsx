@@ -1,6 +1,7 @@
 import "@testing-library/jest-dom";
-import { render, screen } from "@testing-library/react";
+import { render, screen, act, fireEvent } from "@testing-library/react";
 import PatientForm from "@pages/rekaman-medis/tambah-pasien";
+import * as nextRouter from 'next/router';
 
 // redux
 import { Provider } from "react-redux";
@@ -34,8 +35,8 @@ describe("<PatientForm/>", () => {
     });
 
     it("renders fields correctly", () => {
-        expect(screen.getByLabelText("fullName")).toBeInTheDocument();
-        expect(screen.getByLabelText("nik")).toBeInTheDocument();
+        expect(screen.getByLabelText("Nama Lengkap")).toBeInTheDocument();
+        expect(screen.getByLabelText("NIK")).toBeInTheDocument();
     });
 
     it('renders submit buttons', () => {
@@ -43,27 +44,27 @@ describe("<PatientForm/>", () => {
     });
 
     it('invalidate empty name field', async () => {
-        const fullNameField = screen.getByLabelText("fullName")
+        const submitButton = screen.getByText("Simpan")
 
         await act(async () => {
-            await fireEvent.click(fullNameField);
+            await fireEvent.click(submitButton);
         })
 
         expect(screen.getByText("Nama lengkap wajib diisi")).toBeInTheDocument();
     });
 
     it('invalidate empty nik field', async () => {
-        const nikField = screen.getByLabelText("nik")
+        const submitButton = screen.getByText("Simpan")
 
         await act(async () => {
-            await fireEvent.click(nikField);
+            await fireEvent.click(submitButton);
         })
 
         expect(screen.getByText("NIK wajib diisi")).toBeInTheDocument();
     });
 
     it('invalidate non-numeric nik field', async () => {
-        const nikField = screen.getByLabelText("nik")
+        const nikField = screen.getByLabelText("NIK")
 
         await act(async () => {
             await fireEvent.change(nikField, { target: { value: 'abcdefg' } });
