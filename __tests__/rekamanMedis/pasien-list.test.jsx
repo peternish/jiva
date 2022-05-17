@@ -34,4 +34,16 @@ describe("<RekamanMedisGlobal/> empty", () => {
     it('renders buttons', () => {
         expect(screen.getByText("Tambah Pasien")).toBeInTheDocument()
     });
+
+    it('shows the table are empty', async () => {
+        await store.dispatch(setSchemas([]))
+
+        render(
+            <Provider store={store}>
+                <RekamanMedisGlobal />
+            </Provider>
+        );
+
+        expect(screen.getByText("Belum ada Pasien yang terdaftar")).toBeInTheDocument()
+    })
 });
