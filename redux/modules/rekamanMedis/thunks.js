@@ -51,7 +51,7 @@ export const registerPatient = ({ full_name, nik } = {}, setSubmitting) => {
 export const tambahEntri = (values, setSubmitting) => {
   return async () => {
     try {
-      await jivaAPI.rekamanMedis.tambahEntri(values)
+      await jivaAPI.rekamanMedis.postPasien(values)
       toast("Entri Berhasil Ditambahkan", { type: toast.TYPE.SUCCESS });
       setSubmitting(false)
     } catch (error) {

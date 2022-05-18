@@ -10,10 +10,12 @@ const rekamanMedis = {
     nik
   }),
   getPasien: (nik) => axios.get(BASE_URL + "/pasien/" + nik + "/"),
-  tambahEntri: ({ nik, fields } = {}) => axios.post(BASE_URL + "//", {
-    patient: nik,
-    fields
-  }),
+  createPasien: ({ nik, fullName }) => {
+    return axios.post(`${BASE_URL}/pasien/`, {
+      nik: nik,
+      full_name: fullName,
+    });
+  },
   getListRekamanMedis: ({ nik }) => {
     return axios.get(`${BASE_URL}/rekaman/${nik}/`);
   },
