@@ -40,7 +40,7 @@ jadwal_pasien_patterns = [
     ),
     path("id/<int:pk>/", JadwalPasienAPI.as_view(), name="jadwal-pasien-detail"),
     path(
-        "create/<int:jadwal_tenaga_medis_pk>/<int:pasien_pk>/",
+        "create/<int:jadwal_tenaga_medis_pk>/",
         CreateJadwalPasienAPI.as_view(),
         name="create-jadwal-pasien",
     ),
