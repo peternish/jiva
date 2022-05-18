@@ -213,29 +213,6 @@ class CreateJadwalPasienAPI(APIView):
 
     permission_classes = [IsStafPermission]
 
-    # def get_serializer(self, *args, **kwargs):
-    #         # leave this intact
-    #         serializer_class = self.get_serializer_class()
-    #         kwargs["context"] = self.get_serializer_context()
-
-    #         """
-    #         Intercept the request and see if it needs tweaking
-    #         """
-    #         if (name := self.request.data.get("name")) and (
-    #             surname := self.request.data.get("surname")
-    #         ):
-
-    #             # Copy and manipulate the request
-    #             draft_request_data = self.request.data.copy()
-    #             draft_request_data["first_name"] = name
-    #             draft_request_data["last_name"] = surname
-    #             kwargs["data"] = draft_request_data
-    #             return serializer_class(*args, **kwargs)
-    #         """
-    #         If not mind your own business and move on
-    #         """
-    #         return serializer_class(*args, **kwargs)
-
     def post(self, request: Request, jadwal_tenaga_medis_pk: int):
         
         jadwal_tenaga_medis: JadwalTenagaMedis = get_object(

@@ -614,6 +614,18 @@ class JadwalPasienAPITestSetup(APITestCase, TestCase):
             )
             jadwal_lain.save()
 
+        self.mockdata = {"lamaranPasien": {
+                        "nik": "123980295782",
+                        "email": "surat@email.com",
+                        "nama": "Abdullah",
+                        "fields": [
+                            {
+                                "nickname": "Abdul"
+                            }
+                        ]
+                    },
+                "date": datetime.date(1666, 4, 20)}
+
 
 class JadwalPasienModelTest(JadwalPasienAPITestSetup):
     def test_jadwal_pasien_str_method(self):
@@ -627,25 +639,13 @@ class JadwalPasienAPITest(JadwalPasienAPITestSetup):
         self.assertEqual(JadwalTenagaMedis.objects.count(), 2)
         self.assertEqual(LamaranPasien.objects.count(), 11)
 
-        data = {"lamaranPasien": {
-                        "nik": "123980295782",
-                        "email": "surat@email.com",
-                        "nama": "Abdullah",
-                        "fields": [
-                            {
-                                "nickname": "Abdul"
-                            }
-                        ]
-                    },
-                "date": datetime.date(1666, 4, 20)}
-
         url = reverse(
             self.create_jadwal_pasien_url,
             kwargs={
                 "jadwal_tenaga_medis_pk": 1
             },
         )
-        resp = self.client.post(url, data=data, format='json')
+        resp = self.client.post(url, data=self.mockdata, format='json')
 
         jadwal_pasien = JadwalPasien.objects.last()
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
@@ -670,43 +670,23 @@ class JadwalPasienAPITest(JadwalPasienAPITestSetup):
     
     def test_create_jadwal_pasien_not_found(self):
         self.assertEqual(JadwalPasien.objects.count(), 11)
-        data = {"lamaranPasien": {
-                        "nik": "123980295782",
-                        "email": "surat@email.com",
-                        "nama": "Abdullah",
-                        "fields": [
-                            {
-                                "nickname": "Abdul"
-                            }
-                        ]
-                    },
-                "date": datetime.date(1666, 4, 20)}
+
         url = reverse(
             self.create_jadwal_pasien_url,
             kwargs={"jadwal_tenaga_medis_pk": 1999},
         )
-        resp = self.client.post(url, data=data, format='json')
+        resp = self.client.post(url, data=self.mockdata, format='json')
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
         self.assertEqual(JadwalPasien.objects.count(), 11)
 
     def test_create_jadwal_pasien_fail_quota(self):
         self.assertEqual(JadwalPasien.objects.count(), 11)
-        data = {"lamaranPasien": {
-                        "nik": "123980295782",
-                        "email": "surat@email.com",
-                        "nama": "Abdullah",
-                        "fields": [
-                            {
-                                "nickname": "Abdul"
-                            }
-                        ]
-                    },
-                "date": datetime.date(1666, 4, 20)}
+
         url = reverse(
             self.create_jadwal_pasien_url,
             kwargs={"jadwal_tenaga_medis_pk": 2},
         )
-        resp = self.client.post(url, data=data, format='json')
+        resp = self.client.post(url, data=self.mockdata, format='json')
         self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(JadwalPasien.objects.count(), 11)
 

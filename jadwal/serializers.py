@@ -76,10 +76,10 @@ class JadwalPasienSerializer(serializers.ModelSerializer):
         :return: returns a successfully created JadwalPasien
         """
 
-        lamaranPasienData = validated_data.pop('lamaranPasien')
-        lamaranPasien = LamaranPasienSerializer.create(LamaranPasienSerializer(), validated_data=lamaranPasienData)
+        lamaran_pasien_data = validated_data.pop('lamaranPasien')
+        lamaran_pasien = LamaranPasienSerializer.create(LamaranPasienSerializer(), validated_data=lamaran_pasien_data)
 
-        jadwalPasien = JadwalPasien.objects.create(lamaranPasien=lamaranPasien, jadwalTenagaMedis=validated_data.pop('jadwalTenagaMedis'),
+        jadwal_pasien = JadwalPasien.objects.create(lamaranPasien=lamaran_pasien, jadwalTenagaMedis=validated_data.pop('jadwalTenagaMedis'),
                             date=validated_data.pop('date'))
                             
-        return jadwalPasien
+        return jadwal_pasien
