@@ -51,7 +51,7 @@ function RekamanMedisTable() {
             ) : listRekamanMedis && listRekamanMedis.map((rekamanMedis) => (
               <TableRow key={rekamanMedis.id} className={styles.row}>
                 <TableCell>{rekamanMedis.time_created}</TableCell>
-                <TableCell>{rekamanMedis.author}</TableCell>
+                <TableCell>{rekamanMedis.author.account.full_name}</TableCell>
                 <TableCell>
                   <Link href={`/klinik/${idKlinik}/${idCabang}/rekaman-medis/${nik}/detail/${rekamanMedis.id}`} underline="none" className={styles.link}>Lihat</Link>
                 </TableCell>
