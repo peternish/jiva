@@ -89,34 +89,9 @@ const Jadwal = (props) => {
             const quota = jadwalTenagaMedis.quota;
             const id_tenaga_medis = jadwalTenagaMedis.tenaga_medis.account.id;
             const id = jadwalTenagaMedis.id;
-
-            const dayDict = {
-              "mon": 1,
-              "tue": 2,
-              "wed": 3,
-              "thu": 4,
-              "fri": 5,
-              "sat": 6,
-              "sun": 7,
-            }
   
-            const day_int = dayDict[day];
-            const currentDate = new Date();
-            let day_num = 0;
-            if(currentDate.getDay() > 0) {
-              day_num = day_int - currentDate.getDay();
-            } else {
-              day_num = day_int - 7;
-            }
-
-            currentDate.setDate(new Date(currentDate.getDate() + day_num))
-  
-            const start = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), 
-              start_time.split(":")[0], start_time.split(":")[1], start_time.split(":")[2])
-
-  
-            const end = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), 
-              end_time.split(":")[0], end_time.split(":")[1], end_time.split(":")[2])
+            const start = convertIntoProperDate(day, start_time)
+            const end = convertIntoProperDate(day, end_time)
 
             setCurrentId(id)
 
@@ -176,7 +151,7 @@ const Jadwal = (props) => {
         if(title) {
           const signal = undefined
           await dispatch(createJadwalTenagaMedis({ idTenagaMedis, startTime, endTime, quota, day })).then((value) => signal = value)
-           if(!(signal == "Error: Request failed with status code 400")) {
+           if(signal != "Error: Request failed with status code 400") {
              setEvents((prev) => [...prev, { currentId, start, end, title, quota, idTenagaMedis }])
              signal = undefined
            }
@@ -397,7 +372,7 @@ const Jadwal = (props) => {
                   type="button" 
                   data-testid="delete"
                   onClick={() => {
-                    deleteEvent
+                    deleteEvent()
                   }}
                   style={{ background: "#F44336" }}
                 >
