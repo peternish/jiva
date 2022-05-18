@@ -311,7 +311,9 @@ const Jadwal = (props) => {
               jadwal_hari: "mon",
               jadwal_title: currentEvent ?  currentEvent.title : undefined,
               quota: currentEvent ? currentEvent.quota : undefined}}
-            onSubmit = {async (values) => createEvent(values)}
+            onSubmit = {async (values) => {
+              createEvent(values)
+            }}
             >{({values}) => 
               <Form>
                 {currentEvent === undefined ? <h2>Tambah Jadwal</h2> : <h2>Ubah Jadwal</h2>}
@@ -371,7 +373,9 @@ const Jadwal = (props) => {
                   type="button"
                   id="input_button"
                   data-testid="update"
-                  onClick={() => updateEvent(values)}
+                  onClick={() => {
+                    updateEvent(values)
+                  }}
                 >
                   Simpan
                 </LoadingButton>
@@ -380,7 +384,9 @@ const Jadwal = (props) => {
                   variant="outlined"
                   id="input_button"
                   data-testid="batal"
-                  onClick={batalEvent}
+                  onClick={() => {
+                    batalEvent()
+                  }}
                 >
                   Batal
                 </LoadingButton>
@@ -390,7 +396,9 @@ const Jadwal = (props) => {
                   id="hapus"
                   type="button" 
                   data-testid="delete"
-                  onClick={deleteEvent}
+                  onClick={() => {
+                    deleteEvent
+                  }}
                   style={{ background: "#F44336" }}
                 >
                   Hapus
