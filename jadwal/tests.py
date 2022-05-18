@@ -451,7 +451,7 @@ class AvailableJadwalTenagaMedisAPITest(JadwalTenagaMedisTestSetUp):
         )
         jadwal_tenaga_medis.save()
         lamaran_pasien = LamaranPasien.objects.create(
-            nik="123", fields=[{"nama": "Antonio"}]
+            nik="123", email="asdf@gamil.com", nama="Astolfo", fields=[{"nickname": "Antonio"}]
         )
         lamaran_pasien.save()
         jadwal_pasien = JadwalPasien.objects.create(
@@ -483,7 +483,7 @@ class AvailableJadwalTenagaMedisAPITest(JadwalTenagaMedisTestSetUp):
         response = self.client.get(url)
         for i in range(2):
             lamaran_pasien = LamaranPasien.objects.create(
-                nik=f"{i+1}", fields=[{"nama": "Antonio"}]
+                nik=f"{i+1}", email=f"asd{i+1}@gamil.com", nama=f"Astolfo{i+1}", fields=[{"nickname": "Antonio"}]
             )
             lamaran_pasien.save()
             jadwal_pasien = JadwalPasien.objects.create(
@@ -585,13 +585,13 @@ class JadwalPasienAPITestSetup(APITestCase, TestCase):
         jadwal_tenaga_medis_lain.save()
 
         # Should have ID 1
-        self.pas = LamaranPasien(nik=f"4206913371", email="emails@email.com", fields=[{"nama": f"Abdullah1"}])
+        self.pas = LamaranPasien(nik=f"4206913371", email="emails@email.com", nama="Abdullah1", fields=[{"nickname": f"Abdul1"}])
         self.pas.save()
 
         # Should have ID starting from 2
         for _ in range(10):
             lam = LamaranPasien(
-                nik=f"420691337{_+2}", email=f"email{_+2}@email.com", fields=[{"nama": f"Abdullah{_+2}"}]
+                nik=f"420691337{_+2}", email=f"email{_+2}@email.com", nama=f"Abdullah{_+2}", fields=[{"nama": f"Abdul{_+2}"}]
             )
             lam.save()
 
@@ -630,9 +630,10 @@ class JadwalPasienAPITest(JadwalPasienAPITestSetup):
         data = {"lamaranPasien": {
                         "nik": "123980295782",
                         "email": "surat@email.com",
+                        "nama": "Abdullah",
                         "fields": [
                             {
-                                "nama": "Abdullah"
+                                "nickname": "Abdul"
                             }
                         ]
                     },
@@ -672,9 +673,10 @@ class JadwalPasienAPITest(JadwalPasienAPITestSetup):
         data = {"lamaranPasien": {
                         "nik": "123980295782",
                         "email": "surat@email.com",
+                        "nama": "Abdullah",
                         "fields": [
                             {
-                                "nama": "Abdullah"
+                                "nickname": "Abdul"
                             }
                         ]
                     },
@@ -692,9 +694,10 @@ class JadwalPasienAPITest(JadwalPasienAPITestSetup):
         data = {"lamaranPasien": {
                         "nik": "123980295782",
                         "email": "surat@email.com",
+                        "nama": "Abdullah",
                         "fields": [
                             {
-                                "nama": "Abdullah"
+                                "nickname": "Abdul"
                             }
                         ]
                     },
