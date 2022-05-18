@@ -189,7 +189,7 @@ class RekamMedisAPITest(EHRTestCase):
         resp = self.client.get(uri)
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         self.assertEqual(resp.data["fields"], self.fields)
-        self.assertEqual(resp.data["author"], self.medic.id)
+        self.assertEqual(resp.data["author"]["account"]["id"], self.account.id)
         self.assertEqual(resp.data["patient"], self.patient.id)
 
     def test_get_rekaman_medis_from_id_but_not_found(self):
