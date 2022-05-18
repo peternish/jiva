@@ -25,7 +25,7 @@ from jadwal.serializers import JadwalPasienSerializer
 from urllib.request import Request
 from klinik.utils import send_confirmation_email
 import multiprocessing
-multiprocessing.set_start_method("fork") # Avoids AppRegistryNotReady exception on macOS platforms
+multiprocessing.set_start_method("spawn") # Avoids AppRegistryNotReady exception on macOS platforms
 
 
 def get_object(klass: models.Model, pk: int):
@@ -247,48 +247,3 @@ class LamaranPasienApi(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
         lamaran_pasien.delete()
         return Response(status=status.HTTP_200_OK)
-
-class LamaranPasienCompoundApi(APIView):
-    
-    permission_classes = [
-        IsAuthenticated,
-    ]
-    
-    def post(self, request: Request):
-        lamaran_pasien_data = QueryDict('', mutable=True)
-        jadwal_pasien_data = QueryDict('', mutable=True)
-        jadwal_tenaga_medis_pk = 0
-
-        try:
-            for key, value in request.data.items():
-                if (key == "date"):
-                    jadwal_pasien_data[key] = value
-                if (key == "jadwal_tenaga_medis_pk"):
-                    jadwal_tenaga_medis_pk = value
-                else: 
-                    lamaran_pasien_data[key] = value
-        except TypeError:
-            return Response({ "error": "request data tidak sesuai" }, status=status.HTTP_400_BAD_REQUEST)
-
-        lamaran_serializer = LamaranPasienSerializer(data=lamaran_pasien_data)
-        if lamaran_serializer.is_valid() and jadwal_tenaga_medis_pk != 0:
-            lamaran_serializer.save()
-        else:
-            return Response(lamaran_serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
-
-        lamaran_pasien: LamaranPasien = LamaranPasien.objects.last()
-        jadwal_tenaga_medis: JadwalTenagaMedis = get_object(JadwalTenagaMedis, jadwal_tenaga_medis_pk)
-        if jadwal_tenaga_medis is None:
-            lamaran_pasien.delete()
-            return Response({ "error": "Jadwal tenaga medis tidak ditemukan" }, status=status.HTTP_400_BAD_REQUEST)
-
-        jadwal_serializer = JadwalPasienSerializer(data=jadwal_pasien_data)
-        if jadwal_serializer.is_valid():
-            jadwal_serializer.save(lamaranPasien = lamaran_pasien, jadwalTenagaMedis = jadwal_tenaga_medis)
-            multiprocessing.Process(
-                target=send_confirmation_email, 
-                args=(lamaran_pasien, jadwal_tenaga_medis, request.data["date"])
-            ).start()
-            return Response(jadwal_serializer.data, status=status.HTTP_201_CREATED)
-        lamaran_pasien.delete()
-        return Response(jadwal_serializer.errors, status=status.HTTP_400_BAD_REQUEST) and print(jadwal_serializer.errors)
