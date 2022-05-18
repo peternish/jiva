@@ -24,8 +24,13 @@ from jadwal.serializers import JadwalPasienSerializer
 # other import
 from urllib.request import Request
 from klinik.utils import send_confirmation_email
+from os import getenv
 import multiprocessing
-multiprocessing.set_start_method("spawn") # Avoids AppRegistryNotReady exception on macOS platforms
+
+# - If an error regarding the multiprocessing module occured, 
+#   try to set MULTIPROCESSING_START_METHOD to "spawn" in your .env file.
+# - Used "fork" to avoid AppRegistryNotReady exception on macOS platforms.
+multiprocessing.set_start_method(getenv("MULTIPROCESSING_START_METHOD") or "fork")
 
 
 def get_object(klass: models.Model, pk: int):
@@ -144,11 +149,6 @@ class DynamicFormListApi(APIView):
         cabang: Cabang = get_object(Cabang, cabang_pk)
         if cabang is None:
             return Response(status=status.HTTP_404_NOT_FOUND)
-
-        owner: OwnerProfile = OwnerProfile.objects.get(account__email=request.user)
-        klinik: Klinik = Klinik.objects.get(owner=owner)
-        if cabang.klinik.pk != klinik.pk:
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
 
         schema = DynamicForm.objects.all()
         schema = schema.filter(cabang=cabang)
