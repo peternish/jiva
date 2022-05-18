@@ -11,7 +11,7 @@ import { setPasienList } from "@redux/modules/rekamanMedis";
 // utils
 import { SAMPLE_PASIEN } from "@utils/testUtils/constants"
 
-describe("<RekamanMedisGlobal/> empty", () => {
+describe("<RekamanMedisGlobal/>", () => {
     beforeEach(async () => {
 
         nextRouter.useRouter = jest.fn();
