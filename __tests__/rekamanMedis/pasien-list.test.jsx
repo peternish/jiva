@@ -1,7 +1,7 @@
 import "@testing-library/jest-dom";
 import * as nextRouter from 'next/router';
 import { render, screen } from "@testing-library/react";
-import RekamanMedisGlobal from "@pages/rekaman-medis";
+import RekamanMedisGlobal from "@pages/klinik/[idKlinik]/[idCabang]/rekaman-medis";
 
 // redux
 import { Provider } from "react-redux";

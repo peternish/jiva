@@ -1,3 +1,5 @@
+import { useRouter } from "next/router";
+
 // components
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -21,10 +23,13 @@ import { getAllPasien } from "@redux/modules/rekamanMedis/thunks";
 
 function PasienListTable() {
     const dispatch = useDispatch();
+    const { query, isReady } = useRouter();
+    const { idKlinik, idCabang } = query;
 
     useEffect(() => {
+        if (!isReady) return;
         dispatch(getAllPasien());
-    }, [dispatch]);
+    }, [dispatch, isReady]);
 
     const { pasienList } = useSelector(state => state.rekamanMedis);
 
@@ -52,7 +57,7 @@ function PasienListTable() {
                                 <TableCell>{`${getKabKot(pasien.nik)}, ${getDOB(pasien.nik).toLocaleDateString('en-GB')}`}</TableCell>
                                 <TableCell>{pasien.nik}</TableCell>
                                 <TableCell>
-                                    <Link href={`/klinik/rekam-medis/1`} underline="none" className={styles.link}>
+                                    <Link href={`/klinik/${idKlinik}/${idCabang}/rekaman-medis/${pasien.nik}/`} underline="none" className={styles.link}>
                                         <b>
                                             Lihat
                                         </b>

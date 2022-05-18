@@ -37,7 +37,7 @@ export const registerPatient = ({ full_name, nik } = {}, setSubmitting) => {
     try {
       setSubmitting(true)
       jivaAPI.rekamanMedis.postPasien({ full_name, nik })
-      window.location.assign("/rekaman-medis");
+      window.location.href = '../rekaman-medis'
       toast('Berhasil mendaftarkan pasien', { type: toast.TYPE.SUCCESS });
     } catch (err) {
       setSubmitting(false)

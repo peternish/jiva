@@ -44,7 +44,7 @@ export default function Sidebar() {
 
         { divider: 'Rekaman Medis', roles: ["tenaga_medis"] },
         { title: 'Pengaturan Formulir Rekaman Medis', icon: <ConstructionIcon />, link: `/klinik/${idKlinik}/${idCabang}/pengaturan-formulir-rekaman-medis`, roles: ["tenaga_medis"] },
-        { title: 'Rekaman Medis', icon: <AssignmentIcon />, link: '/rekaman-medis', roles: ["tenaga_medis"] },
+        { title: 'Rekaman Medis', icon: <AssignmentIcon />, link: `/klinik/${idKlinik}/${idCabang}/rekaman-medis`, roles: ["tenaga_medis"] },
     ]
 
     const [open, setOpen] = useState(false)

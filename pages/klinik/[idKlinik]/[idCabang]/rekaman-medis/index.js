@@ -1,4 +1,6 @@
 import Link from '@mui/material/Link';
+import { useRouter } from "next/router";
+import { useEffect } from 'react';
 
 // components
 import Button from '@mui/material/Button';
@@ -8,6 +10,13 @@ import Layout from '@components/Layout';
 import Box from "@mui/material/Box";
 
 function PasienList() {
+    const { query, isReady } = useRouter();
+    const { idKlinik, idCabang } = query;
+
+    useEffect(() => {
+        if (!isReady) return;
+    }, [isReady]);
+
     return (
         <main>
             <Layout title="Daftar Pasien">
@@ -20,7 +29,7 @@ function PasienList() {
                         rowGap: 2,
                         my: 2
                     }}>
-                        <Link href="/rekaman-medis/tambah-pasien" passHref={true}>
+                        <Link href={`/klinik/${idKlinik}/${idCabang}/rekaman-medis/tambah-pasien`} passHref={true}>
                             <Button variant="contained" type="submit" sx={{
                                 whiteSpace: 'nowrap',
                                 minWidth: 'auto',
