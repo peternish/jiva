@@ -161,7 +161,7 @@ const Jadwal = (props) => {
     )
 
     const createEvent = useCallback(
-      (values) => {
+      async (values) => {
         const startTime = getISOtime(values.start)
         const endTime = getISOtime(values.end)
         const day = values.jadwal_hari
@@ -174,9 +174,12 @@ const Jadwal = (props) => {
         setCurrentId(currentId + 1)
         const idTenagaMedis = tenagaMedisDict2[title]
         if(title) {
-
-          dispatch(createJadwalTenagaMedis({ idTenagaMedis, startTime, endTime, quota, day }))
-          setEvents((prev) => [...prev, { currentId, start, end, title, quota, idTenagaMedis }])
+          const signal = undefined
+          await dispatch(createJadwalTenagaMedis({ idTenagaMedis, startTime, endTime, quota, day })).then((value) => signal = value)
+           if(!(signal == "Error: Request failed with status code 400")) {
+             setEvents((prev) => [...prev, { currentId, start, end, title, quota, idTenagaMedis }])
+             signal = undefined
+           }
         }
       }, [setEvents, currentId, tenagaMedisDict2, dispatch]
     )
