@@ -4,11 +4,16 @@ const rekamanMedis = createSlice({
   name: "rekamanMedis",
   initialState: {
     pasien: undefined,
+    listRekamanMedis: undefined,
     pasienList: undefined,
   },
   reducers: {
     setPasien(state, { payload }) {
       state.pasien = payload;
+      return state;
+    },
+    setListRekamanMedis(state, { payload }) {
+      state.listRekamanMedis = payload;
       return state;
     },
     setPasienList(state, { payload }) {
@@ -18,6 +23,6 @@ const rekamanMedis = createSlice({
   },
 });
 
-export const { setPasien, setPasienList } = rekamanMedis.actions;
+export const { setPasien, setListRekamanMedis, setPasienList } = rekamanMedis.actions;
 
 export default rekamanMedis.reducer;
