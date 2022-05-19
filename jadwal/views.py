@@ -20,6 +20,15 @@ from jiva_be.utils import IsStafPermission
 import json
 from datetime import datetime, timedelta
 from .utils import filter_available_jadwal
+# other import
+from klinik.utils import send_confirmation_email
+from os import getenv
+import multiprocessing
+
+# - If an error regarding the multiprocessing module occured, 
+#   try to set MULTIPROCESSING_START_METHOD to "spawn" in your .env file.
+# - Used "fork" to avoid AppRegistryNotReady exception on macOS platforms.
+multiprocessing.set_start_method(getenv("MULTIPROCESSING_START_METHOD") or "fork")
 
 
 def get_object(klass: models.Model, pk: int):
@@ -240,7 +249,11 @@ class CreateJadwalPasienAPI(APIView):
 
         serializer = JadwalPasienSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(jadwalTenagaMedis = jadwal_tenaga_medis)
+            jadwal_pasien = serializer.save(jadwalTenagaMedis = jadwal_tenaga_medis)
+            multiprocessing.Process(
+                target=send_confirmation_email, 
+                args=(jadwal_pasien.lamaranPasien, jadwal_tenaga_medis, request.data["date"])
+            ).start()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.error_messages,
                         status=status.HTTP_400_BAD_REQUEST)
