@@ -7,6 +7,9 @@ import { toast } from "react-toastify";
 // actions
 import { setPasien, setListRekamanMedis, setPasienList } from "@redux/modules/rekamanMedis";
 
+// utils
+import { parseDate } from "@utils/dateParser"
+
 
 export const getAllPasien = () => {
   return async (dispatch) => {
@@ -65,6 +68,9 @@ export const getListRekamanMedis = (nik) => {
   return async (dispatch) => {
     try {
       const { data } = await jivaAPI.rekamanMedis.getListRekamanMedis(nik);
+      data.forEach((rekamanMedis) => {
+        rekamanMedis["time_created"] = parseDate(rekamanMedis["time_created"]);
+      });
       dispatch(setListRekamanMedis(data));
     } catch (error) {
       toast("Terjadi kesalahan 😥", { type: toast.TYPE.ERROR });

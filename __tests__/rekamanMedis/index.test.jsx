@@ -158,18 +158,30 @@ describe('DaftarRekamanMedis', () => {
         [
           {
             id: 1,
-            time_created: "Senin, 1 Januari 1970",
-            author: "dr. Budi",
+            time_created: "1999-12-16",
+            author: {
+              account: {
+                "full_name": "dr. Budi",
+              }
+            },
           },
           {
             id: 2,
-            time_created: "Selasa, 2 Januari 1970",
-            author: "dr. Budi",
+            time_created: "2001-05-16",
+            author: {
+              account: {
+                "full_name": "dr. Budi",
+              }
+            },
           },
           {
             id: 3,
-            time_created: "Rabu, 3 Januari 1970",
-            author: "dr. Budi",
+            time_created: "2022-05-19",
+            author: {
+              account: {
+                "full_name": "dr. Budi",
+              }
+            },
           },
         ]
       ));

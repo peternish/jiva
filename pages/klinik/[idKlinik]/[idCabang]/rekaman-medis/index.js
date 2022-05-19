@@ -19,7 +19,7 @@ function PasienList() {
 
     return (
         <main>
-            <Layout title="Daftar Pasien">
+            <Layout title="Daftar Rekam Medis Pasien">
                 <Box sx={{ width: '85%' }}>
                     <Box sx={{
                         display: 'flex',
