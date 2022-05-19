@@ -34,8 +34,8 @@ export const registerCabang = (setSubmitting, { location } = {}) => {
   return async () => {
     try {
       await jivaAPI.cabang.register({ location })
-      window.location.assign("/klinik");
       toast('Cabang berhasil dibuat', { type: toast.TYPE.SUCCESS });
+      window.location.assign("/klinik");
     } catch (err) {
       setSubmitting(false)
       toast(err.toString(), { type: toast.TYPE.ERROR });
@@ -49,7 +49,7 @@ export const createApplication = (setSubmitting, values) => {
       await jivaAPI.patientApplication.createApplication(values)
       toast("Pendaftaran Anda Sudah Terkirim", { type: toast.TYPE.SUCCESS });
       setSubmitting(false)
-    } catch(error) {
+    } catch (error) {
       setSubmitting(false)
       toast(constants.BASE_ERROR_MESSAGE, { type: toast.TYPE.ERROR });
     }

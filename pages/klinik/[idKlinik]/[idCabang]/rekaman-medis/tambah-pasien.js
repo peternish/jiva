@@ -1,78 +1,89 @@
-import Layout from "@components/Layout";
-import React from "react";
-import { createPasien } from "@redux/modules/rekamMedis/thunks";
-import { useDispatch } from "react-redux";
-
 // components
-import Button from '@mui/material/Button';
-import { Formik, Form } from "formik";
+import { Box } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
-import Stack from '@mui/material/Stack';
+import Layout from "@components/Layout";
+import { Formik, Form } from "formik";
 import TextInput from "@components/common/TextInput";
+import { checkValidity } from '@utils/nikParser'
 
-export default function PasienCreatePage() {
-  const disptach = useDispatch()
+// redux
+import { useDispatch } from "react-redux";
+import { registerPatient } from "@redux/modules/rekamanMedis/thunks";
 
-  const validateFields = (values) => {
-    const errors = {};
-    
-    if (!values.fullName) {
-      errors.fullName = "Nama lengkap wajib diisi";
-    }
 
-    if (!values.nik) errors.password = "NIK wajib diisi";
-    return errors;
-  }
+function TambahPasien() {
+    const pasien = {}
+    const dispatch = useDispatch();
+    return (
+        <main>
+            <Layout title="Tambah Pasien">
+                <Box sx={{
+                    maxWidth: "45vw"
+                }}>
+                    <Box sx={{
+                        marginTop: 2,
+                        marginBottom: 2,
+                        color: "#AEAEAE"
+                    }}>
+                        <h4>Informasi Pasien</h4>
+                    </Box>
+                    {true && (
+                        <Formik
+                            initialValues={{
+                                full_name: pasien.full_name,
+                                nik: pasien.nik,
+                            }}
+                            validate={(values) => {
+                                const errors = {};
 
-  const handleSubmit = (values, { setSubmitting }) => {
-    setSubmitting(true)
-    disptach(createPasien({ ...values }, setSubmitting))
-  }
+                                if (!values.fullName) errors.fullName = "Nama lengkap wajib diisi";
+                                if (!values.nik) errors.nik = "NIK wajib diisi";
+                                else {
+                                    if (!checkValidity(values.nik) || isNaN(parseFloat(values.nik))) errors.nik = "NIK tidak valid";
+                                }
 
-  return (
-    <Layout title="Tambah Pasien">
-      <Formik 
-        initialValues={{ NIK: "", fullName: "",}}
-        validate={validateFields}
-        onSubmit={handleSubmit}
-      >
-        {({ isValid, errors, isSubmitting }) => (
-          <Form>
-            <TextInput
-              name="fullName"
-              type="text"
-              label="Nama Lengkap"
-              placeholder="Nama Lengkap"
-              error={errors.fullName}
-            />
 
-            <TextInput
-              name="nik"
-              type="number"
-              label="NIK"
-              placeholder="3276040001112223"
-              error={errors.nik}
-            />
+                                return errors;
+                            }}
+                            onSubmit={(values, { setSubmitting }) => {
+                                setSubmitting(true)
+                                dispatch(registerPatient(setSubmitting, { nik: values.nik, full_name: values.fullName }));
+                            }}
+                        >
+                            {({ isValid, errors, isSubmitting }) => (
+                                <Form>
+                                    <TextInput
+                                        name="fullName"
+                                        type="text"
+                                        label="Nama Lengkap"
+                                        placeholder="Budi Budiman"
+                                        error={errors.fullName}
+                                    />
 
-            <Stack spacing={2} direction="row">
-              <Button
-                href='/rekaman-medis/'
-                variant="outlined"
-              >
-                Batal
-              </Button>
-              <LoadingButton
-                variant="contained"
-                type="submit"
-                disabled={!isValid}
-                loading={isSubmitting}
-              >
-                Tambah
-              </LoadingButton>
-            </Stack>
-          </Form>
-        )}
-      </Formik>
-    </Layout>
-  );
-};
+                                    <TextInput
+                                        name="nik"
+                                        type="text"
+                                        label="NIK"
+                                        placeholder="3102010101010001"
+                                        error={errors.nik}
+                                    />
+
+                                    <LoadingButton
+                                        variant="contained"
+                                        type="submit"
+                                        disabled={!isValid}
+                                        loading={isSubmitting}
+                                    >
+                                        Simpan
+                                    </LoadingButton>
+                                </Form>
+                            )}
+                        </Formik>
+                    )}
+                </Box>
+            </Layout>
+        </main >
+    );
+}
+
+export default TambahPasien;

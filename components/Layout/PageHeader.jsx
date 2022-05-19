@@ -6,7 +6,7 @@ export default function PageHeader({ children }) {
   const router = useRouter()
   return (
     <div className={style.pageHeader}>
-      <ArrowBackIcon onClick={() => router.back()} style={{cursor: 'pointer'}} />
+      <ArrowBackIcon onClick={() => router.back()} style={{ cursor: 'pointer', marginBottom: 20 }} />
       <h1>{children}</h1>
     </div>
   )
