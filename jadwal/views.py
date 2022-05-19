@@ -20,7 +20,6 @@ from jiva_be.utils import IsStafPermission
 import json
 from datetime import datetime, timedelta
 from .utils import filter_available_jadwal
-# other import
 from klinik.utils import send_confirmation_email
 from os import getenv
 import multiprocessing

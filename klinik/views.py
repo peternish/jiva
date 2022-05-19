@@ -25,12 +25,6 @@ from jadwal.serializers import JadwalPasienSerializer
 from urllib.request import Request
 from klinik.utils import send_confirmation_email
 from os import getenv
-import multiprocessing
-
-# - If an error regarding the multiprocessing module occured, 
-#   try to set MULTIPROCESSING_START_METHOD to "spawn" in your .env file.
-# - Used "fork" to avoid AppRegistryNotReady exception on macOS platforms.
-multiprocessing.set_start_method(getenv("MULTIPROCESSING_START_METHOD") or "fork")
 
 
 def get_object(klass: models.Model, pk: int):
