@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from rekammedis.models import Pasien, RekamanMedis
+from account.serializers import TenagaMedisProfileSerializer
 
 
 class PasienSerializer(serializers.ModelSerializer):
@@ -10,6 +11,8 @@ class PasienSerializer(serializers.ModelSerializer):
 
 
 class RekamanMedisSerializer(serializers.ModelSerializer):
+    author = TenagaMedisProfileSerializer(read_only=True)
+
     class Meta:
         model = RekamanMedis
         fields = ["id", "fields", "time_created", "author", "patient"]
