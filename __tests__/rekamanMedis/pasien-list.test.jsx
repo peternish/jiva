@@ -31,7 +31,7 @@ describe("<RekamanMedisGlobal/>", () => {
     });
 
     it("renders title correctly", () => {
-        expect(screen.getByText("Daftar Pasien")).toBeInTheDocument();
+        expect(screen.getByText("Daftar Rekam Medis Pasien")).toBeInTheDocument();
     });
 
     it("renders patient data correctly", () => {
