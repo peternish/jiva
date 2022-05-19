@@ -121,7 +121,7 @@ const Jadwal = () => {
               const id_jadwal_pasien_TM = pasien.jadwalTenagaMedis.id;
               if(id_jadwal_pasien_TM == id) {
                 if(isThisWeek(new Date(pasien.date), { weekStartsOn: 1 })) {
-                  listPasien.push(pasien.lamaranPasien.fields[0][0].nama)
+                  listPasien.push(pasien.lamaranPasien.nik)
                 }
               }
             })

@@ -1,7 +1,6 @@
 import jivaAPI from "@api/index";
 import { setJadwalTenagaMedisList, setJadwalTenagaMedis } from "@redux/modules/jadwalTenagaMedis";
 import { toast } from "react-toastify";
-import constants from "@utils/constants"
 
 const getJadwalTenagaMedisList = ({ idCabang, getAvailable = false }) => {
     return async (dispatch) => {
@@ -14,7 +13,7 @@ const getJadwalTenagaMedisList = ({ idCabang, getAvailable = false }) => {
             }
             await dispatch(setJadwalTenagaMedisList(response.data));
         } catch (error) {
-            toast(constants.BASE_ERROR_MESSAGE, { type: toast.TYPE.ERROR });
+            toast(error.toString(), { type: toast.TYPE.ERROR });
         }
     };
 };
@@ -25,7 +24,7 @@ const getJadwalTenagaMedis = ({ idJadwal }) => {
             const { data } = await jivaAPI.jadwalTenagaMedis.getJadwalTenagaMedis({ idJadwal });
             await dispatch(setJadwalTenagaMedis(data));
         } catch (error) {
-            toast(constants.BASE_ERROR_MESSAGE, { type: toast.TYPE.ERROR });
+            toast(error.toString(), { type: toast.TYPE.ERROR });
         }
     };
 };
@@ -35,7 +34,8 @@ const createJadwalTenagaMedis = ({ idTenagaMedis, startTime, endTime, quota, day
         try {
             await jivaAPI.jadwalTenagaMedis.createJadwalTenagaMedis({ idTenagaMedis, startTime, endTime, quota, day });
         } catch(error) {
-            toast(constants.BASE_ERROR_MESSAGE, { type: toast.TYPE.ERROR });
+            toast(error.toString(), { type: toast.TYPE.ERROR });
+            return(error.toString())
         }
     }
 }
@@ -46,7 +46,7 @@ const deleteJadwalTenagaMedis = ({ idJadwal, idCabang }) => {
             await jivaAPI.jadwalTenagaMedis.deleteJadwalTenagaMedis({ idJadwal });
             dispatch(getJadwalTenagaMedisList({ idCabang }))
         } catch(error) {
-            toast(constants.BASE_ERROR_MESSAGE, { type: toast.TYPE.ERROR });
+            toast(error.toString(), { type: toast.TYPE.ERROR });
         }
     }
 }
@@ -56,7 +56,7 @@ const updateJadwalTenagaMedis = ({ idJadwal, startTime, endTime, quota, day }) =
         try {
             await jivaAPI.jadwalTenagaMedis.updateJadwalTenagaMedis({ idJadwal, startTime, endTime, quota, day });
         } catch(error) {
-            toast(constants.BASE_ERROR_MESSAGE, { type: toast.TYPE.ERROR });
+            toast(error.toString(), { type: toast.TYPE.ERROR });
         }
     }
 }
