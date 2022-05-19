@@ -1,4 +1,4 @@
-const KTP = {
+const nimMap = {
     provinsi: {
         11: "ACEH",
         12: "SUMATERA UTARA",
@@ -7584,4 +7584,4 @@ const KTP = {
         927110: "MALADUM MES -- -"
     }
 }
-export default KTP
+export default nimMap

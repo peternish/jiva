@@ -4,14 +4,14 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import Layout from "@components/Layout";
 import { Formik, Form } from "formik";
 import TextInput from "@components/common/TextInput";
-import { isValid } from '@utils/nikParser'
+import { checkValidity } from '@utils/nikParser'
 
 // redux
 import { useDispatch } from "react-redux";
 import { registerPatient } from "@redux/modules/rekamanMedis/thunks";
 
 
-function DetailTenagaMedis() {
+function TambahPasien() {
     const pasien = {}
     const dispatch = useDispatch();
     return (
@@ -39,12 +39,7 @@ function DetailTenagaMedis() {
                                 if (!values.fullName) errors.fullName = "Nama lengkap wajib diisi";
                                 if (!values.nik) errors.nik = "NIK wajib diisi";
                                 else {
-                                    console.log(values.nik)
-                                    console.log("not valid")
-                                    console.log(!isValid(values.nik))
-                                    console.log("not number")
-                                    console.log(isNaN(parseFloat(values.nik)))
-                                    if (!isValid(values.nik) || isNaN(parseFloat(values.nik))) errors.nik = "NIK tidak valid";
+                                    if (!checkValidity(values.nik) || isNaN(parseFloat(values.nik))) errors.nik = "NIK tidak valid";
                                 }
 
 
@@ -52,7 +47,7 @@ function DetailTenagaMedis() {
                             }}
                             onSubmit={(values, { setSubmitting }) => {
                                 setSubmitting(true)
-                                dispatch(registerPatient({ nik: values.nik, full_name: values.fullName }, setSubmitting));
+                                dispatch(registerPatient(setSubmitting, { nik: values.nik, full_name: values.fullName }));
                             }}
                         >
                             {({ isValid, errors, isSubmitting }) => (
@@ -91,4 +86,4 @@ function DetailTenagaMedis() {
     );
 }
 
-export default DetailTenagaMedis;
+export default TambahPasien;

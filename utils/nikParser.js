@@ -35,7 +35,7 @@ export function getDOB(nik) {
     return new Date(finalYear, month - 1, date)
 }
 
-export function isValid(nik) {
+export function checkValidity(nik) {
     if (nik == undefined) {
         return false
     }

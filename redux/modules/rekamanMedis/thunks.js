@@ -32,7 +32,7 @@ export const getPasien = (nik) => {
   }
 }
 
-export const registerPatient = ({ full_name, nik } = {}, setSubmitting) => {
+export const registerPatient = (setSubmitting, { full_name, nik } = {}) => {
   return async () => {
     try {
       setSubmitting(true)
