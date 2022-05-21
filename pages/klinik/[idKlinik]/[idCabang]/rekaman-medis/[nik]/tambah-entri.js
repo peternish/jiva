@@ -9,6 +9,7 @@ import Layout from '@components/Layout';
 import { Formik, Form } from "formik";
 import TextInput from "@components/common/TextInput";
 import FormRender from "@components/common/FormRender";
+import Divider from '@mui/material/Divider';
 
 // redux
 import { useDispatch, useSelector } from "react-redux";
@@ -17,13 +18,17 @@ import { findSchema } from "@redux/modules/dynamicForm/selectors";
 import { tambahEntri, getPasien } from "@redux/modules/rekamanMedis/thunks";
 
 const CSS = styled.div`
+#form-container {
+  display: flex;
+  flex-direction: column;
+}
+
 .sub-header {
   font-weight: bold;
-  color: #AEAEAE;
 }
 
 form {
-  margin: 0 !important;
+  margin-top: 1em;
 }
 `
 
@@ -56,12 +61,14 @@ function TambahEntri() {
               }}
               onSubmit={(values, { setSubmitting }) => {
                 setSubmitting(true)
-                dispatch(tambahEntri(values, setSubmitting))
+                console.log(values)
+                dispatch(tambahEntri(values, setSubmitting, { idCabang, idKlinik }))
               }}
             >
               {({ isValid, isSubmitting, setFieldValue, submitForm }) => (
-                <div>
-                  <label className="sub-header">Informasi Pasien</label>
+                <div id="form-container">
+                  <h4 className="sub-header">Informasi Pasien</h4>
+                  <small>Data pasien tidak dapat diubah</small>
 
                   <Form>
                     <TextInput 
@@ -79,7 +86,10 @@ function TambahEntri() {
                     />
                   </Form>
 
-                  <label className="sub-header">Rekam Medis</label>
+                  <Divider sx={{ margin: "1em 0" }}/>
+
+                  <h4 className="sub-header">Rekam Medis</h4>
+                  <small>Isi detail rekaman medis pada formulir di bawah</small>
 
                   <FormRender
                     schema={schema.fields}
