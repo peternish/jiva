@@ -51,12 +51,14 @@ export const registerPatient = (setSubmitting, { full_name, nik } = {}) => {
 };
 
 
-export const tambahEntri = (values, setSubmitting) => {
+export const tambahEntri = (values, setSubmitting, options) => {
   return async () => {
     try {
-      await jivaAPI.rekamanMedis.postPasien(values)
+      await jivaAPI.rekamanMedis.tambahEntri(values)
       toast("Entri Berhasil Ditambahkan", { type: toast.TYPE.SUCCESS });
       setSubmitting(false)
+      const { idCabang, idKlinik } = options
+      location.assign(`/klinik/${idKlinik}/${idCabang}/rekaman-medis/${values.nik}`)
     } catch (error) {
       toast("Terjadi kesalahan 😥", { type: toast.TYPE.ERROR });
       setSubmitting(false)

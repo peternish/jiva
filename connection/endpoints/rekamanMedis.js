@@ -19,6 +19,10 @@ const rekamanMedis = {
   getListRekamanMedis: ({ nik }) => {
     return axios.get(`${BASE_URL}/rekaman/${nik}/`);
   },
+  tambahEntri: ({ nik, fields }={}) => axios.post(BASE_URL + "//", {
+    patient: nik,
+    fields
+  })
 };
 
 export default rekamanMedis;
