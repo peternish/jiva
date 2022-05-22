@@ -41,7 +41,7 @@ function PasienListTable() {
                         <TableCell>Nama</TableCell>
                         <TableCell>Tempat/Tanggal Lahir</TableCell>
                         <TableCell>NIK</TableCell>
-                        <TableCell>EHR</TableCell>
+                        <TableCell>Rekaman Medis</TableCell>
                     </TableRow>
                 </TableHead>
 
