@@ -8,12 +8,7 @@ import DetailRekamanMedis from "@pages/klinik/[idKlinik]/[idCabang]/rekaman-medi
 // redux
 import { Provider } from "react-redux";
 import { store } from "@redux/store";
-import { getPasien } from "@redux/modules/rekamanMedis/thunks";
-import { getListRekamanMedis } from "@redux/modules/rekamanMedis/thunks";
 import { setPasien, setListRekamanMedis } from "@redux/modules/rekamanMedis";
-
-// utils
-import { mockRouter } from "@utils/testUtils/index"
 
 const dummyData =
     [{

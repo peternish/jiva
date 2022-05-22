@@ -13,50 +13,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { getPasien } from "@redux/modules/rekamanMedis/thunks";
 import { getListRekamanMedis } from "@redux/modules/rekamanMedis/thunks";
 
-
-function DetailRekamanMedis() {
-  const { query, isReady } = useRouter();
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    if (!isReady) return;
-    const { nik } = query;
-    dispatch(getPasien(nik));
-  }, [isReady, dispatch, query]);
-    
-  const { pasien } = useSelector(state => state.rekamanMedis);
-
-  useEffect(() => {
-    if (!isReady) return;
-    const { nik } = query;
-    dispatch(getListRekamanMedis({ nik }));
-  }, [isReady, dispatch, query]);
-
-  const { rekamanMedisId } = query;
-  const { listRekamanMedis } = useSelector(state => state.rekamanMedis);
-
-  const [rekamanDetail, setRekamanDetail] = useState({});
-
-  const [signal, setSignal] = useState(false)
-
-  const getRekamMedisById = useCallback((rekamanMedisId) => {
-    if(listRekamanMedis) {
-      listRekamanMedis.map((rekam) => {
-        const idRekam = rekam.id
-        if(idRekam == rekamanMedisId) {
-          setRekamanDetail(rekam)
-          setSignal(true)
-        }
-      })
-    }
-  }, [listRekamanMedis])
-  
-
-  useEffect(() => {
-    getRekamMedisById(rekamanMedisId)
-  }, [getRekamMedisById, rekamanMedisId])
-
-  const CSS = styled.div`
+const CSS = styled.div`
   display: flex;
   flex-direction: column;
 
@@ -93,6 +50,51 @@ function DetailRekamanMedis() {
     }
   }
 `;
+
+
+function DetailRekamanMedis() {
+  const { query, isReady } = useRouter();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (!isReady) return;
+    const { nik } = query;
+    dispatch(getPasien(nik));
+  }, [isReady, dispatch, query]);
+    
+  const { pasien } = useSelector(state => state.rekamanMedis);
+
+  useEffect(() => {
+    if (!isReady) return;
+    const { nik } = query;
+    dispatch(getListRekamanMedis({ nik }));
+  }, [isReady, dispatch, query]);
+
+  const { rekamanMedisId } = query;
+  const { listRekamanMedis } = useSelector(state => state.rekamanMedis);
+
+  const [rekamanDetail, setRekamanDetail] = useState({});
+
+  const [signal, setSignal] = useState(false)
+
+  const getRekamMedisById = useCallback(() => {
+    if(listRekamanMedis) {
+      listRekamanMedis.map((rekam) => {
+        const idRekam = rekam.id
+        if(idRekam == rekamanMedisId) {
+          setRekamanDetail(rekam)
+          setSignal(true)
+        }
+      })
+    }
+  }, [listRekamanMedis, rekamanMedisId])
+  
+
+  useEffect(() => {
+    getRekamMedisById()
+  }, [getRekamMedisById, rekamanMedisId])
+
+  
 
   return (listRekamanMedis && rekamanDetail && pasien && signal)? (
     <main>
