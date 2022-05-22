@@ -14,7 +14,7 @@ import { getPasien } from "@redux/modules/rekamanMedis/thunks";
 import { getListRekamanMedis } from "@redux/modules/rekamanMedis/thunks";
 
 
-function DaftarRekamanMedis() {
+function DetailRekamanMedis() {
   const { query, isReady } = useRouter();
   const dispatch = useDispatch();
 
@@ -108,7 +108,7 @@ function DaftarRekamanMedis() {
               <label id='info'>Rekaman Medis</label>
               {Object.keys(rekamanDetail.fields).map((key) => 
                 <div key={key} id="detail">
-                  <label>{rekamanDetail.fields[key].name}</label> 
+                  <label>{rekamanDetail.fields[key].label}</label> 
                   <input type={rekamanDetail.fields[key].type} value={rekamanDetail.fields[key].value} readOnly></input>
                 </div>)}
             </CSS>
@@ -119,4 +119,4 @@ function DaftarRekamanMedis() {
   ): null
 }
 
-export default DaftarRekamanMedis;
+export default DetailRekamanMedis;
