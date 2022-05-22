@@ -110,7 +110,7 @@ describe('Pengaturan Pengguna Main (empty)', () => {
 
   it('renders tambah button', () => {
 
-    const button = screen.getByRole('button', {
+    const button = screen.getByRole('link', {
       name: /Tambah Staf/,
     })
 
@@ -179,7 +179,7 @@ describe("Pengaturan Pengguna Main (exist)", () => {
 
   it('renders tambah button', () => {
 
-    const button = screen.getByRole('button', {
+    const button = screen.getByRole('link', {
       name: /Tambah Staf/,
     })
 
