@@ -88,11 +88,12 @@ const FormRender = ({ schema, submit, isSubmitting, extraButton, isValid = true 
   
     // map fields to payload object
     const payload = [];
-    schema.forEach(({ type, required, name }) => {
+    schema.forEach(({ type, required, name, label }) => {
       const inputValue = {
         type,
         required,
         name,
+        label,
         value: values[name],
       };
       if (type === "file") {
