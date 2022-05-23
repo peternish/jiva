@@ -39,12 +39,15 @@ export const registerPatient = (setSubmitting, { full_name, nik } = {}) => {
   return async () => {
     try {
       setSubmitting(true)
-      jivaAPI.rekamanMedis.postPasien({ full_name, nik })
+      await jivaAPI.rekamanMedis.postPasien({ full_name, nik })
       window.location.href = '../rekaman-medis'
       toast('Berhasil mendaftarkan pasien', { type: toast.TYPE.SUCCESS });
     } catch (err) {
       setSubmitting(false)
       console.error(err.toString())
+      if (err?.response?.status === 400) {
+        return toast('Pasien with the same NIK already exists', { type: toast.TYPE.ERROR });
+      }
       toast('Gagal mendaftarkan pasien', { type: toast.TYPE.ERROR });
     }
   };
