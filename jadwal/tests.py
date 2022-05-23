@@ -451,7 +451,7 @@ class AvailableJadwalTenagaMedisAPITest(JadwalTenagaMedisTestSetUp):
         )
         jadwal_tenaga_medis.save()
         lamaran_pasien = LamaranPasien.objects.create(
-            nik="123", fields=[{"nama": "Antonio"}]
+            nik="123", email="asdf@gamil.com", nama="Astolfo", fields=[{"nickname": "Antonio"}]
         )
         lamaran_pasien.save()
         jadwal_pasien = JadwalPasien.objects.create(
@@ -483,7 +483,7 @@ class AvailableJadwalTenagaMedisAPITest(JadwalTenagaMedisTestSetUp):
         response = self.client.get(url)
         for i in range(2):
             lamaran_pasien = LamaranPasien.objects.create(
-                nik=f"{i+1}", fields=[{"nama": "Antonio"}]
+                nik=f"{i+1}", email=f"asd{i+1}@gamil.com", nama=f"Astolfo{i+1}", fields=[{"nickname": "Antonio"}]
             )
             lamaran_pasien.save()
             jadwal_pasien = JadwalPasien.objects.create(
@@ -585,13 +585,13 @@ class JadwalPasienAPITestSetup(APITestCase, TestCase):
         jadwal_tenaga_medis_lain.save()
 
         # Should have ID 1
-        self.pas = LamaranPasien(nik=f"4206913371", fields=[{"nama": f"Abdullah1"}])
+        self.pas = LamaranPasien(nik=f"4206913371", email="emails@email.com", nama="Abdullah1", fields=[{"nickname": f"Abdul1"}])
         self.pas.save()
 
         # Should have ID starting from 2
         for _ in range(10):
             lam = LamaranPasien(
-                nik=f"420691337{_+2}", fields=[{"nama": f"Abdullah{_+2}"}]
+                nik=f"420691337{_+2}", email=f"email{_+2}@email.com", nama=f"Abdullah{_+2}", fields=[{"nama": f"Abdul{_+2}"}]
             )
             lam.save()
 
@@ -614,6 +614,18 @@ class JadwalPasienAPITestSetup(APITestCase, TestCase):
             )
             jadwal_lain.save()
 
+        self.mockdata = {"lamaranPasien": {
+                        "nik": "123980295782",
+                        "email": "surat@email.com",
+                        "nama": "Abdullah",
+                        "fields": [
+                            {
+                                "nickname": "Abdul"
+                            }
+                        ]
+                    },
+                "date": datetime.date(1666, 4, 20)}
+
 
 class JadwalPasienModelTest(JadwalPasienAPITestSetup):
     def test_jadwal_pasien_str_method(self):
@@ -626,22 +638,20 @@ class JadwalPasienAPITest(JadwalPasienAPITestSetup):
         self.assertEqual(JadwalPasien.objects.count(), 11)
         self.assertEqual(JadwalTenagaMedis.objects.count(), 2)
         self.assertEqual(LamaranPasien.objects.count(), 11)
-        data = {"date": datetime.date(1666, 4, 20)}
-        lam = LamaranPasien(nik=f"123456678", fields=[{"nama": "Ahmed"}])
-        lam.save()
-        self.assertEqual(LamaranPasien.objects.count(), 12)
+
         url = reverse(
             self.create_jadwal_pasien_url,
             kwargs={
-                "jadwal_tenaga_medis_pk": 1,
-                "pasien_pk": LamaranPasien.objects.count(),
+                "jadwal_tenaga_medis_pk": 1
             },
         )
-        resp = self.client.post(url, data=data)
+        resp = self.client.post(url, data=self.mockdata, format='json')
+
         jadwal_pasien = JadwalPasien.objects.last()
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
         self.assertEqual(jadwal_pasien.date, datetime.date(1666, 4, 20))
         self.assertEqual(jadwal_pasien.jadwalTenagaMedis.id, 1)
+        self.assertEqual(LamaranPasien.objects.count(), 12)
         self.assertEqual(jadwal_pasien.lamaranPasien.id, 12)
         self.assertEqual(JadwalPasien.objects.count(), 12)
 
@@ -652,7 +662,7 @@ class JadwalPasienAPITest(JadwalPasienAPITestSetup):
         }
         url = reverse(
             self.create_jadwal_pasien_url,
-            kwargs={"jadwal_tenaga_medis_pk": 1, "pasien_pk": 2},
+            kwargs={"jadwal_tenaga_medis_pk": 1},
         )
         resp = self.client.post(url, data=data)
         self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
@@ -660,25 +670,23 @@ class JadwalPasienAPITest(JadwalPasienAPITestSetup):
     
     def test_create_jadwal_pasien_not_found(self):
         self.assertEqual(JadwalPasien.objects.count(), 11)
-        data = {
-            # all missing fields
-        }
+
         url = reverse(
             self.create_jadwal_pasien_url,
-            kwargs={"jadwal_tenaga_medis_pk": 1999, "pasien_pk": 1999},
+            kwargs={"jadwal_tenaga_medis_pk": 1999},
         )
-        resp = self.client.post(url, data=data)
+        resp = self.client.post(url, data=self.mockdata, format='json')
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
         self.assertEqual(JadwalPasien.objects.count(), 11)
 
     def test_create_jadwal_pasien_fail_quota(self):
         self.assertEqual(JadwalPasien.objects.count(), 11)
-        data = {"date": datetime.date(1666, 4, 20)}
+
         url = reverse(
             self.create_jadwal_pasien_url,
-            kwargs={"jadwal_tenaga_medis_pk": 2, "pasien_pk": 2},
+            kwargs={"jadwal_tenaga_medis_pk": 2},
         )
-        resp = self.client.post(url, data=data)
+        resp = self.client.post(url, data=self.mockdata, format='json')
         self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(JadwalPasien.objects.count(), 11)
 

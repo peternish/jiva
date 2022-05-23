@@ -1,6 +1,8 @@
 # rest imports
 from rest_framework import serializers
 
+from klinik.models import LamaranPasien
+
 # model and serializer imports
 from .models import JadwalTenagaMedis, JadwalPasien
 from account.serializers import TenagaMedisProfileSerializer
@@ -60,9 +62,24 @@ class JadwalTenagaMedisSerializer(serializers.ModelSerializer):
 
 class JadwalPasienSerializer(serializers.ModelSerializer):
     jadwalTenagaMedis = JadwalTenagaMedisSerializer(read_only=True)
-    lamaranPasien = LamaranPasienSerializer(read_only=True)
+    lamaranPasien = LamaranPasienSerializer(required=False)
 
     class Meta:
         model = JadwalPasien
         fields = ["id", "date", "jadwalTenagaMedis", "lamaranPasien"]
-        read_only_fields = ["id", "jadwalTenagaMedis", "lamaranPasien"]
+        read_only_fields = ["id"]
+
+    def create(self, validated_data):
+        """
+        Overriding the default create method of the Model serializer.
+        :param validated_data: data containing all the details of JadwalPasien
+        :return: returns a successfully created JadwalPasien
+        """
+
+        lamaran_pasien_data = validated_data.pop('lamaranPasien')
+        lamaran_pasien = LamaranPasienSerializer.create(LamaranPasienSerializer(), validated_data=lamaran_pasien_data)
+
+        jadwal_pasien = JadwalPasien.objects.create(lamaranPasien=lamaran_pasien, jadwalTenagaMedis=validated_data.pop('jadwalTenagaMedis'),
+                            date=validated_data.pop('date'))
+                            
+        return jadwal_pasien
