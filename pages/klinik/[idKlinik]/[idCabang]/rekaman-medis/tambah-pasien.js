@@ -18,19 +18,13 @@ function TambahPasien() {
         <main>
             <Layout title="Tambah Pasien">
                 <Box sx={{
-                    maxWidth: "45vw"
+                    maxWidth: "45vw",
+                    paddingTop: '1em'
                 }}>
-                    <Box sx={{
-                        marginTop: 2,
-                        marginBottom: 2,
-                        color: "#AEAEAE"
-                    }}>
-                        <h4>Informasi Pasien</h4>
-                    </Box>
                     {true && (
                         <Formik
                             initialValues={{
-                                full_name: pasien.full_name,
+                                fullName: pasien.full_name,
                                 nik: pasien.nik,
                             }}
                             validate={(values) => {
