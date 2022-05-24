@@ -186,7 +186,7 @@ django_heroku.settings(locals(), test_runner=False)
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.mailgun.org"
-EMAIL_USE_TLS = True
+EMAIL_USE_TLS = False
 EMAIL_USE_SSL = False
 EMAIL_PORT = 587
 EMAIL_HOST_USER = getenv("JIVA_CONTACT_EMAIL")
