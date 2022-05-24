@@ -49,7 +49,7 @@ const TextInput = ({ label, name, type = "text", placeholder = "", disabled = fa
   return (
     <CSS isError={!!error}>
       <label htmlFor={name}>{label}</label>
-      <Field type={type} placeholder={placeholder} name={name} id={name} disabled={disabled} as={as}>{children}</Field>
+      <Field type={type} placeholder={placeholder} name={name} id={name} disabled={disabled} as={as} min="1">{children}</Field>
       <small className="error-message">{error}</small>
     </CSS>
   );
