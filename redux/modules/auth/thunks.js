@@ -93,7 +93,7 @@ export const logout = () => {
 export const redirectHandler = () => {
   return (_, getState) => {
     const isLoggedIn = isLoggedInSelector(getState())
-    const publicRoutes = [ /^\/login$/, /^\/$/, /^\/register$/, /^\/form.*$/ ]
+    const publicRoutes = [ /^\/login$/, /^\/$/, /^\/register$/, /^\/form.*$/, /^\/guide$/]
     const isPublicRoute = publicRoutes.some(rx => rx.test(location.pathname))
     if (!isPublicRoute && !isLoggedIn) {
       location.assign("/login")
