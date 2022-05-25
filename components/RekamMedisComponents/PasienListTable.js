@@ -58,9 +58,7 @@ function PasienListTable() {
                                 <TableCell>{pasien.nik}</TableCell>
                                 <TableCell>
                                     <Link href={`/klinik/${idKlinik}/${idCabang}/rekaman-medis/${pasien.nik}/`} underline="none" className={styles.link}>
-                                        <b>
-                                            Lihat
-                                        </b>
+                                        Lihat
                                     </Link>
                                 </TableCell>
                             </TableRow>

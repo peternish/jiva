@@ -36,7 +36,7 @@ function RekamanMedisTable() {
       <Table>
         <TableHead>
           <TableRow className={styles.header}>
-            <TableCell>Tanggal</TableCell>
+            <TableCell>Tanggal Diagnosa</TableCell>
             <TableCell>Dokter</TableCell>
             <TableCell>Rekaman Medis</TableCell>
           </TableRow>
