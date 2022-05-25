@@ -1,13 +1,7 @@
 // components
-import Button from '@mui/material/Button';
 import Layout from '@components/Layout';
-import Box from "@mui/material/Box";
 import styled from "styled-components";
-import Script from "next/script";
 import Link from "next/link";
-
-//redux
-import { useDispatch } from "react-redux";
 
 const Wrapper = styled.div`
   margin: 0 auto;
