@@ -1,6 +1,7 @@
 import { fireEvent, render, screen, act } from "@testing-library/react";
 import '@testing-library/jest-dom';
 import * as nextRouter from 'next/router';
+import { React } from "react";
 
 import Jadwal from '@pages/klinik/[idKlinik]/[idCabang]/jadwal-tenaga-medis';
 
@@ -11,28 +12,40 @@ import { setTenagaMedisList } from '@redux/modules/tenagaMedis';
 
 function selecting(hari, start, end, jml) {
     const jadwalHariSelect = screen.getAllByRole('combobox')[2]
-            act(async () => {
-                await fireEvent.change(jadwalHariSelect, {target: {value: hari}});
-            });
+    act(async () => {
+        fireEvent.change(jadwalHariSelect, { target: { value: hari } });
+    });
 
-            const startTime = screen.getByTestId("start")
-            act(async () => {
-                await fireEvent.change(startTime, {target: {value: start}});
-            });
+    const startTime = screen.getByTestId("start")
+    act(async () => {
+        fireEvent.change(startTime, { target: { value: start } });
+    });
 
-            const endTime = screen.getByTestId("end")
-            act(async () => {
-                await fireEvent.change(endTime, {target: {value: end}});
-            });
+    const endTime = screen.getByTestId("end")
+    act(async () => {
+        fireEvent.change(endTime, { target: { value: end } });
+    });
 
-            const quota = screen.getByRole('spinbutton')
-            act(async () => {
-                await fireEvent.change(quota, {target: {value: jml}});
-            });
+    const quota = screen.getByRole('spinbutton')
+    act(async () => {
+        fireEvent.change(quota, { target: { value: jml } });
+    });
 }
 
+const setHookState = (newState) =>
+    jest.fn().mockImplementation(() => [
+        newState,
+        () => { },
+    ]);
+
+const reactMock = require('react');
+
+const signal = true
+
+
+
 describe('JadwalTenagaMedis', () => {
-    beforeEach( async () => {
+    beforeEach(async () => {
         await store.dispatch(setJadwalTenagaMedisList([{
             id: 47,
             tenaga_medis: {
@@ -73,55 +86,59 @@ describe('JadwalTenagaMedis', () => {
             quota: 3,
             day: "tue"
         }]))
-    await store.dispatch(setTenagaMedisList([
-        {
-            account: {
-                id: 2,
-                full_name: "TM 2",
-                email: "tm2@klinik99.com",
-                date_joined: "2022-03-31T12:49:11.378628Z",
-                last_login: "2022-03-31T12:49:11.378628Z",
-                role: "tenaga_medis",
-                cabang: 1,
-                klinik: 1
-            },
-            sip: "https://django-surat-izin-klinik-jiva.s3.amazonaws.com/static/HW2204B4.txt"
-        },
-        {
-            account: {
-                id: 3,
-                full_name: "TM 3",
-                email: "tm3@klinik99.com",
-                date_joined: "2022-04-02T10:43:33.797983Z",
-                last_login: "2022-04-02T10:43:33.797983Z",
-                ole: "tenaga_medis",
-                cabang: 1,
-                klinik: 1
-            },
-            sip: "https://django-surat-izin-klinik-jiva.s3.amazonaws.com/static/HW2204B4.txt"
-        }
-    ]))
-        nextRouter.useRouter = jest.fn();
-        nextRouter.useRouter.mockImplementation(() => ({ 
-          route: '/klinik/1/1/jadwal-tenaga-medis', 
-          query: { idKlinik: 1, idCabang: 1 },
-          isReady: true, 
-        }));
-        render(
-          <Provider store={store}>
-            <Jadwal />
-          </Provider>
-        );
-      });
 
-      afterEach(() => {
+        await store.dispatch(setTenagaMedisList([
+            {
+                account: {
+                    id: 2,
+                    full_name: "TM 2",
+                    email: "tm2@klinik99.com",
+                    date_joined: "2022-03-31T12:49:11.378628Z",
+                    last_login: "2022-03-31T12:49:11.378628Z",
+                    role: "tenaga_medis",
+                    cabang: 1,
+                    klinik: 1
+                },
+                sip: "https://django-surat-izin-klinik-jiva.s3.amazonaws.com/static/HW2204B4.txt"
+            },
+            {
+                account: {
+                    id: 3,
+                    full_name: "TM 3",
+                    email: "tm3@klinik99.com",
+                    date_joined: "2022-04-02T10:43:33.797983Z",
+                    last_login: "2022-04-02T10:43:33.797983Z",
+                    ole: "tenaga_medis",
+                    cabang: 1,
+                    klinik: 1
+                },
+                sip: "https://django-surat-izin-klinik-jiva.s3.amazonaws.com/static/HW2204B4.txt"
+            }
+        ]))
+
+        nextRouter.useRouter = jest.fn();
+        nextRouter.useRouter.mockImplementation(() => ({
+            route: '/klinik/1/1/jadwal-tenaga-medis',
+            query: { idKlinik: 1, idCabang: 1 },
+            isReady: true,
+            signal: true,
+        }));
+
+        render(
+            <Provider store={store}>
+                <Jadwal />
+            </Provider>
+        );
+    });
+
+    afterEach(() => {
         let assignMock = jest.fn();
         delete window.location;
         window.location = { assign: assignMock };
         assignMock.mockClear();
-      });
+    });
 
-      describe('Main Components', () => {
+    describe('Main Components', () => {
         it('should have page heading', () => {
             const heading = screen.getByRole('heading', {
                 name: /Jadwal Tenaga Medis/,
@@ -136,75 +153,89 @@ describe('JadwalTenagaMedis', () => {
             expect(combobox).toBeInTheDocument();
             expect(option).toBeInTheDocument();
         })
-      });
+    });
 
-      describe('Functions', () => {
-          it('should parseData force_filter', async () => {
-              const button = screen.getByText('Tampilkan Semua Jadwal')
-              act(async () => {
-                await fireEvent.click(button);
-              });
-
-              expect(await screen.getAllByRole('combobox')[0]).toBeInTheDocument();
-          });
-
-          it('should updateEvents', async () => {
-            const event = screen.getAllByText('TM 3')[1];
-            await act(async () => {
-                await fireEvent.click(event);
+    describe('Functions', () => {
+        it('should parseData force_filter', async () => {
+            const button = screen.getByText('Tampilkan Semua Jadwal')
+            act(async () => {
+                fireEvent.click(button);
             });
 
-            expect(await screen.getAllByText('TM 3').length === 3)
+            expect(screen.getAllByRole('combobox')[0]).toBeInTheDocument();
+        });
+
+        it('should updateEvents', async () => {
+            const event = screen.getAllByText('TM 3')[1];
+            await act(async () => {
+                fireEvent.click(event);
+            });
+
+            expect(screen.getAllByText('TM 3').length === 3)
 
             selecting("Sabtu", "13:00", "15:00", 8)
 
             const button = screen.getByTestId('update')
             await act(async () => {
-                await fireEvent.click(button);
+                fireEvent.click(button);
             });
 
-            expect(await screen.getAllByText('TM 3').length === 3)
+            expect(screen.getAllByText('TM 3').length === 3)
         });
 
-          it('should deleteEvent', async () => {
-            const event = screen.getAllByText('TM 2')[1];
-            act(async () => {
-                await fireEvent.click(event);
+        it('should batalEvent', async () => {
+            const event = screen.getAllByText('TM 3')[1];
+            await act(async () => {
+                fireEvent.click(event);
             });
 
-            expect(await screen.getAllByText('TM 2').length === 3)
+            const button = screen.getByTestId('batal')
+            await act(async () => {
+                fireEvent.click(button);
+            });
+
+            expect(screen.getAllByText('TM 3').length === 3)
+        })
+
+        it('should deleteEvent', async () => {
+            const event = screen.getAllByText('TM 2')[1];
+            act(async () => {
+                fireEvent.click(event);
+            });
+
+            expect(screen.getAllByText('TM 2').length === 3)
 
             const deleteButton = screen.getByTestId('delete');
             act(async () => {
-                await fireEvent.click(deleteButton);
+                fireEvent.click(deleteButton);
             });
 
-            expect(await screen.getAllByText('TM 2').length === 2)
-          });
+            expect(screen.getAllByText('TM 2').length === 2)
+        });
 
-          it('should createEvent', async () => {
+        it('should createEvent', async () => {
             const tenagaMedisSelect = screen.getAllByRole('combobox')[1]
             act(async () => {
-                await fireEvent.change(tenagaMedisSelect, {target: {value: "TM 2"}});
+                fireEvent.change(tenagaMedisSelect, { target: { value: "TM 2" } });
             });
 
             selecting("Minggu", "07:00", "09:00", 10)
 
             const create = screen.getByTestId("create")
             act(async () => {
-                await fireEvent.click(create);
+                fireEvent.click(create);
             });
 
-            expect(await screen.getAllByText('TM 2').length === 3)
-          })
+            expect(screen.getAllByText('TM 2').length === 3)
+        })
 
-          it('should filter by tenaga medis', async () => {
+        it('should filter by tenaga medis', async () => {
             const tenagaMedisSelect = screen.getAllByRole('combobox')[0]
             act(async () => {
-                await fireEvent.change(tenagaMedisSelect, {target: {value: "TM 2"}});
+                fireEvent.change(tenagaMedisSelect, { target: { value: "TM 2" } });
             });
 
-            expect(await screen.getAllByText('TM 2').length === 3)
-          })
-      })
+            expect(screen.getAllByText('TM 2').length === 3)
+        })
+    })
 })

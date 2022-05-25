@@ -23,10 +23,6 @@ const CSS = styled.div`
     margin-bottom: 0.8em;
   }
 
-  #info {
-    color: gray;
-  }
-
   #detail {
     display: flex;
     flex-direction: column;
@@ -102,12 +98,12 @@ function DetailRekamanMedis() {
         <Layout title={`Entri Rekaman Medis ${rekamanDetail.time_created} untuk ${pasien.full_name}`}>
           <Box sx={{ width : '85%'}}>
             <CSS>
-              <label id='info'>Informasi Pasien</label>
+              <label>Informasi Pasien</label>
               <label>Nama Lengkap</label>
               <input type="text" readOnly value={pasien.full_name}></input>
               <label>NIK</label>
               <input type="number" readOnly value={pasien.nik}></input>
-              <label id='info'>Rekaman Medis</label>
+              <label>Rekaman Medis</label>
               {Object.keys(rekamanDetail.fields).map((key) => 
                 <div key={key} id="detail">
                   <label>{rekamanDetail.fields[key].label}</label> 
