@@ -46,7 +46,7 @@ export const registerPatient = (setSubmitting, { full_name, nik } = {}) => {
       setSubmitting(false)
       console.error(err.toString())
       if (err?.response?.status === 400) {
-        return toast('Pasien with the same NIK already exists', { type: toast.TYPE.ERROR });
+        return toast('NIK sudah terdaftar', { type: toast.TYPE.ERROR });
       }
       toast('Gagal mendaftarkan pasien', { type: toast.TYPE.ERROR });
     }
