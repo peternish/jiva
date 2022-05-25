@@ -16,6 +16,9 @@ const Navbar = () => {
       </div>
 
       <div className={styles.navLinks}>
+          <Link href="/guide">
+            <a>Petunjuk</a>
+          </Link>
         {loggedIn ? (
           <Link href="/">
             <a onClick={dispatch(logout)}>Logout</a>

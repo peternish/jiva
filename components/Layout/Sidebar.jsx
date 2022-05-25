@@ -18,6 +18,7 @@ import ConstructionIcon from '@mui/icons-material/Construction';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import Divider from "@mui/material/Divider";
 import LogoutIcon from '@mui/icons-material/Logout';
+import OtherHousesIcon from '@mui/icons-material/OtherHouses';
 
 export default function Sidebar() {
     const { query, isReady } = useRouter();
@@ -78,14 +79,26 @@ export default function Sidebar() {
                     ) : null)}
                 </div>
             </div>
-            <Link href="/login">
-                <a onClick={dispatch(logout)}>
-                    <div className={styles.sidebarFooter}>
-                        <LogoutIcon />
-                        Logout
-                    </div>
-                </a>
-            </Link>
+            <div className={styles.navList}>
+                {profile.role == "owner" ? (
+                    <Link href="/klinik">
+                    <a onClick={dispatch(logout)}>
+                        <div className={styles.sidebarFooter}>
+                            <OtherHousesIcon />
+                            Ganti Cabang
+                        </div>
+                    </a>
+                </Link>
+                ): null}
+                <Link href="/login">
+                    <a onClick={dispatch(logout)}>
+                        <div className={styles.sidebarFooter}>
+                            <LogoutIcon />
+                            Logout
+                        </div>
+                    </a>
+                </Link>
+            </div>
         </nav>
     ) : null
 }
