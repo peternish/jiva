@@ -16,6 +16,7 @@ from dotenv import load_dotenv
 from os import getenv
 from datetime import timedelta
 import django_heroku
+import os
 
 load_dotenv()
 
@@ -185,9 +186,9 @@ SIMPLE_JWT = {
 django_heroku.settings(locals(), test_runner=False)
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp.mailgun.org"
-EMAIL_USE_TLS = False
+EMAIL_HOST = os.environ.get("MAILGUN_SMTP_SERVER", "smtp.mailgun.org")
+EMAIL_PORT = os.environ.get("MAILGUN_SMTP_PORT", 587)
+EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
-EMAIL_PORT = 587
 EMAIL_HOST_USER = getenv("JIVA_CONTACT_EMAIL")
 EMAIL_HOST_PASSWORD = getenv("JIVA_CONTACT_EMAIL_PASSWORD")
