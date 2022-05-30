@@ -27,7 +27,7 @@ def send_confirmation_email(lamaran_pasien: LamaranPasien, jadwal_tenaga_medis: 
         message=strip_tags(html_message), 
         from_email=from_email, 
         recipient_list=recipient_list,
-        fail_silently=False,
+        fail_silently=True,
         html_message=html_message
     )
 
