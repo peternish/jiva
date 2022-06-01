@@ -74,12 +74,16 @@ export const getTokens = ({ email, password } = {}) => {
 
 export const refreshToken = () => {
   return async (dispatch, _getState) => {
-    const {
-      data: { access },
-    } = await jivaAPI.auth.refresh({
-      refresh: _getState().auth.refreshToken,
-    });
-    await dispatch(setAccessToken(access));
+    try {
+      const {
+        data: { access },
+      } = await jivaAPI.auth.refresh({
+        refresh: _getState().auth.refreshToken,
+      });
+      await dispatch(setAccessToken(access));
+    } catch (err) {
+      dispatch(logout())
+    }
   };
 };
 
