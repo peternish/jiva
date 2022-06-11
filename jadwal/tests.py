@@ -437,7 +437,7 @@ class JadwalTenagaMedisAPITest(JadwalTenagaMedisTestSetUp):
 class AvailableJadwalTenagaMedisAPITest(JadwalTenagaMedisTestSetUp):
     def setUp(self):
         super().setUp()
-        self.sample_date = datetime.datetime.today() + datetime.timedelta(days=1)
+        self.sample_date = datetime.datetime.today()
 
     def test_get_available_jadwal_tenaga_medis(self):
         self.client.credentials(HTTP_AUTHORIZATION=None)
@@ -469,12 +469,13 @@ class AvailableJadwalTenagaMedisAPITest(JadwalTenagaMedisTestSetUp):
 
     def test_get_available_jadwal_tenaga_medis_empty(self):
         self.client.credentials(HTTP_AUTHORIZATION=None)
+        tomorrow = self.sample_date + datetime.timedelta(days=1)
         jadwal_tenaga_medis = JadwalTenagaMedis.objects.create(
             tenaga_medis=self.tenaga_medis_profile,
             start_time=datetime.time(8, 0, 0),
             end_time=datetime.time(10, 0, 0),
             quota=2,
-            day=self.sample_date.strftime("%a").lower(),
+            day=tomorrow.strftime("%a").lower(),
         )
         jadwal_tenaga_medis.save()
         url = reverse(
