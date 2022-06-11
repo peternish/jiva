@@ -82,7 +82,7 @@ export default function Sidebar() {
             <div className={styles.navList}>
                 {profile.role == "owner" ? (
                     <Link href="/klinik">
-                    <a onClick={dispatch(logout)}>
+                    <a title="Ganti Cabang">
                         <div className={styles.sidebarFooter}>
                             <OtherHousesIcon />
                             Ganti Cabang
