@@ -82,6 +82,7 @@ unit_testing:
     - coverage run --omit="manage.py,jiva_be/*,*migrations*" manage.py test
     - coverage report -m
     - coverage xml
+  coverage: /^TOTAL.*\s+(\d+\%)$/
   only:
     - merge_requests
     - staging
