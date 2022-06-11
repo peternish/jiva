@@ -178,6 +178,12 @@ const Jadwal = (props) => {
     [],
   )
 
+  function getTimezoneOffset(time) {
+    var tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
+    const newTime = (new Date(time - tzoffset).toISOString().slice(0, -1).split("T")[1].substr(0,5))
+    return(newTime)
+  }
+
   const createEvent = useCallback(
     async (values) => {
       const startTime = getISOtime(values.start)
@@ -314,8 +320,8 @@ const Jadwal = (props) => {
           <Formik enableReinitialize
             initialValues={
               {
-                start: currentEvent ? currentEvent.start?.toISOString().split("T")[1].substr(0, 5) : "00:00",
-                end: currentEvent ? currentEvent.end?.toISOString().split("T")[1].substr(0, 5) : "00:00",
+                start: currentEvent ? getTimezoneOffset(currentEvent.start) : "00:00",
+                end: currentEvent ? getTimezoneOffset(currentEvent.end) : "00:00",
                 jadwal_hari: currentEvent ? getDayFromDate(currentEvent.end?.toISOString().split("T")[0]) : "mon",
                 jadwal_title: currentEvent ? currentEvent.title : "",
                 quota: currentEvent ? currentEvent.quota : 1
