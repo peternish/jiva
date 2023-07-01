@@ -1,0 +1,31 @@
+[tool.poetry]
+name = "jiva-backend"
+version = "0.1.0"
+description = "Backed for Jiva ERP"
+authors = ["Dennis A. Walangadi <dennisaw2000@gmail.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+djangorestframework = "^3.13.1"
+Django = "^4.0.2"
+coverage = "^6.3.1"
+python-dotenv = "^0.19.2"
+psycopg2 = "^2.9.3"
+gunicorn = "^20.1.0"
+pylint-django = "^2.5.2"
+model-bakery = "^1.4.0"
+djangorestframework-simplejwt = "^5.0.0"
+boto3 = "^1.21.11"
+django-storages = "^1.12.3"
+django-cors-headers = "^3.11.0"
+django-heroku = "^0.3.1"
+
+[tool.poetry.dev-dependencies]
+black = "^22.1.0"
+pylint = "^2.12.2"
+pylint-django = "^2.5.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
