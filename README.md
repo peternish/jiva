@@ -9,7 +9,7 @@ Clinical ERP is an information system that supports clinic operations. The featu
 - Medical record system
 
 # Team
-= Adam Syauqi Medise  
+- Adam Syauqi Medise  
 - Hanif Arkan Audah  
 - Muhammad Hanif Anggawi        
 - Dennis Al Baihaqi Walangadi    
