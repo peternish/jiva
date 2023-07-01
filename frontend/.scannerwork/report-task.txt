@@ -1,0 +1,6 @@
+projectKey=ppl-fasilkom-ui_2022_Kelas-B_pencari-kelulusan_frontend_AX8Cz9v0mTzPxwcer_YD
+serverUrl=https://sonarqube.cs.ui.ac.id
+serverVersion=8.9.2.46101
+dashboardUrl=https://sonarqube.cs.ui.ac.id/dashboard?id=ppl-fasilkom-ui_2022_Kelas-B_pencari-kelulusan_frontend_AX8Cz9v0mTzPxwcer_YD
+ceTaskId=AX8C4lnfmTzPxwcer_YV
+ceTaskUrl=https://sonarqube.cs.ui.ac.id/api/ce/task?id=AX8C4lnfmTzPxwcer_YV
